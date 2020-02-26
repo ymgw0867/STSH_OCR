@@ -76,5 +76,41 @@ namespace STSH_OCR.Properties {
                 return ((string)(this["FAX注文書"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\FaxRoot\\")]
+        public string FaxRootDirectory {
+            get {
+                return ((string)(this["FaxRootDirectory"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_CLI\\DATA\\")]
+        public string MyDataPath {
+            get {
+                return ((string)(this["MyDataPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\DATA\\")]
+        public string DataPath {
+            get {
+                return ((string)(this["DataPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PC1")]
+        public string lockFileName {
+            get {
+                return ((string)(this["lockFileName"]));
+            }
+        }
     }
 }

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Configuration;
-using STSH_OCR.Common;
 using System.Data.SQLite;
 using System.Data.Linq;
 using STSH_OCR.Common;
@@ -167,6 +166,12 @@ namespace STSH_OCR.Common
             csvTokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(MstArray, toDate);
         }
 
+        ///----------------------------------------------------------------
+        /// <summary>
+        ///     発注書パターンデータ表示 </summary>
+        /// <param name="g">
+        ///     DataGridViewオブジェクト</param>
+        ///----------------------------------------------------------------
         private void showPattern(DataGridView g)
         {
             this.Cursor = Cursors.WaitCursor;
@@ -243,7 +248,7 @@ namespace STSH_OCR.Common
                 g[colNouName, cnt].Value = csvTokuisakis[vI].TOKUISAKI_NM;
                 g[colPtnID, cnt].Value = s.SeqNum.ToString().PadLeft(3, '0');
                 g[colSecondNum, cnt].Value = s.SecondNum.ToString().PadLeft(3, '0');
-                //g[colMemo, cnt].Value = s.
+                g[colMemo, cnt].Value = s.Memo;
                 g[colTel, cnt].Value = csvTokuisakis[vI].TOKUISAKI_TEL;
                 g[colAddress, cnt].Value = csvTokuisakis[vI].TOKUISAKI_ZYUSYO1 + " " + csvTokuisakis[vI].TOKUISAKI_ZYUSYO2;
                 g[colDate, cnt].Value = s.YyMmDd;
@@ -257,7 +262,7 @@ namespace STSH_OCR.Common
 
             if (cnt == 0)
             {
-                MessageBox.Show("該当する注文書パターンはありませんでした", "検索結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("該当する発注書パターンはありませんでした", "検索結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

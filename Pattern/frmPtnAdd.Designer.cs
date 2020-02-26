@@ -90,9 +90,9 @@
             this.label1.BackColor = System.Drawing.SystemColors.Control;
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label1.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(774, 971);
+            this.label1.Location = new System.Drawing.Point(774, 972);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 28);
+            this.label1.Size = new System.Drawing.Size(74, 21);
             this.label1.TabIndex = 3;
             this.label1.Text = "備考";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -101,13 +101,12 @@
             // 
             this.txtMemo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMemo.Font = new System.Drawing.Font("ＭＳ ゴシック", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtMemo.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtMemo.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtMemo.Location = new System.Drawing.Point(847, 971);
+            this.txtMemo.Location = new System.Drawing.Point(847, 972);
             this.txtMemo.MaxLength = 255;
-            this.txtMemo.Multiline = true;
             this.txtMemo.Name = "txtMemo";
-            this.txtMemo.Size = new System.Drawing.Size(575, 28);
+            this.txtMemo.Size = new System.Drawing.Size(575, 21);
             this.txtMemo.TabIndex = 6;
             // 
             // button1

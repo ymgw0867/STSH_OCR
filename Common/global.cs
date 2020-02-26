@@ -24,7 +24,13 @@ namespace STSH_OCR.Common
 
         //和暦西暦変換
         public const int rekiCnv = 1988;    //西暦、和暦変換
-        
+
+        // 表示色
+        public static System.Drawing.Color defaultColor = System.Drawing.Color.DarkBlue;
+
+        // ChangeValueStatus
+        public static bool ChangeValueStatus = true;
+
         #region ローカルMDB関連定数
         public const string MDBFILE = "NHBR_CLI.mdb";           // MDBファイル名
         public const string MDBTEMP = "NHBR_CLI_Temp.mdb";      // 最適化一時ファイル名
@@ -62,9 +68,6 @@ namespace STSH_OCR.Common
         public string cnfLogPath = string.Empty; // ログデータ作成パス
         public int cnfArchived = 0;              // データ保管期間（月数）
         #endregion
-
-        // ChangeValueStatus
-        public bool ChangeValueStatus = true;
 
         public const int MAX_GYO = 15;
         public const int MAX_MIN = 1;
@@ -111,6 +114,10 @@ namespace STSH_OCR.Common
         public static string SH_PACK_TARU = "3";
 
         // 再FAX文字列 2018/08/02
-        public static string REFAX = "REFAX"; 
+        public static string REFAX = "REFAX";
+
+
+        // グリッドビューで次の行の移動先カラム名
+        public static string NEXT_COLUMN = string.Empty;
     }
 }

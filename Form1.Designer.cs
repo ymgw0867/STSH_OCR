@@ -44,7 +44,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(40, 20);
+            this.button1.Location = new System.Drawing.Point(40, 24);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(283, 38);
             this.button1.TabIndex = 0;
@@ -54,7 +54,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(40, 108);
+            this.button2.Location = new System.Drawing.Point(40, 112);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(283, 38);
             this.button2.TabIndex = 1;
@@ -63,16 +63,17 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(40, 152);
+            this.button3.Location = new System.Drawing.Point(40, 156);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(283, 38);
             this.button3.TabIndex = 2;
             this.button3.Text = "発注書データ作成(&D)";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(339, 64);
+            this.button4.Location = new System.Drawing.Point(339, 68);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(283, 38);
             this.button4.TabIndex = 3;
@@ -81,7 +82,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(339, 108);
+            this.button5.Location = new System.Drawing.Point(339, 112);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(283, 38);
             this.button5.TabIndex = 4;
@@ -91,7 +92,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(339, 196);
+            this.button6.Location = new System.Drawing.Point(339, 200);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(283, 38);
             this.button6.TabIndex = 5;
@@ -107,6 +108,7 @@
             this.button7.TabIndex = 6;
             this.button7.Text = "button7";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button8
@@ -117,11 +119,12 @@
             this.button8.TabIndex = 7;
             this.button8.Text = "button8";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Visible = false;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(40, 196);
+            this.button9.Location = new System.Drawing.Point(40, 200);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(283, 38);
             this.button9.TabIndex = 8;
@@ -130,7 +133,7 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(339, 20);
+            this.button10.Location = new System.Drawing.Point(339, 24);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(283, 38);
             this.button10.TabIndex = 9;
@@ -139,7 +142,7 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(40, 64);
+            this.button11.Location = new System.Drawing.Point(40, 68);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(283, 38);
             this.button11.TabIndex = 10;
@@ -151,7 +154,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(663, 255);
+            this.ClientSize = new System.Drawing.Size(663, 263);
             this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
             this.Controls.Add(this.button9);
@@ -172,6 +175,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "販売管理FAXOCRシステム";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

@@ -736,7 +736,7 @@ namespace STSH_OCR.Pattern
                             rtnArray[xRow2, 1] = csvSyohin.SYOHIN_NM;
                             rtnArray[xRow, 23] = csvSyohin.SYOHIN_KIKAKU;
                             rtnArray[xRow, 44] = csvSyohin.CASE_IRISU;
-                            rtnArray[xRow, 48] = csvSyohin.SYOHIN_CD.PadLeft(7, '0');
+                            rtnArray[xRow, 48] = csvSyohin.SYOHIN_CD.PadLeft(8, '0');
                             rtnArray[xRow2, 48] = _R_Days + "日前";
                             rtnArray[xRow, 60] = csvSyohin.NOUHIN_KARI_TANKA;
                             rtnArray[xRow, 74] = csvSyohin.RETAIL_TANKA;

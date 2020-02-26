@@ -20,5 +20,17 @@
     <Setting Name="FAX注文書" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\STSH_OCR\XLS\FAX注文書.xlsx</Value>
     </Setting>
+    <Setting Name="FaxRootDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">c:\STSH_OCR\FaxRoot\</Value>
+    </Setting>
+    <Setting Name="MyDataPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\STSH_CLI\DATA\</Value>
+    </Setting>
+    <Setting Name="DataPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">c:\STSH_OCR\DATA\</Value>
+    </Setting>
+    <Setting Name="lockFileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">PC1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

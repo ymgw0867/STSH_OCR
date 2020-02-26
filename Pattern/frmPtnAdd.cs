@@ -18,7 +18,6 @@ namespace STSH_OCR.Pattern
         public frmPtnAdd()
         {
             InitializeComponent();
-            //adp.Fill(dts.パターンID);
         }
 
         string[] TkArray = null;        // 得意先マスター配列
@@ -83,7 +82,7 @@ namespace STSH_OCR.Pattern
             // 仕入先CSVデータ配列読み込み
             ShiireArray = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
 
-            // ローカルマスター接続定義
+            // ローカルマスター接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
 
@@ -802,7 +801,7 @@ namespace STSH_OCR.Pattern
                 // 商品表示
                 g.Rows.Add();
                 g[colMaker, cnt].Value = ShiiresakiName;
-                g[colHinCode, cnt].Value = t[1].Replace("\"", "");
+                g[colHinCode, cnt].Value = t[1].Replace("\"", "").Trim().PadLeft(8, '0');
                 g[colHinName, cnt].Value = t[2].Replace("\"", "");
                 g[colIrisu, cnt].Value = t[24].Replace("\"", "");
                 g[colKikaku, cnt].Value = t[19].Replace("\"", "");
@@ -1049,7 +1048,7 @@ namespace STSH_OCR.Pattern
                 string gTel = string.Empty;
                 string gJyu = string.Empty;
 
-                gName = Utility.getNouhinName(TkArray, tdkCode, out gTel, out gJyu);
+                gName = Utility.getNouhinName(tdkCode, out gTel, out gJyu);
 
                 if (tdkCode != "000000" && gName == string.Empty)
                 {
@@ -1192,7 +1191,7 @@ namespace STSH_OCR.Pattern
                 }
 
                 // 更新処理
-                dataUpdate(fID, dataGridView3);
+                dataUpdate(dataGridView3);
 
                 // 画面初期化
                 dispInitial();
@@ -1228,7 +1227,7 @@ namespace STSH_OCR.Pattern
                     sql += "商品6, 商品名6, 商品6リード日数, 商品7, 商品名7, 商品7リード日数, 商品8, 商品名8, 商品8リード日数, 商品9, 商品名9, 商品9リード日数, 商品10, 商品名10, 商品10リード日数, ";
                     sql += "商品11, 商品名11, 商品11リード日数, 商品12, 商品名12, 商品12リード日数, 商品13, 商品名13, 商品13リード日数, 商品14, 商品名14, 商品14リード日数, 商品15, 商品名15, 商品15リード日数, ";
                     sql += "商品16, 商品名16, 商品16リード日数, 商品17, 商品名17, 商品17リード日数, 商品18, 商品名18, 商品18リード日数, 商品19, 商品名19, 商品19リード日数, 商品20, 商品名20, 商品20リード日数, ";
-                    sql += "更新年月日) ";
+                    sql += "備考, 更新年月日) ";
                     sql += "values (";
                     sql += g[colTdkCode, i].Value.ToString() + "," + g[colPtnNum, i].Value.ToString();
 
@@ -1244,7 +1243,7 @@ namespace STSH_OCR.Pattern
 
                         if (sCnt == global.MAX_GYO)
                         {
-                            sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + DateTime.Now.ToString() + "');";
+                            sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + txtMemo.Text + "','" + DateTime.Now.ToString() + "');";
 
                             //MessageBox.Show(sql + sqlSy);
 
@@ -1275,7 +1274,7 @@ namespace STSH_OCR.Pattern
                             }
                         }
 
-                        sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + DateTime.Now.ToString() + "');";
+                        sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + txtMemo.Text + "','" + DateTime.Now.ToString() + "');";
 
                         //MessageBox.Show(sql + sqlSy);
 
@@ -1298,7 +1297,14 @@ namespace STSH_OCR.Pattern
             }
         }
 
-        private void dataUpdate(int sID, DataGridView m)
+        ///-------------------------------------------------------------------------------
+        ///
+        /// <summary>
+        ///     発注書パターン更新処理 </summary>
+        /// <param name="m">
+        ///     DataGridViewオブジェクト</param>
+        ///-------------------------------------------------------------------------------
+        private void dataUpdate(DataGridView m)
         {
             try
             {
@@ -1350,13 +1356,13 @@ namespace STSH_OCR.Pattern
                 ClsOrderPattern.G_Read14 = Utility.StrtoInt(Utility.NulltoStr(m[colReadDays, 13].Value));
                 ClsOrderPattern.G_Read15 = Utility.StrtoInt(Utility.NulltoStr(m[colReadDays, 14].Value));
 
-                //ClsOrderPattern.備考 = txtMemo.Text;
+                ClsOrderPattern.Memo = txtMemo.Text;
                 ClsOrderPattern.YyMmDd = DateTime.Now.ToString();
 
                 // データベース更新
                 context.SubmitChanges();
 
-                MessageBox.Show("注文書パターンが更新されました", "処理終了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("発注書パターンが更新されました", "処理終了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -1710,7 +1716,7 @@ namespace STSH_OCR.Pattern
             dataGridView3[colHinName, 14].Value =ClsOrderPattern.G_Name15;
             dataGridView3[colReadDays, 14].Value = ClsOrderPattern.G_Read15;
 
-            //txtMemo.Text = s.m
+            txtMemo.Text = ClsOrderPattern.Memo;
 
             dataGridView3.CurrentCell = null;
         }

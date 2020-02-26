@@ -411,12 +411,15 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     得意先名</returns>
         ///-------------------------------------------------------------------
-        public static string getNouhinName(string[] Tk_Array, string tID, out string sTel, out string sJyu)
+        public static string getNouhinName(string tID, out string sTel, out string sJyu)
         {
             string val = string.Empty;
             sTel = string.Empty;
             sJyu = string.Empty;
 
+
+            // 得意先CSVデータ配列読み込み
+            string [] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
 
             int cnt = 0;
 
