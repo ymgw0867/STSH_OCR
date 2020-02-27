@@ -14,8 +14,9 @@ using System.Data.SqlClient;
 using STSH_OCR.Common;
 using STSH_OCR.OCR;
 using System.Configuration;
-using Oracle.ManagedDataAccess.Client;
+//using Oracle.ManagedDataAccess.Client;
 using Excel = Microsoft.Office.Interop.Excel;
+using OpenCvSharp;
 
 namespace STSH_OCR.OCR
 {
@@ -37,15 +38,6 @@ namespace STSH_OCR.OCR
             //_eMode = eMode;         // 処理モード2
 
             _myCode = myCode;       // 担当者コード
-
-            //// パターンIDデータ読み込み
-            //pAdp.Fill(dts.パターンID);
-
-            //// 環境設定読み込み
-            //cAdp.Fill(dts.環境設定);
-
-            //// 出荷基準設定
-            //skAdp.Fill(dts.出荷基準設定);
         }
 
         // ローカルマスター：Sqlite3
@@ -125,13 +117,22 @@ namespace STSH_OCR.OCR
         // グローバルクラス
         global gl = new global();
 
-        OracleConnection Conn = new OracleConnection();
+        //OracleConnection Conn = new OracleConnection();
 
         // 画面表示時ステータス
         bool showStatus = false;
 
         int fCnt = 0;   // データ件数
+        
+        string _img = string.Empty;
 
+        // openCvSharp 関連
+        const float B_WIDTH = 0.48f;
+        const float B_HEIGHT = 0.48f;
+        float n_width = 0f;
+        float n_height = 0f;
+
+        Mat mMat = new Mat();
 
         // カラム定義
         private readonly string colHinCode = "c0";
@@ -160,7 +161,7 @@ namespace STSH_OCR.OCR
 
         private void frmCorrect_Load(object sender, EventArgs e)
         {
-            //this.pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            this.pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
             // フォーム最大値
             Utility.WindowsMaxSize(this, this.Width, this.Height);
@@ -188,7 +189,7 @@ namespace STSH_OCR.OCR
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
 
-            tblFax = context.GetTable<Common.ClsFaxOrder>();    // ＦＡＸ発注書テーブル
+            tblFax = context.GetTable<Common.ClsFaxOrder>();        // ＦＡＸ発注書テーブル
             tblPtn = context.GetTable<Common.ClsOrderPattern>();    // 登録パターンテーブル
 
             // データ登録
@@ -196,9 +197,6 @@ namespace STSH_OCR.OCR
             {
                 // CSVデータをローカルマスターへ読み込みます
                 GetCsvDataToSQLite();
-
-                // データセットへＦＡＸ注文書データを読み込みます
-                //getDataSet();
 
                 // データテーブル件数カウント
                 if (tblFax.Count() == 0)
@@ -215,17 +213,11 @@ namespace STSH_OCR.OCR
             
             // キャプション
             this.Text = "ＦＡＸ発注書表示";
-                        
-            //// 楽商データベース接続
-            //Conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
-            //Conn.Open();
 
             // GCMultiRow初期化
-            //gcMrSetting();
+            gcMrSetting();
 
-            //GridviewSet(dg1);
-            //dg1.RowCount = 30;
-            //dg1.CurrentCell = null;
+            GridviewSet(dg1);
 
             //dg1[colMaker, 0].Value = "和貴商事株式会社";
             //dg1[colMaker, 1].Value = "佐藤　海鮮かき揚げ　２枚";
@@ -385,10 +377,10 @@ namespace STSH_OCR.OCR
                 // 行の高さ
                 tempDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
                 //tempDGV.ColumnHeadersHeight = 20;
-                tempDGV.RowTemplate.Height = 22;
+                tempDGV.RowTemplate.Height = 20;
 
                 // 全体の高さ
-                tempDGV.Height = 690;
+                tempDGV.Height = 630;
 
                 // 奇数行の色
                 //tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
@@ -936,7 +928,7 @@ namespace STSH_OCR.OCR
 
             //レコードの移動
             cI = hScrollBar1.Value;
-            //showOcrData(cI);
+            showOcrData(cI);
         }
 
         private void btnDel_Click(object sender, EventArgs e)
@@ -2075,41 +2067,7 @@ namespace STSH_OCR.OCR
         //            Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[e.RowIndex, "txtPtnNum"].Value)));
         //    }
         //}
-
-        ///-------------------------------------------------------------------
-        /// <summary>
-        ///     お届け先情報取得 </summary>
-        /// <param name="tID">
-        ///     届先番号</param>
-        /// <param name="sTel">
-        ///     電話番号</param>
-        /// <param name="sJyu">
-        ///     住所</param>
-        /// <returns>
-        ///     届先名</returns>
-        ///-------------------------------------------------------------------
-        private string getUserName(string tID, out string sTel, out string sJyu)
-        {
-            string val = string.Empty;
-            sTel = string.Empty;
-            sJyu = string.Empty;
-
-            string strSQL = "SELECT KOK_ID, NOU_NAME, NOU_JYU1, NOU_JYU2, NOU_TEL from RAKUSYO_FAXOCR.V_NOUHINSAKI WHERE KOK_ID = '" + tID + "'";
-            OracleCommand Cmd = new OracleCommand(strSQL, Conn);
-            OracleDataReader dR = Cmd.ExecuteReader();
-            while (dR.Read())
-            {
-                val = dR["NOU_NAME"].ToString().Trim();
-                sTel = dR["NOU_TEL"].ToString().Trim();
-                sJyu = dR["NOU_JYU1"].ToString().Trim() + " " + dR["NOU_JYU2"].ToString().Trim();
-            }
-
-            dR.Dispose();
-            Cmd.Dispose();
-
-            return val;
-        }
-
+        
         //private void gcMultiRow1_EditingControlShowing(object sender, EditingControlShowingEventArgs e)
         //{
         //    if (e.Control is TextBoxEditingControl)
@@ -2935,7 +2893,7 @@ namespace STSH_OCR.OCR
 
             //レコードの移動
             cI = 0;
-            //showOcrData(cI);
+            showOcrData(cI);
         }
 
         private void button4_Click_1(object sender, EventArgs e)
@@ -2947,7 +2905,7 @@ namespace STSH_OCR.OCR
             if (cI > 0)
             {
                 cI--;
-                //showOcrData(cI);
+                showOcrData(cI);
             }
         }
 
@@ -2957,10 +2915,10 @@ namespace STSH_OCR.OCR
             CurDataUpDate(cID[cI]);
 
             //レコードの移動
-            if (cI + 1 < fCnt)
+            if (cI + 1 < cID.Length)
             {
                 cI++;
-                //showOcrData(cI);
+                showOcrData(cI);
             }
         }
 
@@ -2970,8 +2928,8 @@ namespace STSH_OCR.OCR
             CurDataUpDate(cID[cI]);
 
             //レコードの移動
-            cI = fCnt - 1;
-            //showOcrData(cI);
+            cI = cID.Length - 1;
+            showOcrData(cI);
         }
 
         private void gcMultiRow3_Leave(object sender, EventArgs e)
@@ -3716,9 +3674,9 @@ namespace STSH_OCR.OCR
 
         private void ShowFaxPattern(TextBox TokuisakiCD, TextBox PID, TextBox SeqNum)
         {
-            string _TokuisakiCD = Utility.NulltoStr(txtTokuisakiCD);
-            string _PID = Utility.NulltoStr(PID);
-            string _SeqNum = Utility.NulltoStr(SeqNum);
+            string _TokuisakiCD = Utility.NulltoStr(TokuisakiCD.Text);
+            string _PID = Utility.NulltoStr(PID.Text);
+            string _SeqNum = Utility.NulltoStr(SeqNum.Text);
 
             if (_TokuisakiCD == string.Empty || _PID == string.Empty || _SeqNum == string.Empty)
             {
@@ -3731,117 +3689,117 @@ namespace STSH_OCR.OCR
                 if (t.G_Code1 != string.Empty)
                 {
                     dg1[colHinCode, 0].Value = t.G_Code1.PadLeft(8, '0');
-                    dg1[colHinName, 0].Value = t.G_Name1;
-                    dg1[colReadDays, 0].Value = t.G_Read1;
+                    dg1[colMaker, 1].Value = t.G_Name1;
+                    dg1[colHinCode, 1].Value = t.G_Read1;
                 }
 
                 if (t.G_Code2 != string.Empty)
                 {
-                    dg1[colHinCode, 1].Value = t.G_Code2.PadLeft(8, '0');
-                    dg1[colHinName, 1].Value = t.G_Name2;
-                    dg1[colReadDays, 1].Value = t.G_Read2;
+                    dg1[colHinCode, 2].Value = t.G_Code2.PadLeft(8, '0');
+                    dg1[colMaker, 3].Value = t.G_Name2;
+                    dg1[colHinCode, 3].Value = t.G_Read2;
                 }
 
                 if (t.G_Code3 != string.Empty)
                 {
-                    dg1[colHinCode, 2].Value = t.G_Code3.PadLeft(8, '0');
-                    dg1[colHinName, 2].Value = t.G_Name3;
-                    dg1[colReadDays, 2].Value = t.G_Read3;
+                    dg1[colHinCode, 4].Value = t.G_Code3.PadLeft(8, '0');
+                    dg1[colMaker, 5].Value = t.G_Name3;
+                    dg1[colHinCode, 5].Value = t.G_Read3;
                 }
 
 
                 if (t.G_Code4 != string.Empty)
                 {
-                    dg1[colHinCode, 3].Value = t.G_Code4.PadLeft(8, '0');
-                    dg1[colHinName, 3].Value = t.G_Name4;
-                    dg1[colReadDays, 3].Value = t.G_Read4;
+                    dg1[colHinCode, 6].Value = t.G_Code4.PadLeft(8, '0');
+                    dg1[colMaker, 7].Value = t.G_Name4;
+                    dg1[colHinCode, 7].Value = t.G_Read4;
                 }
 
 
                 if (t.G_Code5 != string.Empty)
                 {
-                    dg1[colHinCode, 4].Value = t.G_Code5.PadLeft(8, '0');
-                    dg1[colHinName, 4].Value = t.G_Name5;
-                    dg1[colReadDays, 4].Value = t.G_Read5;
+                    dg1[colHinCode, 8].Value = t.G_Code5.PadLeft(8, '0');
+                    dg1[colMaker, 9].Value = t.G_Name5;
+                    dg1[colHinCode, 9].Value = t.G_Read5;
                 }
 
 
                 if (t.G_Code6 != string.Empty)
                 {
-                    dg1[colHinCode, 5].Value = t.G_Code6.PadLeft(8, '0');
-                    dg1[colHinName, 5].Value = t.G_Name6;
-                    dg1[colReadDays, 5].Value = t.G_Read6;
+                    dg1[colHinCode, 10].Value = t.G_Code6.PadLeft(8, '0');
+                    dg1[colMaker, 11].Value = t.G_Name6;
+                    dg1[colHinCode, 11].Value = t.G_Read6;
                 }
 
 
                 if (t.G_Code7 != string.Empty)
                 {
-                    dg1[colHinCode, 6].Value = t.G_Code7.PadLeft(8, '0');
-                    dg1[colHinName, 6].Value = t.G_Name7;
-                    dg1[colReadDays, 6].Value = t.G_Read7;
+                    dg1[colHinCode, 12].Value = t.G_Code7.PadLeft(8, '0');
+                    dg1[colMaker, 13].Value = t.G_Name7;
+                    dg1[colHinCode, 13].Value = t.G_Read7;
                 }
 
 
                 if (t.G_Code8 != string.Empty)
                 {
-                    dg1[colHinCode, 7].Value = t.G_Code8.PadLeft(8, '0');
-                    dg1[colHinName, 7].Value = t.G_Name8;
-                    dg1[colReadDays, 7].Value = t.G_Read8;
+                    dg1[colHinCode, 14].Value = t.G_Code8.PadLeft(8, '0');
+                    dg1[colMaker, 15].Value = t.G_Name8;
+                    dg1[colHinCode, 15].Value = t.G_Read8;
                 }
 
 
                 if (t.G_Code9 != string.Empty)
                 {
-                    dg1[colHinCode, 8].Value = t.G_Code9.PadLeft(8, '0');
-                    dg1[colHinName, 8].Value = t.G_Name9;
-                    dg1[colReadDays, 8].Value = t.G_Read9;
+                    dg1[colHinCode, 16].Value = t.G_Code9.PadLeft(8, '0');
+                    dg1[colMaker, 17].Value = t.G_Name9;
+                    dg1[colHinCode, 17].Value = t.G_Read9;
                 }
 
 
                 if (t.G_Code10 != string.Empty)
                 {
-                    dg1[colHinCode, 9].Value = t.G_Code10.PadLeft(8, '0');
-                    dg1[colHinName, 9].Value = t.G_Name10;
-                    dg1[colReadDays, 9].Value = t.G_Read10;
+                    dg1[colHinCode, 18].Value = t.G_Code10.PadLeft(8, '0');
+                    dg1[colMaker, 19].Value = t.G_Name10;
+                    dg1[colHinCode, 19].Value = t.G_Read10;
                 }
 
 
                 if (t.G_Code11 != string.Empty)
                 {
-                    dg1[colHinCode, 10].Value = t.G_Code11.PadLeft(8, '0');
-                    dg1[colHinName, 10].Value = t.G_Name11;
-                    dg1[colReadDays, 10].Value = t.G_Read11;
+                    dg1[colHinCode, 20].Value = t.G_Code11.PadLeft(8, '0');
+                    dg1[colMaker, 21].Value = t.G_Name11;
+                    dg1[colHinCode, 21].Value = t.G_Read11;
                 }
 
 
                 if (t.G_Code12 != string.Empty)
                 {
-                    dg1[colHinCode, 11].Value = t.G_Code12.PadLeft(8, '0');
-                    dg1[colHinName, 11].Value = t.G_Name12;
-                    dg1[colReadDays, 11].Value = t.G_Read12;
+                    dg1[colHinCode, 22].Value = t.G_Code12.PadLeft(8, '0');
+                    dg1[colMaker, 23].Value = t.G_Name12;
+                    dg1[colHinCode, 23].Value = t.G_Read12;
                 }
 
 
                 if (t.G_Code13 != string.Empty)
                 {
-                    dg1[colHinCode, 12].Value = t.G_Code13.PadLeft(8, '0');
-                    dg1[colHinName, 12].Value = t.G_Name13;
-                    dg1[colReadDays, 12].Value = t.G_Read13;
+                    dg1[colHinCode, 24].Value = t.G_Code13.PadLeft(8, '0');
+                    dg1[colMaker, 25].Value = t.G_Name13;
+                    dg1[colHinCode, 25].Value = t.G_Read13;
                 }
 
 
                 if (t.G_Code14 != string.Empty)
                 {
-                    dg1[colHinCode, 13].Value = t.G_Code14.PadLeft(8, '0');
-                    dg1[colHinName, 13].Value = t.G_Name14;
-                    dg1[colReadDays, 13].Value = t.G_Read14;
+                    dg1[colHinCode, 26].Value = t.G_Code14.PadLeft(8, '0');
+                    dg1[colMaker, 27].Value = t.G_Name14;
+                    dg1[colHinCode, 27].Value = t.G_Read14;
                 }
 
                 if (t.G_Code15 != string.Empty)
                 {
-                    dg1[colHinCode, 14].Value = t.G_Code15.PadLeft(8, '0');
-                    dg1[colHinName, 14].Value = t.G_Name15;
-                    dg1[colReadDays, 14].Value = t.G_Read15;
+                    dg1[colHinCode, 28].Value = t.G_Code15.PadLeft(8, '0');
+                    dg1[colMaker, 29].Value = t.G_Name15;
+                    dg1[colHinCode, 29].Value = t.G_Read15;
                 }
             }
         }
@@ -3856,6 +3814,134 @@ namespace STSH_OCR.OCR
 
             // 発注書パターン表示
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
+        }
+
+
+
+        ///-----------------------------------------------------------
+        /// <summary>
+        ///     画像表示 openCV：2018/10/24 </summary>
+        /// <param name="img">
+        ///     表示画像ファイル名</param>
+        ///-----------------------------------------------------------
+        private void showImage_openCv(string img)
+        {
+            n_width = B_WIDTH;
+            n_height = B_HEIGHT;
+
+            imgShow(img, n_width, n_height);
+
+            trackBar1.Value = 0;
+        }
+
+
+        // GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
+        public static Bitmap MatToBitmap(Mat image)
+        {
+            return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
+        }
+
+
+        ///---------------------------------------------------------
+        /// <summary>
+        ///     画像表示メイン openCV : 2018/10/24 </summary>
+        /// <param name="mImg">
+        ///     Mat形式イメージ</param>
+        /// <param name="w">
+        ///     width</param>
+        /// <param name="h">
+        ///     height</param>
+        ///---------------------------------------------------------
+        private void imgShow(Mat mImg, float w, float h)
+        {
+            int cWidth = 0;
+            int cHeight = 0;
+
+            Bitmap bt = MatToBitmap(mImg);
+
+            // Bitmapサイズ
+            if (panel1.Width < (bt.Width * w) || panel1.Height < (bt.Height * h))
+            {
+                cWidth = (int)(bt.Width * w);
+                cHeight = (int)(bt.Height * h);
+            }
+            else
+            {
+                cWidth = panel1.Width;
+                cHeight = panel1.Height;
+            }
+
+            // Bitmap を生成
+            Bitmap canvas = new Bitmap(cWidth, cHeight);
+
+            // ImageオブジェクトのGraphicsオブジェクトを作成する
+            Graphics g = Graphics.FromImage(canvas);
+
+            // 画像をcanvasの座標(0, 0)の位置に指定のサイズで描画する
+            g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+
+            //メモリクリア
+            bt.Dispose();
+            g.Dispose();
+
+            // PictureBox1に表示する
+            pictureBox1.Image = canvas;
+        }
+
+
+        ///---------------------------------------------------------
+        /// <summary>
+        ///     画像表示メイン openCV : 2018/10/24 </summary>
+        /// <param name="mImg">
+        ///     Mat形式イメージ</param>
+        /// <param name="w">
+        ///     width</param>
+        /// <param name="h">
+        ///     height</param>
+        ///---------------------------------------------------------
+        private void imgShow(string filePath, float w, float h)
+        {
+            mMat = new Mat(filePath, ImreadModes.Grayscale);
+            Bitmap bt = MatToBitmap(mMat);
+
+            // Bitmap を生成
+            Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
+
+            Graphics g = Graphics.FromImage(canvas);
+
+            g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+
+            //メモリクリア
+            bt.Dispose();
+            g.Dispose();
+
+            pictureBox1.Image = canvas;
+        }
+
+        private void dg1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 3)
+            {
+                if ((e.RowIndex % 2) == 0)
+                {
+                    ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, 
+                        Properties.Settings.Default.仕入先マスター, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
+
+                    dg1[colMaker, e.RowIndex].Value = syohin.SIRESAKI_NM;
+                    dg1[colMaker, e.RowIndex + 1].Value = syohin.SYOHIN_NM;
+                    dg1[colKikaku, e.RowIndex].Value = syohin.SYOHIN_KIKAKU;
+                    dg1[colIrisu, e.RowIndex + 1].Value = syohin.CASE_IRISU;
+                    dg1[colNouka, e.RowIndex + 1].Value = syohin.JAN_CD;
+                }
+            }
+        }
+
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        {
+            n_width = B_WIDTH + (float)trackBar1.Value * 0.05f;
+            n_height = B_HEIGHT + (float)trackBar1.Value * 0.05f;
+
+            imgShow(mMat, n_width, n_height);
         }
     }
 }

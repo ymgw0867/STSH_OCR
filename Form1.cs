@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
-using Oracle.ManagedDataAccess.Client;
+//using Oracle.ManagedDataAccess.Client;
 using STSH_OCR.Pattern;
 using STSH_OCR.OCR;
 using STSH_OCR.Common;
@@ -68,53 +68,53 @@ namespace STSH_OCR
 
         private void button8_Click(object sender, EventArgs e)
         {
-            using (var Conn = new OracleConnection())
-            {
-                Conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
-                Conn.Open();
+            //using (var Conn = new OracleConnection())
+            //{
+            //    Conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
+            //    Conn.Open();
 
-                // 商品マスターを読み込み
-                string strSQL = "SELECT SYOHIN_CD, SYOHIN_NM FROM M_SYOHIN ";
+            //    // 商品マスターを読み込み
+            //    string strSQL = "SELECT SYOHIN_CD, SYOHIN_NM FROM M_SYOHIN ";
 
-                // using句を使用しないパターン
-                //OracleCommand Cmd = new OracleCommand(strSQL, Conn);
-                //OracleDataReader dR = Cmd.ExecuteReader();
-                //while (dR.Read())
-                //{
-                //    MessageBox.Show(dR["SYOHIN_CD"].ToString() + ":" + dR["SYOHIN_NM"].ToString());
-                //}
+            //    // using句を使用しないパターン
+            //    //OracleCommand Cmd = new OracleCommand(strSQL, Conn);
+            //    //OracleDataReader dR = Cmd.ExecuteReader();
+            //    //while (dR.Read())
+            //    //{
+            //    //    MessageBox.Show(dR["SYOHIN_CD"].ToString() + ":" + dR["SYOHIN_NM"].ToString());
+            //    //}
 
-                //dR.Dispose();
-                //Cmd.Dispose();
+            //    //dR.Dispose();
+            //    //Cmd.Dispose();
 
-                // using句を使用
-                using (OracleCommand Cmd = new OracleCommand(strSQL, Conn))
-                {
-                    using (OracleDataReader dR = Cmd.ExecuteReader())
-                    {
-                        while (dR.Read())
-                        {
-                            MessageBox.Show(dR["SYOHIN_CD"].ToString() + ":" + dR["SYOHIN_NM"].ToString());
-                        }
-                    }
-                }
+            //    // using句を使用
+            //    using (OracleCommand Cmd = new OracleCommand(strSQL, Conn))
+            //    {
+            //        using (OracleDataReader dR = Cmd.ExecuteReader())
+            //        {
+            //            while (dR.Read())
+            //            {
+            //                MessageBox.Show(dR["SYOHIN_CD"].ToString() + ":" + dR["SYOHIN_NM"].ToString());
+            //            }
+            //        }
+            //    }
 
 
-                // 得意先マスターを読み込み
-                strSQL = "SELECT TOKUISAKI_CD, TOKUISAKI_NM FROM M_TOKUISAKI ";
+            //    // 得意先マスターを読み込み
+            //    strSQL = "SELECT TOKUISAKI_CD, TOKUISAKI_NM FROM M_TOKUISAKI ";
 
-                // using句を使用
-                using (OracleCommand Cmd = new OracleCommand(strSQL, Conn))
-                {
-                    using (OracleDataReader dR = Cmd.ExecuteReader())
-                    {
-                        while (dR.Read())
-                        {
-                            MessageBox.Show(dR["TOKUISAKI_CD"].ToString() + ":" + dR["TOKUISAKI_NM"].ToString());
-                        }
-                    }
-                }
-            }
+            //    // using句を使用
+            //    using (OracleCommand Cmd = new OracleCommand(strSQL, Conn))
+            //    {
+            //        using (OracleDataReader dR = Cmd.ExecuteReader())
+            //        {
+            //            while (dR.Read())
+            //            {
+            //                MessageBox.Show(dR["TOKUISAKI_CD"].ToString() + ":" + dR["TOKUISAKI_NM"].ToString());
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         private void button1_Click(object sender, EventArgs e)

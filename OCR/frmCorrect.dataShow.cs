@@ -53,7 +53,7 @@ namespace STSH_OCR.OCR
             // 非ログ書き込み状態とする
             editLogStatus = false;
 
-            // 勤務票ヘッダデータを取得
+            // 発注データを取得
             var r = tblFax.Single(a => a.ID == cID[iX]);
 
             // フォーム初期化
@@ -61,7 +61,7 @@ namespace STSH_OCR.OCR
 
             txtYear.Text = r.Year.ToString();
             txtMonth.Text = Utility.EmptytoZero(r.Month.ToString());
-            txtTokuisakiCD.Text = r.TokuisakiCode.ToString();
+            txtTokuisakiCD.Text = r.TokuisakiCode.ToString("D7");
             txtPID.Text = r.patternID.ToString();
             txtSeqNum.Text = r.SeqNumber.ToString();
 
@@ -73,7 +73,7 @@ namespace STSH_OCR.OCR
             global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
 
             // 登録パターン表示
-            showItem(r.ID, dGV, r.週払い区分);
+            showItem(r, dg1);
 
             //// 月間合計値表示
             //getMonthTotal();
@@ -83,7 +83,7 @@ namespace STSH_OCR.OCR
             lblErrMsg.Text = string.Empty;
 
             // 画像表示
-            _img = Properties.Settings.Default.mydataPath + r.画像名.ToString();
+            _img = Properties.Settings.Default.MyDataPath + r.ImageFileName.ToString();
             showImage_openCv(_img);
             trackBar1.Enabled = true;
 
@@ -104,41 +104,305 @@ namespace STSH_OCR.OCR
         /// <param name="ptnNum">
         ///     パターンID</param>
         ///------------------------------------------------------------------------------------
-        private void showItem()
+        private void showItem(ClsFaxOrder r, DataGridView dataGrid)
         {
-            gl.ChangeValueStatus = false;
+            global.ChangeValueStatus = false;
 
-            //mr.SetValue(0, "txtSuu", r.注文数1);
-            //mr.SetValue(1, "txtSuu", r.注文数2);
-            //mr.SetValue(2, "txtSuu", r.注文数3);
-            //mr.SetValue(3, "txtSuu", r.注文数4);
-            //mr.SetValue(4, "txtSuu", r.注文数5);
-            //mr.SetValue(5, "txtSuu", r.注文数6);
-            //mr.SetValue(6, "txtSuu", r.注文数7);
-            //mr.SetValue(7, "txtSuu", r.注文数8);
-            //mr.SetValue(8, "txtSuu", r.注文数9);
-            //mr.SetValue(9, "txtSuu", r.注文数10);
-            //mr.SetValue(10, "txtSuu", r.注文数11);
-            //mr.SetValue(11, "txtSuu", r.注文数12);
-            //mr.SetValue(12, "txtSuu", r.注文数13);
-            //mr.SetValue(13, "txtSuu", r.注文数14);
-            //mr.SetValue(14, "txtSuu", r.注文数15);
-            //mr.SetValue(0, "txtSuu2", r.注文数16);
-            //mr.SetValue(1, "txtSuu2", r.注文数17);
-            //mr.SetValue(2, "txtSuu2", r.注文数18);
-            //mr.SetValue(3, "txtSuu2", r.注文数19);
-            //mr.SetValue(4, "txtSuu2", r.注文数20);
-            //mr.SetValue(5, "txtSuu2", r.注文数21);
-            //mr.SetValue(6, "txtSuu2", r.注文数22);
-            //mr.SetValue(7, "txtSuu2", r.注文数23);
-            //mr.SetValue(8, "txtSuu2", r.注文数24);
-            //mr.SetValue(9, "txtSuu2", r.注文数25);
-            //mr.SetValue(10, "txtSuu2", r.注文数26);
-            //mr.SetValue(11, "txtSuu2", r.注文数27);
-            //mr.SetValue(12, "txtSuu2", r.注文数28);
-            //mr.SetValue(13, "txtSuu2", r.注文数29);
-            //mr.SetValue(14, "txtSuu2", r.注文数30);
-                                    
+            // 店着日
+            txtTenDay1.Text = r.Day1.ToString();
+            txtTenDay2.Text = r.Day2.ToString();
+            txtTenDay3.Text = r.Day3.ToString();
+            txtTenDay4.Text = r.Day4.ToString();
+            txtTenDay5.Text = r.Day5.ToString();
+            txtTenDay6.Text = r.Day6.ToString();
+            txtTenDay7.Text = r.Day7.ToString();
+
+            // １行目
+            if (r.G_Code1 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 0].Value = r.G_Code1;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 0].Value = r.G_Nouka1;
+            dataGrid[colBaika, 0].Value = r.G_Baika1;
+            dataGrid[colHinCode, 1].Value = r.G_Read1;
+            dataGrid[colDay1, 1].Value = r.Goods1_1;
+            dataGrid[colDay2, 1].Value = r.Goods1_2;
+            dataGrid[colDay3, 1].Value = r.Goods1_3;
+            dataGrid[colDay4, 1].Value = r.Goods1_4;
+            dataGrid[colDay5, 1].Value = r.Goods1_5;
+            dataGrid[colDay6, 1].Value = r.Goods1_6;
+            dataGrid[colDay7, 1].Value = r.Goods1_7;
+
+            // ２行目
+            if (r.G_Code2 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 2].Value = r.G_Code2;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 2].Value = r.G_Nouka2;
+            dataGrid[colBaika, 2].Value = r.G_Baika2;
+            dataGrid[colHinCode, 3].Value = r.G_Read2;
+            dataGrid[colDay1, 3].Value = r.Goods2_1;
+            dataGrid[colDay2, 3].Value = r.Goods2_2;
+            dataGrid[colDay3, 3].Value = r.Goods2_3;
+            dataGrid[colDay4, 3].Value = r.Goods2_4;
+            dataGrid[colDay5, 3].Value = r.Goods2_5;
+            dataGrid[colDay6, 3].Value = r.Goods2_6;
+            dataGrid[colDay7, 3].Value = r.Goods2_7;
+
+            // ３行目
+            if (r.G_Code3 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 4].Value = r.G_Code3;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 4].Value = r.G_Nouka3;
+            dataGrid[colBaika, 4].Value = r.G_Baika3;
+            dataGrid[colHinCode, 5].Value = r.G_Read3;
+            dataGrid[colDay1, 5].Value = r.Goods3_1;
+            dataGrid[colDay2, 5].Value = r.Goods3_2;
+            dataGrid[colDay3, 5].Value = r.Goods3_3;
+            dataGrid[colDay4, 5].Value = r.Goods3_4;
+            dataGrid[colDay5, 5].Value = r.Goods3_5;
+            dataGrid[colDay6, 5].Value = r.Goods3_6;
+            dataGrid[colDay7, 5].Value = r.Goods3_7;
+
+            // ４行目
+            if (r.G_Code4 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 6].Value = r.G_Code4;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 6].Value = r.G_Nouka4;
+            dataGrid[colBaika, 6].Value = r.G_Baika4;
+            dataGrid[colHinCode, 7].Value = r.G_Read4;
+            dataGrid[colDay1, 7].Value = r.Goods4_1;
+            dataGrid[colDay2, 7].Value = r.Goods4_2;
+            dataGrid[colDay3, 7].Value = r.Goods4_3;
+            dataGrid[colDay4, 7].Value = r.Goods4_4;
+            dataGrid[colDay5, 7].Value = r.Goods4_5;
+            dataGrid[colDay6, 7].Value = r.Goods4_6;
+            dataGrid[colDay7, 7].Value = r.Goods4_7;
+
+            // ５行目
+            if (r.G_Code5 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 8].Value = r.G_Code5;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 8].Value = r.G_Nouka5;
+            dataGrid[colBaika, 8].Value = r.G_Baika5;
+            dataGrid[colHinCode, 9].Value = r.G_Read5;
+            dataGrid[colDay1, 9].Value = r.Goods5_1;
+            dataGrid[colDay2, 9].Value = r.Goods5_2;
+            dataGrid[colDay3, 9].Value = r.Goods5_3;
+            dataGrid[colDay4, 9].Value = r.Goods5_4;
+            dataGrid[colDay5, 9].Value = r.Goods5_5;
+            dataGrid[colDay6, 9].Value = r.Goods5_6;
+            dataGrid[colDay7, 9].Value = r.Goods5_7;
+
+            // ６行目
+            if (r.G_Code6 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 10].Value = r.G_Code6;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 10].Value = r.G_Nouka6;
+            dataGrid[colBaika, 10].Value = r.G_Baika6;
+            dataGrid[colHinCode, 11].Value = r.G_Read6;
+            dataGrid[colDay1, 11].Value = r.Goods6_1;
+            dataGrid[colDay2, 11].Value = r.Goods6_2;
+            dataGrid[colDay3, 11].Value = r.Goods6_3;
+            dataGrid[colDay4, 11].Value = r.Goods6_4;
+            dataGrid[colDay5, 11].Value = r.Goods6_5;
+            dataGrid[colDay6, 11].Value = r.Goods6_6;
+            dataGrid[colDay7, 11].Value = r.Goods6_7;
+
+            // ７行目
+            if (r.G_Code7 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 12].Value = r.G_Code7;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 12].Value = r.G_Nouka7;
+            dataGrid[colBaika, 12].Value = r.G_Baika7;
+            dataGrid[colHinCode, 13].Value = r.G_Read7;
+            dataGrid[colDay1, 13].Value = r.Goods7_1;
+            dataGrid[colDay2, 13].Value = r.Goods7_2;
+            dataGrid[colDay3, 13].Value = r.Goods7_3;
+            dataGrid[colDay4, 13].Value = r.Goods7_4;
+            dataGrid[colDay5, 13].Value = r.Goods7_5;
+            dataGrid[colDay6, 13].Value = r.Goods7_6;
+            dataGrid[colDay7, 13].Value = r.Goods7_7;
+
+            // ８行目
+            if (r.G_Code8 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 14].Value = r.G_Code8;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 14].Value = r.G_Nouka8;
+            dataGrid[colBaika, 14].Value = r.G_Baika8;
+            dataGrid[colHinCode, 15].Value = r.G_Read8;
+            dataGrid[colDay1, 15].Value = r.Goods8_1;
+            dataGrid[colDay2, 15].Value = r.Goods8_2;
+            dataGrid[colDay3, 15].Value = r.Goods8_3;
+            dataGrid[colDay4, 15].Value = r.Goods8_4;
+            dataGrid[colDay5, 15].Value = r.Goods8_5;
+            dataGrid[colDay6, 15].Value = r.Goods8_6;
+            dataGrid[colDay7, 15].Value = r.Goods8_7;
+
+            // ９行目
+            if (r.G_Code9 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 16].Value = r.G_Code9;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 16].Value = r.G_Nouka9;
+            dataGrid[colBaika, 16].Value = r.G_Baika9;
+            dataGrid[colHinCode, 17].Value = r.G_Read9;
+            dataGrid[colDay1, 17].Value = r.Goods9_1;
+            dataGrid[colDay2, 17].Value = r.Goods9_2;
+            dataGrid[colDay3, 17].Value = r.Goods9_3;
+            dataGrid[colDay4, 17].Value = r.Goods9_4;
+            dataGrid[colDay5, 17].Value = r.Goods9_5;
+            dataGrid[colDay6, 17].Value = r.Goods9_6;
+            dataGrid[colDay7, 17].Value = r.Goods9_7;
+
+            // 10行目
+            if (r.G_Code10 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 18].Value = r.G_Code10;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 18].Value = r.G_Nouka10;
+            dataGrid[colBaika, 18].Value = r.G_Baika10;
+            dataGrid[colHinCode, 19].Value = r.G_Read10;
+            dataGrid[colDay1, 19].Value = r.Goods10_1;
+            dataGrid[colDay2, 19].Value = r.Goods10_2;
+            dataGrid[colDay3, 19].Value = r.Goods10_3;
+            dataGrid[colDay4, 19].Value = r.Goods10_4;
+            dataGrid[colDay5, 19].Value = r.Goods10_5;
+            dataGrid[colDay6, 19].Value = r.Goods10_6;
+            dataGrid[colDay7, 19].Value = r.Goods10_7;
+
+            // 11行目
+            if (r.G_Code11 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 20].Value = r.G_Code11;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 20].Value = r.G_Nouka11;
+            dataGrid[colBaika, 20].Value = r.G_Baika11;
+            dataGrid[colHinCode, 21].Value = r.G_Read11;
+            dataGrid[colDay1, 21].Value = r.Goods11_1;
+            dataGrid[colDay2, 21].Value = r.Goods11_2;
+            dataGrid[colDay3, 21].Value = r.Goods11_3;
+            dataGrid[colDay4, 21].Value = r.Goods11_4;
+            dataGrid[colDay5, 21].Value = r.Goods11_5;
+            dataGrid[colDay6, 21].Value = r.Goods11_6;
+            dataGrid[colDay7, 21].Value = r.Goods11_7;
+
+            // 12行目
+            if (r.G_Code12 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 22].Value = r.G_Code12;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 22].Value = r.G_Nouka12;
+            dataGrid[colBaika, 22].Value = r.G_Baika12;
+            dataGrid[colHinCode, 23].Value = r.G_Read12;
+            dataGrid[colDay1, 23].Value = r.Goods12_1;
+            dataGrid[colDay2, 23].Value = r.Goods12_2;
+            dataGrid[colDay3, 23].Value = r.Goods12_3;
+            dataGrid[colDay4, 23].Value = r.Goods12_4;
+            dataGrid[colDay5, 23].Value = r.Goods12_5;
+            dataGrid[colDay6, 23].Value = r.Goods12_6;
+            dataGrid[colDay7, 23].Value = r.Goods12_7;
+
+            // 13行目
+            if (r.G_Code13 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 24].Value = r.G_Code13;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 24].Value = r.G_Nouka13;
+            dataGrid[colBaika, 24].Value = r.G_Baika13;
+            dataGrid[colHinCode, 25].Value = r.G_Read13;
+            dataGrid[colDay1, 25].Value = r.Goods13_1;
+            dataGrid[colDay2, 25].Value = r.Goods13_2;
+            dataGrid[colDay3, 25].Value = r.Goods13_3;
+            dataGrid[colDay4, 25].Value = r.Goods13_4;
+            dataGrid[colDay5, 25].Value = r.Goods13_5;
+            dataGrid[colDay6, 25].Value = r.Goods13_6;
+            dataGrid[colDay7, 25].Value = r.Goods13_7;
+
+            // 14行目
+            if (r.G_Code14 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 26].Value = r.G_Code14;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 26].Value = r.G_Nouka14;
+            dataGrid[colBaika, 26].Value = r.G_Baika14;
+            dataGrid[colHinCode, 27].Value = r.G_Read14;
+            dataGrid[colDay1, 27].Value = r.Goods14_1;
+            dataGrid[colDay2, 27].Value = r.Goods14_2;
+            dataGrid[colDay3, 27].Value = r.Goods14_3;
+            dataGrid[colDay4, 27].Value = r.Goods14_4;
+            dataGrid[colDay5, 27].Value = r.Goods14_5;
+            dataGrid[colDay6, 27].Value = r.Goods14_6;
+            dataGrid[colDay7, 27].Value = r.Goods14_7;
+
+            // 15行目
+            if (r.G_Code15 != global.flgOff)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, 28].Value = r.G_Code15;
+                global.ChangeValueStatus = false;
+            }
+
+            dataGrid[colNouka, 28].Value = r.G_Nouka15;
+            dataGrid[colBaika, 28].Value = r.G_Baika15;
+            dataGrid[colHinCode, 29].Value = r.G_Read15;
+            dataGrid[colDay1, 29].Value = r.Goods15_1;
+            dataGrid[colDay2, 29].Value = r.Goods15_2;
+            dataGrid[colDay3, 29].Value = r.Goods15_3;
+            dataGrid[colDay4, 29].Value = r.Goods15_4;
+            dataGrid[colDay5, 29].Value = r.Goods15_5;
+            dataGrid[colDay6, 29].Value = r.Goods15_6;
+            dataGrid[colDay7, 29].Value = r.Goods15_7;
+
+
             //// 編集を可能とする
             //mr.ReadOnly = false;
 
@@ -471,7 +735,7 @@ namespace STSH_OCR.OCR
             //        gcMultiRow2[i, "txtSuu"].ReadOnly = false;
             //        gcMultiRow2[i, "txtHinCode2"].ReadOnly = false;
             //        gcMultiRow2[i, "txtSuu2"].ReadOnly = false;
-                    
+
             //        // 注文数欄背景色初期化
             //        gcMultiRow2[i, "txtHinCode"].Style.BackColor = Color.Empty;
             //        gcMultiRow2[i, "txtSuu"].Style.BackColor = Color.Empty;
@@ -482,155 +746,86 @@ namespace STSH_OCR.OCR
 
             ////mr.EndEdit();
 
-            ////カレントセル選択状態としない
-            //mr.CurrentCell = null;
-        }
-
-        private void ptnShow(GcMultiRow mr, int tdkCode, int ptnCode)
-        {
-            gl.ChangeValueStatus = true;
-
-            if (dts.パターンID.Any(a => a.届先番号 == tdkCode && a.連番 == ptnCode))
-            {
-                var s = dts.パターンID.Single(a => a.届先番号 == tdkCode && a.連番 == ptnCode);
-
-                mr.SetValue(0, "txtHinCode", Utility.ptnShohinStr(s.商品1));
-                mr.SetValue(1, "txtHinCode", Utility.ptnShohinStr(s.商品2));
-                mr.SetValue(2, "txtHinCode", Utility.ptnShohinStr(s.商品3));
-                mr.SetValue(3, "txtHinCode", Utility.ptnShohinStr(s.商品4));
-                mr.SetValue(4, "txtHinCode", Utility.ptnShohinStr(s.商品5));
-                mr.SetValue(5, "txtHinCode", Utility.ptnShohinStr(s.商品6));
-                mr.SetValue(6, "txtHinCode", Utility.ptnShohinStr(s.商品7));
-                mr.SetValue(7, "txtHinCode", Utility.ptnShohinStr(s.商品8));
-                mr.SetValue(8, "txtHinCode", Utility.ptnShohinStr(s.商品9));
-                mr.SetValue(9, "txtHinCode", Utility.ptnShohinStr(s.商品10));
-                mr.SetValue(10, "txtHinCode", Utility.ptnShohinStr(s.商品11));
-                mr.SetValue(11, "txtHinCode", Utility.ptnShohinStr(s.商品12));
-                mr.SetValue(12, "txtHinCode", Utility.ptnShohinStr(s.商品13));
-                mr.SetValue(13, "txtHinCode", Utility.ptnShohinStr(s.商品14));
-                mr.SetValue(14, "txtHinCode", Utility.ptnShohinStr(s.商品15));
-
-                mr.SetValue(0, "txtHinCode2", Utility.ptnShohinStr(s.商品16));
-                mr.SetValue(1, "txtHinCode2", Utility.ptnShohinStr(s.商品17));
-                mr.SetValue(2, "txtHinCode2", Utility.ptnShohinStr(s.商品18));
-                mr.SetValue(3, "txtHinCode2", Utility.ptnShohinStr(s.商品19));
-                mr.SetValue(4, "txtHinCode2", Utility.ptnShohinStr(s.商品20));
-                mr.SetValue(5, "txtHinCode2", Utility.ptnShohinStr(s.商品21));
-                mr.SetValue(6, "txtHinCode2", Utility.ptnShohinStr(s.商品22));
-                mr.SetValue(7, "txtHinCode2", Utility.ptnShohinStr(s.商品23));
-                mr.SetValue(8, "txtHinCode2", Utility.ptnShohinStr(s.商品24));
-                mr.SetValue(9, "txtHinCode2", Utility.ptnShohinStr(s.商品25));
-                mr.SetValue(10, "txtHinCode2", Utility.ptnShohinStr(s.商品26));
-                mr.SetValue(11, "txtHinCode2", Utility.ptnShohinStr(s.商品27));
-                mr.SetValue(12, "txtHinCode2", Utility.ptnShohinStr(s.商品28));
-                mr.SetValue(13, "txtHinCode2", Utility.ptnShohinStr(s.商品29));
-                mr.SetValue(14, "txtHinCode2", Utility.ptnShohinStr(s.商品30));
-            }
-            else
-            {
-                mr.SetValue(0, "txtHinCode", "");
-                mr.SetValue(1, "txtHinCode", "");
-                mr.SetValue(2, "txtHinCode", "");
-                mr.SetValue(3, "txtHinCode", "");
-                mr.SetValue(4, "txtHinCode", "");
-                mr.SetValue(5, "txtHinCode", "");
-                mr.SetValue(6, "txtHinCode", "");
-                mr.SetValue(7, "txtHinCode", "");
-                mr.SetValue(8, "txtHinCode", "");
-                mr.SetValue(9, "txtHinCode", "");
-                mr.SetValue(10, "txtHinCode", "");
-                mr.SetValue(11, "txtHinCode", "");
-                mr.SetValue(12, "txtHinCode", "");
-                mr.SetValue(13, "txtHinCode", "");
-                mr.SetValue(14, "txtHinCode", "");
-
-                mr.SetValue(0, "txtHinCode2", "");
-                mr.SetValue(1, "txtHinCode2", "");
-                mr.SetValue(2, "txtHinCode2", "");
-                mr.SetValue(3, "txtHinCode2", "");
-                mr.SetValue(4, "txtHinCode2", "");
-                mr.SetValue(5, "txtHinCode2", "");
-                mr.SetValue(6, "txtHinCode2", "");
-                mr.SetValue(7, "txtHinCode2", "");
-                mr.SetValue(8, "txtHinCode2", "");
-                mr.SetValue(9, "txtHinCode2", "");
-                mr.SetValue(10, "txtHinCode2", "");
-                mr.SetValue(11, "txtHinCode2", "");
-                mr.SetValue(12, "txtHinCode2", "");
-                mr.SetValue(13, "txtHinCode2", "");
-                mr.SetValue(14, "txtHinCode2", "");
-            }
-        }
-        
-        ///------------------------------------------------------------------------------------
-        /// <summary>
-        ///     追加商品明細表示 </summary>
-        /// <param name="r">
-        ///     NHBR_CLIDataSet.FAX注文書Row</param>
-        /// <param name="mr">
-        ///     GcMultiRow</param>
-        ///------------------------------------------------------------------------------------
-        private void addShowItem(NHBR_CLIDataSet.FAX注文書Row r, GcMultiRow mr)
-        {
-            // 2017/08/23
-            for (int i = 0; i < gcMultiRow3.RowCount; i++)
-            {
-                // 注文数欄背景色初期化
-                gcMultiRow3[i, "txtHinCode"].Style.BackColor = Color.Empty;
-                gcMultiRow3[i, "txtSuu"].Style.BackColor = Color.Empty;
-                gcMultiRow3[i, "txtHinCode2"].Style.BackColor = Color.Empty;
-                gcMultiRow3[i, "txtSuu2"].Style.BackColor = Color.Empty;
-            }
-
-            gl.ChangeValueStatus = true;
-            
-            mr.SetValue(0, "txtHinCode", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード1)));
-            mr.SetValue(1, "txtHinCode", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード2)));
-            mr.SetValue(2, "txtHinCode", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード3)));
-            mr.SetValue(3, "txtHinCode", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード4)));
-            mr.SetValue(4, "txtHinCode", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード5)));
-            mr.SetValue(0, "txtHinCode2", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード6)));
-            mr.SetValue(1, "txtHinCode2", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード7)));
-            mr.SetValue(2, "txtHinCode2", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード8)));
-            mr.SetValue(3, "txtHinCode2", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード9)));
-            mr.SetValue(4, "txtHinCode2", Utility.ptnShohinStr(Utility.StrtoInt(r.追加注文商品コード10)));
-
-            //gl.ChangeValueStatus = false;
-
-            mr.SetValue(0, "txtSuu", r.追加注文数1);
-            mr.SetValue(1, "txtSuu", r.追加注文数2);
-            mr.SetValue(2, "txtSuu", r.追加注文数3);
-            mr.SetValue(3, "txtSuu", r.追加注文数4);
-            mr.SetValue(4, "txtSuu", r.追加注文数5);
-            mr.SetValue(0, "txtSuu2", r.追加注文数6);
-            mr.SetValue(1, "txtSuu2", r.追加注文数7);
-            mr.SetValue(2, "txtSuu2", r.追加注文数8);
-            mr.SetValue(3, "txtSuu2", r.追加注文数9);
-            mr.SetValue(4, "txtSuu2", r.追加注文数10);
-
-            gl.ChangeValueStatus = true;
-
-            // 編集を可能とする
-            mr.ReadOnly = false;
-
-            //mr.EndEdit();
-
             //カレントセル選択状態としない
-            mr.CurrentCell = null;
-
-            //string sss = r.追加注文商品コード1 + " " + r.追加注文数1 + Environment.NewLine;
-            //sss += r.追加注文商品コード2 + " " + r.追加注文数2 + Environment.NewLine;
-            //sss += r.追加注文商品コード3 + " " + r.追加注文数3 + Environment.NewLine;
-            //sss += r.追加注文商品コード4 + " " + r.追加注文数4 + Environment.NewLine;
-            //sss += r.追加注文商品コード5 + " " + r.追加注文数5 + Environment.NewLine;
-            //sss += r.追加注文商品コード6 + " " + r.追加注文数6 + Environment.NewLine;
-            //sss += r.追加注文商品コード7 + " " + r.追加注文数7 + Environment.NewLine;
-            //sss += r.追加注文商品コード8 + " " + r.追加注文数8 + Environment.NewLine;
-            //sss += r.追加注文商品コード9 + " " + r.追加注文数9 + Environment.NewLine;
-            //sss += r.追加注文商品コード10 + " " + r.追加注文数10 + Environment.NewLine;
-
-            //MessageBox.Show(sss);
+            dg1.CurrentCell = null;
         }
+
+        //private void ptnShow(GcMultiRow mr, int tdkCode, int ptnCode)
+        //{
+        //    gl.ChangeValueStatus = true;
+
+        //    if (dts.パターンID.Any(a => a.届先番号 == tdkCode && a.連番 == ptnCode))
+        //    {
+        //        var s = dts.パターンID.Single(a => a.届先番号 == tdkCode && a.連番 == ptnCode);
+
+        //        mr.SetValue(0, "txtHinCode", Utility.ptnShohinStr(s.商品1));
+        //        mr.SetValue(1, "txtHinCode", Utility.ptnShohinStr(s.商品2));
+        //        mr.SetValue(2, "txtHinCode", Utility.ptnShohinStr(s.商品3));
+        //        mr.SetValue(3, "txtHinCode", Utility.ptnShohinStr(s.商品4));
+        //        mr.SetValue(4, "txtHinCode", Utility.ptnShohinStr(s.商品5));
+        //        mr.SetValue(5, "txtHinCode", Utility.ptnShohinStr(s.商品6));
+        //        mr.SetValue(6, "txtHinCode", Utility.ptnShohinStr(s.商品7));
+        //        mr.SetValue(7, "txtHinCode", Utility.ptnShohinStr(s.商品8));
+        //        mr.SetValue(8, "txtHinCode", Utility.ptnShohinStr(s.商品9));
+        //        mr.SetValue(9, "txtHinCode", Utility.ptnShohinStr(s.商品10));
+        //        mr.SetValue(10, "txtHinCode", Utility.ptnShohinStr(s.商品11));
+        //        mr.SetValue(11, "txtHinCode", Utility.ptnShohinStr(s.商品12));
+        //        mr.SetValue(12, "txtHinCode", Utility.ptnShohinStr(s.商品13));
+        //        mr.SetValue(13, "txtHinCode", Utility.ptnShohinStr(s.商品14));
+        //        mr.SetValue(14, "txtHinCode", Utility.ptnShohinStr(s.商品15));
+
+        //        mr.SetValue(0, "txtHinCode2", Utility.ptnShohinStr(s.商品16));
+        //        mr.SetValue(1, "txtHinCode2", Utility.ptnShohinStr(s.商品17));
+        //        mr.SetValue(2, "txtHinCode2", Utility.ptnShohinStr(s.商品18));
+        //        mr.SetValue(3, "txtHinCode2", Utility.ptnShohinStr(s.商品19));
+        //        mr.SetValue(4, "txtHinCode2", Utility.ptnShohinStr(s.商品20));
+        //        mr.SetValue(5, "txtHinCode2", Utility.ptnShohinStr(s.商品21));
+        //        mr.SetValue(6, "txtHinCode2", Utility.ptnShohinStr(s.商品22));
+        //        mr.SetValue(7, "txtHinCode2", Utility.ptnShohinStr(s.商品23));
+        //        mr.SetValue(8, "txtHinCode2", Utility.ptnShohinStr(s.商品24));
+        //        mr.SetValue(9, "txtHinCode2", Utility.ptnShohinStr(s.商品25));
+        //        mr.SetValue(10, "txtHinCode2", Utility.ptnShohinStr(s.商品26));
+        //        mr.SetValue(11, "txtHinCode2", Utility.ptnShohinStr(s.商品27));
+        //        mr.SetValue(12, "txtHinCode2", Utility.ptnShohinStr(s.商品28));
+        //        mr.SetValue(13, "txtHinCode2", Utility.ptnShohinStr(s.商品29));
+        //        mr.SetValue(14, "txtHinCode2", Utility.ptnShohinStr(s.商品30));
+        //    }
+        //    else
+        //    {
+        //        mr.SetValue(0, "txtHinCode", "");
+        //        mr.SetValue(1, "txtHinCode", "");
+        //        mr.SetValue(2, "txtHinCode", "");
+        //        mr.SetValue(3, "txtHinCode", "");
+        //        mr.SetValue(4, "txtHinCode", "");
+        //        mr.SetValue(5, "txtHinCode", "");
+        //        mr.SetValue(6, "txtHinCode", "");
+        //        mr.SetValue(7, "txtHinCode", "");
+        //        mr.SetValue(8, "txtHinCode", "");
+        //        mr.SetValue(9, "txtHinCode", "");
+        //        mr.SetValue(10, "txtHinCode", "");
+        //        mr.SetValue(11, "txtHinCode", "");
+        //        mr.SetValue(12, "txtHinCode", "");
+        //        mr.SetValue(13, "txtHinCode", "");
+        //        mr.SetValue(14, "txtHinCode", "");
+
+        //        mr.SetValue(0, "txtHinCode2", "");
+        //        mr.SetValue(1, "txtHinCode2", "");
+        //        mr.SetValue(2, "txtHinCode2", "");
+        //        mr.SetValue(3, "txtHinCode2", "");
+        //        mr.SetValue(4, "txtHinCode2", "");
+        //        mr.SetValue(5, "txtHinCode2", "");
+        //        mr.SetValue(6, "txtHinCode2", "");
+        //        mr.SetValue(7, "txtHinCode2", "");
+        //        mr.SetValue(8, "txtHinCode2", "");
+        //        mr.SetValue(9, "txtHinCode2", "");
+        //        mr.SetValue(10, "txtHinCode2", "");
+        //        mr.SetValue(11, "txtHinCode2", "");
+        //        mr.SetValue(12, "txtHinCode2", "");
+        //        mr.SetValue(13, "txtHinCode2", "");
+        //        mr.SetValue(14, "txtHinCode2", "");
+        //    }
+        //}
+
 
         /// --------------------------------------------------------------------------------
         /// <summary>
@@ -883,19 +1078,19 @@ namespace STSH_OCR.OCR
         {
             Int64 mZan = 0;
 
-            mZan = (Utility.StrtoInt(gcMultiRow1[m, "txtZanH1"].Value.ToString()) * 60) + (Utility.StrtoInt(gcMultiRow1[m, "txtZanM1"].Value.ToString()) * 60 / 10);
+            //mZan = (Utility.StrtoInt(gcMultiRow1[m, "txtZanH1"].Value.ToString()) * 60) + (Utility.StrtoInt(gcMultiRow1[m, "txtZanM1"].Value.ToString()) * 60 / 10);
 
-            // 記入時間と計算された残業時間が不一致のとき
-            if (zan != mZan)
-            {
-                gcMultiRow1[m, "txtZanH1"].Style.BackColor = Color.LightPink;
-                gcMultiRow1[m, "txtZanH1"].Style.BackColor = Color.LightPink;
-            }
-            else
-            {
-                gcMultiRow1[m, "txtZanM1"].Style.BackColor = Color.White;
-                gcMultiRow1[m, "txtZanM1"].Style.BackColor = Color.White;
-            }
+            //// 記入時間と計算された残業時間が不一致のとき
+            //if (zan != mZan)
+            //{
+            //    gcMultiRow1[m, "txtZanH1"].Style.BackColor = Color.LightPink;
+            //    gcMultiRow1[m, "txtZanH1"].Style.BackColor = Color.LightPink;
+            //}
+            //else
+            //{
+            //    gcMultiRow1[m, "txtZanM1"].Style.BackColor = Color.White;
+            //    gcMultiRow1[m, "txtZanM1"].Style.BackColor = Color.White;
+            //}
         }
         
 
@@ -941,6 +1136,9 @@ namespace STSH_OCR.OCR
         ///------------------------------------------------------------------------------------
         private void formInitialize(string sID, int cIx)
         {
+
+            global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
+
             // テキストボックス表示色設定
             txtYear.BackColor = Color.White;
             txtMonth.BackColor = Color.White;
@@ -964,7 +1162,17 @@ namespace STSH_OCR.OCR
             txtTokuisakiCD.Text = string.Empty;
             lblNoImage.Visible = false;
 
-            // 勤務票データ編集のとき
+            dg1.Rows.Clear();   // 行数をクリア
+            dg1.Rows.Add(30);   // 行数を設定
+
+            // メモ欄
+            txtMemo.Text = string.Empty;
+
+            // 確認チェック欄
+            checkBox1.BackColor = SystemColors.Control;
+            checkBox1.Checked = false;
+
+            // データ編集のとき
             if (sID == string.Empty)
             {
                 // ヘッダ情報
@@ -1010,7 +1218,7 @@ namespace STSH_OCR.OCR
                 //ErrShow();
 
                 //データ数表示
-                lblPage.Text = " (" + (cI + 1).ToString() + "/" + cID.Length + ")";
+                lblPage.Text = " (" + (cIx + 1).ToString() + "/" + cID.Length + ")";
             }
             else
             {
@@ -1117,155 +1325,156 @@ namespace STSH_OCR.OCR
         /// <param name="ocr">
         ///     OCRDATAクラス</param>
         ///------------------------------------------------------------------------------------
-        private void ErrShow(OCRData ocr)
-        {
-            if (ocr._errNumber != ocr.eNothing)
-            {
-                // グリッドビューCellEnterイベント処理は実行しない
-                gridViewCellEnterStatus = false;
+        //private void ErrShow(OCRData ocr)
+        //{
+        //    if (ocr._errNumber != ocr.eNothing)
+        //    {
+        //        // グリッドビューCellEnterイベント処理は実行しない
+        //        gridViewCellEnterStatus = false;
 
-                lblErrMsg.Visible = true;
-                lblErrMsg.Text = ocr._errMsg;
+        //        lblErrMsg.Visible = true;
+        //        lblErrMsg.Text = ocr._errMsg;
 
-                // 確認
-                if (ocr._errNumber == ocr.eDataCheck)
-                {
-                    checkBox1.BackColor = Color.Yellow;
-                    checkBox1.Focus();
-                }
+        //        // 確認
+        //        if (ocr._errNumber == ocr.eDataCheck)
+        //        {
+        //            checkBox1.BackColor = Color.Yellow;
+        //            checkBox1.Focus();
+        //        }
 
-                // 届先番号
-                if (ocr._errNumber == ocr.eTdkNo)
-                {
-                    gcMultiRow1[0, "txtTdkNum"].Style.BackColor = Color.Yellow;
-                    gcMultiRow1.Focus();
-                    gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtTdkNum"];
-                    gcMultiRow1.BeginEdit(true);
+        //        // 届先番号
+        //        if (ocr._errNumber == ocr.eTdkNo)
+        //        {
+        //            gcMultiRow1[0, "txtTdkNum"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow1.Focus();
+        //            gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtTdkNum"];
+        //            gcMultiRow1.BeginEdit(true);
                     
-                    // エラー有りフラグ
-                    txtErrStatus.Text = global.FLGON;
-                }
+        //            // エラー有りフラグ
+        //            txtErrStatus.Text = global.FLGON;
+        //        }
 
-                // パターンID
-                if (ocr._errNumber == ocr.ePattern)
-                {
-                    gcMultiRow1[0, "txtPtnNum"].Style.BackColor = Color.Yellow;
-                    gcMultiRow1.Focus();
-                    gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtPtnNum"];
-                    gcMultiRow1.BeginEdit(true);
+        //        // パターンID
+        //        if (ocr._errNumber == ocr.ePattern)
+        //        {
+        //            gcMultiRow1[0, "txtPtnNum"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow1.Focus();
+        //            gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtPtnNum"];
+        //            gcMultiRow1.BeginEdit(true);
                     
-                    // エラー有りフラグ
-                    txtErrStatus.Text = global.FLGON;
-                }
+        //            // エラー有りフラグ
+        //            txtErrStatus.Text = global.FLGON;
+        //        }
                 
-                // 納品希望日
-                if (ocr._errNumber == ocr.eMonth || ocr._errNumber == ocr.eDay)
-                {
-                    gcMultiRow1[0, "txtMonth"].Style.BackColor = Color.Yellow;
-                    gcMultiRow1[0, "txtDay"].Style.BackColor = Color.Yellow;
-                    gcMultiRow1.Focus();
-                    gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtMonth"];
-                    gcMultiRow1.BeginEdit(true);
+        //        // 納品希望日
+        //        if (ocr._errNumber == ocr.eMonth || ocr._errNumber == ocr.eDay)
+        //        {
+        //            gcMultiRow1[0, "txtMonth"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow1[0, "txtDay"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow1.Focus();
+        //            gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtMonth"];
+        //            gcMultiRow1.BeginEdit(true);
                     
-                    // エラー有りフラグ
-                    txtErrStatus.Text = global.FLGON;
-                }
+        //            // エラー有りフラグ
+        //            txtErrStatus.Text = global.FLGON;
+        //        }
 
-                // 再ＦＡＸ：2018/08/03
-                if (ocr._errNumber == ocr.eReFax)
-                {
-                    gcMultiRow1[0, "chkReFax"].Style.BackColor = Color.Yellow;
-                    gcMultiRow1.Focus();
-                    gcMultiRow1.CurrentCell = gcMultiRow1[0, "chkReFax"];
-                    gcMultiRow1.BeginEdit(true);
+        //        // 再ＦＡＸ：2018/08/03
+        //        if (ocr._errNumber == ocr.eReFax)
+        //        {
+        //            gcMultiRow1[0, "chkReFax"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow1.Focus();
+        //            gcMultiRow1.CurrentCell = gcMultiRow1[0, "chkReFax"];
+        //            gcMultiRow1.BeginEdit(true);
 
-                    // エラー有りフラグ
-                    txtErrStatus.Text = global.FLGON;
-                }
+        //            // エラー有りフラグ
+        //            txtErrStatus.Text = global.FLGON;
+        //        }
 
-                // 商品コード
-                if (ocr._errNumber == ocr.eHinCode)
-                {
-                    gcMultiRow2[ocr._errRow, "txtHinCode"].Style.BackColor = Color.Yellow;
-                    gcMultiRow2.Focus();
-                    gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtHinCode"];
-                    gcMultiRow2.BeginEdit(true);
+        //        // 商品コード
+        //        if (ocr._errNumber == ocr.eHinCode)
+        //        {
+        //            gcMultiRow2[ocr._errRow, "txtHinCode"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow2.Focus();
+        //            gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtHinCode"];
+        //            gcMultiRow2.BeginEdit(true);
 
-                    // エラー有りフラグ
-                    txtErrStatus.Text = global.FLGON;
-                }
+        //            // エラー有りフラグ
+        //            txtErrStatus.Text = global.FLGON;
+        //        }
 
-                if (ocr._errNumber == ocr.eHinCode2)
-                {
-                    gcMultiRow2[ocr._errRow, "txtHinCode2"].Style.BackColor = Color.Yellow;
-                    gcMultiRow2.Focus();
-                    gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtHinCode2"];
-                    gcMultiRow2.BeginEdit(true);
+        //        if (ocr._errNumber == ocr.eHinCode2)
+        //        {
+        //            gcMultiRow2[ocr._errRow, "txtHinCode2"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow2.Focus();
+        //            gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtHinCode2"];
+        //            gcMultiRow2.BeginEdit(true);
 
-                    // エラー有りフラグ
-                    txtErrStatus.Text = global.FLGON;
-                }
+        //            // エラー有りフラグ
+        //            txtErrStatus.Text = global.FLGON;
+        //        }
 
-                // 発注数
-                if (ocr._errNumber == ocr.eSuu)
-                {
-                    gcMultiRow2[ocr._errRow, "txtSuu"].Style.BackColor = Color.Yellow;
-                    gcMultiRow2.Focus();
-                    gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtSuu"];
-                    gcMultiRow2.BeginEdit(true);
+        //        // 発注数
+        //        if (ocr._errNumber == ocr.eSuu)
+        //        {
+        //            gcMultiRow2[ocr._errRow, "txtSuu"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow2.Focus();
+        //            gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtSuu"];
+        //            gcMultiRow2.BeginEdit(true);
 
-                    // エラー有りフラグ
-                    txtErrStatus.Text = global.FLGON;
-                }
+        //            // エラー有りフラグ
+        //            txtErrStatus.Text = global.FLGON;
+        //        }
 
-                if (ocr._errNumber == ocr.eSuu2)
-                {
-                    gcMultiRow2[ocr._errRow, "txtSuu2"].Style.BackColor = Color.Yellow;
-                    gcMultiRow2.Focus();
-                    gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtSuu2"];
-                    gcMultiRow2.BeginEdit(true);
+        //        if (ocr._errNumber == ocr.eSuu2)
+        //        {
+        //            gcMultiRow2[ocr._errRow, "txtSuu2"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow2.Focus();
+        //            gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtSuu2"];
+        //            gcMultiRow2.BeginEdit(true);
                     
-                    // エラー有りフラグ
-                    txtErrStatus.Text = global.FLGON;
-                }
+        //            // エラー有りフラグ
+        //            txtErrStatus.Text = global.FLGON;
+        //        }
 
-                // 追加注文・商品コード
-                if (ocr._errNumber == ocr.eAddCode)
-                {
-                    gcMultiRow3[ocr._errRow, "txtHinCode"].Style.BackColor = Color.Yellow;
-                    gcMultiRow3.Focus();
-                    gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtHinCode"];
-                    gcMultiRow3.BeginEdit(true);
-                }
+        //        // 追加注文・商品コード
+        //        if (ocr._errNumber == ocr.eAddCode)
+        //        {
+        //            gcMultiRow3[ocr._errRow, "txtHinCode"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow3.Focus();
+        //            gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtHinCode"];
+        //            gcMultiRow3.BeginEdit(true);
+        //        }
 
-                if (ocr._errNumber == ocr.eAddCode2)
-                {
-                    gcMultiRow3[ocr._errRow, "txtHinCode2"].Style.BackColor = Color.Yellow;
-                    gcMultiRow3.Focus();
-                    gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtHinCode2"];
-                    gcMultiRow3.BeginEdit(true);
-                }
+        //        if (ocr._errNumber == ocr.eAddCode2)
+        //        {
+        //            gcMultiRow3[ocr._errRow, "txtHinCode2"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow3.Focus();
+        //            gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtHinCode2"];
+        //            gcMultiRow3.BeginEdit(true);
+        //        }
                 
-                // 追加注文・発注数
-                if (ocr._errNumber == ocr.eAddSuu)
-                {
-                    gcMultiRow3[ocr._errRow, "txtSuu"].Style.BackColor = Color.Yellow;
-                    gcMultiRow3.Focus();
-                    gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtSuu"];
-                    gcMultiRow3.BeginEdit(true);
-                }
+        //        // 追加注文・発注数
+        //        if (ocr._errNumber == ocr.eAddSuu)
+        //        {
+        //            gcMultiRow3[ocr._errRow, "txtSuu"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow3.Focus();
+        //            gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtSuu"];
+        //            gcMultiRow3.BeginEdit(true);
+        //        }
 
-                if (ocr._errNumber == ocr.eAddSuu2)
-                {
-                    gcMultiRow3[ocr._errRow, "txtSuu2"].Style.BackColor = Color.Yellow;
-                    gcMultiRow3.Focus();
-                    gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtSuu2"];
-                    gcMultiRow3.BeginEdit(true);
-                }
+        //        if (ocr._errNumber == ocr.eAddSuu2)
+        //        {
+        //            gcMultiRow3[ocr._errRow, "txtSuu2"].Style.BackColor = Color.Yellow;
+        //            gcMultiRow3.Focus();
+        //            gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtSuu2"];
+        //            gcMultiRow3.BeginEdit(true);
+        //        }
                 
-                // グリッドビューCellEnterイベントステータスを戻す
-                gridViewCellEnterStatus = true;
-            }
-        }
+        //        // グリッドビューCellEnterイベントステータスを戻す
+        //        gridViewCellEnterStatus = true;
+        //    }
+        //}
+
     }
 }
