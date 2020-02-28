@@ -127,8 +127,8 @@ namespace STSH_OCR.OCR
         string _img = string.Empty;
 
         // openCvSharp 関連
-        const float B_WIDTH = 0.48f;
-        const float B_HEIGHT = 0.48f;
+        const float B_WIDTH = 0.45f;
+        const float B_HEIGHT = 0.45f;
         float n_width = 0f;
         float n_height = 0f;
 
@@ -380,17 +380,17 @@ namespace STSH_OCR.OCR
                 tempDGV.RowTemplate.Height = 20;
 
                 // 全体の高さ
-                tempDGV.Height = 630;
+                tempDGV.Height = 618;
 
                 // 奇数行の色
                 //tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
 
                 // 各列幅指定
-                tempDGV.Columns.Add(colMaker, "メーカー" + Environment.NewLine + "商品名");
+                tempDGV.Columns.Add(colMaker, "メーカー／商品名");
                 tempDGV.Columns.Add(colKikaku, "規格");
                 tempDGV.Columns.Add(colIrisu, "入数");
-                tempDGV.Columns.Add(colHinCode, "商品cd" + Environment.NewLine + "リード");
-                tempDGV.Columns.Add(colNouka, "納価" + "JAN");
+                tempDGV.Columns.Add(colHinCode, "商品CD");
+                tempDGV.Columns.Add(colNouka, "納価");
                 tempDGV.Columns.Add(colBaika, "売価");
                 tempDGV.Columns.Add(colDay1, "月");
                 tempDGV.Columns.Add(colDay2, "火");
@@ -416,7 +416,7 @@ namespace STSH_OCR.OCR
 
                 //tempDGV.Columns[colHinName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-                tempDGV.Columns[colMaker].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                tempDGV.Columns[colMaker].DefaultCellStyle.Alignment = DataGridViewContentAlignment.BottomLeft;
                 tempDGV.Columns[colKikaku].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colIrisu].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colHinCode].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -444,6 +444,17 @@ namespace STSH_OCR.OCR
                     else
                     {
                         c.ReadOnly = false;
+                    }
+
+                    if (c.Name == colMaker)
+                    {
+                        c.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", (float)(9.5), FontStyle.Regular);
+                    }
+
+                    if (c.Name == colDay1 || c.Name == colDay2 || c.Name == colDay3 || c.Name == colDay4 || 
+                        c.Name == colDay5 || c.Name == colDay6 || c.Name == colDay7)
+                    {
+                        c.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 11, FontStyle.Regular);
                     }
                 }
 
@@ -3502,7 +3513,10 @@ namespace STSH_OCR.OCR
             DataGridView dv = (DataGridView)sender;
 
             // 行・列共にヘッダは処理しない
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            {
+                return;
+            }
 
             // セルの上側の境界線を「境界線なし」に設定
             e.AdvancedBorderStyle.Top = DataGridViewAdvancedCellBorderStyle.None;
@@ -3519,8 +3533,9 @@ namespace STSH_OCR.OCR
             //}
 
             // 奇数行を対象とする（インデックスは偶数）
-            if ((e.RowIndex % 2) == 0 && (e.ColumnIndex == 0 || e.ColumnIndex == 2 || e.ColumnIndex == 3 || e.ColumnIndex == 6 || e.ColumnIndex == 7 || e.ColumnIndex == 8 || 
-                e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 11 || e.ColumnIndex == 12))
+            if ((e.RowIndex % 2) == 0 && (e.ColumnIndex == 0 || e.ColumnIndex == 2 || e.ColumnIndex == 3 || e.ColumnIndex == 4 || e.ColumnIndex == 5 || 
+                e.ColumnIndex == 6 || e.ColumnIndex == 7 || e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 11 || 
+                e.ColumnIndex == 12))
             {
                 // セルの下側の境界線を「境界線なし」に設定
                 e.AdvancedBorderStyle.Bottom = DataGridViewAdvancedCellBorderStyle.None;
@@ -3586,11 +3601,12 @@ namespace STSH_OCR.OCR
                     rect.Y -= 1;
                     e.Graphics.FillRectangle(new SolidBrush(e.CellStyle.BackColor), rect);
                     e.Graphics.DrawRectangle(new Pen(dv.GridColor), rect);
+
                     TextRenderer.DrawText(e.Graphics,
                                  e.FormattedValue.ToString(),
                                  e.CellStyle.Font, rect, e.CellStyle.ForeColor,
                                  TextFormatFlags.Left
-                                 | TextFormatFlags.VerticalCenter);
+                                 | TextFormatFlags.Bottom);
                     e.Handled = true;
                 }
                 else
@@ -3602,30 +3618,30 @@ namespace STSH_OCR.OCR
             // 列の結合処理（ＪＡＮ）
             else if (e.ColumnIndex == 4)
             {
-                // 偶数行のみ列結合（インデックスは奇数 1,3,5,...）
-                if (e.RowIndex % 2 != 0)
-                {
-                    rect = e.CellBounds;
-                    cell = dg1[e.ColumnIndex + 1, e.RowIndex];
+                //// 偶数行のみ列結合（インデックスは奇数 1,3,5,...）
+                //if (e.RowIndex % 2 != 0)
+                //{
+                //    rect = e.CellBounds;
+                //    cell = dg1[e.ColumnIndex + 1, e.RowIndex];
 
-                    // 一つ右のセルの幅を足す
-                    rect.Width += cell.Size.Width;
-                    rect.X -= 1;
-                    rect.Y -= 1;
-                    e.Graphics.FillRectangle(new SolidBrush(e.CellStyle.BackColor), rect);
-                    e.Graphics.DrawRectangle(new Pen(dv.GridColor), rect);
-                    TextRenderer.DrawText(e.Graphics,
-                                 e.FormattedValue.ToString(),
-                                 e.CellStyle.Font, rect, e.CellStyle.ForeColor,
-                                 TextFormatFlags.HorizontalCenter
-                                 | TextFormatFlags.VerticalCenter);
-                    e.Handled = true;
-                }
-                else
-                {
-                    // 奇数行は、結合を行わないので、通常の描画処理に任せる
-                    e.Paint(e.ClipBounds, e.PaintParts);
-                }
+                //    // 一つ右のセルの幅を足す
+                //    rect.Width += cell.Size.Width;
+                //    rect.X -= 1;
+                //    rect.Y -= 1;
+                //    e.Graphics.FillRectangle(new SolidBrush(e.CellStyle.BackColor), rect);
+                //    e.Graphics.DrawRectangle(new Pen(dv.GridColor), rect);
+                //    TextRenderer.DrawText(e.Graphics,
+                //                 e.FormattedValue.ToString(),
+                //                 e.CellStyle.Font, rect, e.CellStyle.ForeColor,
+                //                 TextFormatFlags.HorizontalCenter
+                //                 | TextFormatFlags.VerticalCenter);
+                //    e.Handled = true;
+                //}
+                //else
+                //{
+                //    // 奇数行は、結合を行わないので、通常の描画処理に任せる
+                //    e.Paint(e.ClipBounds, e.PaintParts);
+                //}
             }
             else
             {
@@ -3636,12 +3652,12 @@ namespace STSH_OCR.OCR
                     e.Handled = true;
                 }
 
-                // 6列目の偶数行は描画処理をせずに、
-                // イベントハンドラ内で処理を完了したこと通知
-                if (e.RowIndex % 2 != 0 && e.ColumnIndex == 5)
-                {
-                    e.Handled = true;
-                }
+                //// 6列目の偶数行は描画処理をせずに、
+                //// イベントハンドラ内で処理を完了したこと通知
+                //if (e.RowIndex % 2 != 0 && e.ColumnIndex == 5)
+                //{
+                //    e.Handled = true;
+                //}
             }
         }
 
@@ -3688,118 +3704,118 @@ namespace STSH_OCR.OCR
             {
                 if (t.G_Code1 != string.Empty)
                 {
-                    dg1[colHinCode, 0].Value = t.G_Code1.PadLeft(8, '0');
+                    dg1[colHinCode, 1].Value = t.G_Code1.PadLeft(8, '0');
                     dg1[colMaker, 1].Value = t.G_Name1;
-                    dg1[colHinCode, 1].Value = t.G_Read1;
+                    //dg1[colHinCode, 1].Value = t.G_Read1;
                 }
 
                 if (t.G_Code2 != string.Empty)
                 {
-                    dg1[colHinCode, 2].Value = t.G_Code2.PadLeft(8, '0');
+                    dg1[colHinCode, 3].Value = t.G_Code2.PadLeft(8, '0');
                     dg1[colMaker, 3].Value = t.G_Name2;
-                    dg1[colHinCode, 3].Value = t.G_Read2;
+                    //dg1[colHinCode, 3].Value = t.G_Read2;
                 }
 
                 if (t.G_Code3 != string.Empty)
                 {
-                    dg1[colHinCode, 4].Value = t.G_Code3.PadLeft(8, '0');
+                    dg1[colHinCode, 5].Value = t.G_Code3.PadLeft(8, '0');
                     dg1[colMaker, 5].Value = t.G_Name3;
-                    dg1[colHinCode, 5].Value = t.G_Read3;
+                    //dg1[colHinCode, 5].Value = t.G_Read3;
                 }
 
 
                 if (t.G_Code4 != string.Empty)
                 {
-                    dg1[colHinCode, 6].Value = t.G_Code4.PadLeft(8, '0');
+                    dg1[colHinCode, 7].Value = t.G_Code4.PadLeft(8, '0');
                     dg1[colMaker, 7].Value = t.G_Name4;
-                    dg1[colHinCode, 7].Value = t.G_Read4;
+                    //dg1[colHinCode, 7].Value = t.G_Read4;
                 }
 
 
                 if (t.G_Code5 != string.Empty)
                 {
-                    dg1[colHinCode, 8].Value = t.G_Code5.PadLeft(8, '0');
+                    dg1[colHinCode, 9].Value = t.G_Code5.PadLeft(8, '0');
                     dg1[colMaker, 9].Value = t.G_Name5;
-                    dg1[colHinCode, 9].Value = t.G_Read5;
+                    //dg1[colHinCode, 9].Value = t.G_Read5;
                 }
 
 
                 if (t.G_Code6 != string.Empty)
                 {
-                    dg1[colHinCode, 10].Value = t.G_Code6.PadLeft(8, '0');
+                    dg1[colHinCode, 11].Value = t.G_Code6.PadLeft(8, '0');
                     dg1[colMaker, 11].Value = t.G_Name6;
-                    dg1[colHinCode, 11].Value = t.G_Read6;
+                    //dg1[colHinCode, 11].Value = t.G_Read6;
                 }
 
 
                 if (t.G_Code7 != string.Empty)
                 {
-                    dg1[colHinCode, 12].Value = t.G_Code7.PadLeft(8, '0');
+                    dg1[colHinCode, 13].Value = t.G_Code7.PadLeft(8, '0');
                     dg1[colMaker, 13].Value = t.G_Name7;
-                    dg1[colHinCode, 13].Value = t.G_Read7;
+                    //dg1[colHinCode, 13].Value = t.G_Read7;
                 }
 
 
                 if (t.G_Code8 != string.Empty)
                 {
-                    dg1[colHinCode, 14].Value = t.G_Code8.PadLeft(8, '0');
+                    dg1[colHinCode, 15].Value = t.G_Code8.PadLeft(8, '0');
                     dg1[colMaker, 15].Value = t.G_Name8;
-                    dg1[colHinCode, 15].Value = t.G_Read8;
+                    //dg1[colHinCode, 15].Value = t.G_Read8;
                 }
 
 
                 if (t.G_Code9 != string.Empty)
                 {
-                    dg1[colHinCode, 16].Value = t.G_Code9.PadLeft(8, '0');
+                    dg1[colHinCode, 17].Value = t.G_Code9.PadLeft(8, '0');
                     dg1[colMaker, 17].Value = t.G_Name9;
-                    dg1[colHinCode, 17].Value = t.G_Read9;
+                    //dg1[colHinCode, 17].Value = t.G_Read9;
                 }
 
 
                 if (t.G_Code10 != string.Empty)
                 {
-                    dg1[colHinCode, 18].Value = t.G_Code10.PadLeft(8, '0');
+                    dg1[colHinCode, 19].Value = t.G_Code10.PadLeft(8, '0');
                     dg1[colMaker, 19].Value = t.G_Name10;
-                    dg1[colHinCode, 19].Value = t.G_Read10;
+                    //dg1[colHinCode, 19].Value = t.G_Read10;
                 }
 
 
                 if (t.G_Code11 != string.Empty)
                 {
-                    dg1[colHinCode, 20].Value = t.G_Code11.PadLeft(8, '0');
+                    dg1[colHinCode, 21].Value = t.G_Code11.PadLeft(8, '0');
                     dg1[colMaker, 21].Value = t.G_Name11;
-                    dg1[colHinCode, 21].Value = t.G_Read11;
+                    //dg1[colHinCode, 21].Value = t.G_Read11;
                 }
 
 
                 if (t.G_Code12 != string.Empty)
                 {
-                    dg1[colHinCode, 22].Value = t.G_Code12.PadLeft(8, '0');
+                    dg1[colHinCode, 23].Value = t.G_Code12.PadLeft(8, '0');
                     dg1[colMaker, 23].Value = t.G_Name12;
-                    dg1[colHinCode, 23].Value = t.G_Read12;
+                    //dg1[colHinCode, 23].Value = t.G_Read12;
                 }
 
 
                 if (t.G_Code13 != string.Empty)
                 {
-                    dg1[colHinCode, 24].Value = t.G_Code13.PadLeft(8, '0');
+                    dg1[colHinCode, 25].Value = t.G_Code13.PadLeft(8, '0');
                     dg1[colMaker, 25].Value = t.G_Name13;
-                    dg1[colHinCode, 25].Value = t.G_Read13;
+                    //dg1[colHinCode, 25].Value = t.G_Read13;
                 }
 
 
                 if (t.G_Code14 != string.Empty)
                 {
-                    dg1[colHinCode, 26].Value = t.G_Code14.PadLeft(8, '0');
+                    dg1[colHinCode, 27].Value = t.G_Code14.PadLeft(8, '0');
                     dg1[colMaker, 27].Value = t.G_Name14;
-                    dg1[colHinCode, 27].Value = t.G_Read14;
+                    //dg1[colHinCode, 27].Value = t.G_Read14;
                 }
 
                 if (t.G_Code15 != string.Empty)
                 {
-                    dg1[colHinCode, 28].Value = t.G_Code15.PadLeft(8, '0');
+                    dg1[colHinCode, 29].Value = t.G_Code15.PadLeft(8, '0');
                     dg1[colMaker, 29].Value = t.G_Name15;
-                    dg1[colHinCode, 29].Value = t.G_Read15;
+                    //dg1[colHinCode, 29].Value = t.G_Read15;
                 }
             }
         }
@@ -3922,16 +3938,18 @@ namespace STSH_OCR.OCR
         {
             if (e.ColumnIndex == 3)
             {
-                if ((e.RowIndex % 2) == 0)
+                if ((e.RowIndex % 2) != 0)
                 {
                     ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, 
                         Properties.Settings.Default.仕入先マスター, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
 
-                    dg1[colMaker, e.RowIndex].Value = syohin.SIRESAKI_NM;
-                    dg1[colMaker, e.RowIndex + 1].Value = syohin.SYOHIN_NM;
-                    dg1[colKikaku, e.RowIndex].Value = syohin.SYOHIN_KIKAKU;
-                    dg1[colIrisu, e.RowIndex + 1].Value = syohin.CASE_IRISU;
-                    dg1[colNouka, e.RowIndex + 1].Value = syohin.JAN_CD;
+                    dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;
+                    dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;
+                    dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;
+                    dg1[colIrisu, e.RowIndex].Value = syohin.CASE_IRISU;
+                    dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;
+                    dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;
+                    //dg1[colNouka, e.RowIndex + 1].Value = syohin.JAN_CD;
                 }
             }
         }

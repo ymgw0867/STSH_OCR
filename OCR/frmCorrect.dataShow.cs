@@ -121,13 +121,21 @@ namespace STSH_OCR.OCR
             if (r.G_Code1 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 0].Value = r.G_Code1;
+                dataGrid[colHinCode, 1].Value = r.G_Code1;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 0].Value = r.G_Nouka1;
-            dataGrid[colBaika, 0].Value = r.G_Baika1;
-            dataGrid[colHinCode, 1].Value = r.G_Read1;
+            if (r.G_Nouka1 != 0)
+            {
+                dataGrid[colNouka, 1].Value = r.G_Nouka1;
+            }
+
+            if (r.G_Baika1 != 0)
+            {
+                dataGrid[colBaika, 1].Value = r.G_Baika1;
+            }
+
+            //dataGrid[colHinCode, 1].Value = r.G_Read1;
             dataGrid[colDay1, 1].Value = r.Goods1_1;
             dataGrid[colDay2, 1].Value = r.Goods1_2;
             dataGrid[colDay3, 1].Value = r.Goods1_3;
@@ -140,13 +148,21 @@ namespace STSH_OCR.OCR
             if (r.G_Code2 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 2].Value = r.G_Code2;
+                dataGrid[colHinCode, 3].Value = r.G_Code2;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 2].Value = r.G_Nouka2;
-            dataGrid[colBaika, 2].Value = r.G_Baika2;
-            dataGrid[colHinCode, 3].Value = r.G_Read2;
+            if (r.G_Nouka2 != 0)
+            {
+                dataGrid[colNouka, 3].Value = r.G_Nouka2;
+            }
+
+            if (r.G_Baika2 != 0)
+            {
+                dataGrid[colBaika, 3].Value = r.G_Baika2;
+            }
+
+            //dataGrid[colHinCode, 3].Value = r.G_Read2;
             dataGrid[colDay1, 3].Value = r.Goods2_1;
             dataGrid[colDay2, 3].Value = r.Goods2_2;
             dataGrid[colDay3, 3].Value = r.Goods2_3;
@@ -159,13 +175,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code3 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 4].Value = r.G_Code3;
+                dataGrid[colHinCode, 5].Value = r.G_Code3;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 4].Value = r.G_Nouka3;
-            dataGrid[colBaika, 4].Value = r.G_Baika3;
-            dataGrid[colHinCode, 5].Value = r.G_Read3;
+            if (r.G_Nouka3 != 0)
+            {
+                dataGrid[colNouka, 5].Value = r.G_Nouka3;
+            }
+
+            if (r.G_Baika3 != 0)
+            {
+                dataGrid[colBaika, 5].Value = r.G_Baika3;
+            }
+
             dataGrid[colDay1, 5].Value = r.Goods3_1;
             dataGrid[colDay2, 5].Value = r.Goods3_2;
             dataGrid[colDay3, 5].Value = r.Goods3_3;
@@ -178,13 +201,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code4 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 6].Value = r.G_Code4;
+                dataGrid[colHinCode, 7].Value = r.G_Code4;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 6].Value = r.G_Nouka4;
-            dataGrid[colBaika, 6].Value = r.G_Baika4;
-            dataGrid[colHinCode, 7].Value = r.G_Read4;
+            if (r.G_Nouka4 != 0)
+            {
+                dataGrid[colNouka, 7].Value = r.G_Nouka4;
+            }
+
+            if (r.G_Baika4 != 0)
+            {
+                dataGrid[colBaika, 7].Value = r.G_Baika4;
+            }
+
             dataGrid[colDay1, 7].Value = r.Goods4_1;
             dataGrid[colDay2, 7].Value = r.Goods4_2;
             dataGrid[colDay3, 7].Value = r.Goods4_3;
@@ -197,13 +227,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code5 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 8].Value = r.G_Code5;
+                dataGrid[colHinCode, 9].Value = r.G_Code5;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 8].Value = r.G_Nouka5;
-            dataGrid[colBaika, 8].Value = r.G_Baika5;
-            dataGrid[colHinCode, 9].Value = r.G_Read5;
+            if (r.G_Nouka5 != 0)
+            {
+                dataGrid[colNouka, 9].Value = r.G_Nouka5;
+            }
+
+            if (r.G_Baika5 != 0)
+            {
+                dataGrid[colBaika, 9].Value = r.G_Baika5;
+            }
+
             dataGrid[colDay1, 9].Value = r.Goods5_1;
             dataGrid[colDay2, 9].Value = r.Goods5_2;
             dataGrid[colDay3, 9].Value = r.Goods5_3;
@@ -216,13 +253,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code6 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 10].Value = r.G_Code6;
+                dataGrid[colHinCode, 11].Value = r.G_Code6;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 10].Value = r.G_Nouka6;
-            dataGrid[colBaika, 10].Value = r.G_Baika6;
-            dataGrid[colHinCode, 11].Value = r.G_Read6;
+            if (r.G_Nouka6 != 0)
+            {
+                dataGrid[colNouka, 11].Value = r.G_Nouka6;
+            }
+
+            if (r.G_Baika6 != 0)
+            {
+                dataGrid[colBaika, 11].Value = r.G_Baika6;
+            }
+
             dataGrid[colDay1, 11].Value = r.Goods6_1;
             dataGrid[colDay2, 11].Value = r.Goods6_2;
             dataGrid[colDay3, 11].Value = r.Goods6_3;
@@ -235,13 +279,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code7 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 12].Value = r.G_Code7;
+                dataGrid[colHinCode, 13].Value = r.G_Code7;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 12].Value = r.G_Nouka7;
-            dataGrid[colBaika, 12].Value = r.G_Baika7;
-            dataGrid[colHinCode, 13].Value = r.G_Read7;
+            if (r.G_Nouka7 != 0)
+            {
+                dataGrid[colNouka, 13].Value = r.G_Nouka7;
+            }
+
+            if (r.G_Baika7 != 0)
+            {
+                dataGrid[colBaika, 13].Value = r.G_Baika7;
+            }
+
             dataGrid[colDay1, 13].Value = r.Goods7_1;
             dataGrid[colDay2, 13].Value = r.Goods7_2;
             dataGrid[colDay3, 13].Value = r.Goods7_3;
@@ -254,13 +305,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code8 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 14].Value = r.G_Code8;
+                dataGrid[colHinCode, 15].Value = r.G_Code8;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 14].Value = r.G_Nouka8;
-            dataGrid[colBaika, 14].Value = r.G_Baika8;
-            dataGrid[colHinCode, 15].Value = r.G_Read8;
+            if (r.G_Nouka8 != 0)
+            {
+                dataGrid[colNouka, 15].Value = r.G_Nouka8;
+            }
+
+            if (r.G_Baika8 != 0)
+            {
+                dataGrid[colBaika, 15].Value = r.G_Baika8;
+            }
+
             dataGrid[colDay1, 15].Value = r.Goods8_1;
             dataGrid[colDay2, 15].Value = r.Goods8_2;
             dataGrid[colDay3, 15].Value = r.Goods8_3;
@@ -273,13 +331,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code9 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 16].Value = r.G_Code9;
+                dataGrid[colHinCode, 17].Value = r.G_Code9;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 16].Value = r.G_Nouka9;
-            dataGrid[colBaika, 16].Value = r.G_Baika9;
-            dataGrid[colHinCode, 17].Value = r.G_Read9;
+            if (r.G_Nouka9 != 0)
+            {
+                dataGrid[colNouka, 17].Value = r.G_Nouka9;
+            }
+
+            if (r.G_Baika9 != 0)
+            {
+                dataGrid[colBaika, 17].Value = r.G_Baika9;
+            }
+
             dataGrid[colDay1, 17].Value = r.Goods9_1;
             dataGrid[colDay2, 17].Value = r.Goods9_2;
             dataGrid[colDay3, 17].Value = r.Goods9_3;
@@ -292,13 +357,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code10 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 18].Value = r.G_Code10;
+                dataGrid[colHinCode, 19].Value = r.G_Code10;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 18].Value = r.G_Nouka10;
-            dataGrid[colBaika, 18].Value = r.G_Baika10;
-            dataGrid[colHinCode, 19].Value = r.G_Read10;
+            if (r.G_Nouka10 != 0)
+            {
+                dataGrid[colNouka, 19].Value = r.G_Nouka10;
+            }
+
+            if (r.G_Baika10 != 0)
+            {
+                dataGrid[colBaika, 19].Value = r.G_Baika10;
+            }
+
             dataGrid[colDay1, 19].Value = r.Goods10_1;
             dataGrid[colDay2, 19].Value = r.Goods10_2;
             dataGrid[colDay3, 19].Value = r.Goods10_3;
@@ -311,13 +383,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code11 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 20].Value = r.G_Code11;
+                dataGrid[colHinCode, 21].Value = r.G_Code11;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 20].Value = r.G_Nouka11;
-            dataGrid[colBaika, 20].Value = r.G_Baika11;
-            dataGrid[colHinCode, 21].Value = r.G_Read11;
+            if (r.G_Nouka11 != 0)
+            {
+                dataGrid[colNouka, 21].Value = r.G_Nouka11;
+            }
+
+            if (r.G_Baika11 != 0)
+            {
+                dataGrid[colBaika, 21].Value = r.G_Baika11;
+            }
+
             dataGrid[colDay1, 21].Value = r.Goods11_1;
             dataGrid[colDay2, 21].Value = r.Goods11_2;
             dataGrid[colDay3, 21].Value = r.Goods11_3;
@@ -330,13 +409,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code12 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 22].Value = r.G_Code12;
+                dataGrid[colHinCode, 23].Value = r.G_Code12;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 22].Value = r.G_Nouka12;
-            dataGrid[colBaika, 22].Value = r.G_Baika12;
-            dataGrid[colHinCode, 23].Value = r.G_Read12;
+            if (r.G_Nouka12 != 0)
+            {
+                dataGrid[colNouka, 23].Value = r.G_Nouka12;
+            }
+
+            if (r.G_Baika12 != 0)
+            {
+                dataGrid[colBaika, 23].Value = r.G_Baika12;
+            }
+
             dataGrid[colDay1, 23].Value = r.Goods12_1;
             dataGrid[colDay2, 23].Value = r.Goods12_2;
             dataGrid[colDay3, 23].Value = r.Goods12_3;
@@ -349,13 +435,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code13 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 24].Value = r.G_Code13;
+                dataGrid[colHinCode, 25].Value = r.G_Code13;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 24].Value = r.G_Nouka13;
-            dataGrid[colBaika, 24].Value = r.G_Baika13;
-            dataGrid[colHinCode, 25].Value = r.G_Read13;
+            if (r.G_Nouka13 != 0)
+            {
+                dataGrid[colNouka, 25].Value = r.G_Nouka13;
+            }
+
+            if (r.G_Baika13 != 0)
+            {
+                dataGrid[colBaika, 25].Value = r.G_Baika13;
+            }
+
             dataGrid[colDay1, 25].Value = r.Goods13_1;
             dataGrid[colDay2, 25].Value = r.Goods13_2;
             dataGrid[colDay3, 25].Value = r.Goods13_3;
@@ -368,13 +461,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code14 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 26].Value = r.G_Code14;
+                dataGrid[colHinCode, 27].Value = r.G_Code14;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 26].Value = r.G_Nouka14;
-            dataGrid[colBaika, 26].Value = r.G_Baika14;
-            dataGrid[colHinCode, 27].Value = r.G_Read14;
+            if (r.G_Nouka14 != 0)
+            {
+                dataGrid[colNouka, 27].Value = r.G_Nouka14;
+            }
+
+            if (r.G_Baika14 != 0)
+            {
+                dataGrid[colBaika, 27].Value = r.G_Baika14;
+            }
+
             dataGrid[colDay1, 27].Value = r.Goods14_1;
             dataGrid[colDay2, 27].Value = r.Goods14_2;
             dataGrid[colDay3, 27].Value = r.Goods14_3;
@@ -387,13 +487,20 @@ namespace STSH_OCR.OCR
             if (r.G_Code15 != global.flgOff)
             {
                 global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 28].Value = r.G_Code15;
+                dataGrid[colHinCode, 29].Value = r.G_Code15;
                 global.ChangeValueStatus = false;
             }
 
-            dataGrid[colNouka, 28].Value = r.G_Nouka15;
-            dataGrid[colBaika, 28].Value = r.G_Baika15;
-            dataGrid[colHinCode, 29].Value = r.G_Read15;
+            if (r.G_Nouka15 != 0)
+            {
+                dataGrid[colNouka, 29].Value = r.G_Nouka15;
+            }
+
+            if (r.G_Baika15 != 0)
+            {
+                dataGrid[colBaika, 29].Value = r.G_Baika15;
+            }
+
             dataGrid[colDay1, 29].Value = r.Goods15_1;
             dataGrid[colDay2, 29].Value = r.Goods15_2;
             dataGrid[colDay3, 29].Value = r.Goods15_3;
@@ -1164,6 +1271,12 @@ namespace STSH_OCR.OCR
 
             dg1.Rows.Clear();   // 行数をクリア
             dg1.Rows.Add(30);   // 行数を設定
+
+            for (int i = 2; i < dg1.Rows.Count; i+=4)
+            {
+                dg1.Rows[i].DefaultCellStyle.BackColor = Color.Lavender;
+                dg1.Rows[i + 1].DefaultCellStyle.BackColor = Color.Lavender;
+            }
 
             // メモ欄
             txtMemo.Text = string.Empty;
