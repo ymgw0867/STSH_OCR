@@ -54,26 +54,50 @@ namespace STSH_OCR.OCR
             editLogStatus = false;
 
             // 発注データを取得
-            var r = tblFax.Single(a => a.ID == cID[iX]);
+            ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
 
             // フォーム初期化
             formInitialize(dID, iX);
 
-            txtYear.Text = r.Year.ToString();
-            txtMonth.Text = Utility.EmptytoZero(r.Month.ToString());
-            txtTokuisakiCD.Text = r.TokuisakiCode.ToString("D7");
-            txtPID.Text = r.patternID.ToString();
-            txtSeqNum.Text = r.SeqNumber.ToString();
-
             global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
 
-            checkBox1.Checked = Convert.ToBoolean(r.Veri);
-            txtMemo.Text = r.memo;
+            txtYear.Text = ClsFaxOrder.Year.ToString();
+            txtMonth.Text = Utility.EmptytoZero(ClsFaxOrder.Month.ToString());
+            txtTokuisakiCD.Text = ClsFaxOrder.TokuisakiCode.ToString("D7");
+            txtPID.Text = ClsFaxOrder.patternID.ToString();
+            txtSeqNum.Text = ClsFaxOrder.SeqNumber.ToString();
+
+            // 店着日
+            txtTenDay1.Text = ClsFaxOrder.Day1.ToString();
+            txtTenDay2.Text = ClsFaxOrder.Day2.ToString();
+            txtTenDay3.Text = ClsFaxOrder.Day3.ToString();
+            txtTenDay4.Text = ClsFaxOrder.Day4.ToString();
+            txtTenDay5.Text = ClsFaxOrder.Day5.ToString();
+            txtTenDay6.Text = ClsFaxOrder.Day6.ToString();
+            txtTenDay7.Text = ClsFaxOrder.Day7.ToString();
+
+            checkBox1.Checked = Convert.ToBoolean(ClsFaxOrder.Veri);
+            txtMemo.Text = ClsFaxOrder.memo;
 
             global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
 
-            // 登録パターン表示
-            showItem(r, dg1);
+            // 発注書パターン未読み込みの発注データのとき
+            if (ClsFaxOrder.PatternLoad == global.flgOff)
+            {
+                // 該当するＦＡＸ発注書パターンが存在するとき
+                if (tblPtn.Any(a => a.TokuisakiCode == ClsFaxOrder.TokuisakiCode &&
+                                a.SeqNum == ClsFaxOrder.patternID && a.SecondNum == ClsFaxOrder.SeqNumber))
+                {
+                    ClsOrderPattern = tblPtn.Single(a => a.TokuisakiCode == ClsFaxOrder.TokuisakiCode &&
+                                    a.SeqNum == ClsFaxOrder.patternID && a.SecondNum == ClsFaxOrder.SeqNumber);
+
+                    // ＦＡＸ発注書パターンの商品構成とする
+                    PatternLoad(ClsOrderPattern, ClsFaxOrder);
+                }
+            }
+
+            // FAX発注書データ表示
+            showItem(ClsFaxOrder, dg1);
 
             //// 月間合計値表示
             //getMonthTotal();
@@ -83,7 +107,7 @@ namespace STSH_OCR.OCR
             lblErrMsg.Text = string.Empty;
 
             // 画像表示
-            _img = Properties.Settings.Default.MyDataPath + r.ImageFileName.ToString();
+            _img = Properties.Settings.Default.MyDataPath + ClsFaxOrder.ImageFileName.ToString();
             showImage_openCv(_img);
             trackBar1.Enabled = true;
 
@@ -93,10 +117,67 @@ namespace STSH_OCR.OCR
             showStatus = false;
             Cursor = Cursors.Default;
         }
-        
+
+        ///--------------------------------------------------------------------------
+        /// <summary>
+        ///     発注書データにＦＡＸ発注パターン構成を読み込む </summary>
+        /// <param name="clsPtn">
+        ///     ClsOrderPattern </param>
+        /// <param name="clsFax">
+        ///     ClsFaxOrder </param>
+        ///--------------------------------------------------------------------------
+        private void PatternLoad(ClsOrderPattern clsPtn, ClsFaxOrder clsFax)
+        {
+            clsFax.G_Code1 = clsPtn.G_Code1;
+            clsFax.G_Code2 = clsPtn.G_Code2;
+            clsFax.G_Code3 = clsPtn.G_Code3;
+            clsFax.G_Code4 = clsPtn.G_Code4;
+            clsFax.G_Code5 = clsPtn.G_Code5;
+            clsFax.G_Code6 = clsPtn.G_Code6;
+            clsFax.G_Code7 = clsPtn.G_Code7;
+            clsFax.G_Code8 = clsPtn.G_Code8;
+            clsFax.G_Code9 = clsPtn.G_Code9;
+            clsFax.G_Code10 = clsPtn.G_Code10;
+            clsFax.G_Code11 = clsPtn.G_Code11;
+            clsFax.G_Code12 = clsPtn.G_Code12;
+            clsFax.G_Code13 = clsPtn.G_Code13;
+            clsFax.G_Code14 = clsPtn.G_Code14;
+            clsFax.G_Code15 = clsPtn.G_Code15;
+            clsFax.G_Code16 = clsPtn.G_Code16;
+            clsFax.G_Code17 = clsPtn.G_Code17;
+            clsFax.G_Code18 = clsPtn.G_Code18;
+            clsFax.G_Code19 = clsPtn.G_Code19;
+            clsFax.G_Code20 = clsPtn.G_Code20;
+
+            clsFax.G_Read1 = clsPtn.G_Read1;
+            clsFax.G_Read2 = clsPtn.G_Read2;
+            clsFax.G_Read3 = clsPtn.G_Read3;
+            clsFax.G_Read4 = clsPtn.G_Read4;
+            clsFax.G_Read5 = clsPtn.G_Read5;
+            clsFax.G_Read6 = clsPtn.G_Read6;
+            clsFax.G_Read7 = clsPtn.G_Read7;
+            clsFax.G_Read8 = clsPtn.G_Read8;
+            clsFax.G_Read9 = clsPtn.G_Read9;
+            clsFax.G_Read10 = clsPtn.G_Read10;
+            clsFax.G_Read11 = clsPtn.G_Read11;
+            clsFax.G_Read12 = clsPtn.G_Read12;
+            clsFax.G_Read13 = clsPtn.G_Read13;
+            clsFax.G_Read14 = clsPtn.G_Read14;
+            clsFax.G_Read15 = clsPtn.G_Read15;
+            clsFax.G_Read16 = clsPtn.G_Read16;
+            clsFax.G_Read17 = clsPtn.G_Read17;
+            clsFax.G_Read18 = clsPtn.G_Read18;
+            clsFax.G_Read19 = clsPtn.G_Read19;
+            clsFax.G_Read20 = clsPtn.G_Read20;
+
+            clsFax.PatternLoad = global.flgOn;
+        }
+
+
+
         ///------------------------------------------------------------------------------------
         /// <summary>
-        ///     発注商品明細表示 </summary>
+        ///     発注商品表示 </summary>
         /// <param name="r">
         ///     NHBR_CLIDataSet.FAX注文書Row</param>
         /// <param name="mr">
@@ -108,22 +189,10 @@ namespace STSH_OCR.OCR
         {
             global.ChangeValueStatus = false;
 
-            // 店着日
-            txtTenDay1.Text = r.Day1.ToString();
-            txtTenDay2.Text = r.Day2.ToString();
-            txtTenDay3.Text = r.Day3.ToString();
-            txtTenDay4.Text = r.Day4.ToString();
-            txtTenDay5.Text = r.Day5.ToString();
-            txtTenDay6.Text = r.Day6.ToString();
-            txtTenDay7.Text = r.Day7.ToString();
-
             // １行目
-            if (r.G_Code1 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 1].Value = r.G_Code1;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 1].Value = r.G_Code1;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka1 != 0)
             {
@@ -135,7 +204,6 @@ namespace STSH_OCR.OCR
                 dataGrid[colBaika, 1].Value = r.G_Baika1;
             }
 
-            //dataGrid[colHinCode, 1].Value = r.G_Read1;
             dataGrid[colDay1, 1].Value = r.Goods1_1;
             dataGrid[colDay2, 1].Value = r.Goods1_2;
             dataGrid[colDay3, 1].Value = r.Goods1_3;
@@ -145,12 +213,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 1].Value = r.Goods1_7;
 
             // ２行目
-            if (r.G_Code2 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 3].Value = r.G_Code2;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 3].Value = r.G_Code2;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka2 != 0)
             {
@@ -162,7 +227,6 @@ namespace STSH_OCR.OCR
                 dataGrid[colBaika, 3].Value = r.G_Baika2;
             }
 
-            //dataGrid[colHinCode, 3].Value = r.G_Read2;
             dataGrid[colDay1, 3].Value = r.Goods2_1;
             dataGrid[colDay2, 3].Value = r.Goods2_2;
             dataGrid[colDay3, 3].Value = r.Goods2_3;
@@ -172,12 +236,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 3].Value = r.Goods2_7;
 
             // ３行目
-            if (r.G_Code3 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 5].Value = r.G_Code3;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 5].Value = r.G_Code3;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka3 != 0)
             {
@@ -198,12 +259,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 5].Value = r.Goods3_7;
 
             // ４行目
-            if (r.G_Code4 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 7].Value = r.G_Code4;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 7].Value = r.G_Code4;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka4 != 0)
             {
@@ -224,12 +282,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 7].Value = r.Goods4_7;
 
             // ５行目
-            if (r.G_Code5 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 9].Value = r.G_Code5;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 9].Value = r.G_Code5;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka5 != 0)
             {
@@ -250,12 +305,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 9].Value = r.Goods5_7;
 
             // ６行目
-            if (r.G_Code6 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 11].Value = r.G_Code6;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 11].Value = r.G_Code6;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka6 != 0)
             {
@@ -276,12 +328,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 11].Value = r.Goods6_7;
 
             // ７行目
-            if (r.G_Code7 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 13].Value = r.G_Code7;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 13].Value = r.G_Code7;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka7 != 0)
             {
@@ -302,12 +351,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 13].Value = r.Goods7_7;
 
             // ８行目
-            if (r.G_Code8 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 15].Value = r.G_Code8;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 15].Value = r.G_Code8;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka8 != 0)
             {
@@ -328,12 +374,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 15].Value = r.Goods8_7;
 
             // ９行目
-            if (r.G_Code9 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 17].Value = r.G_Code9;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 17].Value = r.G_Code9;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka9 != 0)
             {
@@ -354,12 +397,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 17].Value = r.Goods9_7;
 
             // 10行目
-            if (r.G_Code10 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 19].Value = r.G_Code10;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 19].Value = r.G_Code10;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka10 != 0)
             {
@@ -380,12 +420,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 19].Value = r.Goods10_7;
 
             // 11行目
-            if (r.G_Code11 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 21].Value = r.G_Code11;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 21].Value = r.G_Code11;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka11 != 0)
             {
@@ -406,12 +443,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 21].Value = r.Goods11_7;
 
             // 12行目
-            if (r.G_Code12 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 23].Value = r.G_Code12;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 23].Value = r.G_Code12;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka12 != 0)
             {
@@ -432,12 +466,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 23].Value = r.Goods12_7;
 
             // 13行目
-            if (r.G_Code13 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 25].Value = r.G_Code13;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 25].Value = r.G_Code13;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka13 != 0)
             {
@@ -458,12 +489,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 25].Value = r.Goods13_7;
 
             // 14行目
-            if (r.G_Code14 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 27].Value = r.G_Code14;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 27].Value = r.G_Code14;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka14 != 0)
             {
@@ -484,12 +512,9 @@ namespace STSH_OCR.OCR
             dataGrid[colDay7, 27].Value = r.Goods14_7;
 
             // 15行目
-            if (r.G_Code15 != global.flgOff)
-            {
-                global.ChangeValueStatus = true;
-                dataGrid[colHinCode, 29].Value = r.G_Code15;
-                global.ChangeValueStatus = false;
-            }
+            global.ChangeValueStatus = true;
+            dataGrid[colHinCode, 29].Value = r.G_Code15;
+            global.ChangeValueStatus = false;
 
             if (r.G_Nouka15 != 0)
             {

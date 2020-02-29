@@ -84,6 +84,7 @@
       <DependentUpon>frmTodoke.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\global.cs" />
+    <Compile Include="Common\OCRData.cs" />
     <Compile Include="Common\Utility.cs" />
     <Compile Include="Config\frmConfig.cs">
       <SubType>Form</SubType>

@@ -136,27 +136,18 @@ namespace STSH_OCR.OCR
 
         // カラム定義
         private readonly string colHinCode = "c0";
-        private readonly string colHinName = "c1";
-        private readonly string colRyou = "c2";
-        private readonly string colIrisu = "c3";
-        private readonly string colShubetsu = "c4";
-        private readonly string colTani = "c5";
-        private readonly string colUriDate = "c6";
-        private readonly string colSuu = "c7";
-        private readonly string colKikaku = "c8";
-        private readonly string colNouka = "c9";
-        private readonly string colBaika = "c10";
-        private readonly string colJanCD = "c11";
-        private readonly string colReadDays = "c12";
-        private readonly string colMaker = "c13";
-        private readonly string colSeqNum = "c14";
-        private readonly string colDay1 = "c15";
-        private readonly string colDay2 = "c16";
-        private readonly string colDay3 = "c17";
-        private readonly string colDay4 = "c18";
-        private readonly string colDay5 = "c19";
-        private readonly string colDay6 = "c20";
-        private readonly string colDay7 = "c21";
+        private readonly string colIrisu = "c1";
+        private readonly string colKikaku = "c2";
+        private readonly string colNouka = "c3";
+        private readonly string colBaika = "c4";
+        private readonly string colMaker = "c5";
+        private readonly string colDay1 = "c6";
+        private readonly string colDay2 = "c7";
+        private readonly string colDay3 = "c8";
+        private readonly string colDay4 = "c9";
+        private readonly string colDay5 = "c10";
+        private readonly string colDay6 = "c11";
+        private readonly string colDay7 = "c12";
 
 
         private void frmCorrect_Load(object sender, EventArgs e)
@@ -218,49 +209,6 @@ namespace STSH_OCR.OCR
             gcMrSetting();
 
             GridviewSet(dg1);
-
-            //dg1[colMaker, 0].Value = "和貴商事株式会社";
-            //dg1[colMaker, 1].Value = "佐藤　海鮮かき揚げ　２枚";
-            //dg1[colKikaku, 0].Value = "2ﾏｲ";
-            //dg1[colHinCode, 0].Value = "00010002";
-            //dg1[colHinCode, 1].Value = "2";
-            //dg1[colNouka, 0].Value = "398";
-            //dg1[colNouka, 1].Value = "4935033621297";
-            //dg1[colBaika, 0].Value = "500";
-            //dg1[colIrisu, 1].Value = 10;
-            //dg1[colDay1, 1].Value = 10;
-            //dg1[colDay2, 1].Value = 9;
-            //dg1[colDay3, 1].Value = 8;
-            //dg1[colDay4, 1].Value = 7;
-            //dg1[colDay5, 1].Value = 6;
-            //dg1[colDay6, 1].Value = 5;
-            //dg1[colDay7, 1].Value = 4;
-
-            //dg1[colIrisu, 0].ReadOnly = true;
-            //dg1[colDay1, 0].ReadOnly = true;
-            //dg1[colDay2, 0].ReadOnly = true;
-            //dg1[colDay3, 0].ReadOnly = true;
-            //dg1[colDay4, 0].ReadOnly = true;
-            //dg1[colDay5, 0].ReadOnly = true;
-            //dg1[colDay6, 0].ReadOnly = true;
-            //dg1[colDay7, 0].ReadOnly = true;
-
-            //dg1[colMaker, 2].Value = "（有）豊島蒲鉾";
-            //dg1[colMaker, 3].Value = "佐藤　えびかき揚げ　２枚";
-            //dg1[colKikaku, 2].Value = "2ﾏｲ";
-            //dg1[colHinCode, 2].Value = "00010003";
-            //dg1[colHinCode, 3].Value = "1";
-            //dg1[colNouka, 2].Value = "350";
-            //dg1[colNouka, 3].Value = "4935033222159";
-            //dg1[colBaika, 2].Value = "380";
-            //dg1[colIrisu, 3].Value = 20;
-            //dg1[colDay1, 3].Value = 2;
-            //dg1[colDay2, 3].Value = 4;
-            //dg1[colDay3, 3].Value = 6;
-            //dg1[colDay4, 3].Value = 8;
-            //dg1[colDay5, 3].Value = 10;
-            //dg1[colDay6, 3].Value = 12;
-            //dg1[colDay7, 3].Value = 14;
 
 
             // 編集作業、過去データ表示の判断
@@ -433,11 +381,11 @@ namespace STSH_OCR.OCR
                 // 編集可否
                 tempDGV.ReadOnly = false;
 
+                // 列ごとの設定
                 foreach (DataGridViewColumn c in tempDGV.Columns)
                 {
                     // 編集可否
-                    if (c.Name == colMaker || c.Name == colKikaku || c.Name == colIrisu ||
-                        c.Name == colNouka || c.Name == colBaika)
+                    if (c.Name == colMaker || c.Name == colKikaku || c.Name == colIrisu )
                     {
                         c.ReadOnly = true;
                     }
@@ -446,11 +394,13 @@ namespace STSH_OCR.OCR
                         c.ReadOnly = false;
                     }
 
+                    // フォントサイズ
                     if (c.Name == colMaker)
                     {
                         c.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", (float)(9.5), FontStyle.Regular);
                     }
 
+                    // フォントサイズ
                     if (c.Name == colDay1 || c.Name == colDay2 || c.Name == colDay3 || c.Name == colDay4 || 
                         c.Name == colDay5 || c.Name == colDay6 || c.Name == colDay7)
                     {
@@ -639,215 +589,232 @@ namespace STSH_OCR.OCR
         private void CurDataUpDate(string iX)
         {
             // エラーメッセージ
-            //string errMsg = "ＦＡＸ発注書テーブル更新";
+            string errMsg = "ＦＡＸ発注書テーブル更新";
 
-            //try
-            //{
-            //    // ＦＡＸ発注書を取得
-            //    STSH_CLIDataSet.FAX注文書Row r = dtsC.FAX注文書.Single(a => a.ID == iX);
-
-            //    // ＦＡＸ発注書テーブルセット更新
-            //    r.届先番号 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[0, "txtTdkNum"].Value));
-            //    r.パターンID = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[0, "txtPtnNum"].Value));
-            //    r.発注番号 = Utility.NulltoStr(gcMultiRow1[0, "txtOrderNum"].Value);
-            //    r.納品希望月 = Utility.NulltoStr(gcMultiRow1[0, "txtMonth"].Value);
-            //    r.納品希望日 = Utility.NulltoStr(gcMultiRow1[0, "txtDay"].Value);
-
-            //    // 2018/08/02
-            //    if (Convert.ToInt32(gcMultiRow1[0, "chkReFax"].Value) == global.flgOff)
-            //    {
-            //        r.メモ = txtMemo.Text;
-            //    }
-            //    else
-            //    {
-            //        r.メモ = txtMemo.Text + global.REFAX;
-            //    }
-
-            //    r.注文数1 = Utility.NulltoStr(gcMultiRow2[0, "txtSuu"].Value);
-            //    r.注文数2 = Utility.NulltoStr(gcMultiRow2[1, "txtSuu"].Value);
-            //    r.注文数3 = Utility.NulltoStr(gcMultiRow2[2, "txtSuu"].Value);
-            //    r.注文数4 = Utility.NulltoStr(gcMultiRow2[3, "txtSuu"].Value);
-            //    r.注文数5 = Utility.NulltoStr(gcMultiRow2[4, "txtSuu"].Value);
-            //    r.注文数6 = Utility.NulltoStr(gcMultiRow2[5, "txtSuu"].Value);
-            //    r.注文数7 = Utility.NulltoStr(gcMultiRow2[6, "txtSuu"].Value);
-            //    r.注文数8 = Utility.NulltoStr(gcMultiRow2[7, "txtSuu"].Value);
-            //    r.注文数9 = Utility.NulltoStr(gcMultiRow2[8, "txtSuu"].Value);
-            //    r.注文数10 = Utility.NulltoStr(gcMultiRow2[9, "txtSuu"].Value);
-            //    r.注文数11 = Utility.NulltoStr(gcMultiRow2[10, "txtSuu"].Value);
-            //    r.注文数12 = Utility.NulltoStr(gcMultiRow2[11, "txtSuu"].Value);
-            //    r.注文数13 = Utility.NulltoStr(gcMultiRow2[12, "txtSuu"].Value);
-            //    r.注文数14 = Utility.NulltoStr(gcMultiRow2[13, "txtSuu"].Value);
-            //    r.注文数15 = Utility.NulltoStr(gcMultiRow2[14, "txtSuu"].Value);
-            //    r.注文数16 = Utility.NulltoStr(gcMultiRow2[0, "txtSuu2"].Value);
-            //    r.注文数17 = Utility.NulltoStr(gcMultiRow2[1, "txtSuu2"].Value);
-            //    r.注文数18 = Utility.NulltoStr(gcMultiRow2[2, "txtSuu2"].Value);
-            //    r.注文数19 = Utility.NulltoStr(gcMultiRow2[3, "txtSuu2"].Value);
-            //    r.注文数20 = Utility.NulltoStr(gcMultiRow2[4, "txtSuu2"].Value);
-            //    r.注文数21 = Utility.NulltoStr(gcMultiRow2[5, "txtSuu2"].Value);
-            //    r.注文数22 = Utility.NulltoStr(gcMultiRow2[6, "txtSuu2"].Value);
-            //    r.注文数23 = Utility.NulltoStr(gcMultiRow2[7, "txtSuu2"].Value);
-            //    r.注文数24 = Utility.NulltoStr(gcMultiRow2[8, "txtSuu2"].Value);
-            //    r.注文数25 = Utility.NulltoStr(gcMultiRow2[9, "txtSuu2"].Value);
-            //    r.注文数26 = Utility.NulltoStr(gcMultiRow2[10, "txtSuu2"].Value);
-            //    r.注文数27 = Utility.NulltoStr(gcMultiRow2[11, "txtSuu2"].Value);
-            //    r.注文数28 = Utility.NulltoStr(gcMultiRow2[12, "txtSuu2"].Value);
-            //    r.注文数29 = Utility.NulltoStr(gcMultiRow2[13, "txtSuu2"].Value);
-            //    r.注文数30 = Utility.NulltoStr(gcMultiRow2[14, "txtSuu2"].Value);
-
-            //    r.追加注文商品コード1 = Utility.NulltoStr(gcMultiRow3[0, "txtHinCode"].Value);
-            //    r.追加注文商品コード2 = Utility.NulltoStr(gcMultiRow3[1, "txtHinCode"].Value);
-            //    r.追加注文商品コード3 = Utility.NulltoStr(gcMultiRow3[2, "txtHinCode"].Value);
-            //    r.追加注文商品コード4 = Utility.NulltoStr(gcMultiRow3[3, "txtHinCode"].Value);
-            //    r.追加注文商品コード5 = Utility.NulltoStr(gcMultiRow3[4, "txtHinCode"].Value);
-
-            //    r.追加注文商品コード6 = Utility.NulltoStr(gcMultiRow3[0, "txtHinCode2"].Value);
-            //    r.追加注文商品コード7 = Utility.NulltoStr(gcMultiRow3[1, "txtHinCode2"].Value);
-            //    r.追加注文商品コード8 = Utility.NulltoStr(gcMultiRow3[2, "txtHinCode2"].Value);
-            //    r.追加注文商品コード9 = Utility.NulltoStr(gcMultiRow3[3, "txtHinCode2"].Value);
-            //    r.追加注文商品コード10 = Utility.NulltoStr(gcMultiRow3[4, "txtHinCode2"].Value);
-                
-            //    r.追加注文数1 = Utility.NulltoStr(gcMultiRow3[0, "txtSuu"].Value);
-            //    r.追加注文数2 = Utility.NulltoStr(gcMultiRow3[1, "txtSuu"].Value);
-            //    r.追加注文数3 = Utility.NulltoStr(gcMultiRow3[2, "txtSuu"].Value);
-            //    r.追加注文数4 = Utility.NulltoStr(gcMultiRow3[3, "txtSuu"].Value);
-            //    r.追加注文数5 = Utility.NulltoStr(gcMultiRow3[4, "txtSuu"].Value);
-                
-            //    r.追加注文数6 = Utility.NulltoStr(gcMultiRow3[0, "txtSuu2"].Value);
-            //    r.追加注文数7 = Utility.NulltoStr(gcMultiRow3[1, "txtSuu2"].Value);
-            //    r.追加注文数8 = Utility.NulltoStr(gcMultiRow3[2, "txtSuu2"].Value);
-            //    r.追加注文数9 = Utility.NulltoStr(gcMultiRow3[3, "txtSuu2"].Value);
-            //    r.追加注文数10 = Utility.NulltoStr(gcMultiRow3[4, "txtSuu2"].Value);
-
-            //    r.担当者コード = _myCode;
-
-            //    //r.メモ = txtMemo.Text;
-
-            //    r.エラー有無 = Utility.StrtoInt(txtErrStatus.Text);
-
-            //    r.更新年月日 = DateTime.Now;
-
-            //    if (checkBox1.Checked)
-            //    {
-            //        r.確認 = global.flgOn;
-            //    }
-            //    else
-            //    {
-            //        r.確認 = global.flgOff;
-            //    }
-
-            //    r.出荷基準A = kigouToNum(lblGrpA.Text);
-            //    r.出荷基準B = kigouToNum(lblGrpB.Text);
-            //    r.出荷基準C = kigouToNum(lblGrpC.Text);
-            //    r.出荷基準D = kigouToNum(lblGrpD.Text);
-            //    r.出荷基準E = kigouToNum(lblGrpE.Text);
-            //    r.出荷基準F = kigouToNum(lblGrpF.Text);
-            //    r.出荷基準G = kigouToNum(lblGrpG.Text);
-
-            //    // フリー入力商品コード：2017/08/22
-            //    if (Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[0, "txtPtnNum"].Value)) != global.flgOff)
-            //    {
-            //        r.商品コード1 = string.Empty;
-            //        r.商品コード2 = string.Empty;
-            //        r.商品コード3 = string.Empty;
-            //        r.商品コード4 = string.Empty;
-            //        r.商品コード5 = string.Empty;
-            //        r.商品コード6 = string.Empty;
-            //        r.商品コード7 = string.Empty;
-            //        r.商品コード8 = string.Empty;
-            //        r.商品コード9 = string.Empty;
-            //        r.商品コード10 = string.Empty;
-            //        r.商品コード11 = string.Empty;
-            //        r.商品コード12 = string.Empty;
-            //        r.商品コード13 = string.Empty;
-            //        r.商品コード14 = string.Empty;
-            //        r.商品コード15 = string.Empty;
-            //        r.商品コード16 = string.Empty;
-            //        r.商品コード17 = string.Empty;
-            //        r.商品コード18 = string.Empty;
-            //        r.商品コード19 = string.Empty;
-            //        r.商品コード20 = string.Empty;
-            //        r.商品コード21 = string.Empty;
-            //        r.商品コード22 = string.Empty;
-            //        r.商品コード23 = string.Empty;
-            //        r.商品コード24 = string.Empty;
-            //        r.商品コード25 = string.Empty;
-            //        r.商品コード26 = string.Empty;
-            //        r.商品コード27 = string.Empty;
-            //        r.商品コード28 = string.Empty;
-            //        r.商品コード29 = string.Empty;
-            //        r.商品コード30 = string.Empty;
-            //    }
-            //    else
-            //    {
-            //        r.商品コード1 = Utility.NulltoStr(gcMultiRow2[0, "txtHinCode"].Value);
-            //        r.商品コード2 = Utility.NulltoStr(gcMultiRow2[1, "txtHinCode"].Value);
-            //        r.商品コード3 = Utility.NulltoStr(gcMultiRow2[2, "txtHinCode"].Value);
-            //        r.商品コード4 = Utility.NulltoStr(gcMultiRow2[3, "txtHinCode"].Value);
-            //        r.商品コード5 = Utility.NulltoStr(gcMultiRow2[4, "txtHinCode"].Value);
-            //        r.商品コード6 = Utility.NulltoStr(gcMultiRow2[5, "txtHinCode"].Value);
-            //        r.商品コード7 = Utility.NulltoStr(gcMultiRow2[6, "txtHinCode"].Value);
-            //        r.商品コード8 = Utility.NulltoStr(gcMultiRow2[7, "txtHinCode"].Value);
-            //        r.商品コード9 = Utility.NulltoStr(gcMultiRow2[8, "txtHinCode"].Value);
-            //        r.商品コード10 = Utility.NulltoStr(gcMultiRow2[9, "txtHinCode"].Value);
-            //        r.商品コード11 = Utility.NulltoStr(gcMultiRow2[10, "txtHinCode"].Value);
-            //        r.商品コード12 = Utility.NulltoStr(gcMultiRow2[11, "txtHinCode"].Value);
-            //        r.商品コード13 = Utility.NulltoStr(gcMultiRow2[12, "txtHinCode"].Value);
-            //        r.商品コード14 = Utility.NulltoStr(gcMultiRow2[13, "txtHinCode"].Value);
-            //        r.商品コード15 = Utility.NulltoStr(gcMultiRow2[14, "txtHinCode"].Value);
-            //        r.商品コード16 = Utility.NulltoStr(gcMultiRow2[0, "txtHinCode2"].Value);
-            //        r.商品コード17 = Utility.NulltoStr(gcMultiRow2[1, "txtHinCode2"].Value);
-            //        r.商品コード18 = Utility.NulltoStr(gcMultiRow2[2, "txtHinCode2"].Value);
-            //        r.商品コード19 = Utility.NulltoStr(gcMultiRow2[3, "txtHinCode2"].Value);
-            //        r.商品コード20 = Utility.NulltoStr(gcMultiRow2[4, "txtHinCode2"].Value);
-            //        r.商品コード21 = Utility.NulltoStr(gcMultiRow2[5, "txtHinCode2"].Value);
-            //        r.商品コード22 = Utility.NulltoStr(gcMultiRow2[6, "txtHinCode2"].Value);
-            //        r.商品コード23 = Utility.NulltoStr(gcMultiRow2[7, "txtHinCode2"].Value);
-            //        r.商品コード24 = Utility.NulltoStr(gcMultiRow2[8, "txtHinCode2"].Value);
-            //        r.商品コード25 = Utility.NulltoStr(gcMultiRow2[9, "txtHinCode2"].Value);
-            //        r.商品コード26 = Utility.NulltoStr(gcMultiRow2[10, "txtHinCode2"].Value);
-            //        r.商品コード27 = Utility.NulltoStr(gcMultiRow2[11, "txtHinCode2"].Value);
-            //        r.商品コード28 = Utility.NulltoStr(gcMultiRow2[12, "txtHinCode2"].Value);
-            //        r.商品コード29 = Utility.NulltoStr(gcMultiRow2[13, "txtHinCode2"].Value);
-            //        r.商品コード30 = Utility.NulltoStr(gcMultiRow2[14, "txtHinCode2"].Value);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message, errMsg, MessageBoxButtons.OK);
-            //}
-            //finally
-            //{
-            //}
-        }
-
-        ///----------------------------------------------------------------
-        /// <summary>
-        ///     出荷基準判定記号を数値に変換する </summary>
-        /// <param name="str">
-        ///     出荷基準判定記号</param>
-        /// <returns>
-        ///     数値（0:◯、1:✕、2:－）</returns>
-        ///----------------------------------------------------------------
-        private string kigouToNum(string str)
-        {
-            string rtn = string.Empty;
-
-            switch (str)
+            try
             {
-                case "◯":
-                    rtn = global.FLGOFF;
-                    break;
+                // ＦＡＸ発注書テーブルセット更新
+                ClsFaxOrder.TokuisakiCode = Utility.StrtoInt(Utility.NulltoStr(txtTokuisakiCD.Text));
+                ClsFaxOrder.patternID = Utility.StrtoInt(Utility.NulltoStr(txtPID.Text));
+                ClsFaxOrder.SeqNumber = Utility.StrtoInt(Utility.NulltoStr(txtSeqNum.Text));
+                ClsFaxOrder.Year = Utility.StrtoInt(Utility.NulltoStr(txtYear.Text));
+                ClsFaxOrder.Month = Utility.StrtoInt(Utility.NulltoStr(txtMonth.Text));
 
-                case "✕":
-                    rtn = global.FLGON;
-                    break;
+                ClsFaxOrder.Day1 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay1.Text));
+                ClsFaxOrder.Day2 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay2.Text));
+                ClsFaxOrder.Day3 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay3.Text));
+                ClsFaxOrder.Day4 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay4.Text));
+                ClsFaxOrder.Day5 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay5.Text));
+                ClsFaxOrder.Day6 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay6.Text));
+                ClsFaxOrder.Day7 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay7.Text));
+
+                ClsFaxOrder.memo = txtMemo.Text;
+                ClsFaxOrder.Veri = Convert.ToInt32(checkBox1);
+
+                // 商品１
+                ClsFaxOrder.G_Code1 = Utility.NulltoStr(dg1[colHinCode, 1].Value);
+                ClsFaxOrder.G_Nouka1 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 1].Value));
+                ClsFaxOrder.G_Baika1 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 1].Value));
+
+                ClsFaxOrder.Goods1_1 = Utility.NulltoStr(dg1[colDay1, 1].Value);
+                ClsFaxOrder.Goods1_2 = Utility.NulltoStr(dg1[colDay2, 1].Value);
+                ClsFaxOrder.Goods1_3 = Utility.NulltoStr(dg1[colDay3, 1].Value);
+                ClsFaxOrder.Goods1_4 = Utility.NulltoStr(dg1[colDay4, 1].Value);
+                ClsFaxOrder.Goods1_5 = Utility.NulltoStr(dg1[colDay5, 1].Value);
+                ClsFaxOrder.Goods1_6 = Utility.NulltoStr(dg1[colDay6, 1].Value);
+                ClsFaxOrder.Goods1_7 = Utility.NulltoStr(dg1[colDay7, 1].Value);
+
+                // 商品2
+                ClsFaxOrder.G_Code2 = Utility.NulltoStr(dg1[colHinCode, 3].Value);
+                ClsFaxOrder.G_Nouka2 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 3].Value));
+                ClsFaxOrder.G_Baika2 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 3].Value));
+
+                ClsFaxOrder.Goods2_1 = Utility.NulltoStr(dg1[colDay1, 3].Value);
+                ClsFaxOrder.Goods2_2 = Utility.NulltoStr(dg1[colDay2, 3].Value);
+                ClsFaxOrder.Goods2_3 = Utility.NulltoStr(dg1[colDay3, 3].Value);
+                ClsFaxOrder.Goods2_4 = Utility.NulltoStr(dg1[colDay4, 3].Value);
+                ClsFaxOrder.Goods2_5 = Utility.NulltoStr(dg1[colDay5, 3].Value);
+                ClsFaxOrder.Goods2_6 = Utility.NulltoStr(dg1[colDay6, 3].Value);
+                ClsFaxOrder.Goods2_7 = Utility.NulltoStr(dg1[colDay7, 3].Value);
+
+                // 商品3
+                ClsFaxOrder.G_Code3 = Utility.NulltoStr(dg1[colHinCode, 5].Value);
+                ClsFaxOrder.G_Nouka3 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 5].Value));
+                ClsFaxOrder.G_Baika3 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 5].Value));
+
+                ClsFaxOrder.Goods3_1 = Utility.NulltoStr(dg1[colDay1, 5].Value);
+                ClsFaxOrder.Goods3_2 = Utility.NulltoStr(dg1[colDay2, 5].Value);
+                ClsFaxOrder.Goods3_3 = Utility.NulltoStr(dg1[colDay3, 5].Value);
+                ClsFaxOrder.Goods3_4 = Utility.NulltoStr(dg1[colDay4, 5].Value);
+                ClsFaxOrder.Goods3_5 = Utility.NulltoStr(dg1[colDay5, 5].Value);
+                ClsFaxOrder.Goods3_6 = Utility.NulltoStr(dg1[colDay6, 5].Value);
+                ClsFaxOrder.Goods3_7 = Utility.NulltoStr(dg1[colDay7, 5].Value);
+
+                // 商品４
+                ClsFaxOrder.G_Code4 = Utility.NulltoStr(dg1[colHinCode, 7].Value);
+                ClsFaxOrder.G_Nouka4 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 7].Value));
+                ClsFaxOrder.G_Baika4 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 7].Value));
+
+                ClsFaxOrder.Goods4_1 = Utility.NulltoStr(dg1[colDay1, 7].Value);
+                ClsFaxOrder.Goods4_2 = Utility.NulltoStr(dg1[colDay2, 7].Value);
+                ClsFaxOrder.Goods4_3 = Utility.NulltoStr(dg1[colDay3, 7].Value);
+                ClsFaxOrder.Goods4_4 = Utility.NulltoStr(dg1[colDay4, 7].Value);
+                ClsFaxOrder.Goods4_5 = Utility.NulltoStr(dg1[colDay5, 7].Value);
+                ClsFaxOrder.Goods4_6 = Utility.NulltoStr(dg1[colDay6, 7].Value);
+                ClsFaxOrder.Goods4_7 = Utility.NulltoStr(dg1[colDay7, 7].Value);
+
+                // 商品５
+                ClsFaxOrder.G_Code5 = Utility.NulltoStr(dg1[colHinCode, 9].Value);
+                ClsFaxOrder.G_Nouka5 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 9].Value));
+                ClsFaxOrder.G_Baika5 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 9].Value));
+
+                ClsFaxOrder.Goods5_1 = Utility.NulltoStr(dg1[colDay1, 9].Value);
+                ClsFaxOrder.Goods5_2 = Utility.NulltoStr(dg1[colDay2, 9].Value);
+                ClsFaxOrder.Goods5_3 = Utility.NulltoStr(dg1[colDay3, 9].Value);
+                ClsFaxOrder.Goods5_4 = Utility.NulltoStr(dg1[colDay4, 9].Value);
+                ClsFaxOrder.Goods5_5 = Utility.NulltoStr(dg1[colDay5, 9].Value);
+                ClsFaxOrder.Goods5_6 = Utility.NulltoStr(dg1[colDay6, 9].Value);
+                ClsFaxOrder.Goods5_7 = Utility.NulltoStr(dg1[colDay7, 9].Value);
+
+                // 商品6
+                ClsFaxOrder.G_Code6 = Utility.NulltoStr(dg1[colHinCode, 11].Value);
+                ClsFaxOrder.G_Nouka6 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 11].Value));
+                ClsFaxOrder.G_Baika6 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 11].Value));
+
+                ClsFaxOrder.Goods6_1 = Utility.NulltoStr(dg1[colDay1, 11].Value);
+                ClsFaxOrder.Goods6_2 = Utility.NulltoStr(dg1[colDay2, 11].Value);
+                ClsFaxOrder.Goods6_3 = Utility.NulltoStr(dg1[colDay3, 11].Value);
+                ClsFaxOrder.Goods6_4 = Utility.NulltoStr(dg1[colDay4, 11].Value);
+                ClsFaxOrder.Goods6_5 = Utility.NulltoStr(dg1[colDay5, 11].Value);
+                ClsFaxOrder.Goods6_6 = Utility.NulltoStr(dg1[colDay6, 11].Value);
+                ClsFaxOrder.Goods6_7 = Utility.NulltoStr(dg1[colDay7, 11].Value);
+
+                // 商品7
+                ClsFaxOrder.G_Code7  = Utility.NulltoStr(dg1[colHinCode, 13].Value);
+                ClsFaxOrder.G_Nouka7  = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 13].Value));
+                ClsFaxOrder.G_Baika7  = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 13].Value));
+
+                ClsFaxOrder.Goods7_1 = Utility.NulltoStr(dg1[colDay1, 13].Value);
+                ClsFaxOrder.Goods7_2 = Utility.NulltoStr(dg1[colDay2, 13].Value);
+                ClsFaxOrder.Goods7_3 = Utility.NulltoStr(dg1[colDay3, 13].Value);
+                ClsFaxOrder.Goods7_4 = Utility.NulltoStr(dg1[colDay4, 13].Value);
+                ClsFaxOrder.Goods7_5 = Utility.NulltoStr(dg1[colDay5, 13].Value);
+                ClsFaxOrder.Goods7_6 = Utility.NulltoStr(dg1[colDay6, 13].Value);
+                ClsFaxOrder.Goods7_7 = Utility.NulltoStr(dg1[colDay7, 13].Value);
                 
-                default:
-                    rtn = "2";
-                    break;
-            }
+                // 商品8
+                ClsFaxOrder.G_Code8  = Utility.NulltoStr(dg1[colHinCode, 15].Value);
+                ClsFaxOrder.G_Nouka8  = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 15].Value));
+                ClsFaxOrder.G_Baika8  = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 15].Value));
 
-            return rtn;
+                ClsFaxOrder.Goods8_1 = Utility.NulltoStr(dg1[colDay1, 15].Value);
+                ClsFaxOrder.Goods8_2 = Utility.NulltoStr(dg1[colDay2, 15].Value);
+                ClsFaxOrder.Goods8_3 = Utility.NulltoStr(dg1[colDay3, 15].Value);
+                ClsFaxOrder.Goods8_4 = Utility.NulltoStr(dg1[colDay4, 15].Value);
+                ClsFaxOrder.Goods8_5 = Utility.NulltoStr(dg1[colDay5, 15].Value);
+                ClsFaxOrder.Goods8_6 = Utility.NulltoStr(dg1[colDay6, 15].Value);
+                ClsFaxOrder.Goods8_7 = Utility.NulltoStr(dg1[colDay7, 15].Value);
+
+                // 商品9
+                ClsFaxOrder.G_Code9 = Utility.NulltoStr(dg1[colHinCode, 17].Value);
+                ClsFaxOrder.G_Nouka9 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 17].Value));
+                ClsFaxOrder.G_Baika9 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 17].Value));
+
+                ClsFaxOrder.Goods9_1 = Utility.NulltoStr(dg1[colDay1, 17].Value);
+                ClsFaxOrder.Goods9_2 = Utility.NulltoStr(dg1[colDay2, 17].Value);
+                ClsFaxOrder.Goods9_3 = Utility.NulltoStr(dg1[colDay3, 17].Value);
+                ClsFaxOrder.Goods9_4 = Utility.NulltoStr(dg1[colDay4, 17].Value);
+                ClsFaxOrder.Goods9_5 = Utility.NulltoStr(dg1[colDay5, 17].Value);
+                ClsFaxOrder.Goods9_6 = Utility.NulltoStr(dg1[colDay6, 17].Value);
+                ClsFaxOrder.Goods9_7 = Utility.NulltoStr(dg1[colDay7, 17].Value);
+
+                // 商品10
+                ClsFaxOrder.G_Code10 = Utility.NulltoStr(dg1[colHinCode, 19].Value);
+                ClsFaxOrder.G_Nouka10 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 19].Value));
+                ClsFaxOrder.G_Baika10 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 19].Value));
+
+                ClsFaxOrder.Goods10_1 = Utility.NulltoStr(dg1[colDay1, 19].Value);
+                ClsFaxOrder.Goods10_2 = Utility.NulltoStr(dg1[colDay2, 19].Value);
+                ClsFaxOrder.Goods10_3 = Utility.NulltoStr(dg1[colDay3, 19].Value);
+                ClsFaxOrder.Goods10_4 = Utility.NulltoStr(dg1[colDay4, 19].Value);
+                ClsFaxOrder.Goods10_5 = Utility.NulltoStr(dg1[colDay5, 19].Value);
+                ClsFaxOrder.Goods10_6 = Utility.NulltoStr(dg1[colDay6, 19].Value);
+                ClsFaxOrder.Goods10_7 = Utility.NulltoStr(dg1[colDay7, 19].Value);
+
+                // 商品11
+                ClsFaxOrder.G_Code11 = Utility.NulltoStr(dg1[colHinCode, 21].Value);
+                ClsFaxOrder.G_Nouka11 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 21].Value));
+                ClsFaxOrder.G_Baika11 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 21].Value));
+
+                ClsFaxOrder.Goods11_1 = Utility.NulltoStr(dg1[colDay1, 21].Value);
+                ClsFaxOrder.Goods11_2 = Utility.NulltoStr(dg1[colDay2, 21].Value);
+                ClsFaxOrder.Goods11_3 = Utility.NulltoStr(dg1[colDay3, 21].Value);
+                ClsFaxOrder.Goods11_4 = Utility.NulltoStr(dg1[colDay4, 21].Value);
+                ClsFaxOrder.Goods11_5 = Utility.NulltoStr(dg1[colDay5, 21].Value);
+                ClsFaxOrder.Goods11_6 = Utility.NulltoStr(dg1[colDay6, 21].Value);
+                ClsFaxOrder.Goods11_7 = Utility.NulltoStr(dg1[colDay7, 21].Value);
+
+                // 商品12
+                ClsFaxOrder.G_Code12 = Utility.NulltoStr(dg1[colHinCode, 23].Value);
+                ClsFaxOrder.G_Nouka12 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 23].Value));
+                ClsFaxOrder.G_Baika12 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 23].Value));
+
+                ClsFaxOrder.Goods12_1 = Utility.NulltoStr(dg1[colDay1, 23].Value);
+                ClsFaxOrder.Goods12_2 = Utility.NulltoStr(dg1[colDay2, 23].Value);
+                ClsFaxOrder.Goods12_3 = Utility.NulltoStr(dg1[colDay3, 23].Value);
+                ClsFaxOrder.Goods12_4 = Utility.NulltoStr(dg1[colDay4, 23].Value);
+                ClsFaxOrder.Goods12_5 = Utility.NulltoStr(dg1[colDay5, 23].Value);
+                ClsFaxOrder.Goods12_6 = Utility.NulltoStr(dg1[colDay6, 23].Value);
+                ClsFaxOrder.Goods12_7 = Utility.NulltoStr(dg1[colDay7, 23].Value);
+
+                // 商品13
+                ClsFaxOrder.G_Code13 = Utility.NulltoStr(dg1[colHinCode, 25].Value);
+                ClsFaxOrder.G_Nouka13 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 25].Value));
+                ClsFaxOrder.G_Baika13 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 25].Value));
+
+                ClsFaxOrder.Goods13_1 = Utility.NulltoStr(dg1[colDay1, 25].Value);
+                ClsFaxOrder.Goods13_2 = Utility.NulltoStr(dg1[colDay2, 25].Value);
+                ClsFaxOrder.Goods13_3 = Utility.NulltoStr(dg1[colDay3, 25].Value);
+                ClsFaxOrder.Goods13_4 = Utility.NulltoStr(dg1[colDay4, 25].Value);
+                ClsFaxOrder.Goods13_5 = Utility.NulltoStr(dg1[colDay5, 25].Value);
+                ClsFaxOrder.Goods13_6 = Utility.NulltoStr(dg1[colDay6, 25].Value);
+                ClsFaxOrder.Goods13_7 = Utility.NulltoStr(dg1[colDay7, 25].Value);
+
+                // 商品14
+                ClsFaxOrder.G_Code14 = Utility.NulltoStr(dg1[colHinCode, 27].Value);
+                ClsFaxOrder.G_Nouka14 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 27].Value));
+                ClsFaxOrder.G_Baika14 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 27].Value));
+
+                ClsFaxOrder.Goods14_1 = Utility.NulltoStr(dg1[colDay1, 27].Value);
+                ClsFaxOrder.Goods14_2 = Utility.NulltoStr(dg1[colDay2, 27].Value);
+                ClsFaxOrder.Goods14_3 = Utility.NulltoStr(dg1[colDay3, 27].Value);
+                ClsFaxOrder.Goods14_4 = Utility.NulltoStr(dg1[colDay4, 27].Value);
+                ClsFaxOrder.Goods14_5 = Utility.NulltoStr(dg1[colDay5, 27].Value);
+                ClsFaxOrder.Goods14_6 = Utility.NulltoStr(dg1[colDay6, 27].Value);
+                ClsFaxOrder.Goods14_7 = Utility.NulltoStr(dg1[colDay7, 27].Value);
+
+                // 商品15
+                ClsFaxOrder.G_Code15 = Utility.NulltoStr(dg1[colHinCode, 29].Value);
+                ClsFaxOrder.G_Nouka15 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 29].Value));
+                ClsFaxOrder.G_Baika15 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 29].Value));
+
+                ClsFaxOrder.Goods15_1 = Utility.NulltoStr(dg1[colDay1, 29].Value);
+                ClsFaxOrder.Goods15_2 = Utility.NulltoStr(dg1[colDay2, 29].Value);
+                ClsFaxOrder.Goods15_3 = Utility.NulltoStr(dg1[colDay3, 29].Value);
+                ClsFaxOrder.Goods15_4 = Utility.NulltoStr(dg1[colDay4, 29].Value);
+                ClsFaxOrder.Goods15_5 = Utility.NulltoStr(dg1[colDay5, 29].Value);
+                ClsFaxOrder.Goods15_6 = Utility.NulltoStr(dg1[colDay6, 29].Value);
+                ClsFaxOrder.Goods15_7 = Utility.NulltoStr(dg1[colDay7, 29].Value);
+
+                ClsFaxOrder.YyMmDd = DateTime.Now.ToString();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, errMsg, MessageBoxButtons.OK);
+            }
+            finally
+            {
+            }
         }
 
         /// ----------------------------------------------------------------------------------------------------
@@ -1100,37 +1067,37 @@ namespace STSH_OCR.OCR
         /// <returns>
         ///     エラーなし：true, エラーあり：false</returns>
         /// -----------------------------------------------------------------------------------
-        //private bool getErrData(int cIdx, OCRData ocr)
-        //{
-        //    // カレントレコード更新
-        //    CurDataUpDate(cID[cIdx]);
+        private bool getErrData(int cIdx, OCRData ocr)
+        {
+            // カレントレコード更新
+            CurDataUpDate(cID[cIdx]);
 
-        //    // エラー番号初期化
-        //    ocr._errNumber = ocr.eNothing;
+            // エラー番号初期化
+            ocr._errNumber = ocr.eNothing;
 
-        //    // エラーメッセージクリーン
-        //    ocr._errMsg = string.Empty;
+            // エラーメッセージクリーン
+            ocr._errMsg = string.Empty;
 
-        //    //// エラーチェック実行①:カレントレコードから最終レコードまで
-        //    //if (!ocr.errCheckMain(cIdx, (dtsC.FAX注文書.Rows.Count - 1), this, dtsC, dts, cID))
-        //    //{
-        //    //    return false;
-        //    //}
+            // エラーチェック実行①:カレントレコードから最終レコードまで
+            if (!ocr.errCheckMain(cIdx, cID.Length - 1, this, tblFax, tblPtn, cID))
+            {
+                return false;
+            }
 
-        //    //// エラーチェック実行②:最初のレコードからカレントレコードの前のレコードまで
-        //    //if (cIdx > 0)
-        //    //{
-        //    //    if (!ocr.errCheckMain(0, (cIdx - 1), this, dtsC, dts, cID))
-        //    //    {
-        //    //        return false;
-        //    //    }
-        //    //}
+            // エラーチェック実行②:最初のレコードからカレントレコードの前のレコードまで
+            if (cIdx > 0)
+            {
+                if (!ocr.errCheckMain(0, (cIdx - 1), this, dtsC, dts, cID))
+                {
+                    return false;
+                }
+            }
 
-        //    // エラーなし
-        //    lblErrMsg.Text = string.Empty;
+            // エラーなし
+            lblErrMsg.Text = string.Empty;
 
-        //    return true;
-        //}
+            return true;
+        }
 
         ///----------------------------------------------------------------------------------
         /// <summary>
@@ -2788,34 +2755,34 @@ namespace STSH_OCR.OCR
         ///---------------------------------------------------------
         private void errCheckClick()
         {
-            //// 非ログ書き込み状態とする：2015/09/25
-            //editLogStatus = false;
+            // 非ログ書き込み状態とする：2015/09/25
+            editLogStatus = false;
 
-            //// OCRDataクラス生成
-            //OCRData ocr = new OCRData(Conn);
+            // OCRDataクラス生成
+            OCRData ocr = new OCRData();
 
-            //// エラーチェックを実行
-            //if (getErrData(cI, ocr))
-            //{
-            //    MessageBox.Show("エラーはありませんでした", "エラーチェック", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    gcMultiRow1.CurrentCell = null;
-            //    gcMultiRow2.CurrentCell = null;
-            //    gcMultiRow3.CurrentCell = null;
+            // エラーチェックを実行
+            if (getErrData(cI, ocr))
+            {
+                MessageBox.Show("エラーはありませんでした", "エラーチェック", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //gcMultiRow1.CurrentCell = null;
+                //gcMultiRow2.CurrentCell = null;
+                //gcMultiRow3.CurrentCell = null;
 
-            //    // データ表示
-            //    showOcrData(cI);
-            //}
-            //else
-            //{
-            //    // カレントインデックスをエラーありインデックスで更新
-            //    cI = ocr._errHeaderIndex;
+                // データ表示
+                showOcrData(cI);
+            }
+            else
+            {
+                // カレントインデックスをエラーありインデックスで更新
+                cI = ocr._errHeaderIndex;
 
-            //    // データ表示
-            //    showOcrData(cI);
+                // データ表示
+                showOcrData(cI);
 
-            //    // エラー表示
-            //    ErrShow(ocr);
-            //}
+                // エラー表示
+                ErrShow(ocr);
+            }
         }
 
 
@@ -3206,34 +3173,6 @@ namespace STSH_OCR.OCR
         {
             ClsFaxOrder order = null;
 
-            //string sql = "insert into FAX_Order ";
-            //sql += "(画像名, 得意先コード, patternID, SeqNumber, 年, 月, Day1, Day2, Day3, Day4, Day5, Day6, Day7, ";
-            //sql += "Goods1_1, Goods1_2, Goods1_3, Goods1_4, Goods1_5, Goods1_6, Goods1_7, ";
-            //sql += "Goods2_1, Goods2_2, Goods2_3, Goods2_4, Goods2_5, Goods2_6, Goods2_7, ";
-            //sql += "Goods3_1, Goods3_2, Goods3_3, Goods3_4, Goods3_5, Goods3_6, Goods3_7, ";
-            //sql += "Goods4_1, Goods4_2, Goods4_3, Goods4_4, Goods4_5, Goods4_6, Goods4_7, ";
-            //sql += "Goods5_1, Goods5_2, Goods5_3, Goods5_4, Goods5_5, Goods5_6, Goods5_7, ";
-            //sql += "Goods6_1, Goods6_2, Goods6_3, Goods6_4, Goods6_5, Goods6_6, Goods6_7, ";
-            //sql += "Goods7_1, Goods7_2, Goods7_3, Goods7_4, Goods7_5, Goods7_6, Goods7_7, ";
-            //sql += "Goods8_1, Goods8_2, Goods8_3, Goods8_4, Goods8_5, Goods8_6, Goods8_7, ";
-            //sql += "Goods9_1, Goods9_2, Goods9_3, Goods9_4, Goods9_5, Goods9_6, Goods9_7, ";
-            //sql += "Goods10_1, Goods10_2, Goods10_3, Goods10_4, Goods10_5, Goods10_6, Goods10_7, ";
-            //sql += "Goods11_1, Goods11_2, Goods11_3, Goods11_4, Goods11_5, Goods11_6, Goods11_7, ";
-            //sql += "Goods12_1, Goods12_2, Goods12_3, Goods12_4, Goods12_5, Goods12_6, Goods12_7, ";
-            //sql += "Goods13_1, Goods13_2, Goods13_3, Goods13_4, Goods13_5, Goods13_6, Goods13_7, ";
-            //sql += "Goods14_1, Goods14_2, Goods14_3, Goods14_4, Goods14_5, Goods14_6, Goods14_7, ";
-            //sql += "Goods15_1, Goods15_2, Goods15_3, Goods15_4, Goods15_5, Goods15_6, Goods15_7, ";
-            //sql += "更新年月日) ";
-            //sql += "values (";
-
-            //sql += "Goods6, Goods名6, Goods6リード日数, Goods7, Goods名7, Goods7リード日数, Goods8, Goods名8, Goods8リード日数, Goods9, Goods名9, Goods9リード日数, Goods10, Goods名10, Goods10リード日数, ";
-            //sql += "Goods11, Goods名11, Goods11リード日数, Goods12, Goods名12, Goods12リード日数, Goods13, Goods名13, Goods13リード日数, Goods14, Goods名14, Goods14リード日数, Goods15, Goods名15, Goods15リード日数, ";
-            //sql += "Goods16, Goods名16, Goods16リード日数, Goods17, Goods名17, Goods17リード日数, Goods18, Goods名18, Goods18リード日数, Goods19, Goods名19, Goods19リード日数, Goods20, Goods名20, Goods20リード日数, ";
-            //sql += "備考, 更新年月日) ";
-            //sql += "values (";
-            //sql += g[colTdkCode, i].Value.ToString() + "," + g[colPtnNum, i].Value.ToString();
-
-
             try
             {
                 // 対象CSVファイル数を取得
@@ -3482,8 +3421,30 @@ namespace STSH_OCR.OCR
                     order.Goods20_6 = string.Empty;
                     order.Goods20_7 = string.Empty;
 
+                    order.G_Code1 = string.Empty;
+                    order.G_Code2 = string.Empty;
+                    order.G_Code3 = string.Empty;
+                    order.G_Code4 = string.Empty;
+                    order.G_Code5 = string.Empty;
+                    order.G_Code6 = string.Empty;
+                    order.G_Code7 = string.Empty;
+                    order.G_Code8 = string.Empty;
+                    order.G_Code9 = string.Empty;
+                    order.G_Code10 = string.Empty;
+                    order.G_Code11 = string.Empty;
+                    order.G_Code12 = string.Empty;
+                    order.G_Code13 = string.Empty;
+                    order.G_Code14 = string.Empty;
+                    order.G_Code15 = string.Empty;
+                    order.G_Code16 = string.Empty;
+                    order.G_Code17 = string.Empty;
+                    order.G_Code18 = string.Empty;
+                    order.G_Code19 = string.Empty;
+                    order.G_Code20 = string.Empty;
+
                     order.memo = string.Empty;
                     order.Veri = global.flgOff;
+                    order.PatternLoad = global.flgOff;
                     order.YyMmDd = DateTime.Now.ToString();
 
                     // ＦＡＸ発注書データを追加登録する
@@ -3943,12 +3904,12 @@ namespace STSH_OCR.OCR
                     ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, 
                         Properties.Settings.Default.仕入先マスター, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
 
-                    dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;
-                    dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;
-                    dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;
-                    dg1[colIrisu, e.RowIndex].Value = syohin.CASE_IRISU;
-                    dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;
-                    dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;
+                    dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;       // 仕入先名
+                    dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;             // 商品名
+                    dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;    // 規格
+                    dg1[colIrisu, e.RowIndex].Value = syohin.CASE_IRISU;            // 入数
+                    dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;     // 納価
+                    dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;          // 売価
                     //dg1[colNouka, e.RowIndex + 1].Value = syohin.JAN_CD;
                 }
             }

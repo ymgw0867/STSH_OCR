@@ -136,11 +136,12 @@ namespace STSH_OCR
         private void button3_Click(object sender, EventArgs e)
         {
             // データ作成処理へ
-            Hide();
-            frmCorrect frm = new frmCorrect(string.Empty);
-            frm.ShowDialog();
-            Show();
-            //KintaiData();
+            //Hide();
+            //frmCorrect frm = new frmCorrect(string.Empty);
+            //frm.ShowDialog();
+            //Show();
+
+            KintaiData();
         }
 
         private void Form1_Load(object sender, EventArgs e)

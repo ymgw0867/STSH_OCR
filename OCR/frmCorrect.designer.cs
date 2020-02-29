@@ -109,6 +109,7 @@
             this.btnRight.TabStop = false;
             this.toolTip1.SetToolTip(this.btnRight, "画像を右回転");
             this.btnRight.UseVisualStyleBackColor = false;
+            this.btnRight.Visible = false;
             this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
             // 
             // btnLeft
@@ -123,6 +124,7 @@
             this.btnLeft.TabStop = false;
             this.toolTip1.SetToolTip(this.btnLeft, "画像を左回転");
             this.btnLeft.UseVisualStyleBackColor = false;
+            this.btnLeft.Visible = false;
             this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
             // lblNoImage

@@ -71,7 +71,7 @@ namespace STSH_OCR.Common
         public int ePattern = 4;
 
         /// <summary> 
-        ///     エラー項目 = 届先番号 </summary>
+        ///     エラー項目 = 得意先番号 </summary>
         public int eTdkNo = 5;
 
         /// <summary> 
@@ -95,34 +95,15 @@ namespace STSH_OCR.Common
         public int eAddSuu2 = 10;
 
         /// <summary> 
-        ///     エラー項目 = 事由 </summary>
-        public int eJiyu1 = 9;
-        public int eJiyu2 = 10;
-        public int eJiyu3 = 11;
+        ///     エラー項目 = 店着日付 </summary>
+        public int eTenDate1 = 11;
+        public int eTenDate2 = 12;
+        public int eTenDate3 = 13;
+        public int eTenDate4 = 14;
+        public int eTenDate5 = 15;
+        public int eTenDate6 = 16;
+        public int eTenDate7 = 17;
 
-        /// <summary> 
-        ///     エラー項目 = シフトコード </summary>
-        public int eSftCode = 12;
-        
-        /// <summary> 
-        ///     エラー項目 = 開始時 </summary>
-        public int eSH = 13;
-
-        /// <summary> 
-        ///     エラー項目 = 開始分 </summary>
-        public int eSM = 14;
-
-        /// <summary> 
-        ///     エラー項目 = 終了時 </summary>
-        public int eEH = 15;
-
-        /// <summary> 
-        ///     エラー項目 = 終了分 </summary>
-        public int eEM = 16;
-
-        /// <summary> 
-        ///     エラー項目 = 残業理由1 </summary>
-        public int eZanRe1 = 17;
 
         /// <summary> 
         ///     エラー項目 = 残業時1 </summary>
@@ -219,291 +200,6 @@ namespace STSH_OCR.Common
         // テーブルアダプターインスタンス
         //NHBRDataSetTableAdapters.TableAdapterManager adpMn = new NHBRDataSetTableAdapters.TableAdapterManager();
         
-        ///-----------------------------------------------------------------------
-        /// <summary>
-        ///     CSVデータをMDBに登録する：DataSet Version </summary>
-        /// <param name="_inPath">
-        ///     CSVデータパス</param>
-        /// <param name="frmP">
-        ///     プログレスバーフォームオブジェクト</param>
-        /// <param name="myCode">
-        ///     担当者コード </param>
-        ///-----------------------------------------------------------------------
-        public static void CsvToSQLite(string _inPath, frmPrg frmP, string myCode, SQLiteConnection Cn)
-        {
-            // テーブルセットオブジェクト
-            //NHBR_CLIDataSet dts = new NHBR_CLIDataSet();
-
-            ClsFaxOrder order = null;
-
-            //string sql = "insert into FAX_Order ";
-            //sql += "(画像名, 得意先コード, patternID, SeqNumber, 年, 月, Day1, Day2, Day3, Day4, Day5, Day6, Day7, ";
-            //sql += "Goods1_1, Goods1_2, Goods1_3, Goods1_4, Goods1_5, Goods1_6, Goods1_7, ";
-            //sql += "Goods2_1, Goods2_2, Goods2_3, Goods2_4, Goods2_5, Goods2_6, Goods2_7, ";
-            //sql += "Goods3_1, Goods3_2, Goods3_3, Goods3_4, Goods3_5, Goods3_6, Goods3_7, ";
-            //sql += "Goods4_1, Goods4_2, Goods4_3, Goods4_4, Goods4_5, Goods4_6, Goods4_7, ";
-            //sql += "Goods5_1, Goods5_2, Goods5_3, Goods5_4, Goods5_5, Goods5_6, Goods5_7, ";
-            //sql += "Goods6_1, Goods6_2, Goods6_3, Goods6_4, Goods6_5, Goods6_6, Goods6_7, ";
-            //sql += "Goods7_1, Goods7_2, Goods7_3, Goods7_4, Goods7_5, Goods7_6, Goods7_7, ";
-            //sql += "Goods8_1, Goods8_2, Goods8_3, Goods8_4, Goods8_5, Goods8_6, Goods8_7, ";
-            //sql += "Goods9_1, Goods9_2, Goods9_3, Goods9_4, Goods9_5, Goods9_6, Goods9_7, ";
-            //sql += "Goods10_1, Goods10_2, Goods10_3, Goods10_4, Goods10_5, Goods10_6, Goods10_7, ";
-            //sql += "Goods11_1, Goods11_2, Goods11_3, Goods11_4, Goods11_5, Goods11_6, Goods11_7, ";
-            //sql += "Goods12_1, Goods12_2, Goods12_3, Goods12_4, Goods12_5, Goods12_6, Goods12_7, ";
-            //sql += "Goods13_1, Goods13_2, Goods13_3, Goods13_4, Goods13_5, Goods13_6, Goods13_7, ";
-            //sql += "Goods14_1, Goods14_2, Goods14_3, Goods14_4, Goods14_5, Goods14_6, Goods14_7, ";
-            //sql += "Goods15_1, Goods15_2, Goods15_3, Goods15_4, Goods15_5, Goods15_6, Goods15_7, ";
-            //sql += "更新年月日) ";
-            //sql += "values (";
-
-            //sql += "Goods6, Goods名6, Goods6リード日数, Goods7, Goods名7, Goods7リード日数, Goods8, Goods名8, Goods8リード日数, Goods9, Goods名9, Goods9リード日数, Goods10, Goods名10, Goods10リード日数, ";
-            //sql += "Goods11, Goods名11, Goods11リード日数, Goods12, Goods名12, Goods12リード日数, Goods13, Goods名13, Goods13リード日数, Goods14, Goods名14, Goods14リード日数, Goods15, Goods名15, Goods15リード日数, ";
-            //sql += "Goods16, Goods名16, Goods16リード日数, Goods17, Goods名17, Goods17リード日数, Goods18, Goods名18, Goods18リード日数, Goods19, Goods名19, Goods19リード日数, Goods20, Goods名20, Goods20リード日数, ";
-            //sql += "備考, 更新年月日) ";
-            //sql += "values (";
-            //sql += g[colTdkCode, i].Value.ToString() + "," + g[colPtnNum, i].Value.ToString();
-
-            try
-            {
-                // 対象CSVファイル数を取得
-                int cLen = System.IO.Directory.GetFiles(_inPath, "*.csv").Count();
-
-                //CSVデータをSQLiteへ取込
-                int cCnt = 0;
-                foreach (string files in System.IO.Directory.GetFiles(_inPath, "*.csv"))
-                {
-                    //件数カウント
-                    cCnt++;
-
-                    //プログレスバー表示
-                    frmP.Text = "OCR変換CSVデータロード中　" + cCnt.ToString() + "/" + cLen.ToString();
-                    frmP.progressValue = cCnt * 100 / cLen;
-                    frmP.ProgressStep();
-
-                    ////////OCR処理対象のCSVファイルかファイル名の文字数を検証する
-                    //////string fn = Path.GetFileName(files);
-
-                    // 新しいFAX注文書Row
-                    //NHBR_CLIDataSet.FAX注文書Row nr = dts.FAX注文書.NewFAX注文書Row();
-
-                    int mCnt = 1;
-
-                    // CSVファイルインポート
-                    foreach (var stBuffer in System.IO.File.ReadAllLines(files, Encoding.Default))
-                    {
-                        // カンマ区切りで分割して配列に格納する
-                        string[] stCSV = stBuffer.Split(',');
-                        
-                        // ヘッダ
-                        if (stCSV[0] == "*")
-                        {
-                            order = new ClsFaxOrder
-                            { 
-                                ID = Utility.GetStringSubMax(stCSV[1].Trim(), 17),
-                                ImageFileName = Utility.GetStringSubMax(stCSV[1].Trim(), 21),
-                                TokuisakiCode = Utility.StrtoInt(stCSV[5].Trim()),
-                                patternID = Utility.StrtoInt(stCSV[4].Trim()),
-                                SeqNumber = Utility.StrtoInt(stCSV[6].Trim()),
-                                Year = Utility.StrtoInt(stCSV[2].Trim()),
-                                Month = Utility.StrtoInt(stCSV[3].Trim()),
-                                Day1 = Utility.StrtoInt(stCSV[7].Trim()),
-                                Day2 = Utility.StrtoInt(stCSV[8].Trim()),
-                                Day3 = Utility.StrtoInt(stCSV[9].Trim()),
-                                Day4 = Utility.StrtoInt(stCSV[10].Trim()),
-                                Day5 = Utility.StrtoInt(stCSV[11].Trim()),
-                                Day6 = Utility.StrtoInt(stCSV[12].Trim()),
-                                Day7 = Utility.StrtoInt(stCSV[13].Trim())
-                            };
-                        }
-                        else
-                        {
-                            switch (mCnt)
-                            {
-                                case 1:
-                                    order.Goods1_1 = stCSV[0].Trim();
-                                    order.Goods1_2 = stCSV[1].Trim();
-                                    order.Goods1_3 = stCSV[2].Trim();
-                                    order.Goods1_4 = stCSV[3].Trim();
-                                    order.Goods1_5 = stCSV[4].Trim();
-                                    order.Goods1_6 = stCSV[5].Trim();
-                                    order.Goods1_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 2:
-                                    order.Goods2_1 = stCSV[0].Trim();
-                                    order.Goods2_2 = stCSV[1].Trim();
-                                    order.Goods2_3 = stCSV[2].Trim();
-                                    order.Goods2_4 = stCSV[3].Trim();
-                                    order.Goods2_5 = stCSV[4].Trim();
-                                    order.Goods2_6 = stCSV[5].Trim();
-                                    order.Goods2_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 3:
-                                    order.Goods3_1 = stCSV[0].Trim();
-                                    order.Goods3_2 = stCSV[1].Trim();
-                                    order.Goods3_3 = stCSV[2].Trim();
-                                    order.Goods3_4 = stCSV[3].Trim();
-                                    order.Goods3_5 = stCSV[4].Trim();
-                                    order.Goods3_6 = stCSV[5].Trim();
-                                    order.Goods3_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 4:
-                                    order.Goods4_1 = stCSV[0].Trim();
-                                    order.Goods4_2 = stCSV[1].Trim();
-                                    order.Goods4_3 = stCSV[2].Trim();
-                                    order.Goods4_4 = stCSV[3].Trim();
-                                    order.Goods4_5 = stCSV[4].Trim();
-                                    order.Goods4_6 = stCSV[5].Trim();
-                                    order.Goods4_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 5:
-                                    order.Goods5_1 = stCSV[0].Trim();
-                                    order.Goods5_2 = stCSV[1].Trim();
-                                    order.Goods5_3 = stCSV[2].Trim();
-                                    order.Goods5_4 = stCSV[3].Trim();
-                                    order.Goods5_5 = stCSV[4].Trim();
-                                    order.Goods5_6 = stCSV[5].Trim();
-                                    order.Goods5_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 6:
-                                    order.Goods6_1 = stCSV[0].Trim();
-                                    order.Goods6_2 = stCSV[1].Trim();
-                                    order.Goods6_3 = stCSV[2].Trim();
-                                    order.Goods6_4 = stCSV[3].Trim();
-                                    order.Goods6_5 = stCSV[4].Trim();
-                                    order.Goods6_6 = stCSV[5].Trim();
-                                    order.Goods6_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 7:
-                                    order.Goods7_1 = stCSV[0].Trim();
-                                    order.Goods7_2 = stCSV[1].Trim();
-                                    order.Goods7_3 = stCSV[2].Trim();
-                                    order.Goods7_4 = stCSV[3].Trim();
-                                    order.Goods7_5 = stCSV[4].Trim();
-                                    order.Goods7_6 = stCSV[5].Trim();
-                                    order.Goods7_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 8:
-                                    order.Goods8_1 = stCSV[0].Trim();
-                                    order.Goods8_2 = stCSV[1].Trim();
-                                    order.Goods8_3 = stCSV[2].Trim();
-                                    order.Goods8_4 = stCSV[3].Trim();
-                                    order.Goods8_5 = stCSV[4].Trim();
-                                    order.Goods8_6 = stCSV[5].Trim();
-                                    order.Goods8_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 9:
-                                    order.Goods9_1 = stCSV[0].Trim();
-                                    order.Goods9_2 = stCSV[1].Trim();
-                                    order.Goods9_3 = stCSV[2].Trim();
-                                    order.Goods9_4 = stCSV[3].Trim();
-                                    order.Goods9_5 = stCSV[4].Trim();
-                                    order.Goods9_6 = stCSV[5].Trim();
-                                    order.Goods9_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 10:
-                                    order.Goods10_1 = stCSV[0].Trim();
-                                    order.Goods10_2 = stCSV[1].Trim();
-                                    order.Goods10_3 = stCSV[2].Trim();
-                                    order.Goods10_4 = stCSV[3].Trim();
-                                    order.Goods10_5 = stCSV[4].Trim();
-                                    order.Goods10_6 = stCSV[5].Trim();
-                                    order.Goods10_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 11:
-                                    order.Goods11_1 = stCSV[0].Trim();
-                                    order.Goods11_2 = stCSV[1].Trim();
-                                    order.Goods11_3 = stCSV[2].Trim();
-                                    order.Goods11_4 = stCSV[3].Trim();
-                                    order.Goods11_5 = stCSV[4].Trim();
-                                    order.Goods11_6 = stCSV[5].Trim();
-                                    order.Goods11_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 12:
-                                    order.Goods12_1 = stCSV[0].Trim();
-                                    order.Goods12_2 = stCSV[1].Trim();
-                                    order.Goods12_3 = stCSV[2].Trim();
-                                    order.Goods12_4 = stCSV[3].Trim();
-                                    order.Goods12_5 = stCSV[4].Trim();
-                                    order.Goods12_6 = stCSV[5].Trim();
-                                    order.Goods12_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 13:
-                                    order.Goods13_1 = stCSV[0].Trim();
-                                    order.Goods13_2 = stCSV[1].Trim();
-                                    order.Goods13_3 = stCSV[2].Trim();
-                                    order.Goods13_4 = stCSV[3].Trim();
-                                    order.Goods13_5 = stCSV[4].Trim();
-                                    order.Goods13_6 = stCSV[5].Trim();
-                                    order.Goods13_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 14:
-                                    order.Goods14_1 = stCSV[0].Trim();
-                                    order.Goods14_2 = stCSV[1].Trim();
-                                    order.Goods14_3 = stCSV[2].Trim();
-                                    order.Goods14_4 = stCSV[3].Trim();
-                                    order.Goods14_5 = stCSV[4].Trim();
-                                    order.Goods14_6 = stCSV[5].Trim();
-                                    order.Goods14_7 = stCSV[6].Trim();
-                                    break;
-
-                                case 15:
-                                    order.Goods15_1 = stCSV[0].Trim();
-                                    order.Goods15_2 = stCSV[1].Trim();
-                                    order.Goods15_3 = stCSV[2].Trim();
-                                    order.Goods15_4 = stCSV[3].Trim();
-                                    order.Goods15_5 = stCSV[4].Trim();
-                                    order.Goods15_6 = stCSV[5].Trim();
-                                    order.Goods15_7 = stCSV[6].Trim();
-                                    break;
-
-                                default:
-                                    break;
-                            }
-
-                            mCnt++;
-                        }
-
-                        order.memo = string.Empty;
-                        order.Veri = global.flgOff;
-                        order.YyMmDd = DateTime.Now.ToString();
-                    }
-
-                    // ＦＡＸ発注書データを追加登録する
-                    tblFax.InsertOnSubmit();
-                    context.SubmitChanges();
-                }
-
-                // ローカルのデータベースを更新
-                context.SubmitChanges();
-
-                //CSVファイルを削除する
-                foreach (string files in System.IO.Directory.GetFiles(_inPath, "*.csv"))
-                {
-                    System.IO.File.Delete(files);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "ＦＡＸ注文書CSVインポート処理", MessageBoxButtons.OK);
-            }
-            finally
-            {
-            }
-        }
-
         ///---------------------------------------------------------------------------------
         /// <summary>
         ///     追加用FAX注文書Rowオブジェクトを作成する </summary>
@@ -519,7 +215,7 @@ namespace STSH_OCR.Common
             r.ID = Utility.GetStringSubMax(stCSV[1].Trim(), 17);
             r.画像名 = Utility.GetStringSubMax(stCSV[1].Trim(), 17) + ".tif";
             r.パターンID = Utility.StrtoInt(Utility.GetStringSubMax(stCSV[2].Trim(), 4).Replace("-", ""));
-            r.届先番号 = Utility.StrtoInt(Utility.GetStringSubMax(stCSV[3].Trim(), 6).Replace("-", ""));
+            r.得意先番号 = Utility.StrtoInt(Utility.GetStringSubMax(stCSV[3].Trim(), 6).Replace("-", ""));
             r.発注番号 = Utility.GetStringSubMax(stCSV[5].Trim(), 8).Replace("-", "").Replace(" ", "");
             
             //r.納品希望月 = Utility.GetStringSubMax(stCSV[6].Trim(), 2).Replace("-", "");   // 2018/09/14
@@ -832,7 +528,7 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     True:エラーなし、false:エラーあり</returns>
         ///-----------------------------------------------------------------------------------------------
-        public Boolean errCheckMain(int sIx, int eIx, Form frm, NHBR_CLIDataSet dtsC, NHBRDataSet dts, string[] cID)
+        public Boolean errCheckMain(int sIx, int eIx, Form frm, Table<ClsFaxOrder> tblFax, Table<ClsOrderPattern> tblPtn, string[] cID)
         {
             int rCnt = 0;
 
@@ -845,7 +541,7 @@ namespace STSH_OCR.Common
             frmP.Show();
 
             // レコード件数取得
-            int cTotal = dtsC.FAX注文書.Rows.Count;
+            int cTotal = cID.Length;
 
             // 出勤簿データ読み出し
             Boolean eCheck = true;
@@ -864,10 +560,10 @@ namespace STSH_OCR.Common
                 if (i >= sIx && i <= eIx)
                 {
                     // FAX注文書データのコレクションを取得します
-                    NHBR_CLIDataSet.FAX注文書Row r = dtsC.FAX注文書.Single(a => a.ID == cID[i]);
+                    ClsFaxOrder r = tblFax.Single(a => a.ID == cID[i]);
 
                     // エラーチェック実施
-                    eCheck = errCheckData(dtsC, r, dts);
+                    eCheck = errCheckData(dtsC, r, tblPtn);
 
                     if (!eCheck)　//エラーがあったとき
                     {
@@ -922,88 +618,229 @@ namespace STSH_OCR.Common
         ///     エラーなし：true, エラー有り：false</returns>
         ///-----------------------------------------------------------------------------------------------
         /// 
-        public Boolean errCheckData(NHBR_CLIDataSet dtsC, NHBR_CLIDataSet.FAX注文書Row r, NHBRDataSet dts)
+        public Boolean errCheckData(NHBR_CLIDataSet dtsC,  ClsFaxOrder r, Table<ClsOrderPattern> ptn)
         {
             string sDate;
             DateTime eDate;
-            NHBR_CLIDataSet _dtsC = dtsC;
-            NHBRDataSet _dts = dts;
 
             // 確認チェック
-            if (r.確認 == global.flgOff)
+            if (r.Veri == global.flgOff)
             {
                 setErrStatus(eDataCheck, 0, "未確認の発注書です");
                 return false;
             }
 
-            // 届先番号
-            if (!getTdkStatus(r.届先番号.ToString().PadLeft(6, '0')))
+            // 年月
+            int rDate = r.Year * 100 + r.Month;
+            int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Day;
+            if (rDate < toDate)
             {
-                setErrStatus(eTdkNo, 0, "未確認のお客様番号です");
+                setErrStatus(eYearMonth, 0, "年月が正しくありません");
                 return false;
             }
-            
+
             // パターンID : 「０」はフリー入力可能とする 2017/08/22
-            if (r.パターンID != global.flgOff)
+            if (r.patternID != global.flgOff)
             {
-                if (!_dts.パターンID.Any(a => a.届先番号 == r.届先番号 && a.連番 == r.パターンID))
+                if (!ptn.Any(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber))
                 {
-                    setErrStatus(ePattern, 0, "登録されていないパターンＩＤです");
+                    setErrStatus(ePattern, 0, "登録されていない発注書番号です");
                     return false;
                 }
             }
 
-            // 納品希望日
-            if (r.納品希望月 == string.Empty && r.納品希望日 != string.Empty)
+            // 得意先コード
+            if (!getTdkStatus(r.TokuisakiCode.ToString().PadLeft(7, '0')))
             {
-                setErrStatus(eMonth, 0, "納品希望月が記入されていません");
+                setErrStatus(eTdkNo, 0, "不明な得意先コードです");
                 return false;
             }
 
-            if (r.納品希望月 != string.Empty && r.納品希望日 == string.Empty)
+            // 店着日付
+            DateTime dt;
+            string rdt = r.Year + "/" + r.Month + "/" + r.Day1;
+            if (!DateTime.TryParse(rdt, out dt))
             {
-                setErrStatus(eDay, 0, "納品希望日が記入されていません");
+                setErrStatus(eTenDate1, 0, "店着日付が正しくありません");
                 return false;
             }
 
-            if (r.納品希望月 != string.Empty || r.納品希望日 != string.Empty)
+            DayOfWeek wk = dt.DayOfWeek;
+            if ((Int32)wk != 1)
             {
-                int y = DateTime.Today.Year;
-                int m = DateTime.Today.Month;
-                string ymd;
-                DateTime dt;
+                setErrStatus(eTenDate1, 0, "店着日付の曜日が正しくありません");
+                return false;
+            }
 
-                if (Utility.StrtoInt(r.納品希望月) < m)
-                {
-                    // 希望月が翌年のとき
-                    ymd = (y + 1) + "/" + Utility.StrtoInt(r.納品希望月) + "/" + Utility.StrtoInt(r.納品希望日);
-                }
-                else
-                {
-                    // 希望月が当年のとき
-                    ymd = y + "/" + Utility.StrtoInt(r.納品希望月) + "/" + Utility.StrtoInt(r.納品希望日);
-                }
 
-                if (!DateTime.TryParse(ymd, out dt))
+            // 商品未登録の発注
+            if (r.G_Code1 == string.Empty)
+            {
+                if  (r.Goods1_1 != string.Empty || r.Goods1_2 != string.Empty || r.Goods1_3 != string.Empty || r.Goods1_4 != string.Empty ||
+                     r.Goods1_5 != string.Empty || r.Goods1_6 != string.Empty || r.Goods1_7 != string.Empty)
                 {
-                    setErrStatus(eMonth, 0, "納品希望日が正しくありません");
+                    setErrStatus(eSH, 0, "商品が登録されていません");
                     return false;
                 }
             }
 
-            // 再FAXチェック：2018/08/03
-            if (r.メモ.Contains(global.REFAX))
+            if (r.G_Code2 == string.Empty)
             {
-                setErrStatus(eReFax, 0, "再FAXの発注書は再FAXフォルダへ移動してください。" + Environment.NewLine + "再FAXではない場合はチェックを外してください。");
-                return false;
+                if (r.Goods2_1 != string.Empty || r.Goods2_2 != string.Empty || r.Goods2_3 != string.Empty || r.Goods2_4 != string.Empty ||
+                     r.Goods2_5 != string.Empty || r.Goods2_6 != string.Empty || r.Goods2_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 1, "商品が登録されていません");
+                    return false;
+                }
             }
-            
+
+            if (r.G_Code3 == string.Empty)
+            {
+                if (r.Goods3_1 != string.Empty || r.Goods3_2 != string.Empty || r.Goods3_3 != string.Empty || r.Goods3_4 != string.Empty ||
+                     r.Goods3_5 != string.Empty || r.Goods3_6 != string.Empty || r.Goods3_7 != string.Empty)
+                {
+                    setErrStatus(eSH,2, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code4 == string.Empty)
+            {
+                if (r.Goods4_1 != string.Empty || r.Goods4_2 != string.Empty || r.Goods4_3 != string.Empty || r.Goods4_4 != string.Empty ||
+                     r.Goods4_5 != string.Empty || r.Goods4_6 != string.Empty || r.Goods4_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 3, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code5 == string.Empty)
+            {
+                if (r.Goods5_1 != string.Empty || r.Goods5_2 != string.Empty || r.Goods5_3 != string.Empty || r.Goods5_4 != string.Empty ||
+                     r.Goods5_5 != string.Empty || r.Goods5_6 != string.Empty || r.Goods5_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 4, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code6 == string.Empty)
+            {
+                if (r.Goods6_1 != string.Empty || r.Goods6_2 != string.Empty || r.Goods6_3 != string.Empty || r.Goods6_4 != string.Empty ||
+                     r.Goods6_5 != string.Empty || r.Goods6_6 != string.Empty || r.Goods6_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 5, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code7 == string.Empty)
+            {
+                if (r.Goods8_1 != string.Empty || r.Goods7_2 != string.Empty || r.Goods7_3 != string.Empty || r.Goods7_4 != string.Empty ||
+                     r.Goods7_5 != string.Empty || r.Goods7_6 != string.Empty || r.Goods7_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 6, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code8 == string.Empty)
+            {
+                if (r.Goods8_1 != string.Empty || r.Goods8_2 != string.Empty || r.Goods8_3 != string.Empty || r.Goods8_4 != string.Empty ||
+                     r.Goods8_5 != string.Empty || r.Goods8_6 != string.Empty || r.Goods8_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 7, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code9 == string.Empty)
+            {
+                if (r.Goods9_1 != string.Empty || r.Goods9_2 != string.Empty || r.Goods9_3 != string.Empty || r.Goods9_4 != string.Empty ||
+                     r.Goods9_5 != string.Empty || r.Goods9_6 != string.Empty || r.Goods9_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 8, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code10 == string.Empty)
+            {
+                if (r.Goods10_1 != string.Empty || r.Goods10_2 != string.Empty || r.Goods10_3 != string.Empty || r.Goods10_4 != string.Empty ||
+                     r.Goods10_5 != string.Empty || r.Goods10_6 != string.Empty || r.Goods10_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 9, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code11 == string.Empty)
+            {
+                if (r.Goods11_1 != string.Empty || r.Goods11_2 != string.Empty || r.Goods11_3 != string.Empty || r.Goods11_4 != string.Empty ||
+                     r.Goods11_5 != string.Empty || r.Goods11_6 != string.Empty || r.Goods11_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 10, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code12 == string.Empty)
+            {
+                if (r.Goods13_1 != string.Empty || r.Goods12_2 != string.Empty || r.Goods12_3 != string.Empty || r.Goods12_4 != string.Empty ||
+                     r.Goods12_5 != string.Empty || r.Goods12_6 != string.Empty || r.Goods12_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 11, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code13 == string.Empty)
+            {
+                if (r.Goods13_1 != string.Empty || r.Goods13_2 != string.Empty || r.Goods13_3 != string.Empty || r.Goods13_4 != string.Empty ||
+                     r.Goods13_5 != string.Empty || r.Goods13_6 != string.Empty || r.Goods13_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 12, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code14 == string.Empty)
+            {
+                if (r.Goods14_1 != string.Empty || r.Goods14_2 != string.Empty || r.Goods14_3 != string.Empty || r.Goods14_4 != string.Empty ||
+                     r.Goods14_5 != string.Empty || r.Goods14_6 != string.Empty || r.Goods14_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 13, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+            if (r.G_Code15 == string.Empty)
+            {
+                if (r.Goods15_1 != string.Empty || r.Goods15_2 != string.Empty || r.Goods15_3 != string.Empty || r.Goods15_4 != string.Empty ||
+                     r.Goods15_5 != string.Empty || r.Goods15_6 != string.Empty || r.Goods15_7 != string.Empty)
+                {
+                    setErrStatus(eSH, 14, "商品が登録されていません");
+                    return false;
+                }
+            }
+
+
+
+
+
+
+
+
+
+
             // パターン登録商品 : パターンID「０」以外を対象　2017/08/22
-            if (r.パターンID != global.flgOff)
+            if (r.patternID != global.flgOff)
             {
-                NHBR_OCR.NHBRDataSet.パターンIDRow t = dts.パターンID.Single(a => a.届先番号 == r.届先番号 && a.連番 == r.パターンID);
+                //NHBR_OCR.NHBRDataSet.パターンIDRow t = dts.パターンID.Single(a => a.得意先番号 == r.得意先番号 && a.連番 == r.パターンID);
 
-                if (t.商品1 == global.flgOff && r.注文数1 != string.Empty)
+                ClsOrderPattern t = ptn.Single(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber);
+
+                if (t.G_Code1 == string.Empty && r. != string.Empty)
                 {
                     setErrStatus(eSuu, 0, "商品登録されていません");
                     return false;
@@ -1914,28 +1751,50 @@ namespace STSH_OCR.Common
             return true;
         }
 
+
+        private bool ChkTenDate(string rDate)
+        {
+            // 店着日付
+            DateTime dt;
+            if (!DateTime.TryParse(rDate, out dt))
+            {
+                setErrStatus(eTenDate1, 0, "店着日付が正しくありません");
+                return false;
+            }
+
+            DayOfWeek wk = dt.DayOfWeek;
+            if ((Int32)wk != 1)
+            {
+                setErrStatus(eTenDate1, 0, "店着日付の曜日が正しくありません");
+                return false;
+            }
+        }
+
+
+
+
+
+
+
         ///--------------------------------------------------------------
         /// <summary>
-        ///     届先番号が登録済みか調べる </summary>
+        ///     得意先番号が登録済みか調べる </summary>
         /// <param name="tCode">
-        ///     届先番号</param>
+        ///     得意先番号</param>
         /// <returns>
         ///     true:登録済み、false:未登録</returns>
         ///--------------------------------------------------------------
         private bool getTdkStatus(string tCode)
         {
-            // 届先番号
             bool rtn = false;
-            string strSQL = "SELECT KOK_ID, NOU_NAME, NOU_JYU1, NOU_JYU2, NOU_TEL from RAKUSYO_FAXOCR.V_NOUHINSAKI WHERE KOK_ID = '" + tCode + "'";
-            OracleCommand Cmd = new OracleCommand(strSQL, _Conn);
-            OracleDataReader dR = Cmd.ExecuteReader();
-            if (dR.HasRows)
+            string _Tel = "";
+            string _Jyu = "";
+
+            // 得意先番号
+            if (Utility.getNouhinName(tCode, out _Tel, out _Jyu) != string.Empty)
             {
                 rtn = true;
             }
-
-            dR.Dispose();
-            Cmd.Dispose();
 
             return rtn;
         }

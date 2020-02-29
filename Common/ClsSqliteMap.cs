@@ -583,83 +583,83 @@ namespace STSH_OCR.Common
 
         // 商品コード１
         [Column(Name = "G_Code1")]
-        public int G_Code1 { get; set; }
+        public string G_Code1 { get; set; }
 
         // 商品コード２
         [Column(Name = "G_Code2")]
-        public int G_Code2 { get; set; }
+        public string G_Code2 { get; set; }
 
         // 商品コード３
         [Column(Name = "G_Code3")]
-        public int G_Code3 { get; set; }
+        public string G_Code3 { get; set; }
 
         // 商品コード４
         [Column(Name = "G_Code4")]
-        public int G_Code4 { get; set; }
+        public string G_Code4 { get; set; }
 
         // 商品コード５
         [Column(Name = "G_Code5")]
-        public int G_Code5 { get; set; }
+        public string G_Code5 { get; set; }
 
         // 商品コード６
         [Column(Name = "G_Code6")]
-        public int G_Code6 { get; set; }
+        public string G_Code6 { get; set; }
 
         // 商品コード７
         [Column(Name = "G_Code7")]
-        public int G_Code7 { get; set; }
+        public string G_Code7 { get; set; }
 
         // 商品コード８
         [Column(Name = "G_Code8")]
-        public int G_Code8 { get; set; }
+        public string G_Code8 { get; set; }
 
         // 商品コード９
         [Column(Name = "G_Code9")]
-        public int G_Code9 { get; set; }
+        public string G_Code9 { get; set; }
 
         // 商品コード10
         [Column(Name = "G_Code10")]
-        public int G_Code10 { get; set; }
+        public string G_Code10 { get; set; }
 
         // 商品コード11
         [Column(Name = "G_Code11")]
-        public int G_Code11 { get; set; }
+        public string G_Code11 { get; set; }
 
         // 商品コード12
         [Column(Name = "G_Code12")]
-        public int G_Code12 { get; set; }
+        public string G_Code12 { get; set; }
 
         // 商品コード13
         [Column(Name = "G_Code13")]
-        public int G_Code13 { get; set; }
+        public string G_Code13 { get; set; }
 
         // 商品コード14
         [Column(Name = "G_Code14")]
-        public int G_Code14 { get; set; }
+        public string G_Code14 { get; set; }
 
         // 商品コード15
         [Column(Name = "G_Code15")]
-        public int G_Code15 { get; set; }
+        public string G_Code15 { get; set; }
 
         // 商品コード16
         [Column(Name = "G_Code16")]
-        public int G_Code16 { get; set; }
+        public string G_Code16 { get; set; }
 
         // 商品コード17
         [Column(Name = "G_Code17")]
-        public int G_Code17 { get; set; }
+        public string G_Code17 { get; set; }
 
         // 商品コード18
         [Column(Name = "G_Code18")]
-        public int G_Code18 { get; set; }
+        public string G_Code18 { get; set; }
 
         // 商品コード19
         [Column(Name = "G_Code19")]
-        public int G_Code19 { get; set; }
+        public string G_Code19 { get; set; }
 
         // 商品コード20
         [Column(Name = "G_Code20")]
-        public int G_Code20 { get; set; }
+        public string G_Code20 { get; set; }
 
         // 納価１
         [Column(Name = "G_Nouka1")]
@@ -908,6 +908,10 @@ namespace STSH_OCR.Common
         // 確認
         [Column(Name = "確認")]
         public int Veri { get; set; }
+
+        // パターンロード
+        [Column(Name = "パターンロード")]
+        public int PatternLoad { get; set; }
 
         // 更新年月日
         [Column(Name = "更新年月日")]
