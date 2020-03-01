@@ -87,7 +87,7 @@
             // 
             // hScrollBar1
             // 
-            this.hScrollBar1.Location = new System.Drawing.Point(11, 821);
+            this.hScrollBar1.Location = new System.Drawing.Point(11, 850);
             this.hScrollBar1.Name = "hScrollBar1";
             this.hScrollBar1.Size = new System.Drawing.Size(330, 45);
             this.hScrollBar1.TabIndex = 13;
@@ -103,7 +103,7 @@
             this.btnRight.BackColor = System.Drawing.SystemColors.Control;
             this.btnRight.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnRight.Image = ((System.Drawing.Image)(resources.GetObject("btnRight.Image")));
-            this.btnRight.Location = new System.Drawing.Point(987, 849);
+            this.btnRight.Location = new System.Drawing.Point(926, 881);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(35, 35);
             this.btnRight.TabIndex = 360;
@@ -118,7 +118,7 @@
             this.btnLeft.BackColor = System.Drawing.SystemColors.Control;
             this.btnLeft.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnLeft.Image")));
-            this.btnLeft.Location = new System.Drawing.Point(1022, 849);
+            this.btnLeft.Location = new System.Drawing.Point(961, 881);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(35, 35);
             this.btnLeft.TabIndex = 361;
@@ -164,7 +164,7 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBox1.Location = new System.Drawing.Point(1805, 835);
+            this.checkBox1.Location = new System.Drawing.Point(1800, 807);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(88, 23);
             this.checkBox1.TabIndex = 5;
@@ -176,7 +176,7 @@
             this.txtMemo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtMemo.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtMemo.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtMemo.Location = new System.Drawing.Point(1138, 826);
+            this.txtMemo.Location = new System.Drawing.Point(1123, 799);
             this.txtMemo.Multiline = true;
             this.txtMemo.Name = "txtMemo";
             this.txtMemo.Size = new System.Drawing.Size(644, 40);
@@ -187,7 +187,7 @@
             this.label2.BackColor = System.Drawing.Color.Lavender;
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(1078, 826);
+            this.label2.Location = new System.Drawing.Point(1063, 799);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(61, 40);
             this.label2.TabIndex = 307;
@@ -199,7 +199,7 @@
             this.btnErrCheck.BackColor = System.Drawing.SystemColors.Control;
             this.btnErrCheck.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnErrCheck.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnErrCheck.Location = new System.Drawing.Point(1370, 881);
+            this.btnErrCheck.Location = new System.Drawing.Point(1359, 869);
             this.btnErrCheck.Name = "btnErrCheck";
             this.btnErrCheck.Size = new System.Drawing.Size(144, 47);
             this.btnErrCheck.TabIndex = 13;
@@ -212,7 +212,7 @@
             this.btnDelete.BackColor = System.Drawing.SystemColors.Control;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnDelete.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnDelete.Location = new System.Drawing.Point(1078, 881);
+            this.btnDelete.Location = new System.Drawing.Point(1063, 869);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(144, 47);
             this.btnDelete.TabIndex = 15;
@@ -223,7 +223,7 @@
             // btnFirst
             // 
             this.btnFirst.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnFirst.Location = new System.Drawing.Point(344, 821);
+            this.btnFirst.Location = new System.Drawing.Point(344, 850);
             this.btnFirst.Name = "btnFirst";
             this.btnFirst.Size = new System.Drawing.Size(103, 37);
             this.btnFirst.TabIndex = 9;
@@ -234,7 +234,7 @@
             // btnBefore
             // 
             this.btnBefore.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnBefore.Location = new System.Drawing.Point(453, 821);
+            this.btnBefore.Location = new System.Drawing.Point(453, 850);
             this.btnBefore.Name = "btnBefore";
             this.btnBefore.Size = new System.Drawing.Size(103, 37);
             this.btnBefore.TabIndex = 10;
@@ -245,7 +245,7 @@
             // btnNext
             // 
             this.btnNext.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnNext.Location = new System.Drawing.Point(562, 821);
+            this.btnNext.Location = new System.Drawing.Point(562, 850);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(103, 37);
             this.btnNext.TabIndex = 11;
@@ -256,7 +256,7 @@
             // btnEnd
             // 
             this.btnEnd.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnEnd.Location = new System.Drawing.Point(671, 821);
+            this.btnEnd.Location = new System.Drawing.Point(671, 850);
             this.btnEnd.Name = "btnEnd";
             this.btnEnd.Size = new System.Drawing.Size(103, 37);
             this.btnEnd.TabIndex = 12;
@@ -269,7 +269,7 @@
             this.btnHold.BackColor = System.Drawing.SystemColors.Control;
             this.btnHold.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnHold.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnHold.Location = new System.Drawing.Point(1516, 881);
+            this.btnHold.Location = new System.Drawing.Point(1507, 869);
             this.btnHold.Name = "btnHold";
             this.btnHold.Size = new System.Drawing.Size(127, 47);
             this.btnHold.TabIndex = 16;
@@ -282,7 +282,7 @@
             this.btnPrint.BackColor = System.Drawing.SystemColors.Control;
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnPrint.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnPrint.Location = new System.Drawing.Point(1224, 881);
+            this.btnPrint.Location = new System.Drawing.Point(1211, 869);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(144, 47);
             this.btnPrint.TabIndex = 17;
@@ -296,7 +296,7 @@
             // 
             // txtErrStatus
             // 
-            this.txtErrStatus.Location = new System.Drawing.Point(831, 859);
+            this.txtErrStatus.Location = new System.Drawing.Point(831, 888);
             this.txtErrStatus.Name = "txtErrStatus";
             this.txtErrStatus.ReadOnly = true;
             this.txtErrStatus.Size = new System.Drawing.Size(23, 19);
@@ -311,7 +311,7 @@
             this.panel2.Controls.Add(this.lblNoImage);
             this.panel2.Location = new System.Drawing.Point(12, 12);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1045, 803);
+            this.panel2.Size = new System.Drawing.Size(1045, 827);
             this.panel2.TabIndex = 363;
             // 
             // pictureBox1
@@ -433,6 +433,7 @@
             this.label9.TabIndex = 373;
             this.label9.Text = "得意先コード";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label9.DoubleClick += new System.EventHandler(this.label9_DoubleClick);
             // 
             // txtTokuisakiCD
             // 
@@ -451,10 +452,10 @@
             this.txtTenDay7.BackColor = System.Drawing.Color.White;
             this.txtTenDay7.Font = new System.Drawing.Font("ＭＳ ゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtTenDay7.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.txtTenDay7.Location = new System.Drawing.Point(1795, 138);
+            this.txtTenDay7.Location = new System.Drawing.Point(1795, 142);
             this.txtTenDay7.MaxLength = 2;
             this.txtTenDay7.Name = "txtTenDay7";
-            this.txtTenDay7.Size = new System.Drawing.Size(39, 31);
+            this.txtTenDay7.Size = new System.Drawing.Size(40, 31);
             this.txtTenDay7.TabIndex = 579;
             this.txtTenDay7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -464,9 +465,9 @@
             this.label89.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label89.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label89.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.label89.Location = new System.Drawing.Point(1496, 138);
+            this.label89.Location = new System.Drawing.Point(1505, 142);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(60, 31);
+            this.label89.Size = new System.Drawing.Size(51, 31);
             this.label89.TabIndex = 586;
             this.label89.Text = "店着日";
             this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -476,7 +477,7 @@
             this.txtTenDay1.BackColor = System.Drawing.Color.White;
             this.txtTenDay1.Font = new System.Drawing.Font("ＭＳ ゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtTenDay1.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.txtTenDay1.Location = new System.Drawing.Point(1555, 138);
+            this.txtTenDay1.Location = new System.Drawing.Point(1555, 142);
             this.txtTenDay1.MaxLength = 2;
             this.txtTenDay1.Name = "txtTenDay1";
             this.txtTenDay1.Size = new System.Drawing.Size(41, 31);
@@ -488,7 +489,7 @@
             this.txtTenDay2.BackColor = System.Drawing.Color.White;
             this.txtTenDay2.Font = new System.Drawing.Font("ＭＳ ゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtTenDay2.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.txtTenDay2.Location = new System.Drawing.Point(1595, 138);
+            this.txtTenDay2.Location = new System.Drawing.Point(1595, 142);
             this.txtTenDay2.MaxLength = 2;
             this.txtTenDay2.Name = "txtTenDay2";
             this.txtTenDay2.Size = new System.Drawing.Size(41, 31);
@@ -500,7 +501,7 @@
             this.txtTenDay3.BackColor = System.Drawing.Color.White;
             this.txtTenDay3.Font = new System.Drawing.Font("ＭＳ ゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtTenDay3.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.txtTenDay3.Location = new System.Drawing.Point(1635, 138);
+            this.txtTenDay3.Location = new System.Drawing.Point(1635, 142);
             this.txtTenDay3.MaxLength = 2;
             this.txtTenDay3.Name = "txtTenDay3";
             this.txtTenDay3.Size = new System.Drawing.Size(41, 31);
@@ -512,7 +513,7 @@
             this.txtTenDay4.BackColor = System.Drawing.Color.White;
             this.txtTenDay4.Font = new System.Drawing.Font("ＭＳ ゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtTenDay4.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.txtTenDay4.Location = new System.Drawing.Point(1675, 138);
+            this.txtTenDay4.Location = new System.Drawing.Point(1675, 142);
             this.txtTenDay4.MaxLength = 2;
             this.txtTenDay4.Name = "txtTenDay4";
             this.txtTenDay4.Size = new System.Drawing.Size(41, 31);
@@ -524,7 +525,7 @@
             this.txtTenDay5.BackColor = System.Drawing.Color.White;
             this.txtTenDay5.Font = new System.Drawing.Font("ＭＳ ゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtTenDay5.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.txtTenDay5.Location = new System.Drawing.Point(1715, 138);
+            this.txtTenDay5.Location = new System.Drawing.Point(1715, 142);
             this.txtTenDay5.MaxLength = 2;
             this.txtTenDay5.Name = "txtTenDay5";
             this.txtTenDay5.Size = new System.Drawing.Size(41, 31);
@@ -536,7 +537,7 @@
             this.txtTenDay6.BackColor = System.Drawing.Color.White;
             this.txtTenDay6.Font = new System.Drawing.Font("ＭＳ ゴシック", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtTenDay6.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.txtTenDay6.Location = new System.Drawing.Point(1755, 138);
+            this.txtTenDay6.Location = new System.Drawing.Point(1755, 142);
             this.txtTenDay6.MaxLength = 2;
             this.txtTenDay6.Name = "txtTenDay6";
             this.txtTenDay6.Size = new System.Drawing.Size(41, 31);
@@ -548,7 +549,7 @@
             this.btnData.BackColor = System.Drawing.SystemColors.Control;
             this.btnData.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnData.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnData.Location = new System.Drawing.Point(1645, 881);
+            this.btnData.Location = new System.Drawing.Point(1638, 869);
             this.btnData.Name = "btnData";
             this.btnData.Size = new System.Drawing.Size(154, 47);
             this.btnData.TabIndex = 587;
@@ -571,7 +572,7 @@
             // 
             this.lblPage.AutoSize = true;
             this.lblPage.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblPage.Location = new System.Drawing.Point(1441, 151);
+            this.lblPage.Location = new System.Drawing.Point(1441, 152);
             this.lblPage.Name = "lblPage";
             this.lblPage.Size = new System.Drawing.Size(49, 14);
             this.lblPage.TabIndex = 589;
@@ -579,7 +580,7 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(781, 821);
+            this.trackBar1.Location = new System.Drawing.Point(781, 850);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(276, 45);
             this.trackBar1.TabIndex = 590;
@@ -588,7 +589,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button1.Location = new System.Drawing.Point(1801, 881);
+            this.button1.Location = new System.Drawing.Point(1796, 869);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(91, 47);
             this.button1.TabIndex = 591;
@@ -602,7 +603,7 @@
             this.panel3.Controls.Add(this.dg1);
             this.panel3.Location = new System.Drawing.Point(1063, 172);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(827, 633);
+            this.panel3.Size = new System.Drawing.Size(825, 619);
             this.panel3.TabIndex = 592;
             // 
             // dg1
@@ -611,8 +612,10 @@
             this.dg1.Location = new System.Drawing.Point(0, 0);
             this.dg1.Name = "dg1";
             this.dg1.RowTemplate.Height = 21;
-            this.dg1.Size = new System.Drawing.Size(826, 619);
+            this.dg1.Size = new System.Drawing.Size(824, 618);
             this.dg1.TabIndex = 364;
+            this.dg1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellContentDoubleClick);
+            this.dg1.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellLeave);
             this.dg1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewEx1_CellPainting);
             this.dg1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellValueChanged);
             this.dg1.CurrentCellDirtyStateChanged += new System.EventHandler(this.dg1_CurrentCellDirtyStateChanged);
@@ -622,7 +625,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1904, 952);
+            this.ClientSize = new System.Drawing.Size(1904, 929);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.lblPage);

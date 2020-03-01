@@ -328,7 +328,7 @@ namespace STSH_OCR.OCR
                 tempDGV.RowTemplate.Height = 20;
 
                 // 全体の高さ
-                tempDGV.Height = 638;
+                tempDGV.Height = 618;
 
                 // 奇数行の色
                 //tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
@@ -366,7 +366,7 @@ namespace STSH_OCR.OCR
 
                 //tempDGV.Columns[colHinName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-                tempDGV.Columns[colMaker].DefaultCellStyle.Alignment = DataGridViewContentAlignment.BottomLeft;
+                tempDGV.Columns[colMaker].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
                 tempDGV.Columns[colKikaku].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colIrisu].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colHinCode].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -616,7 +616,7 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Veri = Convert.ToInt32(checkBox1.Checked);
 
                 // 商品１
-                ClsFaxOrder.G_Code1 = Utility.NulltoStr(dg1[colHinCode, 1].Value);
+                ClsFaxOrder.G_Code1 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 1].Value));
                 ClsFaxOrder.G_Nouka1 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 1].Value));
                 ClsFaxOrder.G_Baika1 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 1].Value));
 
@@ -642,7 +642,7 @@ namespace STSH_OCR.OCR
                 //}
 
                 // 商品2
-                ClsFaxOrder.G_Code2 = Utility.NulltoStr(dg1[colHinCode, 3].Value);
+                ClsFaxOrder.G_Code2 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 3].Value));
                 ClsFaxOrder.G_Nouka2 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 3].Value));
                 ClsFaxOrder.G_Baika2 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 3].Value));
 
@@ -657,7 +657,7 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.G_Syubai2 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 3].Value));
 
                 // 商品3
-                ClsFaxOrder.G_Code3 = Utility.NulltoStr(dg1[colHinCode, 5].Value);
+                ClsFaxOrder.G_Code3 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 5].Value));
                 ClsFaxOrder.G_Nouka3 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 5].Value));
                 ClsFaxOrder.G_Baika3 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 5].Value));
 
@@ -672,7 +672,7 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.G_Syubai3 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 5].Value));
 
                 // 商品４
-                ClsFaxOrder.G_Code4 = Utility.NulltoStr(dg1[colHinCode, 7].Value);
+                ClsFaxOrder.G_Code4 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 7].Value));
                 ClsFaxOrder.G_Nouka4 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 7].Value));
                 ClsFaxOrder.G_Baika4 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 7].Value));
 
@@ -688,7 +688,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品５
-                ClsFaxOrder.G_Code5 = Utility.NulltoStr(dg1[colHinCode, 9].Value);
+                ClsFaxOrder.G_Code5 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 9].Value));
                 ClsFaxOrder.G_Nouka5 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 9].Value));
                 ClsFaxOrder.G_Baika5 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 9].Value));
 
@@ -704,7 +704,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品6
-                ClsFaxOrder.G_Code6 = Utility.NulltoStr(dg1[colHinCode, 11].Value);
+                ClsFaxOrder.G_Code6 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 11].Value));
                 ClsFaxOrder.G_Nouka6 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 11].Value));
                 ClsFaxOrder.G_Baika6 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 11].Value));
 
@@ -720,7 +720,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品7
-                ClsFaxOrder.G_Code7  = Utility.NulltoStr(dg1[colHinCode, 13].Value);
+                ClsFaxOrder.G_Code7  = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 13].Value));
                 ClsFaxOrder.G_Nouka7  = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 13].Value));
                 ClsFaxOrder.G_Baika7  = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 13].Value));
 
@@ -736,7 +736,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品8
-                ClsFaxOrder.G_Code8  = Utility.NulltoStr(dg1[colHinCode, 15].Value);
+                ClsFaxOrder.G_Code8  = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 15].Value));
                 ClsFaxOrder.G_Nouka8  = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 15].Value));
                 ClsFaxOrder.G_Baika8  = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 15].Value));
 
@@ -752,7 +752,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品9
-                ClsFaxOrder.G_Code9 = Utility.NulltoStr(dg1[colHinCode, 17].Value);
+                ClsFaxOrder.G_Code9 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 17].Value));
                 ClsFaxOrder.G_Nouka9 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 17].Value));
                 ClsFaxOrder.G_Baika9 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 17].Value));
 
@@ -768,7 +768,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品10
-                ClsFaxOrder.G_Code10 = Utility.NulltoStr(dg1[colHinCode, 19].Value);
+                ClsFaxOrder.G_Code10 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 19].Value));
                 ClsFaxOrder.G_Nouka10 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 19].Value));
                 ClsFaxOrder.G_Baika10 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 19].Value));
 
@@ -784,7 +784,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品11
-                ClsFaxOrder.G_Code11 = Utility.NulltoStr(dg1[colHinCode, 21].Value);
+                ClsFaxOrder.G_Code11 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 21].Value));
                 ClsFaxOrder.G_Nouka11 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 21].Value));
                 ClsFaxOrder.G_Baika11 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 21].Value));
 
@@ -800,7 +800,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品12
-                ClsFaxOrder.G_Code12 = Utility.NulltoStr(dg1[colHinCode, 23].Value);
+                ClsFaxOrder.G_Code12 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 23].Value));
                 ClsFaxOrder.G_Nouka12 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 23].Value));
                 ClsFaxOrder.G_Baika12 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 23].Value));
 
@@ -816,7 +816,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品13
-                ClsFaxOrder.G_Code13 = Utility.NulltoStr(dg1[colHinCode, 25].Value);
+                ClsFaxOrder.G_Code13 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 25].Value));
                 ClsFaxOrder.G_Nouka13 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 25].Value));
                 ClsFaxOrder.G_Baika13 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 25].Value));
 
@@ -832,7 +832,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品14
-                ClsFaxOrder.G_Code14 = Utility.NulltoStr(dg1[colHinCode, 27].Value);
+                ClsFaxOrder.G_Code14 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 27].Value));
                 ClsFaxOrder.G_Nouka14 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 27].Value));
                 ClsFaxOrder.G_Baika14 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 27].Value));
 
@@ -848,7 +848,7 @@ namespace STSH_OCR.OCR
 
 
                 // 商品15
-                ClsFaxOrder.G_Code15 = Utility.NulltoStr(dg1[colHinCode, 29].Value);
+                ClsFaxOrder.G_Code15 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 29].Value));
                 ClsFaxOrder.G_Nouka15 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 29].Value));
                 ClsFaxOrder.G_Baika15 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 29].Value));
 
@@ -876,6 +876,17 @@ namespace STSH_OCR.OCR
             }
         }
 
+        private string SetSyohinCode(string gCode)
+        {
+            if (gCode != string.Empty)
+            {
+                return gCode.PadLeft(8, '0');
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
 
         ///-------------------------------------------------------------
         /// <summary>
@@ -3667,7 +3678,7 @@ namespace STSH_OCR.OCR
                                  e.FormattedValue.ToString(),
                                  e.CellStyle.Font, rect, e.CellStyle.ForeColor,
                                  TextFormatFlags.Left
-                                 | TextFormatFlags.Bottom);
+                                 | TextFormatFlags.VerticalCenter);
                     e.Handled = true;
                 }
                 else
@@ -4020,7 +4031,7 @@ namespace STSH_OCR.OCR
                                                                     syohin.LAST_SALE_YMD.Substring(4, 2) + "/" + 
                                                                     syohin.LAST_SALE_YMD.Substring(6, 2);
 
-                            dg1[colMaker, e.RowIndex - 1].Style.ForeColor = Color.Red;
+                            dg1[colMaker, e.RowIndex].Style.ForeColor = Color.Red;
                             dg1[colHinCode, e.RowIndex - 1].Style.ForeColor = Color.Red;
                             dg1[colHinCode, e.RowIndex - 1].Style.Font = new Font("MS UI Gothic", 8, FontStyle.Regular);
                         }
@@ -4109,6 +4120,37 @@ namespace STSH_OCR.OCR
             //DataGridViewComboBoxEditingControl cb = (DataGridViewComboBoxEditingControl)sender;
             //Console.WriteLine(cb.SelectedItem);
             //MessageBox.Show(cb.SelectedIndex.ToString());
+        }
+
+        private void label9_DoubleClick(object sender, EventArgs e)
+        {
+            frmTodoke frm = new frmTodoke(false);
+            frm.ShowDialog();
+
+            if (frm._nouCode != null)
+            {
+                txtTokuisakiCD.Text = frm._nouCode[0];
+            }
+
+            // 後片付け
+            frm.Dispose();
+        }
+
+        private void dg1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if ((e.ColumnIndex == 0 || e.ColumnIndex == 1) && (e.RowIndex % 2 != 0))
+            {
+                frmSyohin frmSyohin = new frmSyohin(false);
+                frmSyohin.ShowDialog();
+
+                if (frmSyohin._nouCode != null)
+                {
+                    dg1[colHinCode, e.RowIndex].Value = frmSyohin._nouCode[0];
+                }
+
+                // 後片付け
+                frmSyohin.Dispose();
+            }
         }
     }
 }

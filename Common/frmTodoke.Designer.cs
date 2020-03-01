@@ -31,10 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTodoke));
             this.label1 = new System.Windows.Forms.Label();
             this.sName = new System.Windows.Forms.TextBox();
-            this.sAddress = new System.Windows.Forms.TextBox();
+            this.sFuri = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.sTel = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -51,7 +49,7 @@
             this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(278, 16);
+            this.label1.Location = new System.Drawing.Point(205, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(103, 22);
             this.label1.TabIndex = 0;
@@ -62,19 +60,19 @@
             // 
             this.sName.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.sName.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.sName.Location = new System.Drawing.Point(380, 16);
+            this.sName.Location = new System.Drawing.Point(307, 28);
             this.sName.Name = "sName";
             this.sName.Size = new System.Drawing.Size(288, 22);
             this.sName.TabIndex = 1;
             // 
-            // sAddress
+            // sFuri
             // 
-            this.sAddress.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.sAddress.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.sAddress.Location = new System.Drawing.Point(380, 37);
-            this.sAddress.Name = "sAddress";
-            this.sAddress.Size = new System.Drawing.Size(288, 22);
-            this.sAddress.TabIndex = 3;
+            this.sFuri.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.sFuri.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
+            this.sFuri.Location = new System.Drawing.Point(696, 28);
+            this.sFuri.Name = "sFuri";
+            this.sFuri.Size = new System.Drawing.Size(248, 22);
+            this.sFuri.TabIndex = 3;
             // 
             // label2
             // 
@@ -83,35 +81,12 @@
             this.label2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(278, 37);
+            this.label2.Location = new System.Drawing.Point(594, 28);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(103, 22);
             this.label2.TabIndex = 4;
-            this.label2.Text = "住所";
+            this.label2.Text = "得意先カナ";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // sTel
-            // 
-            this.sTel.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.sTel.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.sTel.Location = new System.Drawing.Point(117, 37);
-            this.sTel.Name = "sTel";
-            this.sTel.Size = new System.Drawing.Size(162, 22);
-            this.sTel.TabIndex = 2;
-            // 
-            // label3
-            // 
-            this.label3.BackColor = System.Drawing.SystemColors.Control;
-            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label3.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(15, 37);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(103, 22);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "電話番号";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // dataGridView1
             // 
@@ -169,11 +144,12 @@
             // 
             this.sCode.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.sCode.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.sCode.Location = new System.Drawing.Point(117, 16);
-            this.sCode.MaxLength = 6;
+            this.sCode.Location = new System.Drawing.Point(117, 28);
+            this.sCode.MaxLength = 7;
             this.sCode.Name = "sCode";
-            this.sCode.Size = new System.Drawing.Size(162, 22);
+            this.sCode.Size = new System.Drawing.Size(89, 22);
             this.sCode.TabIndex = 0;
+            this.sCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.sCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.sCode_KeyPress);
             // 
             // label4
@@ -183,7 +159,7 @@
             this.label4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label4.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label4.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.label4.Location = new System.Drawing.Point(15, 16);
+            this.label4.Location = new System.Drawing.Point(15, 28);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(103, 22);
             this.label4.TabIndex = 16;
@@ -202,9 +178,7 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.sTel);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.sAddress);
+            this.Controls.Add(this.sFuri);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.sName);
             this.Controls.Add(this.label1);
@@ -225,10 +199,8 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox sName;
-        private System.Windows.Forms.TextBox sAddress;
+        private System.Windows.Forms.TextBox sFuri;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox sTel;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;

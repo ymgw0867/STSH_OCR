@@ -109,54 +109,6 @@ namespace STSH_OCR.Common
         ///     エラー項目 = 終売 </summary>
         public int eShubai = 18;
 
-        /// <summary> 
-        ///     エラー項目 = 残業分1 </summary>
-        public int eZanM1 = 19;
-
-        /// <summary> 
-        ///     エラー項目 = 残業理由2 </summary>
-        public int eZanRe2 = 20;
-
-        /// <summary> 
-        ///     エラー項目 = 残業時2 </summary>
-        public int eZanH2 = 21;
-
-        /// <summary> 
-        ///     エラー項目 = 残業分2 </summary>
-        public int eZanM2 = 22;
-
-        /// <summary> 
-        ///     エラー項目 = ライン </summary>
-        public int eLine = 23;
-        public int eLine2 = 28;
-
-        /// <summary> 
-        ///     エラー項目 = 部門 </summary>
-        public int eBmn = 24;
-        public int eBmn2 = 29;
-
-        /// <summary> 
-        ///     エラー項目 = 製品群 </summary>
-        public int eHin = 25;
-        public int eHin2 = 30;
-
-        /// <summary> 
-        ///     エラー項目 = 応援分 </summary>
-        public int eOuenM = 26;
-
-        /// <summary> 
-        ///     エラー項目 = 応援分 </summary>
-        public int eOuenIP = 32;
-        public int eOuenIP2 = 33;
-
-        /// <summary> 
-        ///     エラー項目 = 応援移動票と勤怠データＩ／Ｐ票 </summary>
-        public int eIpOuen = 34;
-
-        /// <summary> 
-        ///     エラー項目 = 再FAX </summary>
-        public int eReFax = 38;
-
         #endregion
         
         #region 警告項目

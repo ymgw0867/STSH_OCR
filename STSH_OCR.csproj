@@ -77,6 +77,12 @@
     <Compile Include="Common\frmPrg.designer.cs">
       <DependentUpon>frmPrg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\frmSyohin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\frmSyohin.Designer.cs">
+      <DependentUpon>frmSyohin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Common\frmTodoke.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +156,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Common\frmPrg.resx">
       <DependentUpon>frmPrg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\frmSyohin.resx">
+      <DependentUpon>frmSyohin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\frmTodoke.resx">
       <DependentUpon>frmTodoke.cs</DependentUpon>

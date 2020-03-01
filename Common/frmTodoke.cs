@@ -71,19 +71,10 @@ namespace STSH_OCR.Common
                 // 各列幅指定
                 tempDGV.Columns.Add(colNouCode, "得意先番号");
                 tempDGV.Columns.Add(colNouName, "得意先名");
-                tempDGV.Columns.Add(colTel, "TEL");
-                tempDGV.Columns.Add(colAddress, "住所");
 
                 tempDGV.Columns[colNouCode].Width = 80;
                 tempDGV.Columns[colNouName].Width = 400;
-                tempDGV.Columns[colTel].Width = 100;
-                //tempDGV.Columns[colAddress].Width = 200;
-
-                tempDGV.Columns[colAddress].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-                tempDGV.Columns[colNouCode].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                tempDGV.Columns[colTel].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                //tempDGV.Columns[colAddress].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                tempDGV.Columns[colNouName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
                 // 編集可否
                 tempDGV.ReadOnly = true;
@@ -194,24 +185,11 @@ namespace STSH_OCR.Common
                     }
                 }
 
-                // 得意先住所
-                string cTkJyu1 = t[25].Replace("\"", "");
-                string cTkJyu2 = t[26].Replace("\"", "");
-
-                if (sAddress.Text.Trim() != string.Empty)
+                // 得意先カナ
+                string cTkFuri = t[7].Replace("\"", "");
+                if (sFuri.Text.Trim() != string.Empty)
                 {
-                    if (!(cTkJyu1 + cTkJyu2).Contains(sAddress.Text))
-                    {
-                        continue;
-                    }
-                }
-
-                // 得意先TEL
-                string cTkTel = t[27].Replace("\"", "");    
-
-                if (sTel.Text.Trim() != string.Empty)
-                {
-                    if (!cTkTel.Contains(sTel.Text))
+                    if (!cTkFuri.Contains(sFuri.Text))
                     {
                         continue;
                     }
@@ -220,8 +198,6 @@ namespace STSH_OCR.Common
                 g.Rows.Add();
                 g[colNouCode, cnt].Value = cTkCD.Trim();
                 g[colNouName, cnt].Value = cTkNM;
-                g[colTel, cnt].Value = cTkTel;
-                g[colAddress, cnt].Value = cTkJyu1 + " " + cTkJyu2;
 
                 cnt++;
             }

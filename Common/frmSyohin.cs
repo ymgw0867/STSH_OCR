@@ -7,9 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Configuration;
-using Oracle.ManagedDataAccess.Client;
 
-namespace NHBR_OCR.common
+namespace STSH_OCR.Common
 {
     public partial class frmSyohin : Form
     {
@@ -24,9 +23,10 @@ namespace NHBR_OCR.common
         // カラム定義
         private string colCode = "c0";
         private string colName = "c1";
-        private string colIrisu = "c2";
-        private string colTani = "c3";
-        private string colAddress = "c4";
+        private string colShiireNM = "c2";
+        private string colJan = "c3";
+        private string colKikaku = "c4";
+        private string colSyubai = "c5";
 
         /// <summary>
         /// データグリッドビューの定義を行います
@@ -40,7 +40,7 @@ namespace NHBR_OCR.common
                 // 列スタイルを変更する
 
                 tempDGV.EnableHeadersVisualStyles = false;
-                tempDGV.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(225, 243, 190);
+                tempDGV.ColumnHeadersDefaultCellStyle.BackColor = Color.Lavender;
                 tempDGV.ColumnHeadersDefaultCellStyle.ForeColor = Color.Black;
 
                 tempDGV.EnableHeadersVisualStyles = false;
@@ -52,7 +52,7 @@ namespace NHBR_OCR.common
                 tempDGV.ColumnHeadersDefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
 
                 // データフォント指定
-                tempDGV.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
+                tempDGV.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 10, FontStyle.Regular);
 
                 // 行の高さ
                 tempDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -63,26 +63,30 @@ namespace NHBR_OCR.common
                 tempDGV.Height = 502;
 
                 // 奇数行の色
-                tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 253, 230);
+                tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
 
                 // 各列幅指定
                 tempDGV.Columns.Add(colCode, "商品番号");
+                tempDGV.Columns.Add(colShiireNM, "仕入先名");
                 tempDGV.Columns.Add(colName, "商品名");
-                tempDGV.Columns.Add(colIrisu, "入数");
-                tempDGV.Columns.Add(colTani, "単位");
+                tempDGV.Columns.Add(colJan, "JANコード");
+                tempDGV.Columns.Add(colKikaku, "規格");
+                tempDGV.Columns.Add(colSyubai, "終売日");
 
                 tempDGV.Columns[colCode].Width = 80;
+                tempDGV.Columns[colShiireNM].Width = 160;
                 tempDGV.Columns[colName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                tempDGV.Columns[colIrisu].Width = 90;
-                tempDGV.Columns[colTani].Width = 90;
-                //tempDGV.Columns[colAddress].Width = 200;
+                tempDGV.Columns[colJan].Width = 100;
+                tempDGV.Columns[colKikaku].Width = 90;
+                tempDGV.Columns[colSyubai].Width = 100;
 
                 //tempDGV.Columns[colAddress].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
                 tempDGV.Columns[colCode].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                tempDGV.Columns[colIrisu].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                tempDGV.Columns[colTani].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-  
+                tempDGV.Columns[colKikaku].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                tempDGV.Columns[colJan].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                tempDGV.Columns[colSyubai].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
                 // 編集可否
                 tempDGV.ReadOnly = true;
 
@@ -130,53 +134,81 @@ namespace NHBR_OCR.common
         }
 
         private void showNouhin(DataGridView g)
-        {
-            string mySql = string.Empty;
-
-            if (sName.Text.Trim() != string.Empty)
-            {
-                mySql += "WHERE (SYO_NAME LIKE '%" + sName.Text + "%') ";
-            }
-            
+        {            
             this.Cursor = Cursors.WaitCursor;
 
-            g.Rows.Clear();
+            ClsCsvData.ClsCsvSyohin [] syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             int cnt = 0;
+            dataGridView1.Rows.Clear();
 
-            using (var Conn = new OracleConnection())
+            foreach (var t in syohins.OrderBy(a => a.SIRESAKI_CD).ThenBy(a => a.SYOHIN_CD))
             {
-                Conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
-                Conn.Open();
-
-                string strSQL = "SELECT SYO_ID, SYO_NAME, SYO_TANI, SYO_IRI_KESU FROM RAKUSYO_FAXOCR.V_SYOHIN ";
-                strSQL += mySql;
-                strSQL += " ORDER BY SYO_ID";
-
-                OracleCommand Cmd = new OracleCommand(strSQL, Conn);
-                OracleDataReader dR = Cmd.ExecuteReader();
-                while (dR.Read())
+                if (!checkBox1.Checked && t.SHUBAI)
                 {
-                    // 販売終了商品はネグる 2017/08/29
-                    if (dR["SYO_NAME"].ToString().Contains("終売") || dR["SYO_NAME"].ToString().Contains("休売"))
-                    {
-                        continue;
-                    }
-                    
-                    g.Rows.Add();
-                    g[colCode, cnt].Value = dR["SYO_ID"].ToString().Trim();
-                    g[colName, cnt].Value = dR["SYO_NAME"].ToString();
-                    g[colIrisu, cnt].Value = dR["SYO_IRI_KESU"].ToString();
-                    g[colTani, cnt].Value = dR["SYO_TANI"].ToString();
-
-                    cnt++;
+                    continue;
+                }
+                
+                // 商品コード検索
+                if (sCode.Text != string.Empty && !t.SYOHIN_CD.Contains(sCode.Text))
+                {
+                    continue;
                 }
 
-                dR.Dispose();
-                Cmd.Dispose();
+                // 商品名カナ検索
+                if (sName.Text != string.Empty && !t.SYOHIN_KANA.Contains(sName.Text))
+                {
+                    continue;
+                }
 
-                g.CurrentCell = null;
-            }
+                // 仕入先コード検索
+                if (sSCode.Text != string.Empty && !t.SIRESAKI_CD.Contains(sSCode.Text))
+                {
+                    continue;
+                }
+
+                // 仕入先カナ検索
+                if (sSName.Text != string.Empty && !t.SIRESAKI_KANA_NM.Contains(sSName.Text))
+                {
+                    continue;
+                }
+
+                // JANコード検索
+                if (sJanCode.Text != string.Empty && !t.JAN_CD.Contains(sJanCode.Text))
+                {
+                    continue;
+                }
+
+                // 商品表示
+                g.Rows.Add();
+                dataGridView1[colCode, cnt].Value = t.SYOHIN_CD;
+                dataGridView1[colShiireNM, cnt].Value = t.SIRESAKI_NM;
+                dataGridView1[colName, cnt].Value = t.SYOHIN_NM;
+                dataGridView1[colJan, cnt].Value = t.JAN_CD;
+                dataGridView1[colKikaku, cnt].Value = t.SYOHIN_KIKAKU;
+
+                if (t.LAST_SALE_YMD.Length > 7)
+                {
+                    dataGridView1[colSyubai, cnt].Value = t.LAST_SALE_YMD.Substring(0, 4) + "/" +
+                                                          t.LAST_SALE_YMD.Substring(4, 2) + "/" +
+                                                          t.LAST_SALE_YMD.Substring(6, 2);
+                }
+                else
+                {
+                    dataGridView1[colSyubai, cnt].Value = ""; ;
+                }
+
+                if (t.SHUBAI)
+                {
+                    dataGridView1.Rows[cnt].DefaultCellStyle.ForeColor = Color.Red;
+                }
+                else
+                {
+                    dataGridView1.Rows[cnt].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                }
+
+                cnt++;
+            }            
 
             this.Cursor = Cursors.Default;
 
@@ -184,6 +216,8 @@ namespace NHBR_OCR.common
             {
                 MessageBox.Show("該当する商品はありませんでした", "検索結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
+            dataGridView1.CurrentCell = null;
         }
 
         private void button1_Click(object sender, EventArgs e)

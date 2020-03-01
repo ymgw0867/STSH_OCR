@@ -19,11 +19,17 @@ namespace STSH_OCR.Common
             // 商品略称
             public string SYOHIN_SNM { get; set; }
 
+            // 商品カナ
+            public string SYOHIN_KANA { get; set; }
+
             // 仕入先コード
             public string SIRESAKI_CD { get; set; }
 
             // 仕入先名
             public string SIRESAKI_NM { get; set; }
+            
+            // 仕入先名カナ
+            public string SIRESAKI_KANA_NM { get; set; }
 
             // JANコード
             public string JAN_CD { get; set; }
@@ -128,6 +134,8 @@ namespace STSH_OCR.Common
 
                     // メーカー名（仕入先）取得
                     string ShiiresakiName = string.Empty;
+                    string ShiiresakiKana = string.Empty;
+
                     foreach (var sr in Shiire_Array)
                     {
                         string[] z = sr.Split(',');
@@ -153,6 +161,7 @@ namespace STSH_OCR.Common
                         }
 
                         ShiiresakiName = z[4].Replace("\"", "");
+                        ShiiresakiKana = z[7].Replace("\"", "");
                         break;
                     }
 
@@ -191,10 +200,12 @@ namespace STSH_OCR.Common
                     {
                         SYOHIN_CD = t[1].Replace("\"", ""),
                         SYOHIN_NM = t[2].Replace("\"", ""),
+                        SYOHIN_KANA = t[4].Replace("\"", ""),
                         SYOHIN_KIKAKU = t[19].Replace("\"", ""),
                         CASE_IRISU = Utility.StrtoDouble(Utility.NulltoStr(t[24].Replace("\"", ""))),
                         SIRESAKI_CD = t[13].Replace("\"", ""),
                         SIRESAKI_NM = ShiiresakiName,
+                        SIRESAKI_KANA_NM = ShiiresakiKana,
                         JAN_CD = t[16].Replace("\"", ""),
                         NOUHIN_KARI_TANKA = Utility.StrtoDouble(Utility.NulltoStr(t[31].Replace("\"", ""))),
                         RETAIL_TANKA = _RETAIL_TANKA,

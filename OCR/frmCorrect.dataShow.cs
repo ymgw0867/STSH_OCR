@@ -1040,6 +1040,13 @@ namespace STSH_OCR.OCR
             txtPID.BackColor = Color.White;
             txtSeqNum.BackColor = Color.White;
             txtTokuisakiCD.BackColor = Color.White;
+            txtTenDay1.BackColor = Color.White;
+            txtTenDay2.BackColor = Color.White;
+            txtTenDay3.BackColor = Color.White;
+            txtTenDay4.BackColor = Color.White;
+            txtTenDay5.BackColor = Color.White;
+            txtTenDay6.BackColor = Color.White;
+            txtTenDay7.BackColor = Color.White;
             checkBox1.BackColor = SystemColors.Control;
 
             txtYear.ForeColor = global.defaultColor;
@@ -1047,6 +1054,13 @@ namespace STSH_OCR.OCR
             txtPID.ForeColor = global.defaultColor;
             txtSeqNum.ForeColor = global.defaultColor;
             txtTokuisakiCD.ForeColor = global.defaultColor;
+            txtTenDay1.ForeColor = global.defaultColor;
+            txtTenDay2.ForeColor = global.defaultColor;
+            txtTenDay3.ForeColor = global.defaultColor;
+            txtTenDay4.ForeColor = global.defaultColor;
+            txtTenDay5.ForeColor = global.defaultColor;
+            txtTenDay6.ForeColor = global.defaultColor;
+            txtTenDay7.ForeColor = global.defaultColor;
             txtMemo.ForeColor = global.defaultColor;
 
             // ヘッダ情報表示欄
@@ -1294,9 +1308,21 @@ namespace STSH_OCR.OCR
                 // 商品コード
                 if (ocr._errNumber == ocr.eHinCode)
                 {
+                    dg1[colHinCode,  ocr._errRow - 1].Style.BackColor = Color.Yellow;
                     dg1[colHinCode,  ocr._errRow].Style.BackColor = Color.Yellow;
                     dg1.Focus();
                     dg1.CurrentCell = dg1[colHinCode, ocr._errRow];
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                // 終売コンボボックス
+                if (ocr._errNumber == ocr.eShubai)
+                {
+                    dg1[colSyubai, ocr._errRow - 1].Style.BackColor = Color.Yellow;
+                    dg1.Focus();
+                    dg1.CurrentCell = dg1[colSyubai, ocr._errRow];
 
                     // エラー有りフラグ
                     txtErrStatus.Text = global.FLGON;
