@@ -148,7 +148,7 @@ namespace STSH_OCR.OCR
         private readonly string colDay5 = "c10";
         private readonly string colDay6 = "c11";
         private readonly string colDay7 = "c12";
-
+        private readonly string colSyubai = "c13";
 
         private void frmCorrect_Load(object sender, EventArgs e)
         {
@@ -328,7 +328,7 @@ namespace STSH_OCR.OCR
                 tempDGV.RowTemplate.Height = 20;
 
                 // 全体の高さ
-                tempDGV.Height = 618;
+                tempDGV.Height = 638;
 
                 // 奇数行の色
                 //tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
@@ -347,13 +347,14 @@ namespace STSH_OCR.OCR
                 tempDGV.Columns.Add(colDay5, "金");
                 tempDGV.Columns.Add(colDay6, "土");
                 tempDGV.Columns.Add(colDay7, "日");
+                tempDGV.Columns.Add(colSyubai, "終売");
 
                 tempDGV.Columns[colMaker].Width = 210;
                 tempDGV.Columns[colKikaku].Width = 70;
-                tempDGV.Columns[colIrisu].Width = 48;
-                tempDGV.Columns[colHinCode].Width = 80;
-                tempDGV.Columns[colNouka].Width = 60;
-                tempDGV.Columns[colBaika].Width = 60;
+                tempDGV.Columns[colIrisu].Width = 40;
+                tempDGV.Columns[colHinCode].Width = 70;
+                tempDGV.Columns[colNouka].Width = 50;
+                tempDGV.Columns[colBaika].Width = 50;
                 tempDGV.Columns[colDay1].Width = 40;
                 tempDGV.Columns[colDay2].Width = 40;
                 tempDGV.Columns[colDay3].Width = 40;
@@ -361,6 +362,7 @@ namespace STSH_OCR.OCR
                 tempDGV.Columns[colDay5].Width = 40;
                 tempDGV.Columns[colDay6].Width = 40;
                 tempDGV.Columns[colDay7].Width = 40;
+                tempDGV.Columns[colSyubai].Width = 50;
 
                 //tempDGV.Columns[colHinName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
@@ -399,12 +401,14 @@ namespace STSH_OCR.OCR
                     {
                         c.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", (float)(9.5), FontStyle.Regular);
                     }
-
-                    // フォントサイズ
-                    if (c.Name == colDay1 || c.Name == colDay2 || c.Name == colDay3 || c.Name == colDay4 || 
-                        c.Name == colDay5 || c.Name == colDay6 || c.Name == colDay7)
+                    else if (c.Name == colDay1 || c.Name == colDay2 || c.Name == colDay3 || c.Name == colDay4 || 
+                             c.Name == colDay5 || c.Name == colDay6 || c.Name == colDay7)
                     {
                         c.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 11, FontStyle.Regular);
+                    }
+                    else if (c.Name == colSyubai)
+                    {
+                        c.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
                     }
                 }
 
@@ -600,16 +604,16 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Year = Utility.StrtoInt(Utility.NulltoStr(txtYear.Text));
                 ClsFaxOrder.Month = Utility.StrtoInt(Utility.NulltoStr(txtMonth.Text));
 
-                ClsFaxOrder.Day1 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay1.Text));
-                ClsFaxOrder.Day2 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay2.Text));
-                ClsFaxOrder.Day3 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay3.Text));
-                ClsFaxOrder.Day4 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay4.Text));
-                ClsFaxOrder.Day5 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay5.Text));
-                ClsFaxOrder.Day6 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay6.Text));
-                ClsFaxOrder.Day7 = Utility.StrtoInt(Utility.NulltoStr(txtTenDay7.Text));
+                ClsFaxOrder.Day1 = Utility.NulltoStr(txtTenDay1.Text);
+                ClsFaxOrder.Day2 = Utility.NulltoStr(txtTenDay2.Text);
+                ClsFaxOrder.Day3 = Utility.NulltoStr(txtTenDay3.Text);
+                ClsFaxOrder.Day4 = Utility.NulltoStr(txtTenDay4.Text);
+                ClsFaxOrder.Day5 = Utility.NulltoStr(txtTenDay5.Text);
+                ClsFaxOrder.Day6 = Utility.NulltoStr(txtTenDay6.Text);
+                ClsFaxOrder.Day7 = Utility.NulltoStr(txtTenDay7.Text);
 
                 ClsFaxOrder.memo = txtMemo.Text;
-                ClsFaxOrder.Veri = Convert.ToInt32(checkBox1);
+                ClsFaxOrder.Veri = Convert.ToInt32(checkBox1.Checked);
 
                 // 商品１
                 ClsFaxOrder.G_Code1 = Utility.NulltoStr(dg1[colHinCode, 1].Value);
@@ -624,6 +628,19 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods1_6 = Utility.NulltoStr(dg1[colDay6, 1].Value);
                 ClsFaxOrder.Goods1_7 = Utility.NulltoStr(dg1[colDay7, 1].Value);
 
+                ClsFaxOrder.G_Syubai1 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 1].Value));
+                
+                //DataGridViewComboBoxCell boxCell = (DataGridViewComboBoxCell)dg1[colSyubai, 1];
+                
+                //if (boxCell != null)
+                //{
+                //    ClsFaxOrder.G_Syubai1 =  boxCell.Items.IndexOf(Utility.NulltoStr(boxCell.Value));
+                //}
+                //else
+                //{
+                //    ClsFaxOrder.G_Syubai1 = global.flgOff;
+                //}
+
                 // 商品2
                 ClsFaxOrder.G_Code2 = Utility.NulltoStr(dg1[colHinCode, 3].Value);
                 ClsFaxOrder.G_Nouka2 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 3].Value));
@@ -636,6 +653,8 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods2_5 = Utility.NulltoStr(dg1[colDay5, 3].Value);
                 ClsFaxOrder.Goods2_6 = Utility.NulltoStr(dg1[colDay6, 3].Value);
                 ClsFaxOrder.Goods2_7 = Utility.NulltoStr(dg1[colDay7, 3].Value);
+
+                ClsFaxOrder.G_Syubai2 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 3].Value));
 
                 // 商品3
                 ClsFaxOrder.G_Code3 = Utility.NulltoStr(dg1[colHinCode, 5].Value);
@@ -650,6 +669,8 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods3_6 = Utility.NulltoStr(dg1[colDay6, 5].Value);
                 ClsFaxOrder.Goods3_7 = Utility.NulltoStr(dg1[colDay7, 5].Value);
 
+                ClsFaxOrder.G_Syubai3 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 5].Value));
+
                 // 商品４
                 ClsFaxOrder.G_Code4 = Utility.NulltoStr(dg1[colHinCode, 7].Value);
                 ClsFaxOrder.G_Nouka4 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 7].Value));
@@ -662,6 +683,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods4_5 = Utility.NulltoStr(dg1[colDay5, 7].Value);
                 ClsFaxOrder.Goods4_6 = Utility.NulltoStr(dg1[colDay6, 7].Value);
                 ClsFaxOrder.Goods4_7 = Utility.NulltoStr(dg1[colDay7, 7].Value);
+
+                ClsFaxOrder.G_Syubai4 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 7].Value));
+
 
                 // 商品５
                 ClsFaxOrder.G_Code5 = Utility.NulltoStr(dg1[colHinCode, 9].Value);
@@ -676,6 +700,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods5_6 = Utility.NulltoStr(dg1[colDay6, 9].Value);
                 ClsFaxOrder.Goods5_7 = Utility.NulltoStr(dg1[colDay7, 9].Value);
 
+                ClsFaxOrder.G_Syubai5 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 9].Value));
+
+
                 // 商品6
                 ClsFaxOrder.G_Code6 = Utility.NulltoStr(dg1[colHinCode, 11].Value);
                 ClsFaxOrder.G_Nouka6 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 11].Value));
@@ -689,6 +716,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods6_6 = Utility.NulltoStr(dg1[colDay6, 11].Value);
                 ClsFaxOrder.Goods6_7 = Utility.NulltoStr(dg1[colDay7, 11].Value);
 
+                ClsFaxOrder.G_Syubai6 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 11].Value));
+
+
                 // 商品7
                 ClsFaxOrder.G_Code7  = Utility.NulltoStr(dg1[colHinCode, 13].Value);
                 ClsFaxOrder.G_Nouka7  = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 13].Value));
@@ -701,7 +731,10 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods7_5 = Utility.NulltoStr(dg1[colDay5, 13].Value);
                 ClsFaxOrder.Goods7_6 = Utility.NulltoStr(dg1[colDay6, 13].Value);
                 ClsFaxOrder.Goods7_7 = Utility.NulltoStr(dg1[colDay7, 13].Value);
-                
+
+                ClsFaxOrder.G_Syubai7 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 13].Value));
+
+
                 // 商品8
                 ClsFaxOrder.G_Code8  = Utility.NulltoStr(dg1[colHinCode, 15].Value);
                 ClsFaxOrder.G_Nouka8  = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 15].Value));
@@ -714,6 +747,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods8_5 = Utility.NulltoStr(dg1[colDay5, 15].Value);
                 ClsFaxOrder.Goods8_6 = Utility.NulltoStr(dg1[colDay6, 15].Value);
                 ClsFaxOrder.Goods8_7 = Utility.NulltoStr(dg1[colDay7, 15].Value);
+
+                ClsFaxOrder.G_Syubai8 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 15].Value));
+
 
                 // 商品9
                 ClsFaxOrder.G_Code9 = Utility.NulltoStr(dg1[colHinCode, 17].Value);
@@ -728,6 +764,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods9_6 = Utility.NulltoStr(dg1[colDay6, 17].Value);
                 ClsFaxOrder.Goods9_7 = Utility.NulltoStr(dg1[colDay7, 17].Value);
 
+                ClsFaxOrder.G_Syubai9 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 17].Value));
+
+
                 // 商品10
                 ClsFaxOrder.G_Code10 = Utility.NulltoStr(dg1[colHinCode, 19].Value);
                 ClsFaxOrder.G_Nouka10 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 19].Value));
@@ -740,6 +779,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods10_5 = Utility.NulltoStr(dg1[colDay5, 19].Value);
                 ClsFaxOrder.Goods10_6 = Utility.NulltoStr(dg1[colDay6, 19].Value);
                 ClsFaxOrder.Goods10_7 = Utility.NulltoStr(dg1[colDay7, 19].Value);
+
+                ClsFaxOrder.G_Syubai10 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 19].Value));
+
 
                 // 商品11
                 ClsFaxOrder.G_Code11 = Utility.NulltoStr(dg1[colHinCode, 21].Value);
@@ -754,6 +796,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods11_6 = Utility.NulltoStr(dg1[colDay6, 21].Value);
                 ClsFaxOrder.Goods11_7 = Utility.NulltoStr(dg1[colDay7, 21].Value);
 
+                ClsFaxOrder.G_Syubai11 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 21].Value));
+
+
                 // 商品12
                 ClsFaxOrder.G_Code12 = Utility.NulltoStr(dg1[colHinCode, 23].Value);
                 ClsFaxOrder.G_Nouka12 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 23].Value));
@@ -766,6 +811,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods12_5 = Utility.NulltoStr(dg1[colDay5, 23].Value);
                 ClsFaxOrder.Goods12_6 = Utility.NulltoStr(dg1[colDay6, 23].Value);
                 ClsFaxOrder.Goods12_7 = Utility.NulltoStr(dg1[colDay7, 23].Value);
+
+                ClsFaxOrder.G_Syubai12 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 23].Value));
+
 
                 // 商品13
                 ClsFaxOrder.G_Code13 = Utility.NulltoStr(dg1[colHinCode, 25].Value);
@@ -780,6 +828,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods13_6 = Utility.NulltoStr(dg1[colDay6, 25].Value);
                 ClsFaxOrder.Goods13_7 = Utility.NulltoStr(dg1[colDay7, 25].Value);
 
+                ClsFaxOrder.G_Syubai13 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 25].Value));
+
+
                 // 商品14
                 ClsFaxOrder.G_Code14 = Utility.NulltoStr(dg1[colHinCode, 27].Value);
                 ClsFaxOrder.G_Nouka14 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 27].Value));
@@ -792,6 +843,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods14_5 = Utility.NulltoStr(dg1[colDay5, 27].Value);
                 ClsFaxOrder.Goods14_6 = Utility.NulltoStr(dg1[colDay6, 27].Value);
                 ClsFaxOrder.Goods14_7 = Utility.NulltoStr(dg1[colDay7, 27].Value);
+
+                ClsFaxOrder.G_Syubai14 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 27].Value));
+
 
                 // 商品15
                 ClsFaxOrder.G_Code15 = Utility.NulltoStr(dg1[colHinCode, 29].Value);
@@ -806,7 +860,12 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods15_6 = Utility.NulltoStr(dg1[colDay6, 29].Value);
                 ClsFaxOrder.Goods15_7 = Utility.NulltoStr(dg1[colDay7, 29].Value);
 
+                ClsFaxOrder.G_Syubai15 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 29].Value));
+
+
                 ClsFaxOrder.YyMmDd = DateTime.Now.ToString();
+
+                context.SubmitChanges();
             }
             catch (Exception ex)
             {
@@ -815,6 +874,31 @@ namespace STSH_OCR.OCR
             finally
             {
             }
+        }
+
+
+        ///-------------------------------------------------------------
+        /// <summary>
+        ///     終売処理区分を取得する </summary>
+        /// <param name="val">
+        ///     コンボボックス選択した値</param>
+        /// <returns>
+        ///     区分　0:なし, 1:取消, 2:有効</returns>
+        ///-------------------------------------------------------------
+        private int GetSyubaiStatus(string val)
+        {
+            int rtn = 0;
+
+            for (int i = 0; i < global.SyubaiArray.Length; i++)
+            {
+                if (global.SyubaiArray[i] == val)
+                {
+                    rtn = i;
+                    break;
+                }
+            }
+
+            return rtn;
         }
 
         /// ----------------------------------------------------------------------------------------------------
@@ -1087,7 +1171,7 @@ namespace STSH_OCR.OCR
             // エラーチェック実行②:最初のレコードからカレントレコードの前のレコードまで
             if (cIdx > 0)
             {
-                if (!ocr.errCheckMain(0, (cIdx - 1), this, dtsC, dts, cID))
+                if (!ocr.errCheckMain(0, (cIdx - 1), this, tblFax, tblPtn, cID))
                 {
                     return false;
                 }
@@ -3210,13 +3294,13 @@ namespace STSH_OCR.OCR
                                 SeqNumber = Utility.StrtoInt(stCSV[6].Trim()),
                                 Year = Utility.StrtoInt(stCSV[2].Trim()),
                                 Month = Utility.StrtoInt(stCSV[3].Trim()),
-                                Day1 = Utility.StrtoInt(stCSV[7].Trim()),
-                                Day2 = Utility.StrtoInt(stCSV[8].Trim()),
-                                Day3 = Utility.StrtoInt(stCSV[9].Trim()),
-                                Day4 = Utility.StrtoInt(stCSV[10].Trim()),
-                                Day5 = Utility.StrtoInt(stCSV[11].Trim()),
-                                Day6 = Utility.StrtoInt(stCSV[12].Trim()),
-                                Day7 = Utility.StrtoInt(stCSV[13].Trim())
+                                Day1 = stCSV[7].Trim(),
+                                Day2 = stCSV[8].Trim(),
+                                Day3 = stCSV[9].Trim(),
+                                Day4 = stCSV[10].Trim(),
+                                Day5 = stCSV[11].Trim(),
+                                Day6 = stCSV[12].Trim(),
+                                Day7 = stCSV[13].Trim()
                             };
                         }
                         else
@@ -3441,6 +3525,22 @@ namespace STSH_OCR.OCR
                     order.G_Code18 = string.Empty;
                     order.G_Code19 = string.Empty;
                     order.G_Code20 = string.Empty;
+
+                    order.G_Syubai1 = global.flgOff;
+                    order.G_Syubai2 = global.flgOff;
+                    order.G_Syubai3 = global.flgOff;
+                    order.G_Syubai4 = global.flgOff;
+                    order.G_Syubai5 = global.flgOff;
+                    order.G_Syubai6 = global.flgOff;
+                    order.G_Syubai7 = global.flgOff;
+                    order.G_Syubai8 = global.flgOff;
+                    order.G_Syubai9 = global.flgOff;
+                    order.G_Syubai10 = global.flgOff;
+                    order.G_Syubai11 = global.flgOff;
+                    order.G_Syubai12 = global.flgOff;
+                    order.G_Syubai13 = global.flgOff;
+                    order.G_Syubai14 = global.flgOff;
+                    order.G_Syubai15 = global.flgOff;
 
                     order.memo = string.Empty;
                     order.Veri = global.flgOff;
@@ -3910,7 +4010,37 @@ namespace STSH_OCR.OCR
                     dg1[colIrisu, e.RowIndex].Value = syohin.CASE_IRISU;            // 入数
                     dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;     // 納価
                     dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;          // 売価
-                    //dg1[colNouka, e.RowIndex + 1].Value = syohin.JAN_CD;
+
+                    // 終売のとき
+                    if (syohin.SHUBAI)
+                    {
+                        if (syohin.LAST_SALE_YMD.Length > 7)
+                        {
+                            dg1[colHinCode, e.RowIndex - 1].Value = syohin.LAST_SALE_YMD.Substring(0, 4) + "/" + 
+                                                                    syohin.LAST_SALE_YMD.Substring(4, 2) + "/" + 
+                                                                    syohin.LAST_SALE_YMD.Substring(6, 2);
+
+                            dg1[colMaker, e.RowIndex - 1].Style.ForeColor = Color.Red;
+                            dg1[colHinCode, e.RowIndex - 1].Style.ForeColor = Color.Red;
+                            dg1[colHinCode, e.RowIndex - 1].Style.Font = new Font("MS UI Gothic", 8, FontStyle.Regular);
+                        }
+                        else
+                        {
+                            dg1[colHinCode, e.RowIndex - 1].Value = "";
+                        }
+
+                        // 終売処理コンボボックスを編集可能とする
+                        dg1[colSyubai, e.RowIndex].ReadOnly = false;
+                    }
+                    else
+                    {
+                        dg1[colHinCode, e.RowIndex - 1].Value = string.Empty;
+                        dg1[colMaker, e.RowIndex].Style.ForeColor = SystemColors.ControlText;
+                        dg1[colHinCode, e.RowIndex - 1].Style.ForeColor = SystemColors.ControlText;
+
+                        // 終売処理コンボボックスを編集不可とする
+                        dg1[colSyubai, e.RowIndex].ReadOnly = true;
+                    }
                 }
             }
         }
@@ -3921,6 +4051,64 @@ namespace STSH_OCR.OCR
             n_height = B_HEIGHT + (float)trackBar1.Value * 0.05f;
 
             imgShow(mMat, n_width, n_height);
+        }
+        private DataGridViewComboBoxEditingControl dataGridViewComboBox = null;
+
+        private void dg1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            //表示されているコントロールがDataGridViewComboBoxEditingControlか調べる
+            if (e.Control is DataGridViewComboBoxEditingControl)
+            {
+                DataGridView dgv = (DataGridView)sender;
+
+                //該当する列か調べる
+                //if (dgv.CurrentCell.OwningColumn.Name == "ComboBox")
+                //{
+                //    //編集のために表示されているコントロールを取得
+                //    this.dataGridViewComboBox =
+                //        (DataGridViewComboBoxEditingControl)e.Control;
+                //    //SelectedIndexChangedイベントハンドラを追加
+                //    this.dataGridViewComboBox.SelectedIndexChanged +=
+                //        new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
+                //}
+
+                //該当する列か調べる
+                if (dgv.CurrentCell.OwningColumn.Name == colSyubai && 
+                    (dgv.CurrentCell.OwningRow.Index % 2  != 0))
+                {
+                    //編集のために表示されているコントロールを取得
+                    this.dataGridViewComboBox =
+                        (DataGridViewComboBoxEditingControl)e.Control;
+                    //SelectedIndexChangedイベントハンドラを追加
+                    this.dataGridViewComboBox.SelectedIndexChanged +=
+                        new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
+                }
+            }
+        }
+
+
+        //CellEndEditイベントハンドラ
+        private void DataGridView1_CellEndEdit(object sender,
+            DataGridViewCellEventArgs e)
+        {
+            //SelectedIndexChangedイベントハンドラを削除
+            if (this.dataGridViewComboBox != null)
+            {
+                this.dataGridViewComboBox.SelectedIndexChanged -=
+                    new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
+                this.dataGridViewComboBox = null;
+            }
+        }
+
+        //DataGridViewに表示されているコンボボックスの
+        //SelectedIndexChangedイベントハンドラ
+        private void dataGridViewComboBox_SelectedIndexChanged(object sender,
+            EventArgs e)
+        {
+            //選択されたアイテムを表示
+            //DataGridViewComboBoxEditingControl cb = (DataGridViewComboBoxEditingControl)sender;
+            //Console.WriteLine(cb.SelectedItem);
+            //MessageBox.Show(cb.SelectedIndex.ToString());
         }
     }
 }

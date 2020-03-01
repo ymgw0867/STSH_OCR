@@ -121,25 +121,25 @@ namespace STSH_OCR.Common
 
         // 店着日
         [Column(Name = "Day1")]
-        public int Day1 { get; set; }
+        public string Day1 { get; set; }
 
         [Column(Name = "Day2")]
-        public int Day2 { get; set; }
+        public string Day2 { get; set; }
 
         [Column(Name = "Day3")]
-        public int Day3 { get; set; }
+        public string Day3 { get; set; }
 
         [Column(Name = "Day4")]
-        public int Day4 { get; set; }
+        public string Day4 { get; set; }
 
         [Column(Name = "Day5")]
-        public int Day5 { get; set; }
+        public string Day5 { get; set; }
 
         [Column(Name = "Day6")]
-        public int Day6 { get; set; }
+        public string Day6 { get; set; }
 
         [Column(Name = "Day7")]
-        public int Day7 { get; set; }
+        public string Day7 { get; set; }
 
         // 商品１
         [Column(Name = "Goods1_1")]
@@ -916,6 +916,67 @@ namespace STSH_OCR.Common
         // 更新年月日
         [Column(Name = "更新年月日")]
         public string YyMmDd { get; set; }
+
+        // 商品１終売処理
+        [Column(Name = "G_Syubai1")]
+        public int G_Syubai1 { get; set; }
+
+        // 商品2終売処理
+        [Column(Name = "G_Syubai2")]
+        public int G_Syubai2 { get; set; }
+
+        // 商品3終売処理
+        [Column(Name = "G_Syubai3")]
+        public int G_Syubai3 { get; set; }
+
+        // 商品4終売処理
+        [Column(Name = "G_Syubai4")]
+        public int G_Syubai4 { get; set; }
+
+        // 商品5終売処理
+        [Column(Name = "G_Syubai5")]
+        public int G_Syubai5 { get; set; }
+
+        // 商品6終売処理
+        [Column(Name = "G_Syubai6")]
+        public int G_Syubai6 { get; set; }
+
+        // 商品7終売処理
+        [Column(Name = "G_Syubai7")]
+        public int G_Syubai7 { get; set; }
+
+        // 商品8終売処理
+        [Column(Name = "G_Syubai8")]
+        public int G_Syubai8 { get; set; }
+
+        // 商品9終売処理
+        [Column(Name = "G_Syubai9")]
+        public int G_Syubai9 { get; set; }
+
+        // 商品10終売処理
+        [Column(Name = "G_Syubai10")]
+        public int G_Syubai10 { get; set; }
+
+        // 商品11終売処理
+        [Column(Name = "G_Syubai11")]
+        public int G_Syubai11 { get; set; }
+
+        // 商品12終売処理
+        [Column(Name = "G_Syubai12")]
+        public int G_Syubai12 { get; set; }
+
+        // 商品13終売処理
+        [Column(Name = "G_Syubai13")]
+        public int G_Syubai13 { get; set; }
+
+        // 商品14終売処理
+        [Column(Name = "G_Syubai14")]
+        public int G_Syubai14 { get; set; }
+
+        // 商品15終売処理
+        [Column(Name = "G_Syubai15")]
+        public int G_Syubai15 { get; set; }
+
     }
 
 

@@ -106,8 +106,8 @@ namespace STSH_OCR.Common
 
 
         /// <summary> 
-        ///     エラー項目 = 残業時1 </summary>
-        public int eZanH1 = 18;
+        ///     エラー項目 = 終売 </summary>
+        public int eShubai = 18;
 
         /// <summary> 
         ///     エラー項目 = 残業分1 </summary>
@@ -196,297 +196,15 @@ namespace STSH_OCR.Common
         public int wShukeitai = 5;
 
         #endregion
-        
-        // テーブルアダプターインスタンス
-        //NHBRDataSetTableAdapters.TableAdapterManager adpMn = new NHBRDataSetTableAdapters.TableAdapterManager();
-        
-        ///---------------------------------------------------------------------------------
-        /// <summary>
-        ///     追加用FAX注文書Rowオブジェクトを作成する </summary>
-        /// <param name="r">
-        ///     NHBR_CLIDataSet.FAX注文書Row </param>
-        /// <param name="stCSV">
-        ///     CSV配列</param>
-        /// <returns>
-        ///     追加するFAX注文書Rowオブジェクト</returns>
-        ///---------------------------------------------------------------------------------
-        private void setNewHeadRecRow(ref NHBR_CLIDataSet.FAX注文書Row r, string[] stCSV)
-        {
-            r.ID = Utility.GetStringSubMax(stCSV[1].Trim(), 17);
-            r.画像名 = Utility.GetStringSubMax(stCSV[1].Trim(), 17) + ".tif";
-            r.パターンID = Utility.StrtoInt(Utility.GetStringSubMax(stCSV[2].Trim(), 4).Replace("-", ""));
-            r.得意先番号 = Utility.StrtoInt(Utility.GetStringSubMax(stCSV[3].Trim(), 6).Replace("-", ""));
-            r.発注番号 = Utility.GetStringSubMax(stCSV[5].Trim(), 8).Replace("-", "").Replace(" ", "");
-            
-            //r.納品希望月 = Utility.GetStringSubMax(stCSV[6].Trim(), 2).Replace("-", "");   // 2018/09/14
-            //r.納品希望日 = Utility.GetStringSubMax(stCSV[7].Trim(), 2).Replace("-", "");   // 2018/09/14
-            
-            // 2018/09/14 新書式対応
-            r.納品希望月 = string.Empty;     // OCR認識するも表示せず 2018/09/18
-            r.納品希望日 = string.Empty;     // OCR認識するも表示せず2018/09/18
 
-            r.確認 = global.flgOff;
-            r.更新年月日 = DateTime.Now;
-            r.出荷基準A = string.Empty;
-            r.出荷基準B = string.Empty;
-            r.出荷基準C = string.Empty;
-            r.出荷基準D = string.Empty;
-            r.出荷基準E = string.Empty;
-            r.出荷基準F = string.Empty;
-            r.出荷基準G = string.Empty;
+        const int Sun = 0;
+        const int Mon = 1;
+        const int Tue = 2;
+        const int Wed = 3;
+        const int Thu = 4;
+        const int Fri = 5;
+        const int Sat = 6;
 
-            // 2018/08/02 再FAXフラグ
-            string rf = Utility.GetStringSubMax(stCSV[4].Trim(), 1).Replace("-", "");
-
-            if (rf == global.FLGOFF)
-            {
-                r.メモ = global.REFAX;
-            }
-            else
-            {
-                r.メモ = string.Empty;
-            }
-        }
-        
-        ///---------------------------------------------------------------------------------
-        /// <summary>
-        ///     追加用FAX注文書Rowオブジェクトを作成する </summary>
-        /// <param name="r">
-        ///     NHBR_CLIDataSet.FAX注文書Row </param>
-        /// <param name="stCSV">
-        ///     CSV配列</param>
-        /// <param name="iX">
-        ///     インデックス</param>
-        /// <param name="mCode">
-        ///     担当者コード</param>
-        /// <returns>
-        ///     追加するFAX注文書Rowオブジェクト</returns>
-        ///---------------------------------------------------------------------------------
-        private void setNewItemRecRow(ref NHBR_CLIDataSet.FAX注文書Row r, string[] stCSV, int iX, string mCode)
-        {
-            if (iX == 1)
-            {
-                r.注文数1 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 2)
-            {
-                r.注文数2 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 3)
-            {
-                r.注文数3 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 4)
-            {
-                r.注文数4 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 5)
-            {
-                r.注文数5 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 6)
-            {
-                r.注文数6 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 7)
-            {
-                r.注文数7 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 8)
-            {
-                r.注文数8 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 9)
-            {
-                r.注文数9 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 10)
-            {
-                r.注文数10 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 11)
-            {
-                r.注文数11 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 12)
-            {
-                r.注文数12 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 13)
-            {
-                r.注文数13 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 14)
-            {
-                r.注文数14 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 15)
-            {
-                r.注文数15 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 16)
-            {
-                r.注文数16 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 17)
-            {
-                r.注文数17 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 18)
-            {
-                r.注文数18 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 19)
-            {
-                r.注文数19 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 20)
-            {
-                r.注文数20 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 21)
-            {
-                r.注文数21 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 22)
-            {
-                r.注文数22 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 23)
-            {
-                r.注文数23 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 24)
-            {
-                r.注文数24 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 25)
-            {
-                r.注文数25 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 26)
-            {
-                r.注文数26 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 27)
-            {
-                r.注文数27 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 28)
-            {
-                r.注文数28 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 29)
-            {
-                r.注文数29 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 30)
-            {
-                r.注文数30 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 31)
-            {
-                r.追加注文数1 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 32)
-            {
-                r.追加注文数2 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 33)
-            {
-                r.追加注文数3 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 34)
-            {
-                r.追加注文数4 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 35)
-            {
-                r.追加注文数5 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 36)
-            {
-                r.追加注文数6 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 37)
-            {
-                r.追加注文数7 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 38)
-            {
-                r.追加注文数8 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 39)
-            {
-                r.追加注文数9 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 40)
-            {
-                r.追加注文数10 = stCSV[0].Trim().Replace("-", "").Replace(" ", "");
-            }
-
-            if (iX == 41)
-            {
-                r.追加注文チェック = Utility.StrtoInt(stCSV[0].Trim());
-                r.備考欄記入 = Utility.StrtoInt(stCSV[1].Trim());
-
-                r.エラー有無 = global.flgOff;
-
-                //r.メモ = string.Empty;
-                
-                r.更新年月日 = DateTime.Now;
-                r.担当者コード = mCode;
-                r.追加注文商品コード1 = string.Empty;
-                r.追加注文商品コード2 = string.Empty;
-                r.追加注文商品コード3 = string.Empty;
-                r.追加注文商品コード4 = string.Empty;
-                r.追加注文商品コード5 = string.Empty;
-                r.追加注文商品コード6 = string.Empty;
-                r.追加注文商品コード7 = string.Empty;
-                r.追加注文商品コード8 = string.Empty;
-                r.追加注文商品コード9 = string.Empty;
-                r.追加注文商品コード10 = string.Empty;
-            }
-        }
 
         ///----------------------------------------------------------------------------------------
         /// <summary>
@@ -563,7 +281,7 @@ namespace STSH_OCR.Common
                     ClsFaxOrder r = tblFax.Single(a => a.ID == cID[i]);
 
                     // エラーチェック実施
-                    eCheck = errCheckData(dtsC, r, tblPtn);
+                    eCheck = errCheckData(r, tblPtn);
 
                     if (!eCheck)　//エラーがあったとき
                     {
@@ -618,10 +336,11 @@ namespace STSH_OCR.Common
         ///     エラーなし：true, エラー有り：false</returns>
         ///-----------------------------------------------------------------------------------------------
         /// 
-        public Boolean errCheckData(NHBR_CLIDataSet dtsC,  ClsFaxOrder r, Table<ClsOrderPattern> ptn)
+        public Boolean errCheckData(ClsFaxOrder r, Table<ClsOrderPattern> ptn)
         {
             string sDate;
             DateTime eDate;
+            int eNum = 0;
 
             // 確認チェック
             if (r.Veri == global.flgOff)
@@ -632,10 +351,16 @@ namespace STSH_OCR.Common
 
             // 年月
             int rDate = r.Year * 100 + r.Month;
-            int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Day;
+            int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Month;
             if (rDate < toDate)
             {
                 setErrStatus(eYearMonth, 0, "年月が正しくありません");
+                return false;
+            }
+
+            if (r.Month < 1 || r.Month > 12)
+            {
+                setErrStatus(eMonth, 0, "月が正しくありません");
                 return false;
             }
 
@@ -657,19 +382,129 @@ namespace STSH_OCR.Common
             }
 
             // 店着日付
-            DateTime dt;
-            string rdt = r.Year + "/" + r.Month + "/" + r.Day1;
-            if (!DateTime.TryParse(rdt, out dt))
-            {
-                setErrStatus(eTenDate1, 0, "店着日付が正しくありません");
-                return false;
-            }
+            String [] tDays = new string [7];
+            tDays[0] = r.Day1.Trim();
+            tDays[1] = r.Day2.Trim();
+            tDays[2] = r.Day3.Trim();
+            tDays[3] = r.Day4.Trim();
+            tDays[4] = r.Day5.Trim();
+            tDays[5] = r.Day6.Trim();
+            tDays[6] = r.Day7.Trim();
 
-            DayOfWeek wk = dt.DayOfWeek;
-            if ((Int32)wk != 1)
+            string eMsg = "";
+            string strDate ="";
+            string strDD ="";
+            int dYear = r.Year;
+            int dMonth = r.Month;
+
+            for (int i = 0; i < tDays.Length; i++)
             {
-                setErrStatus(eTenDate1, 0, "店着日付の曜日が正しくありません");
-                return false;
+                // 店着日付を設定する
+                if (tDays[i] == global.FLGON)
+                {
+                    // 「１」日のとき
+                    if (i == 0)
+                    {
+                        // 当月１日
+                        strDate = dYear + "/" + dMonth + "/"　+ tDays[i];
+                    }
+                    else
+                    {
+                        // 週御途中に「１」日記入
+                        for (int iX = i - 1; iX >= 0; iX--)
+                        {
+                            // 前日までの日付記入を調査
+                            strDD += tDays[iX].Trim();
+                        }
+
+                        if (strDD != string.Empty)
+                        {
+                            // 「前日まで記入あり」はこれ以降は翌月とみなす
+                            if (r.Month == 12)
+                            {
+                                dYear++;
+                                strDate = dYear + "/01/" + tDays[i];
+                            }
+                            else
+                            {
+                                dMonth++;
+                                strDate = dYear + "/" + dMonth + "/" + tDays[i];
+                            }
+                        }
+                        else
+                        {
+                            // 前日までの記入がないときは当月１日とみなす
+                            strDate = dYear + "/" + dMonth + "/" + tDays[i];
+                        }
+                    }
+                }
+                else
+                {
+                    strDate = dYear + "/" + dMonth + "/" + tDays[i];
+                }
+
+                switch (i)
+                {
+                    case 0:
+                        if (!ChkTenDate(strDate, out eMsg, Mon))
+                        {
+                            setErrStatus(eTenDate1, 0, eMsg);
+                            return false;
+                        }
+
+                        break;
+
+                    case 1:
+                        if (!ChkTenDate(strDate, out eMsg, Tue))
+                        {
+                            setErrStatus(eTenDate2, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 2:
+                        if (!ChkTenDate(strDate, out eMsg, Wed))
+                        {
+                            setErrStatus(eTenDate3, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 3:
+                        if (!ChkTenDate(strDate, out eMsg, Thu))
+                        {
+                            setErrStatus(eTenDate4, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 4:
+                        if (!ChkTenDate(strDate, out eMsg, Fri))
+                        {
+                            setErrStatus(eTenDate5, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 5:
+                        if (!ChkTenDate(strDate, out eMsg, Sat))
+                        {
+                            setErrStatus(eTenDate6, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 6:
+                        if (!ChkTenDate(strDate, out eMsg, Sun))
+                        {
+                            setErrStatus(eTenDate7, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
             }
 
 
@@ -679,1101 +514,321 @@ namespace STSH_OCR.Common
                 if  (r.Goods1_1 != string.Empty || r.Goods1_2 != string.Empty || r.Goods1_3 != string.Empty || r.Goods1_4 != string.Empty ||
                      r.Goods1_5 != string.Empty || r.Goods1_6 != string.Empty || r.Goods1_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 0, "商品が登録されていません");
+                    setErrStatus(eHinCode, 1, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code1, r.G_Syubai1, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 1, eMsg);
+                return false;
+            }
 
+            // 商品２
             if (r.G_Code2 == string.Empty)
             {
                 if (r.Goods2_1 != string.Empty || r.Goods2_2 != string.Empty || r.Goods2_3 != string.Empty || r.Goods2_4 != string.Empty ||
                      r.Goods2_5 != string.Empty || r.Goods2_6 != string.Empty || r.Goods2_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 1, "商品が登録されていません");
+                    setErrStatus(eHinCode, 3, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code2, r.G_Syubai2, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 3, eMsg);
+                return false;
+            }
 
+            // 商品３
             if (r.G_Code3 == string.Empty)
             {
                 if (r.Goods3_1 != string.Empty || r.Goods3_2 != string.Empty || r.Goods3_3 != string.Empty || r.Goods3_4 != string.Empty ||
                      r.Goods3_5 != string.Empty || r.Goods3_6 != string.Empty || r.Goods3_7 != string.Empty)
                 {
-                    setErrStatus(eSH,2, "商品が登録されていません");
+                    setErrStatus(eHinCode,5, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code3, r.G_Syubai3, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 5, eMsg);
+                return false;
+            }
 
+            // 商品4
             if (r.G_Code4 == string.Empty)
             {
                 if (r.Goods4_1 != string.Empty || r.Goods4_2 != string.Empty || r.Goods4_3 != string.Empty || r.Goods4_4 != string.Empty ||
                      r.Goods4_5 != string.Empty || r.Goods4_6 != string.Empty || r.Goods4_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 3, "商品が登録されていません");
+                    setErrStatus(eHinCode, 7, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code4, r.G_Syubai4, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 7, eMsg);
+                return false;
+            }
 
+            // 商品5
             if (r.G_Code5 == string.Empty)
             {
                 if (r.Goods5_1 != string.Empty || r.Goods5_2 != string.Empty || r.Goods5_3 != string.Empty || r.Goods5_4 != string.Empty ||
                      r.Goods5_5 != string.Empty || r.Goods5_6 != string.Empty || r.Goods5_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 4, "商品が登録されていません");
+                    setErrStatus(eHinCode, 9, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code5, r.G_Syubai5, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 9, eMsg);
+                return false;
+            }
 
+
+            // 商品6
             if (r.G_Code6 == string.Empty)
             {
                 if (r.Goods6_1 != string.Empty || r.Goods6_2 != string.Empty || r.Goods6_3 != string.Empty || r.Goods6_4 != string.Empty ||
                      r.Goods6_5 != string.Empty || r.Goods6_6 != string.Empty || r.Goods6_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 5, "商品が登録されていません");
+                    setErrStatus(eHinCode, 11, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code6, r.G_Syubai6, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 11, eMsg);
+                return false;
+            }
 
+            // 商品7
             if (r.G_Code7 == string.Empty)
             {
                 if (r.Goods8_1 != string.Empty || r.Goods7_2 != string.Empty || r.Goods7_3 != string.Empty || r.Goods7_4 != string.Empty ||
                      r.Goods7_5 != string.Empty || r.Goods7_6 != string.Empty || r.Goods7_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 6, "商品が登録されていません");
+                    setErrStatus(eHinCode, 13, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code7, r.G_Syubai7, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 13, eMsg);
+                return false;
+            }
 
+            // 商品8
             if (r.G_Code8 == string.Empty)
             {
                 if (r.Goods8_1 != string.Empty || r.Goods8_2 != string.Empty || r.Goods8_3 != string.Empty || r.Goods8_4 != string.Empty ||
                      r.Goods8_5 != string.Empty || r.Goods8_6 != string.Empty || r.Goods8_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 7, "商品が登録されていません");
+                    setErrStatus(eHinCode, 15, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code8, r.G_Syubai8, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 15, eMsg);
+                return false;
+            }
 
+            // 商品9
             if (r.G_Code9 == string.Empty)
             {
                 if (r.Goods9_1 != string.Empty || r.Goods9_2 != string.Empty || r.Goods9_3 != string.Empty || r.Goods9_4 != string.Empty ||
                      r.Goods9_5 != string.Empty || r.Goods9_6 != string.Empty || r.Goods9_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 8, "商品が登録されていません");
+                    setErrStatus(eHinCode, 17, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code9, r.G_Syubai9, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 17, eMsg);
+                return false;
+            }
 
+            // 商品10
             if (r.G_Code10 == string.Empty)
             {
                 if (r.Goods10_1 != string.Empty || r.Goods10_2 != string.Empty || r.Goods10_3 != string.Empty || r.Goods10_4 != string.Empty ||
                      r.Goods10_5 != string.Empty || r.Goods10_6 != string.Empty || r.Goods10_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 9, "商品が登録されていません");
+                    setErrStatus(eHinCode, 19, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code10, r.G_Syubai10, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 19, eMsg);
+                return false;
+            }
 
+            // 商品11
             if (r.G_Code11 == string.Empty)
             {
                 if (r.Goods11_1 != string.Empty || r.Goods11_2 != string.Empty || r.Goods11_3 != string.Empty || r.Goods11_4 != string.Empty ||
                      r.Goods11_5 != string.Empty || r.Goods11_6 != string.Empty || r.Goods11_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 10, "商品が登録されていません");
+                    setErrStatus(eHinCode, 21, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code11, r.G_Syubai11, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 21, eMsg);
+                return false;
+            }
 
+            // 商品12
             if (r.G_Code12 == string.Empty)
             {
                 if (r.Goods13_1 != string.Empty || r.Goods12_2 != string.Empty || r.Goods12_3 != string.Empty || r.Goods12_4 != string.Empty ||
                      r.Goods12_5 != string.Empty || r.Goods12_6 != string.Empty || r.Goods12_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 11, "商品が登録されていません");
+                    setErrStatus(eHinCode, 23, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code12, r.G_Syubai12, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 23, eMsg);
+                return false;
+            }
 
+            // 商品13
             if (r.G_Code13 == string.Empty)
             {
                 if (r.Goods13_1 != string.Empty || r.Goods13_2 != string.Empty || r.Goods13_3 != string.Empty || r.Goods13_4 != string.Empty ||
                      r.Goods13_5 != string.Empty || r.Goods13_6 != string.Empty || r.Goods13_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 12, "商品が登録されていません");
+                    setErrStatus(eHinCode, 25, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code13, r.G_Syubai13, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 25, eMsg);
+                return false;
+            }
 
+            // 商品14
             if (r.G_Code14 == string.Empty)
             {
                 if (r.Goods14_1 != string.Empty || r.Goods14_2 != string.Empty || r.Goods14_3 != string.Empty || r.Goods14_4 != string.Empty ||
                      r.Goods14_5 != string.Empty || r.Goods14_6 != string.Empty || r.Goods14_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 13, "商品が登録されていません");
+                    setErrStatus(eHinCode, 27, "商品が登録されていません");
                     return false;
                 }
             }
+            else if (!ChkShohin(r.G_Code14, r.G_Syubai14, out eMsg, out eNum))
+            {
+                setErrStatus(eNum, 27, eMsg);
+                return false;
+            }
 
+            // 商品15
             if (r.G_Code15 == string.Empty)
             {
                 if (r.Goods15_1 != string.Empty || r.Goods15_2 != string.Empty || r.Goods15_3 != string.Empty || r.Goods15_4 != string.Empty ||
                      r.Goods15_5 != string.Empty || r.Goods15_6 != string.Empty || r.Goods15_7 != string.Empty)
                 {
-                    setErrStatus(eSH, 14, "商品が登録されていません");
+                    setErrStatus(eHinCode, 29, "商品が登録されていません");
                     return false;
                 }
             }
-
-
-
-
-
-
-
-
-
-
-            // パターン登録商品 : パターンID「０」以外を対象　2017/08/22
-            if (r.patternID != global.flgOff)
+            else if (!ChkShohin(r.G_Code15, r.G_Syubai15, out eMsg, out eNum))
             {
-                //NHBR_OCR.NHBRDataSet.パターンIDRow t = dts.パターンID.Single(a => a.得意先番号 == r.得意先番号 && a.連番 == r.パターンID);
-
-                ClsOrderPattern t = ptn.Single(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber);
-
-                if (t.G_Code1 == string.Empty && r. != string.Empty)
-                {
-                    setErrStatus(eSuu, 0, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品2 == global.flgOff && r.注文数2 != string.Empty)
-                {
-                    setErrStatus(eSuu, 1, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品3 == global.flgOff && r.注文数3 != string.Empty)
-                {
-                    setErrStatus(eSuu, 2, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品4 == global.flgOff && r.注文数4 != string.Empty)
-                {
-                    setErrStatus(eSuu, 3, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品5 == global.flgOff && r.注文数5 != string.Empty)
-                {
-                    setErrStatus(eSuu, 4, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品6 == global.flgOff && r.注文数6 != string.Empty)
-                {
-                    setErrStatus(eSuu, 5, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品7 == global.flgOff && r.注文数7 != string.Empty)
-                {
-                    setErrStatus(eSuu, 6, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品8 == global.flgOff && r.注文数8 != string.Empty)
-                {
-                    setErrStatus(eSuu, 7, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品9 == global.flgOff && r.注文数9 != string.Empty)
-                {
-                    setErrStatus(eSuu, 8, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品10 == global.flgOff && r.注文数10 != string.Empty)
-                {
-                    setErrStatus(eSuu, 9, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品11 == global.flgOff && r.注文数11 != string.Empty)
-                {
-                    setErrStatus(eSuu, 10, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品12 == global.flgOff && r.注文数12 != string.Empty)
-                {
-                    setErrStatus(eSuu, 11, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品13 == global.flgOff && r.注文数13 != string.Empty)
-                {
-                    setErrStatus(eSuu, 12, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品14 == global.flgOff && r.注文数14 != string.Empty)
-                {
-                    setErrStatus(eSuu, 13, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品15 == global.flgOff && r.注文数15 != string.Empty)
-                {
-                    setErrStatus(eSuu, 14, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品16 == global.flgOff && r.注文数16 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 0, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品17 == global.flgOff && r.注文数17 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 1, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品18 == global.flgOff && r.注文数18 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 2, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品19 == global.flgOff && r.注文数19 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 3, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品20 == global.flgOff && r.注文数20 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 4, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品21 == global.flgOff && r.注文数21 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 5, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品22 == global.flgOff && r.注文数22 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 6, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品23 == global.flgOff && r.注文数23 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 7, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品24 == global.flgOff && r.注文数24 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 8, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品25 == global.flgOff && r.注文数25 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 9, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品26 == global.flgOff && r.注文数26 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 10, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品27 == global.flgOff && r.注文数27 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 11, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品28 == global.flgOff && r.注文数28 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 12, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品29 == global.flgOff && r.注文数29 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 13, "商品登録されていません");
-                    return false;
-                }
-
-                if (t.商品30 == global.flgOff && r.注文数30 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 14, "商品登録されていません");
-                    return false;
-                }
-            }
-            else
-            {
-                // フリー入力の場合：商品マスター登録チェック
-                if (!getHinStatus(r.商品コード1))
-                {
-                    setErrStatus(eHinCode, 0, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード2))
-                {
-                    setErrStatus(eHinCode, 1, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード3))
-                {
-                    setErrStatus(eHinCode, 2, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード4))
-                {
-                    setErrStatus(eHinCode, 3, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード5))
-                {
-                    setErrStatus(eHinCode, 4, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード6))
-                {
-                    setErrStatus(eHinCode, 5, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード7))
-                {
-                    setErrStatus(eHinCode, 6, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード8))
-                {
-                    setErrStatus(eHinCode, 7, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード9))
-                {
-                    setErrStatus(eHinCode, 8, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード10))
-                {
-                    setErrStatus(eHinCode, 9, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード11))
-                {
-                    setErrStatus(eHinCode, 10, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード12))
-                {
-                    setErrStatus(eHinCode, 11, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード13))
-                {
-                    setErrStatus(eHinCode, 12, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード14))
-                {
-                    setErrStatus(eHinCode, 13, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード15))
-                {
-                    setErrStatus(eHinCode, 14, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード16))
-                {
-                    setErrStatus(eHinCode2, 0, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード17))
-                {
-                    setErrStatus(eHinCode2, 1, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード18))
-                {
-                    setErrStatus(eHinCode2, 2, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード19))
-                {
-                    setErrStatus(eHinCode2, 3, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード20))
-                {
-                    setErrStatus(eHinCode2, 4, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード21))
-                {
-                    setErrStatus(eHinCode2, 5, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード22))
-                {
-                    setErrStatus(eHinCode2, 6, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード23))
-                {
-                    setErrStatus(eHinCode2, 7, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード24))
-                {
-                    setErrStatus(eHinCode2, 8, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード25))
-                {
-                    setErrStatus(eHinCode2, 9, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード26))
-                {
-                    setErrStatus(eHinCode2, 10, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード27))
-                {
-                    setErrStatus(eHinCode2, 11, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード28))
-                {
-                    setErrStatus(eHinCode2, 12, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード29))
-                {
-                    setErrStatus(eHinCode2, 13, "登録されていない商品コードです");
-                    return false;
-                }
-
-                if (!getHinStatus(r.商品コード30))
-                {
-                    setErrStatus(eHinCode2, 14, "登録されていない商品コードです");
-                    return false;
-                }
-                
-                // フリー入力の場合：商品未入力のとき
-                if (r.商品コード1 == string.Empty && r.注文数1 != string.Empty)
-                {
-                    setErrStatus(eSuu, 0, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード2 == string.Empty && r.注文数2 != string.Empty)
-                {
-                    setErrStatus(eSuu, 1, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード3 == string.Empty && r.注文数3 != string.Empty)
-                {
-                    setErrStatus(eSuu, 2, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード4 == string.Empty && r.注文数4 != string.Empty)
-                {
-                    setErrStatus(eSuu, 3, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード5 == string.Empty && r.注文数5 != string.Empty)
-                {
-                    setErrStatus(eSuu, 4, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード6 == string.Empty && r.注文数6 != string.Empty)
-                {
-                    setErrStatus(eSuu, 5, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード7 == string.Empty && r.注文数7 != string.Empty)
-                {
-                    setErrStatus(eSuu, 6, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード8 == string.Empty && r.注文数8 != string.Empty)
-                {
-                    setErrStatus(eSuu, 7, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード9 == string.Empty && r.注文数9 != string.Empty)
-                {
-                    setErrStatus(eSuu, 8, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード10 == string.Empty && r.注文数10 != string.Empty)
-                {
-                    setErrStatus(eSuu, 9, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード11 == string.Empty && r.注文数11 != string.Empty)
-                {
-                    setErrStatus(eSuu, 10, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード12 == string.Empty && r.注文数12 != string.Empty)
-                {
-                    setErrStatus(eSuu, 11, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード13 == string.Empty && r.注文数13 != string.Empty)
-                {
-                    setErrStatus(eSuu, 12, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード14 == string.Empty && r.注文数14 != string.Empty)
-                {
-                    setErrStatus(eSuu, 13, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード15 == string.Empty && r.注文数15 != string.Empty)
-                {
-                    setErrStatus(eSuu, 14, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード16 == string.Empty && r.注文数16 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 0, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード17 == string.Empty && r.注文数17 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 1, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード18 == string.Empty && r.注文数18 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 2, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード19 == string.Empty && r.注文数19 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 3, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード20 == string.Empty && r.注文数20 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 4, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード21 == string.Empty && r.注文数21 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 5, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード22 == string.Empty && r.注文数22 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 6, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード23 == string.Empty && r.注文数23 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 7, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード24 == string.Empty && r.注文数24 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 8, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード25 == string.Empty && r.注文数25 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 9, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード26 == string.Empty && r.注文数26 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 10, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード27 == string.Empty && r.注文数27 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 11, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード28 == string.Empty && r.注文数28 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 12, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード29 == string.Empty && r.注文数29 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 13, "商品登録されていません");
-                    return false;
-                }
-
-                if (r.商品コード30 == string.Empty && r.注文数30 != string.Empty)
-                {
-                    setErrStatus(eSuu2, 14, "商品登録されていません");
-                    return false;
-                }
-
-                // フリー入力の場合：注文数未入力のとき
-                if (r.商品コード1 != string.Empty && r.注文数1 == string.Empty)
-                {
-                    setErrStatus(eSuu, 0, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード2 != string.Empty && r.注文数2 == string.Empty)
-                {
-                    setErrStatus(eSuu, 1, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード3 != string.Empty && r.注文数3 == string.Empty)
-                {
-                    setErrStatus(eSuu, 2, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード4 != string.Empty && r.注文数4 == string.Empty)
-                {
-                    setErrStatus(eSuu, 3, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード5 != string.Empty && r.注文数5 == string.Empty)
-                {
-                    setErrStatus(eSuu, 4, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード6 != string.Empty && r.注文数6 == string.Empty)
-                {
-                    setErrStatus(eSuu, 5, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード7 != string.Empty && r.注文数7 == string.Empty)
-                {
-                    setErrStatus(eSuu, 6, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード8 != string.Empty && r.注文数8 == string.Empty)
-                {
-                    setErrStatus(eSuu, 7, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード9 != string.Empty && r.注文数9 == string.Empty)
-                {
-                    setErrStatus(eSuu, 8, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード10 != string.Empty && r.注文数10 == string.Empty)
-                {
-                    setErrStatus(eSuu, 9, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード11 != string.Empty && r.注文数11 == string.Empty)
-                {
-                    setErrStatus(eSuu, 10, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード12 != string.Empty && r.注文数12 == string.Empty)
-                {
-                    setErrStatus(eSuu, 11, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード13 != string.Empty && r.注文数13 == string.Empty)
-                {
-                    setErrStatus(eSuu, 12, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード14 != string.Empty && r.注文数14 == string.Empty)
-                {
-                    setErrStatus(eSuu, 13, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード15 != string.Empty && r.注文数15 == string.Empty)
-                {
-                    setErrStatus(eSuu, 14, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード16 != string.Empty && r.注文数16 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 0, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード17 != string.Empty && r.注文数17 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 1, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード18 != string.Empty && r.注文数18 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 2, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード19 != string.Empty && r.注文数19 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 3, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード20 != string.Empty && r.注文数20 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 4, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード21 != string.Empty && r.注文数21 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 5, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード22 != string.Empty && r.注文数22 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 6, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード23 != string.Empty && r.注文数23 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 7, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード24 != string.Empty && r.注文数24 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 8, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード25 != string.Empty && r.注文数25 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 9, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード26 != string.Empty && r.注文数26 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 10, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード27 != string.Empty && r.注文数27 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 11, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード28 != string.Empty && r.注文数28 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 12, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード29 != string.Empty && r.注文数29 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 13, "商品数が入力されていません");
-                    return false;
-                }
-
-                if (r.商品コード30 != string.Empty && r.注文数30 == string.Empty)
-                {
-                    setErrStatus(eSuu2, 14, "商品数が入力されていません");
-                    return false;
-                }
-            }
-
-            // 追加注文商品コード：2017/08/23
-            if (!getHinStatus(r.追加注文商品コード1))
-            {
-                setErrStatus(eAddCode, 0, "登録されていない商品コードです");
+                setErrStatus(eNum, 29, eMsg);
                 return false;
             }
 
-            if (!getHinStatus(r.追加注文商品コード2))
-            {
-                setErrStatus(eAddCode, 1, "登録されていない商品コードです");
-                return false;
-            }
-
-            if (!getHinStatus(r.追加注文商品コード3))
-            {
-                setErrStatus(eAddCode, 2, "登録されていない商品コードです");
-                return false;
-            }
-
-            if (!getHinStatus(r.追加注文商品コード4))
-            {
-                setErrStatus(eAddCode, 3, "登録されていない商品コードです");
-                return false;
-            }
-
-            if (!getHinStatus(r.追加注文商品コード5))
-            {
-                setErrStatus(eAddCode, 4, "登録されていない商品コードです");
-                return false;
-            }
-
-            if (!getHinStatus(r.追加注文商品コード6))
-            {
-                setErrStatus(eAddCode2, 0, "登録されていない商品コードです");
-                return false;
-            }
-
-            if (!getHinStatus(r.追加注文商品コード7))
-            {
-                setErrStatus(eAddCode2, 1, "登録されていない商品コードです");
-                return false;
-            }
-
-            if (!getHinStatus(r.追加注文商品コード8))
-            {
-                setErrStatus(eAddCode2, 2, "登録されていない商品コードです");
-                return false;
-            }
-
-            if (!getHinStatus(r.追加注文商品コード9))
-            {
-                setErrStatus(eAddCode2, 3, "登録されていない商品コードです");
-                return false;
-            }
-
-            if (!getHinStatus(r.追加注文商品コード10))
-            {
-                setErrStatus(eAddCode2, 4, "登録されていない商品コードです");
-                return false;
-            }
-
-            // 追加注文
-            if (r.追加注文商品コード1 == string.Empty && r.追加注文数1 != string.Empty)
-            {
-                setErrStatus(eAddCode, 0, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード1 != string.Empty && r.追加注文数1 == string.Empty)
-            {
-                setErrStatus(eAddSuu, 0, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード2 == string.Empty && r.追加注文数2 != string.Empty)
-            {
-                setErrStatus(eAddCode, 1, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード2 != string.Empty && r.追加注文数2 == string.Empty)
-            {
-                setErrStatus(eAddSuu, 1, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード3 == string.Empty && r.追加注文数3 != string.Empty)
-            {
-                setErrStatus(eAddCode, 2, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード3 != string.Empty && r.追加注文数3 == string.Empty)
-            {
-                setErrStatus(eAddSuu, 2, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード4 == string.Empty && r.追加注文数4 != string.Empty)
-            {
-                setErrStatus(eAddCode, 3, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード4 != string.Empty && r.追加注文数4 == string.Empty)
-            {
-                setErrStatus(eAddSuu, 3, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード5 == string.Empty && r.追加注文数5 != string.Empty)
-            {
-                setErrStatus(eAddCode, 4, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード5 != string.Empty && r.追加注文数5 == string.Empty)
-            {
-                setErrStatus(eAddSuu, 4, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード6 == string.Empty && r.追加注文数6 != string.Empty)
-            {
-                setErrStatus(eAddCode2, 0, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード6 != string.Empty && r.追加注文数6 == string.Empty)
-            {
-                setErrStatus(eAddSuu2, 0, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード7 == string.Empty && r.追加注文数7 != string.Empty)
-            {
-                setErrStatus(eAddCode2, 1, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード7 != string.Empty && r.追加注文数7 == string.Empty)
-            {
-                setErrStatus(eAddSuu2, 1, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード8 == string.Empty && r.追加注文数8 != string.Empty)
-            {
-                setErrStatus(eAddCode2, 2, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード8 != string.Empty && r.追加注文数8 == string.Empty)
-            {
-                setErrStatus(eAddSuu2, 2, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード9 == string.Empty && r.追加注文数9 != string.Empty)
-            {
-                setErrStatus(eAddCode2, 3, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード9 != string.Empty && r.追加注文数9 == string.Empty)
-            {
-                setErrStatus(eAddSuu2, 3, "追加商品数が入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード10 == string.Empty && r.追加注文数10 != string.Empty)
-            {
-                setErrStatus(eAddCode2, 4, "追加商品コードが入力されていません");
-                return false;
-            }
-
-            if (r.追加注文商品コード10 != string.Empty && r.追加注文数10 == string.Empty)
-            {
-                setErrStatus(eAddSuu2, 4, "追加商品数が入力されていません");
-                return false;
-            }
-            
             return true;
         }
 
+        ///------------------------------------------------------------
+        /// <summary>
+        ///     商品コード検証 </summary>
+        /// <param name="G_Code">
+        ///     商品コード</param>
+        /// <param name="G_Syubai">
+        ///     終売処理</param>
+        /// <param name="eMsg">
+        ///     エラーメッセージ</param>
+        /// <param name="eNum">
+        ///     エラー箇所</param>
+        /// <returns>
+        ///     エラーなし：true, エラー有り：false</returns>
+        ///------------------------------------------------------------
 
-        private bool ChkTenDate(string rDate)
+        private bool ChkShohin(string G_Code, int G_Syubai, out string eMsg, out int eNum)
         {
-            // 店着日付
+            // 商品コードマスター登録チェック
+            ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター, G_Code);
+
+            // 商品マスター未登録
+            if (syohin.SYOHIN_CD == string.Empty)
+            {
+                eNum = eHinCode;
+                eMsg = "マスター未登録または削除済みの商品です";
+                return false;
+            }
+
+            // 終売のとき
+            if (syohin.SHUBAI)
+            {
+                if (G_Syubai == global.flgOff)
+                {
+                    eNum = eShubai;
+                    eMsg = "該当商品は終売です。終売処理を選択してください";
+                    return false;
+                }
+            }
+
+            eNum = global.flgOff;
+            eMsg = "";
+            return true;
+        }
+
+        ///-------------------------------------------------------------------
+        /// <summary>
+        ///     店着日付の検証 </summary>
+        /// <param name="rDate">
+        ///     店着日付文字列(yyyy/mm/dd) </param>
+        /// <param name="eMsg"><
+        ///     エラーメッセージ/param>
+        /// <param name="week">
+        ///     曜日(Sun:0, Mon:1, ... Sat:6)</param>
+        /// <returns>
+        ///     エラーなし：true, エラー：false</returns>
+        ///-------------------------------------------------------------------
+        private bool ChkTenDate(string rDate, out string eMsg, int week)
+        {
             DateTime dt;
+
             if (!DateTime.TryParse(rDate, out dt))
             {
-                setErrStatus(eTenDate1, 0, "店着日付が正しくありません");
+                eMsg = "店着日付が正しくありません";
                 return false;
             }
 
             DayOfWeek wk = dt.DayOfWeek;
-            if ((Int32)wk != 1)
+
+            if ((Int32)wk != week)
             {
-                setErrStatus(eTenDate1, 0, "店着日付の曜日が正しくありません");
+                eMsg = "店着日付の曜日が正しくありません";
                 return false;
             }
+
+            eMsg = "";
+            return true;
         }
-
-
-
-
-
 
 
         ///--------------------------------------------------------------
@@ -1799,38 +854,6 @@ namespace STSH_OCR.Common
             return rtn;
         }
 
-        ///--------------------------------------------------------------
-        /// <summary>
-        ///     商品コードが登録済みか調べる </summary>
-        /// <param name="hinCode">
-        ///     商品コード</param>
-        /// <returns>
-        ///     true:登録済み、false:未登録</returns>
-        ///--------------------------------------------------------------
-        private bool getHinStatus(string hinCode)
-        {
-            if (hinCode == string.Empty)
-            {
-                return true;
-            }
-          
-            bool rtn = false;
-
-            hinCode = hinCode.PadLeft(8, '0');
-
-            string strSQL = "select SYO_ID, SYO_NAME, SYO_IRI_KESU, SYO_TANI from RAKUSYO_FAXOCR.V_SYOHIN WHERE SYO_ID = '" + hinCode + "'";
-            OracleCommand Cmd = new OracleCommand(strSQL, _Conn);
-            OracleDataReader dR = Cmd.ExecuteReader();
-            if (dR.HasRows)
-            {
-                rtn = true;
-            }
-
-            dR.Dispose();
-            Cmd.Dispose();
-
-            return rtn;
-        }
 
         ///----------------------------------------------------------
         /// <summary>

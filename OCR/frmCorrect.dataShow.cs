@@ -212,6 +212,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay6, 1].Value = r.Goods1_6;
             dataGrid[colDay7, 1].Value = r.Goods1_7;
 
+            dg1.Rows[1].Cells[colSyubai].Value = global.SyubaiArray[r.G_Syubai1];
+
             // ２行目
             global.ChangeValueStatus = true;
             dataGrid[colHinCode, 3].Value = r.G_Code2;
@@ -234,6 +236,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay5, 3].Value = r.Goods2_5;
             dataGrid[colDay6, 3].Value = r.Goods2_6;
             dataGrid[colDay7, 3].Value = r.Goods2_7;
+
+            dataGrid[colSyubai, 3].Value = global.SyubaiArray[r.G_Syubai2];
 
             // ３行目
             global.ChangeValueStatus = true;
@@ -258,6 +262,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay6, 5].Value = r.Goods3_6;
             dataGrid[colDay7, 5].Value = r.Goods3_7;
 
+            dataGrid[colSyubai, 5].Value = global.SyubaiArray[r.G_Syubai3];
+
             // ４行目
             global.ChangeValueStatus = true;
             dataGrid[colHinCode, 7].Value = r.G_Code4;
@@ -280,6 +286,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay5, 7].Value = r.Goods4_5;
             dataGrid[colDay6, 7].Value = r.Goods4_6;
             dataGrid[colDay7, 7].Value = r.Goods4_7;
+
+            dataGrid[colSyubai, 7].Value = global.SyubaiArray[r.G_Syubai4];
 
             // ５行目
             global.ChangeValueStatus = true;
@@ -304,6 +312,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay6, 9].Value = r.Goods5_6;
             dataGrid[colDay7, 9].Value = r.Goods5_7;
 
+            dataGrid[colSyubai, 9].Value = global.SyubaiArray[r.G_Syubai5];
+
             // ６行目
             global.ChangeValueStatus = true;
             dataGrid[colHinCode, 11].Value = r.G_Code6;
@@ -326,6 +336,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay5, 11].Value = r.Goods6_5;
             dataGrid[colDay6, 11].Value = r.Goods6_6;
             dataGrid[colDay7, 11].Value = r.Goods6_7;
+
+            dataGrid[colSyubai, 11].Value = global.SyubaiArray[r.G_Syubai6];
 
             // ７行目
             global.ChangeValueStatus = true;
@@ -350,6 +362,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay6, 13].Value = r.Goods7_6;
             dataGrid[colDay7, 13].Value = r.Goods7_7;
 
+            dataGrid[colSyubai, 13].Value = global.SyubaiArray[r.G_Syubai7];
+
             // ８行目
             global.ChangeValueStatus = true;
             dataGrid[colHinCode, 15].Value = r.G_Code8;
@@ -372,6 +386,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay5, 15].Value = r.Goods8_5;
             dataGrid[colDay6, 15].Value = r.Goods8_6;
             dataGrid[colDay7, 15].Value = r.Goods8_7;
+
+            dataGrid[colSyubai, 15].Value = global.SyubaiArray[r.G_Syubai8];
 
             // ９行目
             global.ChangeValueStatus = true;
@@ -396,6 +412,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay6, 17].Value = r.Goods9_6;
             dataGrid[colDay7, 17].Value = r.Goods9_7;
 
+            dataGrid[colSyubai, 17].Value = global.SyubaiArray[r.G_Syubai9];
+
             // 10行目
             global.ChangeValueStatus = true;
             dataGrid[colHinCode, 19].Value = r.G_Code10;
@@ -418,6 +436,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay5, 19].Value = r.Goods10_5;
             dataGrid[colDay6, 19].Value = r.Goods10_6;
             dataGrid[colDay7, 19].Value = r.Goods10_7;
+
+            dataGrid[colSyubai, 19].Value = global.SyubaiArray[r.G_Syubai10];
 
             // 11行目
             global.ChangeValueStatus = true;
@@ -442,6 +462,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay6, 21].Value = r.Goods11_6;
             dataGrid[colDay7, 21].Value = r.Goods11_7;
 
+            dataGrid[colSyubai, 21].Value = global.SyubaiArray[r.G_Syubai11];
+
             // 12行目
             global.ChangeValueStatus = true;
             dataGrid[colHinCode, 23].Value = r.G_Code12;
@@ -464,6 +486,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay5, 23].Value = r.Goods12_5;
             dataGrid[colDay6, 23].Value = r.Goods12_6;
             dataGrid[colDay7, 23].Value = r.Goods12_7;
+
+            dataGrid[colSyubai, 23].Value = global.SyubaiArray[r.G_Syubai12];
 
             // 13行目
             global.ChangeValueStatus = true;
@@ -488,6 +512,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay6, 25].Value = r.Goods13_6;
             dataGrid[colDay7, 25].Value = r.Goods13_7;
 
+            dataGrid[colSyubai, 25].Value = global.SyubaiArray[r.G_Syubai13];
+
             // 14行目
             global.ChangeValueStatus = true;
             dataGrid[colHinCode, 27].Value = r.G_Code14;
@@ -511,6 +537,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay6, 27].Value = r.Goods14_6;
             dataGrid[colDay7, 27].Value = r.Goods14_7;
 
+            dataGrid[colSyubai, 27].Value = global.SyubaiArray[r.G_Syubai14];
+
             // 15行目
             global.ChangeValueStatus = true;
             dataGrid[colHinCode, 29].Value = r.G_Code15;
@@ -533,6 +561,8 @@ namespace STSH_OCR.OCR
             dataGrid[colDay5, 29].Value = r.Goods15_5;
             dataGrid[colDay6, 29].Value = r.Goods15_6;
             dataGrid[colDay7, 29].Value = r.Goods15_7;
+
+            dataGrid[colSyubai, 29].Value = global.SyubaiArray[r.G_Syubai15];
 
 
             //// 編集を可能とする
@@ -959,273 +989,6 @@ namespace STSH_OCR.OCR
         //}
 
 
-        /// --------------------------------------------------------------------------------
-        /// <summary>
-        ///     時間外記入チェック </summary>
-        /// <param name="wkSpan">
-        ///     所定労働時間 </param>
-        /// <param name="wkSpanName">
-        ///     勤務体系名称 </param>
-        /// <param name="mRow">
-        ///     グリッド行インデックス </param>
-        /// <param name="TaikeiCode">
-        ///     勤務体系コード </param>
-        /// --------------------------------------------------------------------------------
-        private void zanCheckShow(long wkSpan, string wkSpanName, int mRow, int TaikeiCode)
-        {
-            //Int64 s10 = 0;  // 深夜勤務時間中の10分または15分休憩時間
-
-            //// 所定勤務時間が取得されていないとき戻る
-            //if (wkSpan == 0)
-            //{
-            //    return;
-            //}
-            
-            //// 所定勤務時間が取得されているとき残業時間計算チェックを行う
-            //Int64 restTm = 0;
-
-            //// 所定時間ごとの休憩時間
-            ////if (wkSpanName == WKSPAN0750)
-            ////{
-            ////    restTm = RESTTIME0750;
-            ////}
-            ////else if (wkSpanName == WKSPAN0755)
-            ////{
-            ////    restTm = RESTTIME0755;
-            ////}
-            ////else if (wkSpanName == WKSPAN0800)
-            ////{
-            ////    restTm = RESTTIME0800;
-            ////}
-                
-            //// 時間外勤務時間取得 2015/09/30
-            //Int64 zan = getZangyoTime(mRow, (Int64)tanMin30, wkSpan, restTm, out s10, TaikeiCode);
-
-            //// 時間外記入時間チェック 2015/09/30
-            //errCheckZanTm(mRow, zan);
-
-            //OCRData ocr = new OCRData(_dbName, bs);
-
-            //string sh = Utility.NulltoStr(dGV[cSH, mRow].Value.ToString());
-            //string sm = Utility.NulltoStr(dGV[cSM, mRow].Value.ToString());
-            //string eh = Utility.NulltoStr(dGV[cEH, mRow].Value.ToString());
-            //string em = Utility.NulltoStr(dGV[cEM, mRow].Value.ToString());
-
-            //// 深夜勤務時間を取得
-            //double shinyaTm = ocr.getShinyaWorkTime(sh, sm, eh, em, tanMin10, s10);
-
-            //// 深夜勤務時間チェック
-            //errCheckShinyaTm(mRow, (Int64)shinyaTm);
-        }
-
-        /// -----------------------------------------------------------------------------------
-        /// <summary>
-        ///     時間外勤務時間取得 </summary>
-        /// <param name="m">
-        ///     グリッド行インデックス</param>
-        /// <param name="Tani">
-        ///     丸め単位</param>
-        /// <param name="ws">
-        ///     所定労働時間</param>
-        /// <param name="restTime">
-        ///     勤務体系別の所定労働時間内の休憩時間</param>
-        /// <param name="s10Rest">
-        ///     勤務体系別の所定労働時間以降の休憩時間単位</param>
-        /// <param name="taikeiCode">
-        ///     勤務体系コード</param>
-        /// <returns>
-        ///     時間外勤務時間</returns>
-        /// -----------------------------------------------------------------------------------
-        private Int64 getZangyoTime(int m, Int64 Tani, Int64 ws, Int64 restTime, out Int64 s10Rest, int taikeiCode)
-        {
-            Int64 zan = 0;  // 計算後時間外勤務時間
-            s10Rest = 0;    // 深夜勤務時間帯の10分休憩時間
-
-            //DateTime cTm;
-            //DateTime sTm;
-            //DateTime eTm;
-            //DateTime zsTm;
-            //DateTime pTm;
-
-            //if (dGV[cSH, m].Value != null && dGV[cSM, m].Value != null && dGV[cEH, m].Value != null && dGV[cEM, m].Value != null)
-            //{
-            //    int ss = Utility.StrtoInt(dGV[cSH, m].Value.ToString()) * 100 + Utility.StrtoInt(dGV[cSM, m].Value.ToString());
-            //    int ee = Utility.StrtoInt(dGV[cEH, m].Value.ToString()) * 100 + Utility.StrtoInt(dGV[cEM, m].Value.ToString());
-            //    DateTime dt = DateTime.Today;
-            //    string sToday = dt.Year.ToString() + "/" + dt.Month.ToString() + "/" + dt.Day.ToString();
-
-            //    // 始業時刻
-            //    if (DateTime.TryParse(sToday + " " + dGV[cSH, m].Value.ToString() + ":" + dGV[cSM, m].Value.ToString(), out cTm))
-            //    {
-            //        sTm = cTm;
-            //    }
-            //    else return 0;
-
-            //    // 終業時刻
-            //    if (ss > ee)
-            //    {
-            //        // 翌日
-            //        dt = DateTime.Today.AddDays(1);
-            //        sToday = dt.Year.ToString() + "/" + dt.Month.ToString() + "/" + dt.Day.ToString();
-            //        if (DateTime.TryParse(sToday + " " + dGV[cEH, m].Value.ToString() + ":" + dGV[cEM, m].Value.ToString(), out cTm))
-            //        {
-            //            eTm = cTm;
-            //        }
-            //        else return 0;
-            //    }
-            //    else
-            //    {
-            //        // 同日
-            //        if (DateTime.TryParse(sToday + " " + dGV[cEH, m].Value.ToString() + ":" + dGV[cEM, m].Value.ToString(), out cTm))
-            //        {
-            //            eTm = cTm;
-            //        }
-            //        else return 0;
-            //    }
-
-            //    // 作業日報に記入されている始業から就業までの就業時間取得
-            //    double w = Utility.GetTimeSpan(sTm, eTm).TotalMinutes - restTime;
-
-            //    // 所定労働時間内なら時間外なし
-            //    if (w <= ws)
-            //    {
-            //        return 0;
-            //    }
-
-            //    // 所定労働時間＋休憩時間＋10分または15分経過後の時刻を取得（時間外開始時刻）
-            //    zsTm = sTm.AddMinutes(ws);          // 所定労働時間
-            //    zsTm = zsTm.AddMinutes(restTime);   // 休憩時間
-            //    int zSpan = 0;
-
-            //    if (taikeiCode == 100)
-            //    {
-            //        zsTm = zsTm.AddMinutes(10);         // 体系コード：100 所定労働時間後の10分休憩
-            //        zSpan = 130;
-            //    }
-            //    else if (taikeiCode == 200 || taikeiCode == 300)
-            //    {
-            //        zsTm = zsTm.AddMinutes(15);         // 体系コード：200,300 所定労働時間後の15分休憩
-            //        zSpan = 135;
-            //    }
-
-            //    pTm = zsTm;                         // 時間外開始時刻
-
-            //    // 該当時刻から終業時刻まで130分または135分以上あればループさせる
-            //    while (Utility.GetTimeSpan(pTm, eTm).TotalMinutes > zSpan)
-            //    {
-            //        // 終業時刻まで2時間につき10分休憩として時間外を算出
-            //        // 時間外として2時間加算
-            //        zan += 120;
-
-            //        // 130分、または135分後の時刻を取得（2時間＋10分、または15分）
-            //        pTm = pTm.AddMinutes(zSpan);
-
-            //        // 深夜勤務時間中の10分または15分休憩時間を取得する
-            //        s10Rest += getShinya10Rest(pTm, eTm, zSpan - 120);
-            //    }
-
-            //    // 130分（135分）以下の時間外を加算
-            //    zan += (Int64)Utility.GetTimeSpan(pTm, eTm).TotalMinutes;
-
-            //    // 単位で丸める
-            //    zan -= (zan % Tani);
-            //}
-
-            return zan;
-        }
-
-
-        /// --------------------------------------------------------------------
-        /// <summary>
-        ///     深夜勤務時間中の10分または15分休憩時間を取得する </summary>
-        /// <param name="pTm">
-        ///     時刻</param>
-        /// <param name="eTm">
-        ///     終業時刻</param>
-        /// <param name="taikeiRest">
-        ///     勤務体系別の休憩時間(10分または15分）</param>
-        /// <returns>
-        ///     休憩時間</returns>
-        /// --------------------------------------------------------------------
-        private int getShinya10Rest(DateTime pTm, DateTime eTm, int taikeiRest)
-        {
-            int restTime = 0;
-
-            // 130(135)分後の時刻が終業時刻以内か
-            TimeSpan ts = eTm.TimeOfDay;
-
-            if (pTm <= eTm)
-            {
-                // 時刻が深夜時間帯か？
-                if (pTm.Hour >= 22 || pTm.Hour <= 5)
-                {
-                    if (pTm.Hour == 22)
-                    {
-                        // 22時帯は22時以降の経過分を対象とします。
-                        // 例）21:57～22:07のとき22時台の7分が休憩時間
-                        if (pTm.Minute >= taikeiRest)
-                        {
-                            restTime = taikeiRest;
-                        }
-                        else
-                        {
-                            restTime = pTm.Minute;
-                        }
-                    }
-                    else if (pTm.Hour == 5)
-                    {
-                        // 4時帯の経過分を対象とするので5時帯は減算します。
-                        // 例）4:57～5:07のとき5時台の7分は差し引いて3分が休憩時間
-                        if (pTm.Minute < taikeiRest)
-                        {
-                            restTime = (taikeiRest - pTm.Minute);
-                        }
-                    }
-                    else
-                    {
-                        restTime = taikeiRest;
-                    }
-                }
-            }
-
-            return restTime;
-        }
-
-
-        ///------------------------------------------------------------------------------------
-        /// <summary>
-        ///     時間外記入チェック </summary>
-        /// <param name="m">
-        ///     勤務票明細Rowコレクション</param>
-        /// <param name="tittle">
-        ///     チェック項目名称</param>
-        /// <param name="iX">
-        ///     日付を表すインデックス</param>
-        /// <param name="zan">
-        ///     算出残業時間</param>
-        /// <returns>
-        ///     エラーなし：true, エラーあり：false</returns>
-        ///------------------------------------------------------------------------------------
-        private void errCheckZanTm(int m, Int64 zan)
-        {
-            Int64 mZan = 0;
-
-            //mZan = (Utility.StrtoInt(gcMultiRow1[m, "txtZanH1"].Value.ToString()) * 60) + (Utility.StrtoInt(gcMultiRow1[m, "txtZanM1"].Value.ToString()) * 60 / 10);
-
-            //// 記入時間と計算された残業時間が不一致のとき
-            //if (zan != mZan)
-            //{
-            //    gcMultiRow1[m, "txtZanH1"].Style.BackColor = Color.LightPink;
-            //    gcMultiRow1[m, "txtZanH1"].Style.BackColor = Color.LightPink;
-            //}
-            //else
-            //{
-            //    gcMultiRow1[m, "txtZanM1"].Style.BackColor = Color.White;
-            //    gcMultiRow1[m, "txtZanM1"].Style.BackColor = Color.White;
-            //}
-        }
-        
-
         ///------------------------------------------------------------------------------------
         /// <summary>
         ///     画像を表示する </summary>
@@ -1296,6 +1059,18 @@ namespace STSH_OCR.OCR
 
             dg1.Rows.Clear();   // 行数をクリア
             dg1.Rows.Add(30);   // 行数を設定
+
+            for (int i = 1; i < dg1.RowCount; i+=2)
+            {
+                dg1[colSyubai, i] = new DataGridViewComboBoxCell();
+                dg1[colSyubai, i].ReadOnly = false; // 編集可能に設定
+
+                // コンボボックスにアイテムを追加する
+                for (int iX = 0; iX < global.SyubaiArray.Length; iX++)
+                {
+                    ((DataGridViewComboBoxCell)dg1[colSyubai, i]).Items.Add(global.SyubaiArray[iX]);
+                }
+            }
 
             for (int i = 2; i < dg1.Rows.Count; i+=4)
             {
@@ -1392,227 +1167,146 @@ namespace STSH_OCR.OCR
 
         ///------------------------------------------------------------------------------------
         /// <summary>
-        ///     フォーム表示初期化 </summary>
-        /// <param name="sID">
-        ///     過去データ表示時のヘッダID</param>
-        /// <param name="cIx">
-        ///     勤務票ヘッダカレントレコードインデックス</param>
-        ///------------------------------------------------------------------------------------
-        private void formInitialize(string sID, int cIx, int dCnt)
-        {
-            // 表示色設定
-            //gcMultiRow1[0, "txtPtnNum"].Style.BackColor = SystemColors.Window;
-            //gcMultiRow1[0, "txtTdkNum"].Style.BackColor = SystemColors.Window;
-            //gcMultiRow1[0, "lblName"].Style.BackColor = SystemColors.Window;
-            //gcMultiRow1[0, "lblTel"].Style.BackColor = SystemColors.Window;
-            //gcMultiRow1[0, "txtOrderNum"].Style.BackColor = SystemColors.Window;
-            //gcMultiRow1[0, "txtMonth"].Style.BackColor = SystemColors.Window;
-            //gcMultiRow1[0, "txtDay"].Style.BackColor = SystemColors.Window;
-            //gcMultiRow1[0, "lblPage"].Style.BackColor = SystemColors.Control;
-            //gcMultiRow1[0, "chkReFax"].Style.BackColor = SystemColors.Window;   // 2018/08/03
-            
-            lblNoImage.Visible = false;
-
-            // 編集可否
-            //gcMultiRow1.ReadOnly = false;
-            //gcMultiRow2.ReadOnly = false;
-            //gcMultiRow3.ReadOnly = false;
-                
-            // スクロールバー設定
-            hScrollBar1.Enabled = true;
-            hScrollBar1.Minimum = 0;
-            hScrollBar1.Maximum = dCnt;
-            hScrollBar1.Value = cIx;
-            hScrollBar1.LargeChange = 1;
-            hScrollBar1.SmallChange = 1;
-
-            //移動ボタン制御
-            btnFirst.Enabled = true;
-            btnNext.Enabled = true;
-            btnBefore.Enabled = true;
-            btnEnd.Enabled = true;
-
-            //最初のレコード
-            if (cIx == 0)
-            {
-                btnBefore.Enabled = false;
-                btnFirst.Enabled = false;
-            }
-
-            //最終レコード
-            if ((cIx + 1) == dCnt)
-            {
-                btnNext.Enabled = false;
-                btnEnd.Enabled = false;
-            }
-            
-            //データ数表示
-            //gcMultiRow1[0, "lblPage"].Value = " (" + (cI + 1).ToString() + "/" + dCnt + ")";
-            
-            // メモ欄
-            txtMemo.Text = string.Empty;
-
-            // 確認チェック欄
-            checkBox1.BackColor = SystemColors.Control;
-            checkBox1.Checked = false;
-        }
-
-        ///------------------------------------------------------------------------------------
-        /// <summary>
         ///     エラー表示 </summary>
         /// <param name="ocr">
         ///     OCRDATAクラス</param>
         ///------------------------------------------------------------------------------------
-        //private void ErrShow(OCRData ocr)
-        //{
-        //    if (ocr._errNumber != ocr.eNothing)
-        //    {
-        //        // グリッドビューCellEnterイベント処理は実行しない
-        //        gridViewCellEnterStatus = false;
+        private void ErrShow(OCRData ocr)
+        {
+            if (ocr._errNumber != ocr.eNothing)
+            {
+                // グリッドビューCellEnterイベント処理は実行しない
+                gridViewCellEnterStatus = false;
 
-        //        lblErrMsg.Visible = true;
-        //        lblErrMsg.Text = ocr._errMsg;
+                lblErrMsg.Visible = true;
+                lblErrMsg.Text = ocr._errMsg;
 
-        //        // 確認
-        //        if (ocr._errNumber == ocr.eDataCheck)
-        //        {
-        //            checkBox1.BackColor = Color.Yellow;
-        //            checkBox1.Focus();
-        //        }
+                // 確認
+                if (ocr._errNumber == ocr.eDataCheck)
+                {
+                    checkBox1.BackColor = Color.Yellow;
+                    checkBox1.Focus();
+                }
 
-        //        // 届先番号
-        //        if (ocr._errNumber == ocr.eTdkNo)
-        //        {
-        //            gcMultiRow1[0, "txtTdkNum"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow1.Focus();
-        //            gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtTdkNum"];
-        //            gcMultiRow1.BeginEdit(true);
-                    
-        //            // エラー有りフラグ
-        //            txtErrStatus.Text = global.FLGON;
-        //        }
+                // 年月
+                if (ocr._errNumber == ocr.eYearMonth)
+                {
+                    txtYear.BackColor = Color.Yellow;
+                    txtYear.Focus();
 
-        //        // パターンID
-        //        if (ocr._errNumber == ocr.ePattern)
-        //        {
-        //            gcMultiRow1[0, "txtPtnNum"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow1.Focus();
-        //            gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtPtnNum"];
-        //            gcMultiRow1.BeginEdit(true);
-                    
-        //            // エラー有りフラグ
-        //            txtErrStatus.Text = global.FLGON;
-        //        }
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                if (ocr._errNumber == ocr.eMonth)
+                {
+                    txtMonth.BackColor = Color.Yellow;
+                    txtMonth.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                // 得意先コード
+                if (ocr._errNumber == ocr.eTdkNo)
+                {
+                    txtTokuisakiCD.BackColor = Color.Yellow;
+                    txtTokuisakiCD.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                // パターンID
+                if (ocr._errNumber == ocr.ePattern)
+                {
+                    txtPID.BackColor = Color.Yellow;
+                    txtPID.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                // 店着日付
+                if (ocr._errNumber == ocr.eTenDate1)
+                {
+                    txtTenDay1.BackColor = Color.Yellow;
+                    txtTenDay1.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                if (ocr._errNumber == ocr.eTenDate2)
+                {
+                    txtTenDay2.BackColor = Color.Yellow;
+                    txtTenDay2.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                if (ocr._errNumber == ocr.eTenDate3)
+                {
+                    txtTenDay3.BackColor = Color.Yellow;
+                    txtTenDay3.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                if (ocr._errNumber == ocr.eTenDate4)
+                {
+                    txtTenDay4.BackColor = Color.Yellow;
+                    txtTenDay4.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                if (ocr._errNumber == ocr.eTenDate5)
+                {
+                    txtTenDay5.BackColor = Color.Yellow;
+                    txtTenDay5.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                if (ocr._errNumber == ocr.eTenDate6)
+                {
+                    txtTenDay6.BackColor = Color.Yellow;
+                    txtTenDay6.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
+
+                if (ocr._errNumber == ocr.eTenDate7)
+                {
+                    txtTenDay7.BackColor = Color.Yellow;
+                    txtTenDay7.Focus();
+
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
                 
-        //        // 納品希望日
-        //        if (ocr._errNumber == ocr.eMonth || ocr._errNumber == ocr.eDay)
-        //        {
-        //            gcMultiRow1[0, "txtMonth"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow1[0, "txtDay"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow1.Focus();
-        //            gcMultiRow1.CurrentCell = gcMultiRow1[0, "txtMonth"];
-        //            gcMultiRow1.BeginEdit(true);
-                    
-        //            // エラー有りフラグ
-        //            txtErrStatus.Text = global.FLGON;
-        //        }
+                // 商品コード
+                if (ocr._errNumber == ocr.eHinCode)
+                {
+                    dg1[colHinCode,  ocr._errRow].Style.BackColor = Color.Yellow;
+                    dg1.Focus();
+                    dg1.CurrentCell = dg1[colHinCode, ocr._errRow];
 
-        //        // 再ＦＡＸ：2018/08/03
-        //        if (ocr._errNumber == ocr.eReFax)
-        //        {
-        //            gcMultiRow1[0, "chkReFax"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow1.Focus();
-        //            gcMultiRow1.CurrentCell = gcMultiRow1[0, "chkReFax"];
-        //            gcMultiRow1.BeginEdit(true);
+                    // エラー有りフラグ
+                    txtErrStatus.Text = global.FLGON;
+                }
 
-        //            // エラー有りフラグ
-        //            txtErrStatus.Text = global.FLGON;
-        //        }
 
-        //        // 商品コード
-        //        if (ocr._errNumber == ocr.eHinCode)
-        //        {
-        //            gcMultiRow2[ocr._errRow, "txtHinCode"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow2.Focus();
-        //            gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtHinCode"];
-        //            gcMultiRow2.BeginEdit(true);
-
-        //            // エラー有りフラグ
-        //            txtErrStatus.Text = global.FLGON;
-        //        }
-
-        //        if (ocr._errNumber == ocr.eHinCode2)
-        //        {
-        //            gcMultiRow2[ocr._errRow, "txtHinCode2"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow2.Focus();
-        //            gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtHinCode2"];
-        //            gcMultiRow2.BeginEdit(true);
-
-        //            // エラー有りフラグ
-        //            txtErrStatus.Text = global.FLGON;
-        //        }
-
-        //        // 発注数
-        //        if (ocr._errNumber == ocr.eSuu)
-        //        {
-        //            gcMultiRow2[ocr._errRow, "txtSuu"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow2.Focus();
-        //            gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtSuu"];
-        //            gcMultiRow2.BeginEdit(true);
-
-        //            // エラー有りフラグ
-        //            txtErrStatus.Text = global.FLGON;
-        //        }
-
-        //        if (ocr._errNumber == ocr.eSuu2)
-        //        {
-        //            gcMultiRow2[ocr._errRow, "txtSuu2"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow2.Focus();
-        //            gcMultiRow2.CurrentCell = gcMultiRow2[ocr._errRow, "txtSuu2"];
-        //            gcMultiRow2.BeginEdit(true);
-                    
-        //            // エラー有りフラグ
-        //            txtErrStatus.Text = global.FLGON;
-        //        }
-
-        //        // 追加注文・商品コード
-        //        if (ocr._errNumber == ocr.eAddCode)
-        //        {
-        //            gcMultiRow3[ocr._errRow, "txtHinCode"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow3.Focus();
-        //            gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtHinCode"];
-        //            gcMultiRow3.BeginEdit(true);
-        //        }
-
-        //        if (ocr._errNumber == ocr.eAddCode2)
-        //        {
-        //            gcMultiRow3[ocr._errRow, "txtHinCode2"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow3.Focus();
-        //            gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtHinCode2"];
-        //            gcMultiRow3.BeginEdit(true);
-        //        }
-                
-        //        // 追加注文・発注数
-        //        if (ocr._errNumber == ocr.eAddSuu)
-        //        {
-        //            gcMultiRow3[ocr._errRow, "txtSuu"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow3.Focus();
-        //            gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtSuu"];
-        //            gcMultiRow3.BeginEdit(true);
-        //        }
-
-        //        if (ocr._errNumber == ocr.eAddSuu2)
-        //        {
-        //            gcMultiRow3[ocr._errRow, "txtSuu2"].Style.BackColor = Color.Yellow;
-        //            gcMultiRow3.Focus();
-        //            gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtSuu2"];
-        //            gcMultiRow3.BeginEdit(true);
-        //        }
-                
-        //        // グリッドビューCellEnterイベントステータスを戻す
-        //        gridViewCellEnterStatus = true;
-        //    }
-        //}
+                // グリッドビューCellEnterイベントステータスを戻す
+                gridViewCellEnterStatus = true;
+            }
+        }
 
     }
 }

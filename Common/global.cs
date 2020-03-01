@@ -119,5 +119,8 @@ namespace STSH_OCR.Common
 
         // グリッドビューで次の行の移動先カラム名
         public static string NEXT_COLUMN = string.Empty;
+
+        // 終売処理
+        public static string[] SyubaiArray = { "", "取消", "有効" };
     }
 }

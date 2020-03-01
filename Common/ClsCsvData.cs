@@ -43,6 +43,15 @@ namespace STSH_OCR.Common
             // 発注可能日数
             public double HATYU_LIMIT_DAY_CNT { get; set; }
 
+            // 販売開始日付
+            public string START_SALE_YMD { get; set; }
+            
+            // 商品販売開始日付
+            public string LAST_SALE_YMD { get; set; }
+
+            // 終売フラグ
+            public bool SHUBAI { get; set; }
+
             public static ClsCsvSyohin[] Load(string[] Sy_Array, string[] SySz_Array, string [] Shiire_Array, int sDate)
             {
                 ClsCsvSyohin[] syohins = null;
@@ -50,6 +59,8 @@ namespace STSH_OCR.Common
 
                 foreach (var item in Sy_Array)
                 {
+                    string cStart_Sale_YMD = "";    // 商品販売開始日付
+                    string cLast_Sale_YMD = "";     // 商品販売終了日付
                     string[] t = item.Split(',');
 
                     // 削除フラグ
@@ -92,8 +103,8 @@ namespace STSH_OCR.Common
                         }
 
                         // 有効開始日、有効終了日を検証する
-                        string cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
-                        string cLast_Sale_YMD = t[4].Replace("\"", "");     // 商品販売終了日付（終売日）
+                        cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
+                        cLast_Sale_YMD = z[4].Replace("\"", "");     // 商品販売終了日付（終売日）
 
                         if (Utility.StrtoInt(cStart_Sale_YMD) > sDate)
                         {
@@ -187,7 +198,9 @@ namespace STSH_OCR.Common
                         JAN_CD = t[16].Replace("\"", ""),
                         NOUHIN_KARI_TANKA = Utility.StrtoDouble(Utility.NulltoStr(t[31].Replace("\"", ""))),
                         RETAIL_TANKA = _RETAIL_TANKA,
-                        HATYU_LIMIT_DAY_CNT = Utility.StrtoDouble(t[39].Replace("\"", ""))
+                        HATYU_LIMIT_DAY_CNT = Utility.StrtoDouble(t[39].Replace("\"", "")),
+                        START_SALE_YMD = cStart_Sale_YMD,
+                        LAST_SALE_YMD = cLast_Sale_YMD
                     };
 
                     x++;

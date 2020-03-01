@@ -640,8 +640,7 @@ namespace STSH_OCR.Common
 
             return cls;
         }
-
-
+        
         ///-------------------------------------------------------------------
         /// <summary>
         ///     商品情報取得 </summary>
@@ -659,7 +658,7 @@ namespace STSH_OCR.Common
         public static ClsCsvData.ClsCsvSyohin GetSyohinData(string SyPath, string SySzPath, string ShiirePath, string tID)
         {
             // 商品CSVデータ配列読み込み
-            string [] Sy_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
+            string[] Sy_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
 
             // 商品在庫CSVデータ配列読み込み
             string[] SySz_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
@@ -679,7 +678,10 @@ namespace STSH_OCR.Common
                 SYOHIN_KIKAKU = "",
                 CASE_IRISU = global.flgOff,
                 NOUHIN_KARI_TANKA = global.flgOff,
-                RETAIL_TANKA = global.flgOff
+                RETAIL_TANKA = global.flgOff,
+                START_SALE_YMD = "",
+                LAST_SALE_YMD = "",
+                SHUBAI = false              
             };
 
             int toDate = 0;
@@ -687,6 +689,8 @@ namespace STSH_OCR.Common
             foreach (var item in Sy_Array)
             {
                 string[] t = item.Split(',');
+                string cStart_Sale_YMD = "";    // 商品販売開始日付
+                string cLast_Sale_YMD = "";     // 商品販売終了日付
 
                 // 削除フラグ
                 string DelFlg = t[63].Replace("\"", "");
@@ -709,7 +713,7 @@ namespace STSH_OCR.Common
                 }
 
                 // 商品在庫マスターで終売を調べる
-                bool Shubai = false;
+                bool Syubai = false;
                 foreach (var sz in SySz_Array)
                 {
                     string[] z = sz.Split(',');
@@ -735,8 +739,8 @@ namespace STSH_OCR.Common
                     }
 
                     // 有効開始日、有効終了日を検証する
-                    string cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
-                    string cLast_Sale_YMD = t[4].Replace("\"", "");     // 商品販売終了日付（終売日）
+                    cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
+                    cLast_Sale_YMD = z[4].Replace("\"", "");     // 商品販売終了日付（終売日）
 
                     toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
 
@@ -747,10 +751,15 @@ namespace STSH_OCR.Common
 
                     if (toDate > Utility.StrtoInt(cLast_Sale_YMD))
                     {
-                        continue;
+                        // 終売商品
+                        Syubai = true;
+                    }
+                    else
+                    {
+                        // 終売ではない
+                        Syubai = false;
                     }
 
-                    Shubai = true;
                     break;
                 }
 
@@ -806,12 +815,16 @@ namespace STSH_OCR.Common
                 }
 
                 cls.HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", ""));
+                cls.START_SALE_YMD = cStart_Sale_YMD;
+                cls.LAST_SALE_YMD = cLast_Sale_YMD;
+                cls.SHUBAI = Syubai;
 
                 break;
             }
 
             return cls;
         }
+
 
     }
 }
