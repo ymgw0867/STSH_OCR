@@ -32,18 +32,17 @@ namespace STSH_OCR.OCR
         {
             InitializeComponent();
 
-            //_dbName = dbName;       // データベース名
-            //_comName = comName;     // 会社名
-            //dID = sID;              // 処理モード
-            //_eMode = eMode;         // 処理モード2
-
             _myCode = myCode;       // 担当者コード
         }
 
-        // ローカルマスター：Sqlite3
+        // データベース：Sqlite3
         SQLiteConnection cn = null;
         DataContext context = null;
+        SQLiteConnection cn2 = null;
+        DataContext context2 = null;
+
         string db_file = Properties.Settings.Default.DB_File;
+        string Local_DB = Properties.Settings.Default.Local_DB;
 
         // 発注書パターンマスター
         Table<Common.ClsOrderPattern> tblPtn = null;
@@ -93,14 +92,14 @@ namespace STSH_OCR.OCR
         const string END_NODATA = "non Data";
         #endregion
 
-        string dID = string.Empty;                  // 表示する過去データのID
-        string sDBNM = string.Empty;                // データベース名
+        string dID = string.Empty;              // 表示する過去データのID
+        string sDBNM = string.Empty;            // データベース名
 
-        string _dbName = string.Empty;           // 会社領域データベース識別番号
-        string _comNo = string.Empty;            // 会社番号
-        string _comName = string.Empty;          // 会社名
-        string _myCode = string.Empty;           // 担当者コード
-        string _imgFile = string.Empty;         // 画像名
+        string _dbName = string.Empty;          // 会社領域データベース識別番号
+        string _comNo = string.Empty;           // 会社番号
+        string _comName = string.Empty;         // 会社名
+        string _myCode = string.Empty;          // 担当者コード
+        string _img = string.Empty;             // 画像名
 
         bool _eMode = true;
 
@@ -117,14 +116,11 @@ namespace STSH_OCR.OCR
         // グローバルクラス
         global gl = new global();
 
-        //OracleConnection Conn = new OracleConnection();
-
         // 画面表示時ステータス
         bool showStatus = false;
 
         int fCnt = 0;   // データ件数
         
-        string _img = string.Empty;
 
         // openCvSharp 関連
         const float B_WIDTH = 0.45f;
@@ -176,12 +172,16 @@ namespace STSH_OCR.OCR
             //gcMultiRow2.ShortcutKeyManager.Register(new clsKeyTab.CustomMoveToNextContorol(), Keys.Enter);
             //gcMultiRow3.ShortcutKeyManager.Register(new clsKeyTab.CustomMoveToNextContorol(), Keys.Enter);
 
-            // ローカルマスター接続
+            // 共有DB接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
-
-            tblFax = context.GetTable<Common.ClsFaxOrder>();        // ＦＡＸ発注書テーブル
             tblPtn = context.GetTable<Common.ClsOrderPattern>();    // 登録パターンテーブル
+            tblHold = context.GetTable<Common.ClsHoldFax>();        // 保留テーブル
+
+            // ローカルDB接続
+            cn2 = new SQLiteConnection("DataSource=" + Local_DB);
+            context2 = new DataContext(cn2);
+            tblFax = context2.GetTable<Common.ClsFaxOrder>();        // ＦＡＸ発注書テーブル
 
             // データ登録
             if (dID == string.Empty)
@@ -362,7 +362,7 @@ namespace STSH_OCR.OCR
                 tempDGV.Columns[colDay5].Width = 40;
                 tempDGV.Columns[colDay6].Width = 40;
                 tempDGV.Columns[colDay7].Width = 40;
-                tempDGV.Columns[colSyubai].Width = 50;
+                tempDGV.Columns[colSyubai].Width = 52;
 
                 //tempDGV.Columns[colHinName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
@@ -865,7 +865,7 @@ namespace STSH_OCR.OCR
 
                 ClsFaxOrder.YyMmDd = DateTime.Now.ToString();
 
-                context.SubmitChanges();
+                context2.SubmitChanges();
             }
             catch (Exception ex)
             {
@@ -1012,51 +1012,42 @@ namespace STSH_OCR.OCR
         /// <summary>
         ///     １．指定した勤務票ヘッダデータと勤務票明細データを削除する　
         ///     ２．該当する画像データを削除する</summary>
-        /// <param name="i">
-        ///     勤務票ヘッダRow インデックス</param>
         ///-------------------------------------------------------------------------------
-        private void DataDelete(int i)
+        private void DataDelete()
         {
-            //string sImgNm = string.Empty;
-            //string errMsg = string.Empty;
+            string errMsg = string.Empty;
 
-            //// 勤務票データ削除
-            //try
-            //{
-            //    // IDを取得します
-            //    STSH_CLIDataSet.FAX注文書Row r = dtsC.FAX注文書.Single(a => a.ID == cID[i]);
+            // 発注書データ削除
+            try
+            {
+                // 画像ファイル名を取得します
+                string sImgNm = ClsFaxOrder.ImageFileName;
 
-            //    // 画像ファイル名を取得します
-            //    sImgNm = r.画像名;
+                // 発注書データを削除します
+                errMsg = "FAX発注書データ";
+                tblFax.DeleteOnSubmit(ClsFaxOrder);
+                context2.SubmitChanges();
 
-            //    // データテーブルから勤務票ヘッダデータを削除します
-            //    errMsg = "FAX注文書データ";
-            //    r.Delete();
+                // 画像ファイルを削除します
+                errMsg = "FAX発注書画像";
+                if (sImgNm != string.Empty)
+                {
+                    if (System.IO.File.Exists(Properties.Settings.Default.MyDataPath + sImgNm))
+                    {
+                        System.IO.File.Delete(Properties.Settings.Default.MyDataPath + sImgNm);
+                    }
+                }
 
-            //    // データベース更新
-            //    fAdp.Update(dtsC.FAX注文書);
-
-            //    // 画像ファイルを削除します
-            //    errMsg = "FAX発注書画像";
-            //    if (sImgNm != string.Empty)
-            //    {
-            //        if (System.IO.File.Exists(Properties.Settings.Default.mydataPath + sImgNm))
-            //        {
-            //            System.IO.File.Delete(Properties.Settings.Default.mydataPath + sImgNm);
-            //        }
-            //    }
-
-            //    // 配列キー再構築
-            //    keyArrayCreate();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(errMsg + "の削除に失敗しました" + Environment.NewLine + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            //}
-            //finally
-            //{
-            //}
-
+                // 配列キー再構築
+                keyArrayCreate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(errMsg + "の削除に失敗しました" + Environment.NewLine + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            finally
+            {
+            }
         }
 
         private void btnRtn_Click(object sender, EventArgs e)
@@ -1101,56 +1092,123 @@ namespace STSH_OCR.OCR
 
         /// -----------------------------------------------------------------------
         /// <summary>
-        ///     楽商受入CSVデータ出力 </summary>
+        ///     発注データ登録 </summary>
         /// -----------------------------------------------------------------------
         private void textDataMake()
         {
-            //if (MessageBox.Show("楽商データを作成します。よろしいですか", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) return;
+            if (MessageBox.Show("発注データを登録します。よろしいですか", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                return;
+            }
 
-            //// OCRDataクラス生成
-            //OCRData ocr = new OCRData(Conn);
+            // OCRDataクラス生成
+            OCRData ocr = new OCRData();
 
-            //// エラーチェックを実行
-            //if (getErrData(cI, ocr))
-            //{
-            //    // 社内伝票番号日付を入力
-            //    frmDenNumDate frmDen = new frmDenNumDate();
-            //    frmDen.ShowDialog();
+            // エラーチェックを実行
+            if (getErrData(cI, ocr))
+            {
+                // 発注データ作成
+                SetOrderData();
+            }
+            else
+            {
+                // カレントインデックスをエラーありインデックスで更新
+                cI = ocr._errHeaderIndex;
 
-            //    // OCROutputクラス インスタンス生成
-            //    OCROutput kd = new OCROutput(this, dtsC, dts, Conn, _myCode);
+                // データ表示
+                showOcrData(cI);
 
-            //    // 楽商発注データ作成
-            //    kd.SaveData();          
-            //}
-            //else
-            //{
-            //    // カレントインデックスをエラーありインデックスで更新
-            //    cI = ocr._errHeaderIndex;
+                // エラー表示
+                ErrShow(ocr);
 
-            //    // データ表示
-            //    showOcrData(cI);
+                return;
+            }
 
-            //    // エラー表示
-            //    ErrShow(ocr);
-
-            //    return;
-            //}
-
-            //// 画像ファイル退避
-            //tifFileMove();
-            
-            //// FAX注文書データ削除
-            //deleteDataAll();
-
-            //// MDBファイル最適化
-            //mdbCompact();
-
-            ////終了
-            //MessageBox.Show("終了しました。楽商で発注データ受け入れを行ってください。", "楽商受入データ作成", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //this.Tag = END_MAKEDATA;
-            //this.Close();
+            //終了
+            MessageBox.Show("発注書データが登録されました", "発注書登録", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Tag = END_MAKEDATA;
+            this.Close();
         }
+
+        private void SetOrderData()
+        {
+            string errMsg = "";
+
+            cn2.Open();
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                //カレントデータの更新
+                CurDataUpDate(cID[cI]);
+
+                // STSH_OCR.db3をAttachする
+                string sql = "ATTACH [";
+                sql += Properties.Settings.Default.DB_File + "] AS db;";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                sql = "INSERT INTO db.OrderData ";
+                sql += "SELECT * FROM main.FAX_Order ";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                // 発注書画像移動処理
+                foreach (var file in System.IO.Directory.GetFiles(Properties.Settings.Default.MyDataPath, "*.tif"))
+                {
+                    // 画像ファイル名を取得します
+                    string sImgNm = System.IO.Path.GetFileName(file);
+
+                    // 移動先に同じ名前のファイルが存在するとき削除する
+                    string tifName = Properties.Settings.Default.TifPath + sImgNm;
+
+                    if (System.IO.File.Exists(tifName))
+                    {
+                        System.IO.File.Delete(tifName);
+                    }
+
+                    // 画像ファイルをTIFフォルダに移動する
+                    System.IO.File.Move(file, tifName);
+                }
+
+                // 発注書データを削除します
+                errMsg = "FAX発注書データ削除";
+                sql = "delete from FAX_Order ";
+
+                //cn2.Open();
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, errMsg, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+
+                if (cn.State == ConnectionState.Open)
+                {
+                    cn.Close();
+                }
+
+                if (cn2.State == ConnectionState.Open)
+                {
+                    cn2.Close();
+                }
+            }
+        }
+
+
 
         /// -----------------------------------------------------------------------------------
         /// <summary>
@@ -2883,11 +2941,6 @@ namespace STSH_OCR.OCR
 
         private void button3_Click(object sender, EventArgs e)
         {
-            // 非ログ書き込み状態とする
-            editLogStatus = false;
-
-            // 楽商TXTデータ出力
-            textDataMake();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -2902,33 +2955,36 @@ namespace STSH_OCR.OCR
         ///------------------------------------------------------------------
         private void faxDelete()
         {
-            //if (MessageBox.Show("表示中のＦＡＸ発注書を削除します。よろしいですか", "削除確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
-            //    return;
+            if (MessageBox.Show("表示中のＦＡＸ発注書を削除します。よろしいですか", "削除確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                return;
 
-            //// 非ログ書き込み状態とする
-            //editLogStatus = false;
+            // 非ログ書き込み状態とする
+            editLogStatus = false;
 
-            //// レコードと画像ファイルを削除する
-            //DataDelete(cI);
+            // レコードと画像ファイルを削除する
+            DataDelete();
 
-            //// 件数カウント
-            //if (dtsC.FAX注文書.Count() > 0)
-            //{
-            //    // カレントレコードインデックスを再設定
-            //    if (dtsC.FAX注文書.Count() - 1 < cI) cI = dtsC.FAX注文書.Count() - 1;
+            // 件数カウント
+            if (tblFax.Count() > 0)
+            {
+                // カレントレコードインデックスを再設定
+                if (cID.Length - 1 < cI)
+                {
+                    cI = cID.Length - 1;
+                }
 
-            //    // データ画面表示
-            //    showOcrData(cI);
-            //}
-            //else
-            //{
-            //    // ゼロならばプログラム終了
-            //    MessageBox.Show("全ての発注書データが削除されました。処理を終了します。", "発注書削除", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                // データ画面表示
+                showOcrData(cI);
+            }
+            else
+            {
+                // ゼロならばプログラム終了
+                MessageBox.Show("全ての発注書データが削除されました。処理を終了します。", "発注書削除", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-            //    //終了処理
-            //    this.Tag = END_NODATA;
-            //    this.Close();
-            //}
+                //終了処理
+                this.Tag = END_NODATA;
+                this.Close();
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -3024,16 +3080,13 @@ namespace STSH_OCR.OCR
         {
             Image img;
 
-            img = Image.FromFile(_imgFile);
-            //e.Graphics.DrawImage(img, 0, 0);
-
-            // 2017/12/12 縮小
-            //e.Graphics.DrawImage(img, 0, 0, img.Width * 49 / 100, img.Height * 49 / 100);
+            img = Image.FromFile(_img);
 
             // 2018/06/21 元画像のピクセル調整を行わないことによる縮小調整
             e.Graphics.DrawImage(img, 0, 0, img.Width * 47 / 100, img.Height * 47 / 100);
             e.HasMorePages = false;
 
+            MessageBox.Show("印刷が終了しました");
             img.Dispose();
         }
 
@@ -3045,6 +3098,7 @@ namespace STSH_OCR.OCR
             }
 
             // 印刷実行
+            printDocument1.DefaultPageSettings.Landscape = true;
             printDocument1.Print();
         }
 
@@ -3056,163 +3110,83 @@ namespace STSH_OCR.OCR
         ///----------------------------------------------------------
         private void setHoldData(string iX)
         {
-            //try
-            //{
-            //    STSH_CLIDataSetTableAdapters.保留注文書TableAdapter hAdp = new STSH_CLIDataSetTableAdapters.保留注文書TableAdapter();
-            //    hAdp.Fill(dtsC.保留注文書);
+            cn2.Open();
 
-            //    var t = dtsC.FAX注文書.Single(a => a.ID == iX);
+            try
+            {
+                // STSH_OCR.db3をAttachする
+                string sql = "ATTACH [";
+                sql += Properties.Settings.Default.DB_File + "] AS db;";
 
-            //    STSH_CLIDataSet.保留注文書Row hr = dtsC.保留注文書.New保留注文書Row();
-            //    hr.ID = t.ID;
-            //    hr.画像名 = t.画像名;
-            //    hr.届先番号 = t.届先番号;
-            //    hr.パターンID = t.パターンID;
-            //    hr.発注番号 = t.発注番号;
-            //    hr.納品希望月 = t.納品希望月;
-            //    hr.納品希望日 = t.納品希望日;
-            //    hr.注文数1 = t.注文数1;
-            //    hr.注文数2 = t.注文数2;
-            //    hr.注文数3 = t.注文数3;
-            //    hr.注文数4 = t.注文数4;
-            //    hr.注文数5 = t.注文数5;
-            //    hr.注文数6 = t.注文数6;
-            //    hr.注文数7 = t.注文数7;
-            //    hr.注文数8 = t.注文数8;
-            //    hr.注文数9 = t.注文数9;
-            //    hr.注文数10 = t.注文数10;
-            //    hr.注文数11 = t.注文数11;
-            //    hr.注文数12 = t.注文数12;
-            //    hr.注文数13 = t.注文数13;
-            //    hr.注文数14 = t.注文数14;
-            //    hr.注文数15 = t.注文数15;
-            //    hr.注文数16 = t.注文数16;
-            //    hr.注文数17 = t.注文数17;
-            //    hr.注文数18 = t.注文数18;
-            //    hr.注文数19 = t.注文数19;
-            //    hr.注文数20 = t.注文数20;
-            //    hr.注文数21 = t.注文数21;
-            //    hr.注文数22 = t.注文数22;
-            //    hr.注文数23 = t.注文数23;
-            //    hr.注文数24 = t.注文数24;
-            //    hr.注文数25 = t.注文数25;
-            //    hr.注文数26 = t.注文数26;
-            //    hr.注文数27 = t.注文数27;
-            //    hr.注文数28 = t.注文数28;
-            //    hr.注文数29 = t.注文数29;
-            //    hr.注文数30 = t.注文数30;
-            //    hr.追加注文チェック = t.追加注文チェック;
-            //    hr.追加注文数1 = t.追加注文数1;
-            //    hr.追加注文数2 = t.追加注文数2;
-            //    hr.追加注文数3 = t.追加注文数3;
-            //    hr.追加注文数4 = t.追加注文数4;
-            //    hr.追加注文数5 = t.追加注文数5;
-            //    hr.追加注文数6 = t.追加注文数6;
-            //    hr.追加注文数7 = t.追加注文数7;
-            //    hr.追加注文数8 = t.追加注文数8;
-            //    hr.追加注文数9 = t.追加注文数9;
-            //    hr.追加注文数10 = t.追加注文数10;
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
 
-            //    hr.追加注文商品コード1 = t.追加注文商品コード1;
-            //    hr.追加注文商品コード2 = t.追加注文商品コード2;
-            //    hr.追加注文商品コード3 = t.追加注文商品コード3;
-            //    hr.追加注文商品コード4 = t.追加注文商品コード4;
-            //    hr.追加注文商品コード5 = t.追加注文商品コード5;
-            //    hr.追加注文商品コード6 = t.追加注文商品コード6;
-            //    hr.追加注文商品コード7 = t.追加注文商品コード7;
-            //    hr.追加注文商品コード8 = t.追加注文商品コード8;
-            //    hr.追加注文商品コード9 = t.追加注文商品コード9;
-            //    hr.追加注文商品コード10 = t.追加注文商品コード10;
+                sql = "INSERT INTO db.Hold_Fax ";
+                sql += "SELECT * FROM main.FAX_Order ";
+                sql += "WHERE ID = '" + ClsFaxOrder.ID + "'";
 
-            //    hr.担当者コード = t.担当者コード;
-            //    hr.備考欄記入 = t.備考欄記入;
-            //    hr.メモ = t.メモ;
-            //    hr.エラー有無 = t.エラー有無;
-            //    hr.更新年月日 = DateTime.Now;
-            //    hr.確認 = t.確認;
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
 
-            //    hr.出荷基準A = t.出荷基準A;
-            //    hr.出荷基準B = t.出荷基準B;
-            //    hr.出荷基準C = t.出荷基準C;
-            //    hr.出荷基準D = t.出荷基準D;
-            //    hr.出荷基準E = t.出荷基準E;
-            //    hr.出荷基準F = t.出荷基準F;
-            //    hr.出荷基準G = t.出荷基準G;
+                // 画像ファイル名を取得します
+                string sImgNm = ClsFaxOrder.ImageFileName;
 
-            //    // 2017/08/23
-            //    hr.商品コード1 = t.商品コード1;
-            //    hr.商品コード2 = t.商品コード2;
-            //    hr.商品コード3 = t.商品コード3;
-            //    hr.商品コード4 = t.商品コード4;
-            //    hr.商品コード5 = t.商品コード5;
-            //    hr.商品コード6 = t.商品コード6;
-            //    hr.商品コード7 = t.商品コード7;
-            //    hr.商品コード8 = t.商品コード8;
-            //    hr.商品コード9 = t.商品コード9;
-            //    hr.商品コード10 = t.商品コード10;
+                // 移動先に同じ名前のファイルが存在する場合、既にあるファイルを削除する
+                string tifName = Properties.Settings.Default.HoldTifPath + sImgNm;
 
-            //    hr.商品コード11 = t.商品コード11;
-            //    hr.商品コード12 = t.商品コード12;
-            //    hr.商品コード13 = t.商品コード13;
-            //    hr.商品コード14 = t.商品コード14;
-            //    hr.商品コード15 = t.商品コード15;
-            //    hr.商品コード16 = t.商品コード16;
-            //    hr.商品コード17 = t.商品コード17;
-            //    hr.商品コード18 = t.商品コード18;
-            //    hr.商品コード19 = t.商品コード19;
-            //    hr.商品コード20 = t.商品コード20;
+                if (System.IO.File.Exists(tifName))
+                {
+                    System.IO.File.Delete(tifName);
+                }
 
-            //    hr.商品コード21 = t.商品コード21;
-            //    hr.商品コード22 = t.商品コード22;
-            //    hr.商品コード23 = t.商品コード23;
-            //    hr.商品コード24 = t.商品コード24;
-            //    hr.商品コード25 = t.商品コード25;
-            //    hr.商品コード26 = t.商品コード26;
-            //    hr.商品コード27 = t.商品コード27;
-            //    hr.商品コード28 = t.商品コード28;
-            //    hr.商品コード29 = t.商品コード29;
-            //    hr.商品コード30 = t.商品コード30;
+                // 画像ファイルを保留フォルダに移動する
+                System.IO.File.Move(Properties.Settings.Default.MyDataPath + sImgNm, tifName);
 
-            //    // 保留データ追加処理
-            //    dtsC.保留注文書.Add保留注文書Row(hr);
-            //    hAdp.Update(dtsC.保留注文書);
+                // 発注書データを削除します
+                string errMsg = "FAX発注書データ";
+                tblFax.DeleteOnSubmit(ClsFaxOrder);
+                context2.SubmitChanges();
 
-            //    // ＦＡＸ発注書データ削除
-            //    t.Delete();
-            //    fAdp.Update(dtsC.FAX注文書);
+                // 終了メッセージ
+                MessageBox.Show("注文書が保留されました", "ＦＡＸ発注書保留", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            //    // 配列キー再構築
-            //    keyArrayCreate();
+                // 件数カウント
+                if (tblFax.Count() > 0)
+                {
+                    // 配列キー再構築
+                    keyArrayCreate();
 
-            //    // 終了メッセージ
-            //    MessageBox.Show("注文書が保留されました", "ＦＡＸ発注書保留", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // カレントレコードインデックスを再設定
+                    if (cID.Length - 1 < cI)
+                    {
+                        cI = cID.Length - 1;
+                    }
 
-            //    // 件数カウント
-            //    if (dtsC.FAX注文書.Count() > 0)
-            //    {
-            //        // カレントレコードインデックスを再設定
-            //        if (dtsC.FAX注文書.Count() - 1 < cI)
-            //        {
-            //            cI = dtsC.FAX注文書.Count() - 1;
-            //        }
+                    // データ画面表示
+                    showOcrData(cI);
+                }
+                else
+                {
+                    // ゼロならばプログラム終了
+                    MessageBox.Show("全ての発注書データが保留されました。処理を終了します。", "発注書保留", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-            //        // データ画面表示
-            //        showOcrData(cI);
-            //    }
-            //    else
-            //    {
-            //        // ゼロならばプログラム終了
-            //        MessageBox.Show("全ての発注書データが削除されました。処理を終了します。", "発注書削除", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-            //        //終了処理
-            //        this.Tag = END_NODATA;
-            //        this.Close();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
+                    //終了処理
+                    this.Tag = END_NODATA;
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                cn2.Close();
+            }
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -3563,7 +3537,7 @@ namespace STSH_OCR.OCR
                 }
 
                 // ローカルのデータベースを更新
-                context.SubmitChanges();
+                context2.SubmitChanges();
 
                 //CSVファイルを削除する
                 foreach (string files in System.IO.Directory.GetFiles(_inPath, "*.csv"))
@@ -4151,6 +4125,15 @@ namespace STSH_OCR.OCR
                 // 後片付け
                 frmSyohin.Dispose();
             }
+        }
+
+        private void btnData_Click(object sender, EventArgs e)
+        {
+            // 非ログ書き込み状態とする
+            editLogStatus = false;
+
+            // 発注データ出力
+            textDataMake();
         }
     }
 }

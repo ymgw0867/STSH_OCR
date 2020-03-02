@@ -112,5 +112,32 @@ namespace STSH_OCR.Properties {
                 return ((string)(this["lockFileName"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_CLI\\DB\\STSH_CLI.db3")]
+        public string Local_DB {
+            get {
+                return ((string)(this["Local_DB"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\Hold_Tiff\\")]
+        public string HoldTifPath {
+            get {
+                return ((string)(this["HoldTifPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\TIF\\")]
+        public string TifPath {
+            get {
+                return ((string)(this["TifPath"]));
+            }
+        }
     }
 }

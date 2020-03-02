@@ -22,7 +22,15 @@ namespace STSH_OCR.OCR
         // ローカルマスター：Sqlite3
         SQLiteConnection cn = null;
         DataContext context = null;
-        string db_file = Properties.Settings.Default.DB_File;
+        string db_File = Properties.Settings.Default.DB_File;
+
+        SQLiteConnection cn2 = null;
+        DataContext context2 = null;
+        string local_DB = Properties.Settings.Default.Local_DB;
+
+        // 保留データ
+        Table<Common.ClsHoldFax> dbHold = null;
+        ClsHoldFax ClsHoldFax = null;
 
         // FAX発注書データ
         Table<Common.ClsFaxOrder> dbFax = null;
@@ -31,15 +39,8 @@ namespace STSH_OCR.OCR
         // カラム定義
         private string colDirName = "c0";
         private string colCount = "c1";
-        private string colTkName = "c2";
-        private string colZip = "c3";
-        private string colAddress = "c4";
-        private string colPtnID = "c5";
-        private string colDate = "c6";
         private string colID = "c7";
-        private string colMemo = "c8";
         private string colChk = "c9";
-        private string colSecoundNum = "c10";
 
         string[] vs = null;
 
@@ -53,21 +54,24 @@ namespace STSH_OCR.OCR
 
         private void frmFaxSelect_Load(object sender, EventArgs e)
         {
-            // ローカルマスター接続
-            cn = new SQLiteConnection("DataSource=" + db_file);
+            // データベース接続
+            cn = new SQLiteConnection("DataSource=" + db_File);
             context = new DataContext(cn);
-            dbFax = context.GetTable<Common.ClsFaxOrder>();
+            dbHold = context.GetTable<Common.ClsHoldFax>();
+
+            cn2 = new SQLiteConnection("DataSource=" + local_DB);
+            context2 = new DataContext(cn2);
+            dbFax = context2.GetTable<Common.ClsFaxOrder>();
 
             GridviewSet(dataGridView1);
             ShowDirectoryCount(dataGridView1);
 
             textBox1.Text = "";
 
-
-            //foreach (var t in dtsC.保留注文書.OrderBy(a => a.更新年月日))
-            //{
-            //    checkedListBox1.Items.Add(t.更新年月日.ToShortDateString() + " " + t.更新年月日.Hour + ":" + t.更新年月日.Minute + ":" + t.更新年月日.Second + ", " + t.ID);                
-            //}
+            foreach (var t in dbHold.OrderByDescending(a => a.YyMmDd))
+            {
+                checkedListBox1.Items.Add(t.YyMmDd + "," + t.ID);         
+            }
 
             lblDataCnt.Text = dbFax.Count().ToString();
         }
@@ -280,125 +284,61 @@ namespace STSH_OCR.OCR
         ///----------------------------------------------------------
         private void setHoldToData(string iX)
         {
+            cn.Open();
+
             try
             {
-                //var t = dtsC.保留注文書.Single(a => a.ID == iX);
+                if (!dbHold.Any(a => a.ID == iX))
+                {
+                    return;
+                }
 
-                //NHBR_CLIDataSet.FAX注文書Row hr = dtsC.FAX注文書.NewFAX注文書Row();
+                ClsHoldFax = dbHold.Single(a => a.ID == iX);
 
-                //hr.ID = t.ID;
-                //hr.画像名 = t.画像名;
-                //hr.届先番号 = t.届先番号;
-                //hr.パターンID = t.パターンID;
-                //hr.発注番号 = t.発注番号;
-                //hr.納品希望月 = t.納品希望月;
-                //hr.納品希望日 = t.納品希望日;
-                //hr.注文数1 = t.注文数1;
-                //hr.注文数2 = t.注文数2;
-                //hr.注文数3 = t.注文数3;
-                //hr.注文数4 = t.注文数4;
-                //hr.注文数5 = t.注文数5;
-                //hr.注文数6 = t.注文数6;
-                //hr.注文数7 = t.注文数7;
-                //hr.注文数8 = t.注文数8;
-                //hr.注文数9 = t.注文数9;
-                //hr.注文数10 = t.注文数10;
-                //hr.注文数11 = t.注文数11;
-                //hr.注文数12 = t.注文数12;
-                //hr.注文数13 = t.注文数13;
-                //hr.注文数14 = t.注文数14;
-                //hr.注文数15 = t.注文数15;
-                //hr.注文数16 = t.注文数16;
-                //hr.注文数17 = t.注文数17;
-                //hr.注文数18 = t.注文数18;
-                //hr.注文数19 = t.注文数19;
-                //hr.注文数20 = t.注文数20;
-                //hr.注文数21 = t.注文数21;
-                //hr.注文数22 = t.注文数22;
-                //hr.注文数23 = t.注文数23;
-                //hr.注文数24 = t.注文数24;
-                //hr.注文数25 = t.注文数25;
-                //hr.注文数26 = t.注文数26;
-                //hr.注文数27 = t.注文数27;
-                //hr.注文数28 = t.注文数28;
-                //hr.注文数29 = t.注文数29;
-                //hr.注文数30 = t.注文数30;
+                // STSH_CLI.db3をAttachする
+                string sql = "ATTACH [";
+                sql += Properties.Settings.Default.Local_DB + "] AS db;";
 
-                //hr.追加注文チェック = t.追加注文チェック;
-                //hr.追加注文数1 = t.追加注文数1;
-                //hr.追加注文数2 = t.追加注文数2;
-                //hr.追加注文数3 = t.追加注文数3;
-                //hr.追加注文数4 = t.追加注文数4;
-                //hr.追加注文数5 = t.追加注文数5;
-                //hr.追加注文数6 = t.追加注文数6;
-                //hr.追加注文数7 = t.追加注文数7;
-                //hr.追加注文数8 = t.追加注文数8;
-                //hr.追加注文数9 = t.追加注文数9;
-                //hr.追加注文数10 = t.追加注文数10;
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
 
-                //hr.追加注文商品コード1 = t.追加注文商品コード1;
-                //hr.追加注文商品コード2 = t.追加注文商品コード2;
-                //hr.追加注文商品コード3 = t.追加注文商品コード3;
-                //hr.追加注文商品コード4 = t.追加注文商品コード4;
-                //hr.追加注文商品コード5 = t.追加注文商品コード5;
-                //hr.追加注文商品コード6 = t.追加注文商品コード6;
-                //hr.追加注文商品コード7 = t.追加注文商品コード7;
-                //hr.追加注文商品コード8 = t.追加注文商品コード8;
-                //hr.追加注文商品コード9 = t.追加注文商品コード9;
-                //hr.追加注文商品コード10 = t.追加注文商品コード10;
+                sql = "INSERT INTO db.FAX_Order ";
+                sql += "SELECT * FROM main.Hold_Fax ";
+                sql += "WHERE ID = '" + iX + "'";
 
-                //hr.担当者コード = t.担当者コード;
-                //hr.備考欄記入 = t.備考欄記入;
-                //hr.メモ = t.メモ;
-                //hr.エラー有無 = t.エラー有無;
-                //hr.更新年月日 = DateTime.Now;
-                //hr.確認 = t.確認;
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
 
-                //// 2017/08/23
-                //hr.商品コード1 = t.商品コード1;
-                //hr.商品コード2 = t.商品コード2;
-                //hr.商品コード3 = t.商品コード3;
-                //hr.商品コード4 = t.商品コード4;
-                //hr.商品コード5 = t.商品コード5;
-                //hr.商品コード6 = t.商品コード6;
-                //hr.商品コード7 = t.商品コード7;
-                //hr.商品コード8 = t.商品コード8;
-                //hr.商品コード9 = t.商品コード9;
-                //hr.商品コード10 = t.商品コード10;
+                // 画像ファイル名を取得します
+                string sImgNm = ClsHoldFax.ImageFileName;
 
-                //hr.商品コード11 = t.商品コード11;
-                //hr.商品コード12 = t.商品コード12;
-                //hr.商品コード13 = t.商品コード13;
-                //hr.商品コード14 = t.商品コード14;
-                //hr.商品コード15 = t.商品コード15;
-                //hr.商品コード16 = t.商品コード16;
-                //hr.商品コード17 = t.商品コード17;
-                //hr.商品コード18 = t.商品コード18;
-                //hr.商品コード19 = t.商品コード19;
-                //hr.商品コード20 = t.商品コード20;
+                // 移動先に同じ名前のファイルが存在する場合、既にあるファイルを削除する
+                string tifName = Properties.Settings.Default.MyDataPath + sImgNm;
 
-                //hr.商品コード21 = t.商品コード21;
-                //hr.商品コード22 = t.商品コード22;
-                //hr.商品コード23 = t.商品コード23;
-                //hr.商品コード24 = t.商品コード24;
-                //hr.商品コード25 = t.商品コード25;
-                //hr.商品コード26 = t.商品コード26;
-                //hr.商品コード27 = t.商品コード27;
-                //hr.商品コード28 = t.商品コード28;
-                //hr.商品コード29 = t.商品コード29;
-                //hr.商品コード30 = t.商品コード30;
+                if (System.IO.File.Exists(tifName))
+                {
+                    System.IO.File.Delete(tifName);
+                }
 
-                //// ＦＡＸ発注書追加処理
-                //dtsC.FAX注文書.AddFAX注文書Row(hr);
-                //fAdp.Update(dtsC.FAX注文書);
+                // 画像ファイルをローカルDATAフォルダに移動する
+                System.IO.File.Move(Properties.Settings.Default.HoldTifPath + sImgNm, tifName);
 
-                //// 保留データ削除
-                //t.Delete();
-                //hAdp.Update(dtsC.保留注文書);
+                // 保留データを削除します
+                string errMsg = "保留データ";
+                dbHold.DeleteOnSubmit(ClsHoldFax);
+                context.SubmitChanges();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                cn.Close();
             }
         }
         

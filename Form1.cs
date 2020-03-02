@@ -27,7 +27,11 @@ namespace STSH_OCR
         // ローカルマスター：Sqlite3
         SQLiteConnection cn = null;
         DataContext context = null;
+        SQLiteConnection cn2 = null;
+        DataContext context2 = null;
+
         string db_file = Properties.Settings.Default.DB_File;
+        string local_DB = Properties.Settings.Default.Local_DB;
 
         // FAX発注書データ
         Table<Common.ClsFaxOrder> tblFax = null;
@@ -146,12 +150,14 @@ namespace STSH_OCR
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // ローカルマスター接続
+            // データベース接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
-
-            tblFax = context.GetTable<Common.ClsFaxOrder>();
             tblHold = context.GetTable<Common.ClsHoldFax>();
+
+            cn2 = new SQLiteConnection("DataSource=" + local_DB);
+            context2 = new DataContext(cn2);
+            tblFax = context2.GetTable<Common.ClsFaxOrder>();
         }
 
         private void KintaiData()

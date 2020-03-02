@@ -96,7 +96,7 @@
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(12, 475);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(388, 100);
+            this.checkedListBox1.Size = new System.Drawing.Size(557, 100);
             this.checkedListBox1.TabIndex = 2;
             // 
             // label1
