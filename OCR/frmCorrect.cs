@@ -48,35 +48,47 @@ namespace STSH_OCR.OCR
         Table<Common.ClsOrderPattern> tblPtn = null;
         ClsOrderPattern ClsOrderPattern = null;
 
-        // FAX発注書データ
-        Table<Common.ClsFaxOrder>tblFax = null;
-        ClsFaxOrder ClsFaxOrder = null;
-
         // FAX発注書保留データ
         Table<Common.ClsHoldFax> tblHold = null;
         ClsHoldFax ClsHoldFax = null;
+
+        // 編集ログデータ
+        Table<Common.ClsDataEditLog> tblEditLog = null;
+        ClsDataEditLog ClsDataEditLog = null;
+
+        // FAX発注書データ
+        Table<Common.ClsFaxOrder> tblFax = null;
+        ClsFaxOrder ClsFaxOrder = null;
 
         // セル値
         private string cellName = string.Empty;         // セル名
         private string cellBeforeValue = string.Empty;  // 編集前
         private string cellAfterValue = string.Empty;   // 編集後
 
-        #region 編集ログ・項目名 2015/09/08
+        #region 編集ログ・項目名
         private const string LOG_YEAR = "年";
         private const string LOG_MONTH = "月";
-        private const string LOG_DAY = "日";
-        private const string LOG_TAIKEICD = "体系コード";
-        private const string CELL_TORIKESHI = "取消";
-        private const string CELL_NUMBER = "社員番号";
-        private const string CELL_KIGOU = "記号";
-        private const string CELL_FUTSU = "普通残業・時";
-        private const string CELL_FUTSU_M = "普通残業・分";
-        private const string CELL_SHINYA = "深夜残業・時";
-        private const string CELL_SHINYA_M = "深夜残業・分";
-        private const string CELL_SHIGYO = "始業時刻・時";
-        private const string CELL_SHIGYO_M = "始業時刻・分";
-        private const string CELL_SHUUGYO = "終業時刻・時";
-        private const string CELL_SHUUGYO_M = "終業時刻・分";
+        private const string LOG_TOKUISAKICD = "得意先コード";
+        private const string LOG_PID = "発注書ID";
+        private const string LOG_PSEQNUM = "発注書連番";
+        private const string LOG_DAY_1 = "店着日月曜";
+        private const string LOG_DAY_2 = "店着日火曜";
+        private const string LOG_DAY_3 = "店着日水曜";
+        private const string LOG_DAY_4 = "店着日木曜";
+        private const string LOG_DAY_5 = "店着日金曜";
+        private const string LOG_DAY_6 = "店着日土曜";
+        private const string LOG_DAY_7 = "店着日日曜";
+        private const string CELL_SYOHINCD = "商品コード";
+        private const string CELL_NOUKA = "納価";
+        private const string CELL_BAIKA = "売価";
+        private const string CELL_MON = "月曜発注数";
+        private const string CELL_TUE = "火曜発注数";
+        private const string CELL_WED = "水曜発注数";
+        private const string CELL_THU = "木曜発注数";
+        private const string CELL_FRI = "金曜発注数";
+        private const string CELL_SAT = "土曜発注数";
+        private const string CELL_SUN = "日曜発注数";
+        private const string CELL_SHUBAI = "終売処理";
         #endregion 編集ログ・項目名
 
         // カレント社員情報
@@ -156,27 +168,15 @@ namespace STSH_OCR.OCR
             // フォーム最小値
             Utility.WindowsMinSize(this, this.Width, this.Height);
 
-            //// Tabキーの既定のショートカットキーを解除する。
-            //gcMultiRow1.ShortcutKeyManager.Unregister(Keys.Tab);
-            //gcMultiRow2.ShortcutKeyManager.Unregister(Keys.Tab);
-            //gcMultiRow3.ShortcutKeyManager.Unregister(Keys.Tab);
-            //gcMultiRow1.ShortcutKeyManager.Unregister(Keys.Enter);
-            //gcMultiRow2.ShortcutKeyManager.Unregister(Keys.Enter);
-            //gcMultiRow3.ShortcutKeyManager.Unregister(Keys.Enter);
-
-            //// Tabキーのショートカットキーにユーザー定義のショートカットキーを割り当てる。
-            //gcMultiRow1.ShortcutKeyManager.Register(new clsKeyTab.CustomMoveToNextContorol(), Keys.Tab);
-            //gcMultiRow2.ShortcutKeyManager.Register(new clsKeyTab.CustomMoveToNextContorol(), Keys.Tab);
-            //gcMultiRow3.ShortcutKeyManager.Register(new clsKeyTab.CustomMoveToNextContorol(), Keys.Tab);
-            //gcMultiRow1.ShortcutKeyManager.Register(new clsKeyTab.CustomMoveToNextContorol(), Keys.Enter);
-            //gcMultiRow2.ShortcutKeyManager.Register(new clsKeyTab.CustomMoveToNextContorol(), Keys.Enter);
-            //gcMultiRow3.ShortcutKeyManager.Register(new clsKeyTab.CustomMoveToNextContorol(), Keys.Enter);
-
             // 共有DB接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
             tblPtn = context.GetTable<Common.ClsOrderPattern>();    // 登録パターンテーブル
             tblHold = context.GetTable<Common.ClsHoldFax>();        // 保留テーブル
+            tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
+
+            // 共有DBオープン
+            cn.Open();
 
             // ローカルDB接続
             cn2 = new SQLiteConnection("DataSource=" + Local_DB);
@@ -203,13 +203,9 @@ namespace STSH_OCR.OCR
             }
             
             // キャプション
-            this.Text = "ＦＡＸ発注書表示";
-
-            // GCMultiRow初期化
-            gcMrSetting();
+            this.Text = "発注書データ作成";
 
             GridviewSet(dg1);
-
 
             // 編集作業、過去データ表示の判断
             if (dID == string.Empty) // パラメータのヘッダIDがないときは編集作業
@@ -590,7 +586,7 @@ namespace STSH_OCR.OCR
         /// <param name="iX">
         ///     カレントレコードのインデックス</param>
         ///-----------------------------------------------------------------------------------
-        private void CurDataUpDate(string iX)
+        private void CurDataUpDate()
         {
             // エラーメッセージ
             string errMsg = "ＦＡＸ発注書テーブル更新";
@@ -997,7 +993,7 @@ namespace STSH_OCR.OCR
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate(cID[cI]);
+            CurDataUpDate();
 
             //レコードの移動
             cI = hScrollBar1.Value;
@@ -1068,19 +1064,20 @@ namespace STSH_OCR.OCR
                 // カレントデータ更新
                 if (dID == string.Empty)
                 {
-                    //CurDataUpDate(cID[cI]);
+                    CurDataUpDate();
                 }
-
-                //// 勤務表データのない帰宅後勤務データを削除する
-                //kitakuClean();
             }
 
-            // データベース更新
-            //fAdp.Update(dtsC.FAX注文書);
+            // データベース接続解除
+            if (cn.State == ConnectionState.Open)
+            {
+                cn.Close();
+            }
 
-            //// 楽商データベース接続解除
-            //Conn.Close();
-            //Conn.Dispose();
+            if (cn2.State == ConnectionState.Open)
+            {
+                cn2.Close();
+            }
 
             // 解放する
             this.Dispose();
@@ -1141,7 +1138,7 @@ namespace STSH_OCR.OCR
                 Cursor = Cursors.WaitCursor;
 
                 //カレントデータの更新
-                CurDataUpDate(cID[cI]);
+                CurDataUpDate();
 
                 // STSH_OCR.db3をAttachする
                 string sql = "ATTACH [";
@@ -1194,13 +1191,6 @@ namespace STSH_OCR.OCR
             }
             finally
             {
-                Cursor = Cursors.Default;
-
-                if (cn.State == ConnectionState.Open)
-                {
-                    cn.Close();
-                }
-
                 if (cn2.State == ConnectionState.Open)
                 {
                     cn2.Close();
@@ -1223,7 +1213,7 @@ namespace STSH_OCR.OCR
         private bool getErrData(int cIdx, OCRData ocr)
         {
             // カレントレコード更新
-            CurDataUpDate(cID[cIdx]);
+            CurDataUpDate();
 
             // エラー番号初期化
             ocr._errNumber = ocr.eNothing;
@@ -1814,26 +1804,79 @@ namespace STSH_OCR.OCR
 
         private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
+            // ログ書き込み状態のとき、値を保持する
+            if (editLogStatus)
+            {
+                // 商品コード
+                if (e.ColumnIndex == 3)
+                {
+                    cellName = CELL_SYOHINCD;
+                }
+
+                // 納価
+                if (e.ColumnIndex == 4)
+                {
+                    cellName = CELL_BAIKA;
+                }
+
+                // 売価
+                if (e.ColumnIndex == 5)
+                {
+                    cellName = CELL_BAIKA;
+                }
+
+                // 月曜発注数
+                if (e.ColumnIndex == 6)
+                {
+                    cellName = CELL_MON;
+                }
+
+                // 火曜発注数
+                if (e.ColumnIndex == 7)
+                {
+                    cellName = CELL_TUE;
+                }
+
+                // 水曜発注数
+                if (e.ColumnIndex == 8)
+                {
+                    cellName = CELL_WED;
+                }
+
+                // 木曜発注数
+                if (e.ColumnIndex == 9)
+                {
+                    cellName = CELL_THU;
+                }
+
+                // 金曜発注数
+                if (e.ColumnIndex == 10)
+                {
+                    cellName = CELL_FRI;
+                }
+
+                // 土曜発注数
+                if (e.ColumnIndex == 11)
+                {
+                    cellName = CELL_SAT;
+                }
+
+                // 日曜発注数
+                if (e.ColumnIndex == 12)
+                {
+                    cellName = CELL_SUN;
+                }
+
+                // 終売処理
+                if (e.ColumnIndex == 13)
+                {
+                    cellName = CELL_SHUBAI;
+                }
+
+                cellBeforeValue = Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value);
+            }
         }
 
-        private void dataGridView1_CellEnter_1(object sender, DataGridViewCellEventArgs e)
-        {
-            //// 時が入力済みで分が未入力のとき分に"00"を表示します
-            //if (dGV[ColH, dGV.CurrentRow.Index].Value != null)
-            //{
-            //    if (dGV[ColH, dGV.CurrentRow.Index].Value.ToString().Trim() != string.Empty)
-            //    {
-            //        if (dGV[ColM, dGV.CurrentRow.Index].Value == null)
-            //        {
-            //            dGV[ColM, dGV.CurrentRow.Index].Value = "00";
-            //        }
-            //        else if (dGV[ColM, dGV.CurrentRow.Index].Value.ToString().Trim() == string.Empty)
-            //        {
-            //            dGV[ColM, dGV.CurrentRow.Index].Value = "00";
-            //        }
-            //    }
-            //}
-        }
 
         /// ------------------------------------------------------------------------------
         /// <summary>
@@ -2059,38 +2102,105 @@ namespace STSH_OCR.OCR
 
         private void dGV_CellLeave(object sender, DataGridViewCellEventArgs e)
         {
-            //if (editLogStatus)
-            //{
-            //    if (e.ColumnIndex == 0 || e.ColumnIndex == 1 || e.ColumnIndex == 3 || e.ColumnIndex == 4 ||
-            //        e.ColumnIndex == 6 || e.ColumnIndex == 7 || e.ColumnIndex == 9 || e.ColumnIndex == 10 ||
-            //        e.ColumnIndex == 12 || e.ColumnIndex == 13 || e.ColumnIndex == 15)
-            //    {
-            //        dGV.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            //        cellAfterValue = Utility.NulltoStr(dGV[e.ColumnIndex, e.RowIndex].Value);
+            if (editLogStatus)
+            {
+                if (e.ColumnIndex == 3 || e.ColumnIndex == 4 || e.ColumnIndex == 5 || e.ColumnIndex == 6 || 
+                    e.ColumnIndex == 7 || e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 11 || 
+                    e.ColumnIndex == 12 || e.ColumnIndex == 13)
+                {
+                    dg1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                    cellAfterValue = Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value);
 
-            //        //// 変更のとき編集ログデータを書き込み
-            //        //if (cellBeforeValue != cellAfterValue)
-            //        //{
-            //        //    logDataUpdate(e.RowIndex, cI, global.flgOn);
-            //        //}
-            //    }
-            //}
+                    // 変更のとき編集ログデータを書き込み
+                    if (cellBeforeValue != cellAfterValue)
+                    {
+                        LogDataUpdate(e.RowIndex, e.ColumnIndex, global.flgOn, cellName, lblTokuisakiName.Text, Utility.NulltoStr(dg1[colHinCode, e.RowIndex].Value).PadLeft(8, '0'), Utility.NulltoStr(dg1[colMaker, e.RowIndex].Value));
+                    }
+                }
+            }
         }
 
         private void txtYear_Enter(object sender, EventArgs e)
         {
-            //if (editLogStatus)
-            //{
-            //    if (sender == txtYear) cellName = LOG_YEAR;
-            //    if (sender == txtMonth) cellName = LOG_MONTH;
-            //    if (sender == txtDay) cellName = LOG_DAY;
-            //    //if (sender == txtSftCode) cellName = LOG_TAIKEICD;
+            if (editLogStatus)
+            {
+                // 年
+                if (sender == txtYear)
+                {
+                    cellName = LOG_YEAR;
+                }
 
-            //    TextBox tb = (TextBox)sender;
+                // 月
+                if (sender == txtMonth)
+                {
+                    cellName = LOG_MONTH;
+                }
 
-            //    // 値を保持
-            //    cellBeforeValue = Utility.NulltoStr(tb.Text);
-            //}
+                // 発注書ID
+                if (sender == txtPID)
+                {
+                    cellName = LOG_PID;
+                }
+
+                // 発注書ID連番
+                if (sender == txtSeqNum)
+                {
+                    cellName = LOG_PSEQNUM;
+                }
+
+                // 得意先コード
+                if (sender == txtTokuisakiCD)
+                {
+                    cellName = LOG_TOKUISAKICD;
+                }
+
+                // 店着日月曜
+                if (sender == txtTenDay1)
+                {
+                    cellName = LOG_DAY_1;
+                }
+
+                // 店着日火曜
+                if (sender == txtTenDay2)
+                {
+                    cellName = LOG_DAY_2;
+                }
+
+                // 店着日水曜
+                if (sender == txtTenDay3)
+                {
+                    cellName = LOG_DAY_3;
+                }
+
+                // 店着日木曜
+                if (sender == txtTenDay4)
+                {
+                    cellName = LOG_DAY_4;
+                }
+
+                // 店着日金曜
+                if (sender == txtTenDay5)
+                {
+                    cellName = LOG_DAY_5;
+                }
+
+                // 店着日土曜
+                if (sender == txtTenDay6)
+                {
+                    cellName = LOG_DAY_6;
+                }
+
+                // 店着日日曜
+                if (sender == txtTenDay7)
+                {
+                    cellName = LOG_DAY_7;
+                }
+
+                TextBox tb = (TextBox)sender;
+
+                // 値を保持
+                cellBeforeValue = Utility.NulltoStr(tb.Text);
+            }
         }
 
         private void txtYear_Leave(object sender, EventArgs e)
@@ -2100,130 +2210,73 @@ namespace STSH_OCR.OCR
                 TextBox tb = (TextBox)sender;
                 cellAfterValue = Utility.NulltoStr(tb.Text);
 
-                //// 変更のとき編集ログデータを書き込み
-                //if (cellBeforeValue != cellAfterValue)
-                //{
-                //    logDataUpdate(0, cI, global.flgOff);
-                //}
+                // 変更のとき編集ログデータを書き込み
+                if (cellBeforeValue != cellAfterValue)
+                {
+                    LogDataUpdate(0, 0, global.flgOff, cellName, lblTokuisakiName.Text, "", "");
+                }
             }
         }
 
-        //private void gcMultiRow1_CellValueChanged(object sender, CellEventArgs e)
-        //{
-        //    if (!gl.ChangeValueStatus) return;
+        /// ----------------------------------------------------------------------
+        /// <summary>
+        ///     編集ログデータ書き込み </summary>
+        /// <param name="rIndex">
+        ///     データグリッドビュー行インデックス</param>
+        /// <param name="iX">
+        ///     列番号</param>
+        /// <param name="dType">
+        ///     データタイプ　0:ヘッダーデータ, 1:発注明細データ</param>
+        /// <param name="colName">
+        ///     カラム名</param>
+        /// ----------------------------------------------------------------------
+        private void LogDataUpdate(int rIndex, int iX, int dType, string colName, string TokuisakiName, string SyohinCD, string SyohinName)
+        {
+            //cn.Open();
 
-        //    if (e.RowIndex < 0) return;
+            try
+            {
+                // データ追加
+                string sql = "insert into DataEditLog ";
+                sql += "(年月日時刻, 得意先コード, 得意先名, 年, 月, 発注書ID, 発注書ID連番, 商品コード, 商品名, 店着日付, 行番号, 列番号, " +
+                        "項目名, 変更前値, 変更後値, 画像名, 編集アカウントID, コンピュータ名, 更新年月日, 発注データID) ";
+                sql += "values ('";
+                sql += DateTime.Now.ToString() + "','";                     // 年月日時刻
+                sql += ClsFaxOrder.TokuisakiCode.ToString("D7") + "','";    // 得意先コード
+                sql += TokuisakiName + "','";                   // 得意先名
+                sql += ClsFaxOrder.Year + "','";                // 年
+                sql += ClsFaxOrder.Month + "','";               // 月
+                sql += ClsFaxOrder.patternID + "','";           // 発注書ID
+                sql += ClsFaxOrder.SeqNumber + "','";           // 発注書ID連番
+                sql += SyohinCD + "','";                        // 商品コード
+                sql += SyohinName + "','";                      // 商品名
+                sql += "','";                                   // 店着日付
+                sql += rIndex + "','";                          // 行番号
+                sql += iX + "','";                              // 列番号
+                sql += colName + "','";                         // カラム名
+                sql += cellBeforeValue + "','";                 // 変更前値
+                sql += cellAfterValue + "','";                  // 変更後値
+                sql += ClsFaxOrder.ImageFileName + "','";       // 画像名
+                sql += "','";                                   // 編集アカウントID
+                sql += System.Net.Dns.GetHostName() + "','";    // コンピュータ名
+                sql += DateTime.Now.ToString() + "','";         // 更新年月日
+                sql += ClsFaxOrder.ID;                          // 発注データID
+                sql += "');";
 
-        //    // 過去データ表示のときは終了
-        //    if (dID != string.Empty) return;
-
-        //    // パターンコードのとき発注書パターンを更新
-        //    if (e.CellName == "txtPtnNum")
-        //    {
-        //        // 発注パターン表示
-        //        ptnShow(gcMultiRow2,
-        //            Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[e.RowIndex, "txtTdkNum"].Value)),
-        //            Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[e.RowIndex, e.CellName].Value)));
-
-        //        // パターンID「０」でフリー入力のとき
-        //        if (Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[e.RowIndex, e.CellName])) == global.flgOff)
-        //        {
-        //            // 商品コード、数量入力可能とする
-        //            for (int i = 0; i < gcMultiRow2.RowCount; i++)
-        //            {
-        //                gcMultiRow2[i, "txtHinCode"].ReadOnly = false;
-        //                gcMultiRow2[i, "txtHinCode"].Selectable = true;
-
-        //                gcMultiRow2[i, "txtSuu"].ReadOnly = false;
-        //                gcMultiRow2[i, "txtSuu"].Selectable = true;
-
-        //                gcMultiRow2[i, "txtHinCode2"].ReadOnly = false;
-        //                gcMultiRow2[i, "txtHinCode2"].Selectable = true;
-
-        //                gcMultiRow2[i, "txtSuu2"].ReadOnly = false;
-        //                gcMultiRow2[i, "txtSuu2"].Selectable = true;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            // 商品コード、数量入力可能とする
-        //            for (int i = 0; i < gcMultiRow2.RowCount; i++)
-        //            {
-        //                gcMultiRow2[i, "txtHinCode"].ReadOnly = true;
-        //                gcMultiRow2[i, "txtHinCode"].Selectable = false;
-
-        //                gcMultiRow2[i, "txtSuu"].ReadOnly = false;
-        //                gcMultiRow2[i, "txtSuu"].Selectable = true;
-
-        //                gcMultiRow2[i, "txtHinCode2"].ReadOnly = true;
-        //                gcMultiRow2[i, "txtHinCode2"].Selectable = false;
-
-        //                gcMultiRow2[i, "txtSuu2"].ReadOnly = false;
-        //                gcMultiRow2[i, "txtSuu2"].Selectable = true;
-        //            }
-        //        }
-        //    }
-        //    else if (e.CellName == "txtTdkNum")
-        //    {
-        //        // お客様番号のときお客様名を表示します
-
-        //        // ChangeValueイベントを発生させない
-        //        gl.ChangeValueStatus = false;
-
-        //        // 氏名と電話番号を初期化
-        //        gcMultiRow1[e.RowIndex, "lblName"].Value = string.Empty;
-        //        gcMultiRow1[e.RowIndex, "lblTel"].Value = string.Empty;
-                
-        //        // 楽商データベースよりお客様名を取得して表示します
-        //        if (Utility.NulltoStr(gcMultiRow1[0, "txtTdkNum"].Value) != string.Empty)
-        //        {
-        //            // 届先名、電話番号、住所表示
-        //            string gName = string.Empty;
-        //            string gTel = string.Empty;
-        //            string gJyu = string.Empty;
-
-        //            string bCode = gcMultiRow1[e.RowIndex, "txtTdkNum"].Value.ToString().PadLeft(6, '0');
-        //            gName = getUserName(bCode, out gTel, out gJyu);
-
-        //            gcMultiRow1[e.RowIndex, "lblName"].Value = gName;
-        //            gcMultiRow1[e.RowIndex, "lblTel"].Value = gTel;
-
-        //            // ChangeValueイベントステータスをtrueに戻す
-        //            gl.ChangeValueStatus = true;
-        //        }
-
-        //        // 発注パターン表示
-        //        ptnShow(gcMultiRow2,
-        //            Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[e.RowIndex, e.CellName].Value)),
-        //            Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[e.RowIndex, "txtPtnNum"].Value)));
-        //    }
-        //}
-        
-        //private void gcMultiRow1_EditingControlShowing(object sender, EditingControlShowingEventArgs e)
-        //{
-        //    if (e.Control is TextBoxEditingControl)
-        //    {
-        //        //イベントハンドラが複数回追加されてしまうので最初に削除する
-        //        e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
-        //        e.Control.KeyDown -= new KeyEventHandler(Control_KeyDown2);
-
-        //        // 数字のみ入力可能とする
-        //        if (gcMultiRow1.CurrentCell.Name == "txtPtnNum" || gcMultiRow1.CurrentCell.Name == "txtTdkNum" ||
-        //            gcMultiRow1.CurrentCell.Name == "txtOrderNum" || gcMultiRow1.CurrentCell.Name == "txtMonth" ||
-        //            gcMultiRow1.CurrentCell.Name == "txtDay")
-        //        {
-        //            //イベントハンドラを追加する
-        //            e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
-        //        }
-
-        //        // お客様検索画面
-        //        if (gcMultiRow1.CurrentCell.Name == "txtTdkNum")
-        //        {
-        //            //イベントハンドラを追加する
-        //            e.Control.KeyDown += new KeyEventHandler(Control_KeyDown2);
-        //        }
-        //    }
-        //}
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                //cn.Close();
+            }
+        }
 
         private void Control_KeyDown2(object sender, KeyEventArgs e)
         {
@@ -3018,7 +3071,7 @@ namespace STSH_OCR.OCR
         private void button3_Click_1(object sender, EventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate(cID[cI]);
+            CurDataUpDate();
 
             //レコードの移動
             cI = 0;
@@ -3028,7 +3081,7 @@ namespace STSH_OCR.OCR
         private void button4_Click_1(object sender, EventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate(cID[cI]);
+            CurDataUpDate();
 
             //レコードの移動
             if (cI > 0)
@@ -3041,7 +3094,7 @@ namespace STSH_OCR.OCR
         private void button7_Click(object sender, EventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate(cID[cI]);
+            CurDataUpDate();
 
             //レコードの移動
             if (cI + 1 < cID.Length)
@@ -3054,7 +3107,7 @@ namespace STSH_OCR.OCR
         private void button8_Click(object sender, EventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate(cID[cI]);
+            CurDataUpDate();
 
             //レコードの移動
             cI = cID.Length - 1;
@@ -3196,8 +3249,8 @@ namespace STSH_OCR.OCR
                 return;
             }
 
-            //カレントデータの更新 : 2017/07/14
-            CurDataUpDate(cID[cI]);
+            //カレントデータの更新
+            CurDataUpDate();
 
             // 保留処理
             setHoldData(cID[cI]);
@@ -4057,16 +4110,37 @@ namespace STSH_OCR.OCR
                 //        new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
                 //}
 
-                //該当する列か調べる
-                if (dgv.CurrentCell.OwningColumn.Name == colSyubai && 
-                    (dgv.CurrentCell.OwningRow.Index % 2  != 0))
+                if (e.Control is DataGridViewTextBoxEditingControl)
+                {
+                    // 数字のみ入力可能とする
+                    if (dgv.CurrentCell.ColumnIndex == 3 || dgv.CurrentCell.ColumnIndex == 4 || dgv.CurrentCell.ColumnIndex == 5 || dgv.CurrentCell.ColumnIndex == 6 || 
+                        dgv.CurrentCell.ColumnIndex == 7 || dgv.CurrentCell.ColumnIndex == 8 || dgv.CurrentCell.ColumnIndex == 9 || dgv.CurrentCell.ColumnIndex == 10 || 
+                        dgv.CurrentCell.ColumnIndex == 11 || dgv.CurrentCell.ColumnIndex == 12)
+                    {
+                        if (dgv.CurrentCell.ColumnIndex != 2)
+                        {
+                            //イベントハンドラが複数回追加されてしまうので最初に削除する
+                            e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
+                            e.Control.KeyPress -= new KeyPressEventHandler(dataGridViewComboBox_SelectedIndexChanged);
+
+                            //イベントハンドラを追加する
+                            e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
+                        }
+                    }
+                }
+
+                // 終売処理の列か調べる
+                if (dgv.CurrentCell.OwningColumn.Name == colSyubai && dgv.CurrentCell.OwningRow.Index % 2  != 0)
                 {
                     //編集のために表示されているコントロールを取得
-                    this.dataGridViewComboBox =
-                        (DataGridViewComboBoxEditingControl)e.Control;
+                    this.dataGridViewComboBox = (DataGridViewComboBoxEditingControl)e.Control;
+
+                    //イベントハンドラが複数回追加されてしまうので最初に削除する
+                    e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
+                    e.Control.KeyPress -= new KeyPressEventHandler(dataGridViewComboBox_SelectedIndexChanged);
+
                     //SelectedIndexChangedイベントハンドラを追加
-                    this.dataGridViewComboBox.SelectedIndexChanged +=
-                        new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
+                    this.dataGridViewComboBox.SelectedIndexChanged +=　new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
                 }
             }
         }

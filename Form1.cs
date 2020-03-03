@@ -176,7 +176,19 @@ namespace STSH_OCR
             int s = System.IO.Directory.GetFiles(Properties.Settings.Default.DataPath, "*.tif").Count();
 
             // 処理可能なデータが存在するか？
-            if (tblFax.Count() == 0 && tblHold.Count() == 0)
+            // OCR認識データ
+            bool _ocrFile = false;
+            foreach (var dir in System.IO.Directory.GetDirectories(Properties.Settings.Default.DataPath))
+            {
+                if (System.IO.Directory.GetFiles(dir, "*.csv").Any())
+                {
+                    _ocrFile = true;
+                    break;
+                }
+            } 
+
+            // ローカルデータベース
+            if (!_ocrFile && tblFax.Count() == 0 && tblHold.Count() == 0)
             {
                 MessageBox.Show("現在、処理可能なＦＡＸ発注書データはありません", "確認", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;

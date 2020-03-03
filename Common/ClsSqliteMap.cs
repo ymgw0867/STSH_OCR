@@ -49,28 +49,37 @@ namespace STSH_OCR.Common
         public string Date_Time { get; set; }
 
         [Column(Name = "得意先コード")]
-        public int TokuisakiCode { get; set; }
+        public string TokuisakiCode { get; set; }
+
+        [Column(Name = "得意先名")]
+        public string TokuisakiName { get; set; }
 
         [Column(Name = "年")]
-        public int Year { get; set; }
+        public string Year { get; set; }
 
         [Column(Name = "月")]
-        public int Month { get; set; }
+        public string Month { get; set; }
 
-        [Column(Name = "発注書番号")]
-        public int FaxOrderNum { get; set; }
+        [Column(Name = "発注書ID")]
+        public string patternID { get; set; }
+
+        [Column(Name = "発注書ID連番")]
+        public string patternIDSeq { get; set; }
 
         [Column(Name = "商品コード")]
         public string ShohinCode { get; set; }
+
+        [Column(Name = "商品名")]
+        public string ShohinName { get; set; }
 
         [Column(Name = "店着日付")]
         public string TenchakuDate { get; set; }
 
         [Column(Name = "行番号")]
-        public int RowNumber { get; set; }
+        public string RowNumber { get; set; }
 
         [Column(Name = "列番号")]
-        public int ColNumber { get; set; }
+        public string ColNumber { get; set; }
 
         [Column(Name = "項目名")]
         public string FieldName { get; set; }
@@ -92,6 +101,9 @@ namespace STSH_OCR.Common
 
         [Column(Name = "更新年月日")]
         public string YyMmDd { get; set; }
+
+        [Column(Name = "発注データID")]
+        public string FaxOrderNum { get; set; }
     }
 
     // ＦＡＸ発注書データ

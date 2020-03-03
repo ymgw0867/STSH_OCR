@@ -560,7 +560,7 @@ namespace STSH_OCR.Common
             // 商品7
             if (r.G_Code7 == string.Empty)
             {
-                if (r.Goods8_1 != string.Empty || r.Goods7_2 != string.Empty || r.Goods7_3 != string.Empty || r.Goods7_4 != string.Empty ||
+                if (r.Goods7_1 != string.Empty || r.Goods7_2 != string.Empty || r.Goods7_3 != string.Empty || r.Goods7_4 != string.Empty ||
                      r.Goods7_5 != string.Empty || r.Goods7_6 != string.Empty || r.Goods7_7 != string.Empty)
                 {
                     setErrStatus(eHinCode, 13, "商品が登録されていません");
@@ -640,7 +640,7 @@ namespace STSH_OCR.Common
             // 商品12
             if (r.G_Code12 == string.Empty)
             {
-                if (r.Goods13_1 != string.Empty || r.Goods12_2 != string.Empty || r.Goods12_3 != string.Empty || r.Goods12_4 != string.Empty ||
+                if (r.Goods12_1 != string.Empty || r.Goods12_2 != string.Empty || r.Goods12_3 != string.Empty || r.Goods12_4 != string.Empty ||
                      r.Goods12_5 != string.Empty || r.Goods12_6 != string.Empty || r.Goods12_7 != string.Empty)
                 {
                     setErrStatus(eHinCode, 23, "商品が登録されていません");
