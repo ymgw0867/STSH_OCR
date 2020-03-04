@@ -22,7 +22,11 @@ namespace STSH_OCR
         public Form1()
         {
             InitializeComponent();
+
+            timer1.Tick += new EventHandler(timer1_Tick);
         }
+
+        Timer timer1 = new Timer();
 
         // ローカルマスター：Sqlite3
         SQLiteConnection cn = null;
@@ -150,6 +154,13 @@ namespace STSH_OCR
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // キャプションにバージョンを追加
+            this.Text += "   ver " + Application.ProductVersion;
+
+            timer1.Enabled = false;
+            dCountShow();   // 件数表示
+            timer1.Enabled = true;
+
             // データベース接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
@@ -159,6 +170,14 @@ namespace STSH_OCR
             context2 = new DataContext(cn2);
             tblFax = context2.GetTable<Common.ClsFaxOrder>();
         }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            timer1.Enabled = false;
+            dCountShow();   // 件数表示
+            timer1.Enabled = true;
+        }
+
 
         private void KintaiData()
         {
@@ -223,5 +242,90 @@ namespace STSH_OCR
             }
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // 自らのロックファイルを削除する
+            Utility.deleteLockFile(Properties.Settings.Default.NgPath, Properties.Settings.Default.lockFileName);
+
+            //他のPCで処理中の場合、続行不可
+            if (Utility.existsLockFile(Properties.Settings.Default.NgPath))
+            {
+                MessageBox.Show("他のPCで処理中です。しばらくおまちください。", "確認", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            //LOCKファイル作成
+            Utility.makeLockFile(Properties.Settings.Default.NgPath, Properties.Settings.Default.lockFileName);
+
+            Hide();
+            frmNgRecovery frmNg = new frmNgRecovery();
+            frmNg.ShowDialog();
+
+            // ロックファイルを削除する
+            Utility.deleteLockFile(Properties.Settings.Default.NgPath, Properties.Settings.Default.lockFileName);
+
+            // NG件数更新 : 2017/11/18
+            dCountShow();
+
+            Show();
+        }
+
+
+        ///--------------------------------------------------
+        /// <summary>
+        ///     NG件数表示 </summary>
+        ///--------------------------------------------------
+        private void dCountShow()
+        {
+            try
+            {
+                // OCR認証件数取得
+                //int imgCnt = System.IO.Directory.GetFiles(Properties.Settings.Default.scanPath, "*.tif").Count();
+
+                //if (Properties.Settings.Default.OCRPC == global.flgOff)
+                //{
+                //    button5.Enabled = false;
+                //    button5.Text = "ＯＣＲ認識処理 (&M)";
+                //}
+                //else
+                //{
+                //    button5.Enabled = true;
+
+                //    if (imgCnt > 0)
+                //    {
+                //        button5.Text = "ＯＣＲ認識処理 (" + imgCnt + ") (&M)";
+                //    }
+                //    else
+                //    {
+                //        button5.Text = "ＯＣＲ認識処理 (&M)";
+                //    }
+                //}
+
+                // NG件数取得
+                int ngCnt = System.IO.Directory.GetFiles(Properties.Settings.Default.NgPath, "*.tif").Count();
+
+                if (ngCnt > 0)
+                {
+                    button2.Enabled = true;
+                    button2.Text = "ＮＧ画像確認 " + "(" + ngCnt + ") (&N)";
+                }
+                else
+                {
+
+                    button2.Enabled = false;
+                    button2.Text = "ＮＧ画像なし";
+                }
+
+                //// OCR認証件数取得
+                //int ocrCnt = System.IO.Directory.GetFiles(Properties.Settings.Default.dataPath, "*.tif").Count();
+
+                //button1.Enabled = true;
+                //button1.Text = "勤怠データ作成 (" + ocrCnt + ") (&W)";
+            }
+            catch (Exception)
+            {
+                // 何もしない
+            }
+        }
     }
 }

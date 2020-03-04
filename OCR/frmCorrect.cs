@@ -14,7 +14,6 @@ using System.Data.SqlClient;
 using STSH_OCR.Common;
 using STSH_OCR.OCR;
 using System.Configuration;
-//using Oracle.ManagedDataAccess.Client;
 using Excel = Microsoft.Office.Interop.Excel;
 using OpenCvSharp;
 
@@ -131,7 +130,7 @@ namespace STSH_OCR.OCR
         // 画面表示時ステータス
         bool showStatus = false;
 
-        int fCnt = 0;   // データ件数
+        //int fCnt = 0;   // データ件数
         
 
         // openCvSharp 関連
@@ -173,21 +172,24 @@ namespace STSH_OCR.OCR
             context = new DataContext(cn);
             tblPtn = context.GetTable<Common.ClsOrderPattern>();    // 登録パターンテーブル
             tblHold = context.GetTable<Common.ClsHoldFax>();        // 保留テーブル
-            tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
-
-            // 共有DBオープン
-            cn.Open();
-
+                                                                    //tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
             // ローカルDB接続
             cn2 = new SQLiteConnection("DataSource=" + Local_DB);
             context2 = new DataContext(cn2);
             tblFax = context2.GetTable<Common.ClsFaxOrder>();        // ＦＡＸ発注書テーブル
+            tblEditLog = context2.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
 
             // データ登録
             if (dID == string.Empty)
             {
                 // CSVデータをローカルマスターへ読み込みます
                 GetCsvDataToSQLite();
+
+                // DBオープン
+                cn2.Open();
+
+                // ＦＡＸ発注書テーブルを再取得
+                tblFax = context2.GetTable<Common.ClsFaxOrder>();
 
                 // データテーブル件数カウント
                 if (tblFax.Count() == 0)
@@ -586,13 +588,15 @@ namespace STSH_OCR.OCR
         /// <param name="iX">
         ///     カレントレコードのインデックス</param>
         ///-----------------------------------------------------------------------------------
-        private void CurDataUpDate()
+        private void CurDataUpDate_org(int iX)
         {
             // エラーメッセージ
             string errMsg = "ＦＡＸ発注書テーブル更新";
 
             try
             {
+                //ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
+
                 // ＦＡＸ発注書テーブルセット更新
                 ClsFaxOrder.TokuisakiCode = Utility.StrtoInt(Utility.NulltoStr(txtTokuisakiCD.Text));
                 ClsFaxOrder.patternID = Utility.StrtoInt(Utility.NulltoStr(txtPID.Text));
@@ -625,9 +629,9 @@ namespace STSH_OCR.OCR
                 ClsFaxOrder.Goods1_7 = Utility.NulltoStr(dg1[colDay7, 1].Value);
 
                 ClsFaxOrder.G_Syubai1 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 1].Value));
-                
+
                 //DataGridViewComboBoxCell boxCell = (DataGridViewComboBoxCell)dg1[colSyubai, 1];
-                
+
                 //if (boxCell != null)
                 //{
                 //    ClsFaxOrder.G_Syubai1 =  boxCell.Items.IndexOf(Utility.NulltoStr(boxCell.Value));
@@ -716,9 +720,9 @@ namespace STSH_OCR.OCR
 
 
                 // 商品7
-                ClsFaxOrder.G_Code7  = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 13].Value));
-                ClsFaxOrder.G_Nouka7  = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 13].Value));
-                ClsFaxOrder.G_Baika7  = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 13].Value));
+                ClsFaxOrder.G_Code7 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 13].Value));
+                ClsFaxOrder.G_Nouka7 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 13].Value));
+                ClsFaxOrder.G_Baika7 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 13].Value));
 
                 ClsFaxOrder.Goods7_1 = Utility.NulltoStr(dg1[colDay1, 13].Value);
                 ClsFaxOrder.Goods7_2 = Utility.NulltoStr(dg1[colDay2, 13].Value);
@@ -732,9 +736,9 @@ namespace STSH_OCR.OCR
 
 
                 // 商品8
-                ClsFaxOrder.G_Code8  = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 15].Value));
-                ClsFaxOrder.G_Nouka8  = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 15].Value));
-                ClsFaxOrder.G_Baika8  = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 15].Value));
+                ClsFaxOrder.G_Code8 = SetSyohinCode(Utility.NulltoStr(dg1[colHinCode, 15].Value));
+                ClsFaxOrder.G_Nouka8 = Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 15].Value));
+                ClsFaxOrder.G_Baika8 = Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 15].Value));
 
                 ClsFaxOrder.Goods8_1 = Utility.NulltoStr(dg1[colDay1, 15].Value);
                 ClsFaxOrder.Goods8_2 = Utility.NulltoStr(dg1[colDay2, 15].Value);
@@ -858,7 +862,6 @@ namespace STSH_OCR.OCR
 
                 ClsFaxOrder.G_Syubai15 = GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 29].Value));
 
-
                 ClsFaxOrder.YyMmDd = DateTime.Now.ToString();
 
                 context2.SubmitChanges();
@@ -871,6 +874,245 @@ namespace STSH_OCR.OCR
             {
             }
         }
+
+
+        ///-----------------------------------------------------------------------------------
+        /// <summary>
+        ///     カレントデータを更新する</summary>
+        /// <param name="iX">
+        ///     カレントレコードのインデックス</param>
+        ///-----------------------------------------------------------------------------------
+        private void CurDataUpDate(int iX)
+        {
+            // エラーメッセージ
+            string errMsg = "ＦＡＸ発注書テーブル更新";
+
+            //cn2.Open();
+
+            try
+            {
+                string Sql = "UPDATE FAX_Order set ";
+                Sql += "得意先コード = " + Utility.NulltoStr(txtTokuisakiCD.Text) + ",";
+                Sql += "patternID = " + Utility.NulltoStr(txtPID.Text) + ",";
+                Sql += "SeqNumber = " + Utility.NulltoStr(txtSeqNum.Text) + ",";
+                Sql += "年 = " + Utility.NulltoStr(txtYear.Text) + ",";
+                Sql += "月 = " + Utility.NulltoStr(txtMonth.Text) + ",";
+                Sql += "Day1 = '" + Utility.NulltoStr(txtTenDay1.Text) + "',";
+                Sql += "Day2 = '" + Utility.NulltoStr(txtTenDay2.Text) + "',";
+                Sql += "Day3 = '" + Utility.NulltoStr(txtTenDay3.Text) + "',";
+                Sql += "Day4 = '" + Utility.NulltoStr(txtTenDay4.Text) + "',";
+                Sql += "Day5 = '" + Utility.NulltoStr(txtTenDay5.Text) + "',";
+                Sql += "Day6 = '" + Utility.NulltoStr(txtTenDay6.Text) + "',";
+                Sql += "Day7 = '" + Utility.NulltoStr(txtTenDay7.Text) + "',";
+
+                Sql += "Goods1_1 = '" + Utility.NulltoStr(dg1[colDay1, 1].Value) + "',";
+                Sql += "Goods1_2 = '" + Utility.NulltoStr(dg1[colDay2, 1].Value) + "',";
+                Sql += "Goods1_3 = '" + Utility.NulltoStr(dg1[colDay3, 1].Value) + "',";
+                Sql += "Goods1_4 = '" + Utility.NulltoStr(dg1[colDay4, 1].Value) + "',";
+                Sql += "Goods1_5 = '" + Utility.NulltoStr(dg1[colDay5, 1].Value) + "',";
+                Sql += "Goods1_6 = '" + Utility.NulltoStr(dg1[colDay6, 1].Value) + "',";
+                Sql += "Goods1_7 = '" + Utility.NulltoStr(dg1[colDay7, 1].Value) + "',";
+
+                Sql += "Goods2_1 = '" + Utility.NulltoStr(dg1[colDay1, 3].Value) + "',";
+                Sql += "Goods2_2 = '" + Utility.NulltoStr(dg1[colDay2, 3].Value) + "',";
+                Sql += "Goods2_3 = '" + Utility.NulltoStr(dg1[colDay3, 3].Value) + "',";
+                Sql += "Goods2_4 = '" + Utility.NulltoStr(dg1[colDay4, 3].Value) + "',";
+                Sql += "Goods2_5 = '" + Utility.NulltoStr(dg1[colDay5, 3].Value) + "',";
+                Sql += "Goods2_6 = '" + Utility.NulltoStr(dg1[colDay6, 3].Value) + "',";
+                Sql += "Goods2_7 = '" + Utility.NulltoStr(dg1[colDay7, 3].Value) + "',";
+
+                Sql += "Goods3_1 = '" + Utility.NulltoStr(dg1[colDay1, 5].Value) + "',";
+                Sql += "Goods3_2 = '" + Utility.NulltoStr(dg1[colDay2, 5].Value) + "',";
+                Sql += "Goods3_3 = '" + Utility.NulltoStr(dg1[colDay3, 5].Value) + "',";
+                Sql += "Goods3_4 = '" + Utility.NulltoStr(dg1[colDay4, 5].Value) + "',";
+                Sql += "Goods3_5 = '" + Utility.NulltoStr(dg1[colDay5, 5].Value) + "',";
+                Sql += "Goods3_6 = '" + Utility.NulltoStr(dg1[colDay6, 5].Value) + "',";
+                Sql += "Goods3_7 = '" + Utility.NulltoStr(dg1[colDay7, 5].Value) + "',";
+
+                Sql += "Goods4_1 = '" + Utility.NulltoStr(dg1[colDay1, 7].Value) + "',";
+                Sql += "Goods4_2 = '" + Utility.NulltoStr(dg1[colDay2, 7].Value) + "',";
+                Sql += "Goods4_3 = '" + Utility.NulltoStr(dg1[colDay3, 7].Value) + "',";
+                Sql += "Goods4_4 = '" + Utility.NulltoStr(dg1[colDay4, 7].Value) + "',";
+                Sql += "Goods4_5 = '" + Utility.NulltoStr(dg1[colDay5, 7].Value) + "',";
+                Sql += "Goods4_6 = '" + Utility.NulltoStr(dg1[colDay6, 7].Value) + "',";
+                Sql += "Goods4_7 = '" + Utility.NulltoStr(dg1[colDay7, 7].Value) + "',";
+
+                Sql += "Goods5_1 = '" + Utility.NulltoStr(dg1[colDay1, 9].Value) + "',";
+                Sql += "Goods5_2 = '" + Utility.NulltoStr(dg1[colDay2, 9].Value) + "',";
+                Sql += "Goods5_3 = '" + Utility.NulltoStr(dg1[colDay3, 9].Value) + "',";
+                Sql += "Goods5_4 = '" + Utility.NulltoStr(dg1[colDay4, 9].Value) + "',";
+                Sql += "Goods5_5 = '" + Utility.NulltoStr(dg1[colDay5, 9].Value) + "',";
+                Sql += "Goods5_6 = '" + Utility.NulltoStr(dg1[colDay6, 9].Value) + "',";
+                Sql += "Goods5_7 = '" + Utility.NulltoStr(dg1[colDay7, 9].Value) + "',";
+
+                Sql += "Goods6_1 = '" + Utility.NulltoStr(dg1[colDay1, 11].Value) + "',";
+                Sql += "Goods6_2 = '" + Utility.NulltoStr(dg1[colDay2, 11].Value) + "',";
+                Sql += "Goods6_3 = '" + Utility.NulltoStr(dg1[colDay3, 11].Value) + "',";
+                Sql += "Goods6_4 = '" + Utility.NulltoStr(dg1[colDay4, 11].Value) + "',";
+                Sql += "Goods6_5 = '" + Utility.NulltoStr(dg1[colDay5, 11].Value) + "',";
+                Sql += "Goods6_6 = '" + Utility.NulltoStr(dg1[colDay6, 11].Value) + "',";
+                Sql += "Goods6_7 = '" + Utility.NulltoStr(dg1[colDay7, 11].Value) + "',";
+
+                Sql += "Goods7_1 = '" + Utility.NulltoStr(dg1[colDay1, 13].Value) + "',";
+                Sql += "Goods7_2 = '" + Utility.NulltoStr(dg1[colDay2, 13].Value) + "',";
+                Sql += "Goods7_3 = '" + Utility.NulltoStr(dg1[colDay3, 13].Value) + "',";
+                Sql += "Goods7_4 = '" + Utility.NulltoStr(dg1[colDay4, 13].Value) + "',";
+                Sql += "Goods7_5 = '" + Utility.NulltoStr(dg1[colDay5, 13].Value) + "',";
+                Sql += "Goods7_6 = '" + Utility.NulltoStr(dg1[colDay6, 13].Value) + "',";
+                Sql += "Goods7_7 = '" + Utility.NulltoStr(dg1[colDay7, 13].Value) + "',";
+
+                Sql += "Goods8_1 = '" + Utility.NulltoStr(dg1[colDay1, 15].Value) + "',";
+                Sql += "Goods8_2 = '" + Utility.NulltoStr(dg1[colDay2, 15].Value) + "',";
+                Sql += "Goods8_3 = '" + Utility.NulltoStr(dg1[colDay3, 15].Value) + "',";
+                Sql += "Goods8_4 = '" + Utility.NulltoStr(dg1[colDay4, 15].Value) + "',";
+                Sql += "Goods8_5 = '" + Utility.NulltoStr(dg1[colDay5, 15].Value) + "',";
+                Sql += "Goods8_6 = '" + Utility.NulltoStr(dg1[colDay6, 15].Value) + "',";
+                Sql += "Goods8_7 = '" + Utility.NulltoStr(dg1[colDay7, 15].Value) + "',";
+
+                Sql += "Goods9_1 = '" + Utility.NulltoStr(dg1[colDay1, 17].Value) + "',";
+                Sql += "Goods9_2 = '" + Utility.NulltoStr(dg1[colDay2, 17].Value) + "',";
+                Sql += "Goods9_3 = '" + Utility.NulltoStr(dg1[colDay3, 17].Value) + "',";
+                Sql += "Goods9_4 = '" + Utility.NulltoStr(dg1[colDay4, 17].Value) + "',";
+                Sql += "Goods9_5 = '" + Utility.NulltoStr(dg1[colDay5, 17].Value) + "',";
+                Sql += "Goods9_6 = '" + Utility.NulltoStr(dg1[colDay6, 17].Value) + "',";
+                Sql += "Goods9_7 = '" + Utility.NulltoStr(dg1[colDay7, 17].Value) + "',";
+
+                Sql += "Goods10_1 = '" + Utility.NulltoStr(dg1[colDay1, 19].Value) + "',";
+                Sql += "Goods10_2 = '" + Utility.NulltoStr(dg1[colDay2, 19].Value) + "',";
+                Sql += "Goods10_3 = '" + Utility.NulltoStr(dg1[colDay3, 19].Value) + "',";
+                Sql += "Goods10_4 = '" + Utility.NulltoStr(dg1[colDay4, 19].Value) + "',";
+                Sql += "Goods10_5 = '" + Utility.NulltoStr(dg1[colDay5, 19].Value) + "',";
+                Sql += "Goods10_6 = '" + Utility.NulltoStr(dg1[colDay6, 19].Value) + "',";
+                Sql += "Goods10_7 = '" + Utility.NulltoStr(dg1[colDay7, 19].Value) + "',";
+
+                Sql += "Goods11_1 = '" + Utility.NulltoStr(dg1[colDay1, 21].Value) + "',";
+                Sql += "Goods11_2 = '" + Utility.NulltoStr(dg1[colDay2, 21].Value) + "',";
+                Sql += "Goods11_3 = '" + Utility.NulltoStr(dg1[colDay3, 21].Value) + "',";
+                Sql += "Goods11_4 = '" + Utility.NulltoStr(dg1[colDay4, 21].Value) + "',";
+                Sql += "Goods11_5 = '" + Utility.NulltoStr(dg1[colDay5, 21].Value) + "',";
+                Sql += "Goods11_6 = '" + Utility.NulltoStr(dg1[colDay6, 21].Value) + "',";
+                Sql += "Goods11_7 = '" + Utility.NulltoStr(dg1[colDay7, 21].Value) + "',";
+
+                Sql += "Goods12_1 = '" + Utility.NulltoStr(dg1[colDay1, 23].Value) + "',";
+                Sql += "Goods12_2 = '" + Utility.NulltoStr(dg1[colDay2, 23].Value) + "',";
+                Sql += "Goods12_3 = '" + Utility.NulltoStr(dg1[colDay3, 23].Value) + "',";
+                Sql += "Goods12_4 = '" + Utility.NulltoStr(dg1[colDay4, 23].Value) + "',";
+                Sql += "Goods12_5 = '" + Utility.NulltoStr(dg1[colDay5, 23].Value) + "',";
+                Sql += "Goods12_6 = '" + Utility.NulltoStr(dg1[colDay6, 23].Value) + "',";
+                Sql += "Goods12_7 = '" + Utility.NulltoStr(dg1[colDay7, 23].Value) + "',";
+
+                Sql += "Goods13_1 = '" + Utility.NulltoStr(dg1[colDay1, 25].Value) + "',";
+                Sql += "Goods13_2 = '" + Utility.NulltoStr(dg1[colDay2, 25].Value) + "',";
+                Sql += "Goods13_3 = '" + Utility.NulltoStr(dg1[colDay3, 25].Value) + "',";
+                Sql += "Goods13_4 = '" + Utility.NulltoStr(dg1[colDay4, 25].Value) + "',";
+                Sql += "Goods13_5 = '" + Utility.NulltoStr(dg1[colDay5, 25].Value) + "',";
+                Sql += "Goods13_6 = '" + Utility.NulltoStr(dg1[colDay6, 25].Value) + "',";
+                Sql += "Goods13_7 = '" + Utility.NulltoStr(dg1[colDay7, 25].Value) + "',";
+
+                Sql += "Goods14_1 = '" + Utility.NulltoStr(dg1[colDay1, 27].Value) + "',";
+                Sql += "Goods14_2 = '" + Utility.NulltoStr(dg1[colDay2, 27].Value) + "',";
+                Sql += "Goods14_3 = '" + Utility.NulltoStr(dg1[colDay3, 27].Value) + "',";
+                Sql += "Goods14_4 = '" + Utility.NulltoStr(dg1[colDay4, 27].Value) + "',";
+                Sql += "Goods14_5 = '" + Utility.NulltoStr(dg1[colDay5, 27].Value) + "',";
+                Sql += "Goods14_6 = '" + Utility.NulltoStr(dg1[colDay6, 27].Value) + "',";
+                Sql += "Goods14_7 = '" + Utility.NulltoStr(dg1[colDay7, 27].Value) + "',";
+
+                Sql += "Goods15_1 = '" + Utility.NulltoStr(dg1[colDay1, 29].Value) + "',";
+                Sql += "Goods15_2 = '" + Utility.NulltoStr(dg1[colDay2, 29].Value) + "',";
+                Sql += "Goods15_3 = '" + Utility.NulltoStr(dg1[colDay3, 29].Value) + "',";
+                Sql += "Goods15_4 = '" + Utility.NulltoStr(dg1[colDay4, 29].Value) + "',";
+                Sql += "Goods15_5 = '" + Utility.NulltoStr(dg1[colDay5, 29].Value) + "',";
+                Sql += "Goods15_6 = '" + Utility.NulltoStr(dg1[colDay6, 29].Value) + "',";
+                Sql += "Goods15_7 = '" + Utility.NulltoStr(dg1[colDay7, 29].Value) + "',";
+
+                Sql += "G_Code1 = '" + timeVal(dg1[colHinCode, 1].Value, 8) + "',";
+                Sql += "G_Code2 = '" + timeVal(dg1[colHinCode, 3].Value, 8) + "',";
+                Sql += "G_Code3 = '" + timeVal(dg1[colHinCode, 5].Value, 8) + "',";
+                Sql += "G_Code4 = '" + timeVal(dg1[colHinCode, 7].Value, 8) + "',";
+                Sql += "G_Code5 = '" + timeVal(dg1[colHinCode, 9].Value, 8) + "',";
+                Sql += "G_Code6 = '" + timeVal(dg1[colHinCode, 11].Value, 8) + "',";
+                Sql += "G_Code7 = '" + timeVal(dg1[colHinCode, 13].Value, 8) + "',";
+                Sql += "G_Code8 = '" + timeVal(dg1[colHinCode, 15].Value, 8) + "',";
+                Sql += "G_Code9 = '" + timeVal(dg1[colHinCode, 17].Value, 8) + "',";
+                Sql += "G_Code10 = '" + timeVal(dg1[colHinCode, 19].Value, 8) + "',";
+                Sql += "G_Code11 = '" + timeVal(dg1[colHinCode, 21].Value, 8) + "',";
+                Sql += "G_Code12 = '" + timeVal(dg1[colHinCode, 23].Value, 8) + "',";
+                Sql += "G_Code13 = '" + timeVal(dg1[colHinCode, 25].Value, 8) + "',";
+                Sql += "G_Code14 = '" + timeVal(dg1[colHinCode, 27].Value, 8) + "',";
+                Sql += "G_Code15 = '" + timeVal(dg1[colHinCode, 29].Value, 8) + "',";
+
+                Sql += "G_Nouka1 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 1].Value)) + ",";
+                Sql += "G_Nouka2 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 3].Value)) + ",";
+                Sql += "G_Nouka3 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 5].Value)) + ",";
+                Sql += "G_Nouka4 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 7].Value)) + ",";
+                Sql += "G_Nouka5 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 9].Value)) + ",";
+                Sql += "G_Nouka6 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 11].Value)) + ",";
+                Sql += "G_Nouka7 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 13].Value)) + ",";
+                Sql += "G_Nouka8 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 15].Value)) + ",";
+                Sql += "G_Nouka9 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 17].Value)) + ",";
+                Sql += "G_Nouka10 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 19].Value)) + ",";
+                Sql += "G_Nouka11 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 21].Value)) + ",";
+                Sql += "G_Nouka12 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 23].Value)) + ",";
+                Sql += "G_Nouka13 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 25].Value)) + ",";
+                Sql += "G_Nouka14 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 27].Value)) + ",";
+                Sql += "G_Nouka15 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 29].Value)) + ",";
+
+                Sql += "G_Baika1 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 1].Value)) + ",";
+                Sql += "G_Baika2 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 3].Value)) + ",";
+                Sql += "G_Baika3 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 5].Value)) + ",";
+                Sql += "G_Baika4 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 7].Value)) + ",";
+                Sql += "G_Baika5 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 9].Value)) + ",";
+                Sql += "G_Baika6 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 11].Value)) + ",";
+                Sql += "G_Baika7 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 13].Value)) + ",";
+                Sql += "G_Baika8 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 15].Value)) + ",";
+                Sql += "G_Baika9 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 17].Value)) + ",";
+                Sql += "G_Baika10 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 19].Value)) + ",";
+                Sql += "G_Baika11 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 21].Value)) + ",";
+                Sql += "G_Baika12 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 23].Value)) + ",";
+                Sql += "G_Baika13 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 25].Value)) + ",";
+                Sql += "G_Baika14 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 27].Value)) + ",";
+                Sql += "G_Baika15 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 29].Value)) + ",";
+
+                Sql += "G_Syubai1 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 1].Value)) + ",";
+                Sql += "G_Syubai2 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 3].Value)) + ",";
+                Sql += "G_Syubai3 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 5].Value)) + ",";
+                Sql += "G_Syubai4 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 7].Value)) + ",";
+                Sql += "G_Syubai5 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 9].Value)) + ",";
+                Sql += "G_Syubai6 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 11].Value)) + ",";
+                Sql += "G_Syubai7 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 13].Value)) + ",";
+                Sql += "G_Syubai8 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 15].Value)) + ",";
+                Sql += "G_Syubai9 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 17].Value)) + ",";
+                Sql += "G_Syubai10 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 19].Value)) + ",";
+                Sql += "G_Syubai11 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 21].Value)) + ",";
+                Sql += "G_Syubai12 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 23].Value)) + ",";
+                Sql += "G_Syubai13 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 25].Value)) + ",";
+                Sql += "G_Syubai14 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 27].Value)) + ",";
+                Sql += "G_Syubai15 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 29].Value)) + ",";
+
+                Sql += "メモ = '" + txtMemo.Text + "',";
+                Sql += "確認 = " + Convert.ToInt32(checkBox1.Checked) + ",";
+                Sql += "更新年月日 = '" + DateTime.Now.ToString() + "' ";
+                Sql += "WHERE ID = '" + cID[iX] + "'";
+
+                using (SQLiteCommand com = new SQLiteCommand(Sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                // ＦＡＸ発注書テーブル読み込む
+                context2 = new DataContext(cn2);
+                tblFax = context2.GetTable<Common.ClsFaxOrder>();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, errMsg, MessageBoxButtons.OK);
+            }
+            finally
+            {
+
+            }
+        }
+
 
         private string SetSyohinCode(string gCode)
         {
@@ -922,8 +1164,14 @@ namespace STSH_OCR.OCR
         private string timeVal(object tm, int len)
         {
             string t = Utility.NulltoStr(tm);
-            if (t != string.Empty) return t.PadLeft(len, '0');
-            else return t;
+            if (t != string.Empty)
+            {
+                return t.PadLeft(len, '0');
+            }
+            else
+            {
+                return t;
+            }
         }
 
         /// ----------------------------------------------------------------------------------------------------
@@ -993,7 +1241,7 @@ namespace STSH_OCR.OCR
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate();
+            CurDataUpDate(cI);
 
             //レコードの移動
             cI = hScrollBar1.Value;
@@ -1064,8 +1312,11 @@ namespace STSH_OCR.OCR
                 // カレントデータ更新
                 if (dID == string.Empty)
                 {
-                    CurDataUpDate();
+                    CurDataUpDate(cI);
                 }
+
+                // 編集ログデータアップロード
+                EditDataUpload();
             }
 
             // データベース接続解除
@@ -1105,7 +1356,7 @@ namespace STSH_OCR.OCR
             if (getErrData(cI, ocr))
             {
                 // 発注データ作成
-                SetOrderData();
+                OrderDataUpload();
             }
             else
             {
@@ -1127,18 +1378,22 @@ namespace STSH_OCR.OCR
             this.Close();
         }
 
-        private void SetOrderData()
+        ///----------------------------------------------------------------
+        /// <summary>
+        ///     発注データ作成 </summary>
+        ///----------------------------------------------------------------
+        private void OrderDataUpload()
         {
             string errMsg = "";
 
-            cn2.Open();
+            //cn2.Open();
 
             try
             {
                 Cursor = Cursors.WaitCursor;
 
                 //カレントデータの更新
-                CurDataUpDate();
+                CurDataUpDate(cI);
 
                 // STSH_OCR.db3をAttachする
                 string sql = "ATTACH [";
@@ -1184,6 +1439,27 @@ namespace STSH_OCR.OCR
                 {
                     com.ExecuteNonQuery();
                 }
+
+                // 編集ログデータアップロード
+                sql = "INSERT INTO db.DataEditLog (";
+                sql += "年月日時刻, 得意先コード, 得意先名, 年, 月, 発注書ID, 発注書ID連番, 商品コード, 商品名, 店着日付, 行番号, 列番号, 項目名, ";
+                sql += "変更前値, 変更後値, 画像名, 編集アカウントID, コンピュータ名, 更新年月日, 発注データID) ";
+                sql += "SELECT 年月日時刻, 得意先コード, 得意先名, 年, 月, 発注書ID, 発注書ID連番, 商品コード, 商品名, 店着日付, 行番号, 列番号, 項目名,";
+                sql += "変更前値, 変更後値, 画像名, 編集アカウントID, コンピュータ名, 更新年月日, 発注データID FROM main.DataEditLog ";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                // ローカルの編集ログデータを削除します
+                errMsg = "ローカル編集ログデータ削除";
+                sql = "delete from DataEditLog ";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
             }
             catch (Exception ex)
             {
@@ -1191,13 +1467,69 @@ namespace STSH_OCR.OCR
             }
             finally
             {
-                if (cn2.State == ConnectionState.Open)
-                {
-                    cn2.Close();
-                }
+                //if (cn2.State == ConnectionState.Open)
+                //{
+                //    cn2.Close();
+                //}
             }
         }
 
+        ///------------------------------------------------------------------------
+        /// <summary>
+        ///     編集ログデータアップロード </summary>
+        ///------------------------------------------------------------------------
+
+        private void EditDataUpload()
+        {
+            string errMsg = "";
+
+            //cn2.Open();
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                // STSH_OCR.db3をAttachする
+                string sql = "ATTACH [";
+                sql += Properties.Settings.Default.DB_File + "] AS db;";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                sql = "INSERT INTO db.DataEditLog (";
+                sql += "年月日時刻, 得意先コード, 得意先名, 年, 月, 発注書ID, 発注書ID連番, 商品コード, 商品名, 店着日付, 行番号, 列番号, 項目名, ";
+                sql += "変更前値, 変更後値, 画像名, 編集アカウントID, コンピュータ名, 更新年月日, 発注データID) ";
+                sql += "SELECT 年月日時刻, 得意先コード, 得意先名, 年, 月, 発注書ID, 発注書ID連番, 商品コード, 商品名, 店着日付, 行番号, 列番号, 項目名,";
+                sql += "変更前値, 変更後値, 画像名, 編集アカウントID, コンピュータ名, 更新年月日, 発注データID FROM main.DataEditLog ";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                // ローカルの編集ログデータを削除します
+                errMsg = "ローカル編集ログデータ削除";
+                sql = "delete from DataEditLog ";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, errMsg, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            finally
+            {
+                //if (cn2.State == ConnectionState.Open)
+                //{
+                //    cn2.Close();
+                //}
+            }
+        }
 
 
         /// -----------------------------------------------------------------------------------
@@ -1213,7 +1545,7 @@ namespace STSH_OCR.OCR
         private bool getErrData(int cIdx, OCRData ocr)
         {
             // カレントレコード更新
-            CurDataUpDate();
+            CurDataUpDate(cI);
 
             // エラー番号初期化
             ocr._errNumber = ocr.eNothing;
@@ -2263,7 +2595,7 @@ namespace STSH_OCR.OCR
                 sql += ClsFaxOrder.ID;                          // 発注データID
                 sql += "');";
 
-                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
                 {
                     com.ExecuteNonQuery();
                 }
@@ -3071,7 +3403,7 @@ namespace STSH_OCR.OCR
         private void button3_Click_1(object sender, EventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate();
+            CurDataUpDate(cI);
 
             //レコードの移動
             cI = 0;
@@ -3081,7 +3413,7 @@ namespace STSH_OCR.OCR
         private void button4_Click_1(object sender, EventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate();
+            CurDataUpDate(cI);
 
             //レコードの移動
             if (cI > 0)
@@ -3094,7 +3426,7 @@ namespace STSH_OCR.OCR
         private void button7_Click(object sender, EventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate();
+            CurDataUpDate(cI);
 
             //レコードの移動
             if (cI + 1 < cID.Length)
@@ -3107,7 +3439,7 @@ namespace STSH_OCR.OCR
         private void button8_Click(object sender, EventArgs e)
         {
             //カレントデータの更新
-            CurDataUpDate();
+            CurDataUpDate(cI);
 
             //レコードの移動
             cI = cID.Length - 1;
@@ -3250,7 +3582,7 @@ namespace STSH_OCR.OCR
             }
 
             //カレントデータの更新
-            CurDataUpDate();
+            CurDataUpDate(cI);
 
             // 保留処理
             setHoldData(cID[cI]);
@@ -3320,6 +3652,11 @@ namespace STSH_OCR.OCR
                         // カンマ区切りで分割して配列に格納する
                         string[] stCSV = stBuffer.Split(',');
 
+                        if (stCSV.Length < 7)
+                        {
+                            continue;
+                        }
+
                         // ヘッダ
                         if (stCSV[0] == "*")
                         {
@@ -3340,6 +3677,51 @@ namespace STSH_OCR.OCR
                                 Day6 = stCSV[12].Trim(),
                                 Day7 = stCSV[13].Trim()
                             };
+
+                            order.G_Code1 = string.Empty;
+                            order.G_Code2 = string.Empty;
+                            order.G_Code3 = string.Empty;
+                            order.G_Code4 = string.Empty;
+                            order.G_Code5 = string.Empty;
+                            order.G_Code6 = string.Empty;
+                            order.G_Code7 = string.Empty;
+                            order.G_Code8 = string.Empty;
+                            order.G_Code9 = string.Empty;
+                            order.G_Code10 = string.Empty;
+                            order.G_Code11 = string.Empty;
+                            order.G_Code12 = string.Empty;
+                            order.G_Code13 = string.Empty;
+                            order.G_Code14 = string.Empty;
+                            order.G_Code15 = string.Empty;
+                            order.G_Code16 = string.Empty;
+                            order.G_Code17 = string.Empty;
+                            order.G_Code18 = string.Empty;
+                            order.G_Code19 = string.Empty;
+                            order.G_Code20 = string.Empty;
+                            order.PatternLoad = global.flgOff;
+
+                            foreach (var t in tblPtn.Where(a => a.TokuisakiCode == Utility.StrtoInt(stCSV[5].Trim()) &&
+                                                                a.SeqNum == Utility.StrtoInt(stCSV[4].Trim()) &&
+                                                                a.SecondNum == Utility.StrtoInt(stCSV[6].Trim())))
+                            {
+                                order.G_Code1 = t.G_Code1;
+                                order.G_Code2 = t.G_Code2;
+                                order.G_Code3 = t.G_Code3;
+                                order.G_Code4 = t.G_Code4;
+                                order.G_Code5 = t.G_Code5;
+                                order.G_Code6 = t.G_Code6;
+                                order.G_Code7 = t.G_Code7;
+                                order.G_Code8 = t.G_Code8;
+                                order.G_Code9 = t.G_Code9;
+                                order.G_Code10 = t.G_Code10;
+                                order.G_Code11 = t.G_Code11;
+                                order.G_Code12 = t.G_Code12;
+                                order.G_Code13 = t.G_Code13;
+                                order.G_Code14 = t.G_Code14;
+                                order.G_Code15 = t.G_Code15;
+                                order.PatternLoad = global.flgOn;
+                            }
+
                         }
                         else
                         {
@@ -3542,28 +3924,7 @@ namespace STSH_OCR.OCR
                     order.Goods20_5 = string.Empty;
                     order.Goods20_6 = string.Empty;
                     order.Goods20_7 = string.Empty;
-
-                    order.G_Code1 = string.Empty;
-                    order.G_Code2 = string.Empty;
-                    order.G_Code3 = string.Empty;
-                    order.G_Code4 = string.Empty;
-                    order.G_Code5 = string.Empty;
-                    order.G_Code6 = string.Empty;
-                    order.G_Code7 = string.Empty;
-                    order.G_Code8 = string.Empty;
-                    order.G_Code9 = string.Empty;
-                    order.G_Code10 = string.Empty;
-                    order.G_Code11 = string.Empty;
-                    order.G_Code12 = string.Empty;
-                    order.G_Code13 = string.Empty;
-                    order.G_Code14 = string.Empty;
-                    order.G_Code15 = string.Empty;
-                    order.G_Code16 = string.Empty;
-                    order.G_Code17 = string.Empty;
-                    order.G_Code18 = string.Empty;
-                    order.G_Code19 = string.Empty;
-                    order.G_Code20 = string.Empty;
-
+                    
                     order.G_Syubai1 = global.flgOff;
                     order.G_Syubai2 = global.flgOff;
                     order.G_Syubai3 = global.flgOff;
@@ -3582,7 +3943,6 @@ namespace STSH_OCR.OCR
 
                     order.memo = string.Empty;
                     order.Veri = global.flgOff;
-                    order.PatternLoad = global.flgOff;
                     order.YyMmDd = DateTime.Now.ToString();
 
                     // ＦＡＸ発注書データを追加登録する

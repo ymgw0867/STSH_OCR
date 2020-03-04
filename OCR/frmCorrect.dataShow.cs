@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Data.OleDb;
+using System.Data.Linq;
+using System.Data.SQLite;
 using STSH_OCR.Common;
 //using GrapeCity.Win.MultiRow;
 
@@ -38,15 +39,16 @@ namespace STSH_OCR.OCR
         {
             //fAdp.Fill(dtsC.FAX注文書);
         }
-        
+
         ///------------------------------------------------------------------------------------
         /// <summary>
         ///     データを画面に表示します </summary>
         /// <param name="iX">
         ///     ヘッダデータインデックス</param>
         ///------------------------------------------------------------------------------------
-        private void showOcrData(int iX)
+        private void showOcrData_org(int iX)
         {
+
             Cursor = Cursors.WaitCursor;
             showStatus = true;
 
@@ -54,6 +56,7 @@ namespace STSH_OCR.OCR
             editLogStatus = false;
 
             // 発注データを取得
+            tblFax = context2.GetTable<Common.ClsFaxOrder>();
             ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
 
             // フォーム初期化
@@ -81,26 +84,23 @@ namespace STSH_OCR.OCR
 
             global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
 
-            // 発注書パターン未読み込みの発注データのとき
-            if (ClsFaxOrder.PatternLoad == global.flgOff)
-            {
-                // 該当するＦＡＸ発注書パターンが存在するとき
-                if (tblPtn.Any(a => a.TokuisakiCode == ClsFaxOrder.TokuisakiCode &&
-                                a.SeqNum == ClsFaxOrder.patternID && a.SecondNum == ClsFaxOrder.SeqNumber))
-                {
-                    ClsOrderPattern = tblPtn.Single(a => a.TokuisakiCode == ClsFaxOrder.TokuisakiCode &&
-                                    a.SeqNum == ClsFaxOrder.patternID && a.SecondNum == ClsFaxOrder.SeqNumber);
+            //// 発注書パターン未読み込みの発注データのとき
+            //if (ClsFaxOrder.PatternLoad == global.flgOff)
+            //{
+            //    // 該当するＦＡＸ発注書パターンが存在するとき
+            //    if (tblPtn.Any(a => a.TokuisakiCode == ClsFaxOrder.TokuisakiCode &&
+            //                    a.SeqNum == ClsFaxOrder.patternID && a.SecondNum == ClsFaxOrder.SeqNumber))
+            //    {
+            //        ClsOrderPattern = tblPtn.Single(a => a.TokuisakiCode == ClsFaxOrder.TokuisakiCode &&
+            //                        a.SeqNum == ClsFaxOrder.patternID && a.SecondNum == ClsFaxOrder.SeqNumber);
 
-                    // ＦＡＸ発注書パターンの商品構成とする
-                    PatternLoad(ClsOrderPattern, ClsFaxOrder);
-                }
-            }
+            //        // ＦＡＸ発注書パターンの商品構成とする
+            //        PatternLoad(ClsOrderPattern, ClsFaxOrder);
+            //    }
+            //}
 
             // FAX発注書データ表示
-            showItem(ClsFaxOrder, dg1);
-
-            //// 月間合計値表示
-            //getMonthTotal();
+            //showItem(ClsFaxOrder, dg1);
 
             // エラー情報表示初期化
             lblErrMsg.Visible = false;
@@ -116,7 +116,88 @@ namespace STSH_OCR.OCR
 
             showStatus = false;
             Cursor = Cursors.Default;
+
+            label3.Text = ClsFaxOrder.ID;
         }
+
+
+        ///------------------------------------------------------------------------------------
+        /// <summary>
+        ///     データを画面に表示します </summary>
+        /// <param name="iX">
+        ///     ヘッダデータインデックス</param>
+        ///------------------------------------------------------------------------------------
+        private void showOcrData(int iX)
+        {
+            Cursor = Cursors.WaitCursor;
+            showStatus = true;
+
+            // 非ログ書き込み状態とする
+            editLogStatus = false;
+
+            // フォーム初期化
+            formInitialize(dID, iX);
+
+
+            // 発注データを取得
+            ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
+
+            global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
+
+            string Sql = "select * from FAX_Order WHERE ID = '" + cID[iX] + "'";
+
+            using (SQLiteCommand com = new SQLiteCommand(Sql, cn2))
+            {
+                SQLiteDataReader dataReader = com.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    txtYear.Text = dataReader["年"].ToString();
+                    txtMonth.Text = dataReader["月"].ToString();
+                    txtTokuisakiCD.Text = dataReader["得意先コード"].ToString().PadLeft(7, '0'); ;
+                    txtPID.Text = dataReader["patternID"].ToString();
+                    txtSeqNum.Text = dataReader["SeqNumber"].ToString();
+
+                    // 店着日
+                    txtTenDay1.Text = dataReader["Day1"].ToString();
+                    txtTenDay2.Text = dataReader["Day2"].ToString();
+                    txtTenDay3.Text = dataReader["Day3"].ToString();
+                    txtTenDay4.Text = dataReader["Day4"].ToString();
+                    txtTenDay5.Text = dataReader["Day5"].ToString();
+                    txtTenDay6.Text = dataReader["Day6"].ToString();
+                    txtTenDay7.Text = dataReader["Day7"].ToString();
+
+                    checkBox1.Checked = Convert.ToBoolean(Utility.StrtoInt(Utility.NulltoStr(dataReader["確認"])));
+                    txtMemo.Text = dataReader["メモ"].ToString();
+
+                    global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
+
+                    // FAX発注書データ表示
+                    showItem(dataReader, dg1);
+
+                    // エラー情報表示初期化
+                    lblErrMsg.Visible = false;
+                    lblErrMsg.Text = string.Empty;
+
+                    // 画像表示
+                    _img = Properties.Settings.Default.MyDataPath + dataReader["画像名"].ToString();
+                    showImage_openCv(_img);
+                    trackBar1.Enabled = true;
+                }
+
+                dataReader.Close();
+            }
+
+            // ログ書き込み状態とする
+            editLogStatus = true;
+
+            showStatus = false;
+            Cursor = Cursors.Default;
+
+            //ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
+            //label3.Text = ClsFaxOrder.Month.ToString();
+        }
+
 
         ///--------------------------------------------------------------------------
         /// <summary>
@@ -173,8 +254,6 @@ namespace STSH_OCR.OCR
             clsFax.PatternLoad = global.flgOn;
         }
 
-
-
         ///------------------------------------------------------------------------------------
         /// <summary>
         ///     発注商品表示 </summary>
@@ -185,7 +264,7 @@ namespace STSH_OCR.OCR
         /// <param name="ptnNum">
         ///     パターンID</param>
         ///------------------------------------------------------------------------------------
-        private void showItem(ClsFaxOrder r, DataGridView dataGrid)
+        private void showItem_org(ClsFaxOrder r, DataGridView dataGrid)
         {
             global.ChangeValueStatus = false;
 
@@ -564,353 +643,834 @@ namespace STSH_OCR.OCR
 
             dataGrid[colSyubai, 29].Value = global.SyubaiArray[r.G_Syubai15];
 
+            //カレントセル選択状態としない
+            dg1.CurrentCell = null;
+        }
 
-            //// 編集を可能とする
-            //mr.ReadOnly = false;
+        ///------------------------------------------------------------------------------------
+        /// <summary>
+        ///     発注商品表示 </summary>
+        /// <param name="r">
+        ///     NHBR_CLIDataSet.FAX注文書Row</param>
+        /// <param name="mr">
+        ///     GcMultiRow</param>
+        /// <param name="ptnNum">
+        ///     パターンID</param>
+        ///------------------------------------------------------------------------------------
+        private void showItem(SQLiteDataReader r, DataGridView dataGrid)
+        {
+            global.ChangeValueStatus = false;
+            bool g_Ptn = false;
 
-            //// パターン登録のとき
-            //if (ptnNum != global.flgOff)
+            // 発注書パターン未読み込みの発注データのとき
+            if (Utility.StrtoInt(r["パターンロード"].ToString()) == global.flgOff)
+            {
+                // 該当するＦＡＸ発注書パターンが存在するとき
+                if (tblPtn.Any(a => a.TokuisakiCode == Utility.StrtoInt(r["得意先コード"].ToString()) &&
+                                    a.SeqNum == Utility.StrtoInt(r["patternID"].ToString()) &&
+                                    a.SecondNum == Utility.StrtoInt(r["SeqNumber"].ToString())))
+                {
+                    ClsOrderPattern = tblPtn.Single(a => a.TokuisakiCode == Utility.StrtoInt(r["得意先コード"].ToString()) &&
+                                    a.SeqNum == Utility.StrtoInt(r["patternID"].ToString()) &&
+                                    a.SecondNum == Utility.StrtoInt(r["SeqNumber"].ToString()));
+
+                    // ＦＡＸ発注書パターンの商品構成とする
+                    g_Ptn = true;
+                }
+            }
+
+            // 商品発注明細クラス
+            ClsGoods[] goods = new ClsGoods[15];
+            for (int i = 0; i < 15; i++)
+            {
+                goods[i] = new ClsGoods();
+                goods[i].Suu = new string[7];
+
+                switch (i)
+                {
+                    case 0:
+
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code1;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code1"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka1"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika1"].ToString());
+                        goods[i].Suu[0] = r["Goods1_1"].ToString();
+                        goods[i].Suu[1] = r["Goods1_2"].ToString();
+                        goods[i].Suu[2] = r["Goods1_3"].ToString();
+                        goods[i].Suu[3] = r["Goods1_4"].ToString();
+                        goods[i].Suu[4] = r["Goods1_5"].ToString();
+                        goods[i].Suu[5] = r["Goods1_6"].ToString();
+                        goods[i].Suu[6] = r["Goods1_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai1"].ToString());
+
+                        break;
+
+                    case 1:
+
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code2;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code2"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka2"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika2"].ToString());
+                        goods[i].Suu[0] = r["Goods2_1"].ToString();
+                        goods[i].Suu[1] = r["Goods2_2"].ToString();
+                        goods[i].Suu[2] = r["Goods2_3"].ToString();
+                        goods[i].Suu[3] = r["Goods2_4"].ToString();
+                        goods[i].Suu[4] = r["Goods2_5"].ToString();
+                        goods[i].Suu[5] = r["Goods2_6"].ToString();
+                        goods[i].Suu[6] = r["Goods2_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai2"].ToString());
+
+                        break;
+
+
+                    case 2:
+
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code3;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code3"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka3"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika3"].ToString());
+                        goods[i].Suu[0] = r["Goods3_1"].ToString();
+                        goods[i].Suu[1] = r["Goods3_2"].ToString();
+                        goods[i].Suu[2] = r["Goods3_3"].ToString();
+                        goods[i].Suu[3] = r["Goods3_4"].ToString();
+                        goods[i].Suu[4] = r["Goods3_5"].ToString();
+                        goods[i].Suu[5] = r["Goods3_6"].ToString();
+                        goods[i].Suu[6] = r["Goods3_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai3"].ToString());
+
+                        break;
+
+
+                    case 3:
+
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code4;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code4"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka4"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika4"].ToString());
+                        goods[i].Suu[0] = r["Goods4_1"].ToString();
+                        goods[i].Suu[1] = r["Goods4_2"].ToString();
+                        goods[i].Suu[2] = r["Goods4_3"].ToString();
+                        goods[i].Suu[3] = r["Goods4_4"].ToString();
+                        goods[i].Suu[4] = r["Goods4_5"].ToString();
+                        goods[i].Suu[5] = r["Goods4_6"].ToString();
+                        goods[i].Suu[6] = r["Goods4_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai4"].ToString());
+
+                        break;
+
+                    case 4:
+
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code5;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code5"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka5"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika5"].ToString());
+                        goods[i].Suu[0] = r["Goods5_1"].ToString();
+                        goods[i].Suu[1] = r["Goods5_2"].ToString();
+                        goods[i].Suu[2] = r["Goods5_3"].ToString();
+                        goods[i].Suu[3] = r["Goods5_4"].ToString();
+                        goods[i].Suu[4] = r["Goods5_5"].ToString();
+                        goods[i].Suu[5] = r["Goods5_6"].ToString();
+                        goods[i].Suu[6] = r["Goods5_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai5"].ToString());
+
+                        break;
+
+                    case 5:
+
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code6;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code6"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka6"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika6"].ToString());
+                        goods[i].Suu[0] = r["Goods6_1"].ToString();
+                        goods[i].Suu[1] = r["Goods6_2"].ToString();
+                        goods[i].Suu[2] = r["Goods6_3"].ToString();
+                        goods[i].Suu[3] = r["Goods6_4"].ToString();
+                        goods[i].Suu[4] = r["Goods6_5"].ToString();
+                        goods[i].Suu[5] = r["Goods6_6"].ToString();
+                        goods[i].Suu[6] = r["Goods6_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai6"].ToString());
+
+                        break;
+
+                    case 6:
+
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code7;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code7"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka7"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika7"].ToString());
+                        goods[i].Suu[0] = r["Goods7_1"].ToString();
+                        goods[i].Suu[1] = r["Goods7_2"].ToString();
+                        goods[i].Suu[2] = r["Goods7_3"].ToString();
+                        goods[i].Suu[3] = r["Goods7_4"].ToString();
+                        goods[i].Suu[4] = r["Goods7_5"].ToString();
+                        goods[i].Suu[5] = r["Goods7_6"].ToString();
+                        goods[i].Suu[6] = r["Goods7_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai7"].ToString());
+
+                        break;
+
+                    case 7:
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code8;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code8"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka8"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika8"].ToString());
+                        goods[i].Suu[0] = r["Goods8_1"].ToString();
+                        goods[i].Suu[1] = r["Goods8_2"].ToString();
+                        goods[i].Suu[2] = r["Goods8_3"].ToString();
+                        goods[i].Suu[3] = r["Goods8_4"].ToString();
+                        goods[i].Suu[4] = r["Goods8_5"].ToString();
+                        goods[i].Suu[5] = r["Goods8_6"].ToString();
+                        goods[i].Suu[6] = r["Goods8_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai8"].ToString());
+
+                        break;
+
+
+                    case 8:
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code9;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code9"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka9"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika9"].ToString());
+                        goods[i].Suu[0] = r["Goods9_1"].ToString();
+                        goods[i].Suu[1] = r["Goods9_2"].ToString();
+                        goods[i].Suu[2] = r["Goods9_3"].ToString();
+                        goods[i].Suu[3] = r["Goods9_4"].ToString();
+                        goods[i].Suu[4] = r["Goods9_5"].ToString();
+                        goods[i].Suu[5] = r["Goods9_6"].ToString();
+                        goods[i].Suu[6] = r["Goods9_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai9"].ToString());
+
+                        break;
+
+
+                    case 9:
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code10;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code10"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka10"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika10"].ToString());
+                        goods[i].Suu[0] = r["Goods10_1"].ToString();
+                        goods[i].Suu[1] = r["Goods10_2"].ToString();
+                        goods[i].Suu[2] = r["Goods10_3"].ToString();
+                        goods[i].Suu[3] = r["Goods10_4"].ToString();
+                        goods[i].Suu[4] = r["Goods10_5"].ToString();
+                        goods[i].Suu[5] = r["Goods10_6"].ToString();
+                        goods[i].Suu[6] = r["Goods10_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai10"].ToString());
+
+                        break;
+
+
+                    case 10:
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code11;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code11"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka11"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika11"].ToString());
+                        goods[i].Suu[0] = r["Goods11_1"].ToString();
+                        goods[i].Suu[1] = r["Goods11_2"].ToString();
+                        goods[i].Suu[2] = r["Goods11_3"].ToString();
+                        goods[i].Suu[3] = r["Goods11_4"].ToString();
+                        goods[i].Suu[4] = r["Goods11_5"].ToString();
+                        goods[i].Suu[5] = r["Goods11_6"].ToString();
+                        goods[i].Suu[6] = r["Goods11_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai11"].ToString());
+
+                        break;
+
+
+                    case 11:
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code12;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code12"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka12"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika12"].ToString());
+                        goods[i].Suu[0] = r["Goods12_1"].ToString();
+                        goods[i].Suu[1] = r["Goods12_2"].ToString();
+                        goods[i].Suu[2] = r["Goods12_3"].ToString();
+                        goods[i].Suu[3] = r["Goods12_4"].ToString();
+                        goods[i].Suu[4] = r["Goods12_5"].ToString();
+                        goods[i].Suu[5] = r["Goods12_6"].ToString();
+                        goods[i].Suu[6] = r["Goods12_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai12"].ToString());
+
+                        break;
+
+
+                    case 12:
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code13;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code13"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka13"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika13"].ToString());
+                        goods[i].Suu[0] = r["Goods13_1"].ToString();
+                        goods[i].Suu[1] = r["Goods13_2"].ToString();
+                        goods[i].Suu[2] = r["Goods13_3"].ToString();
+                        goods[i].Suu[3] = r["Goods13_4"].ToString();
+                        goods[i].Suu[4] = r["Goods13_5"].ToString();
+                        goods[i].Suu[5] = r["Goods13_6"].ToString();
+                        goods[i].Suu[6] = r["Goods13_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai13"].ToString());
+
+                        break;
+
+
+                    case 13:
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code14;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code14"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka14"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika14"].ToString());
+                        goods[i].Suu[0] = r["Goods14_1"].ToString();
+                        goods[i].Suu[1] = r["Goods14_2"].ToString();
+                        goods[i].Suu[2] = r["Goods14_3"].ToString();
+                        goods[i].Suu[3] = r["Goods14_4"].ToString();
+                        goods[i].Suu[4] = r["Goods14_5"].ToString();
+                        goods[i].Suu[5] = r["Goods14_6"].ToString();
+                        goods[i].Suu[6] = r["Goods14_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai14"].ToString());
+
+                        break;
+
+                    case 14:
+                        if (g_Ptn)
+                        {
+                            goods[i].Code = ClsOrderPattern.G_Code15;
+                        }
+                        else
+                        {
+                            goods[i].Code = r["G_Code15"].ToString();
+                        }
+
+                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka15"].ToString());
+                        goods[i].Baika = Utility.StrtoInt(r["G_Baika15"].ToString());
+                        goods[i].Suu[0] = r["Goods15_1"].ToString();
+                        goods[i].Suu[1] = r["Goods15_2"].ToString();
+                        goods[i].Suu[2] = r["Goods15_3"].ToString();
+                        goods[i].Suu[3] = r["Goods15_4"].ToString();
+                        goods[i].Suu[4] = r["Goods15_5"].ToString();
+                        goods[i].Suu[5] = r["Goods15_6"].ToString();
+                        goods[i].Suu[6] = r["Goods15_7"].ToString();
+                        goods[i].Syubai = Utility.StrtoInt(r["G_Syubai15"].ToString());
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+
+
+            for (int i = 0; i < 15; i++)
+            {
+                global.ChangeValueStatus = true;
+                dataGrid[colHinCode, i * 2 + 1].Value = goods[i].Code;
+                global.ChangeValueStatus = false;
+
+                if (goods[i].Nouka != 0)
+                {
+                    dataGrid[colNouka, i * 2 + 1].Value = goods[i].Nouka;
+                }
+
+                if (goods[i].Baika != 0)
+                {
+                    dataGrid[colBaika, i * 2 + 1].Value = goods[i].Baika;
+                }
+                
+                dataGrid[colDay1, i * 2 + 1].Value = goods[i].Suu[0];
+                dataGrid[colDay2, i * 2 + 1].Value = goods[i].Suu[1];
+                dataGrid[colDay3, i * 2 + 1].Value = goods[i].Suu[2];
+                dataGrid[colDay4, i * 2 + 1].Value = goods[i].Suu[3];
+                dataGrid[colDay5, i * 2 + 1].Value = goods[i].Suu[4];
+                dataGrid[colDay6, i * 2 + 1].Value = goods[i].Suu[5];
+                dataGrid[colDay7, i * 2 + 1].Value = goods[i].Suu[6];
+
+                dg1.Rows[i * 2 + 1].Cells[colSyubai].Value = global.SyubaiArray[goods[i].Syubai];
+            }
+
+
+            //カレントセル選択状態としない
+            dg1.CurrentCell = null;
+
+
+
+
+
+
+            //// １行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 1].Value = r.G_Code1;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka1 != 0)
             //{
-            //    /* 商品パターンが登録されていない欄の発注数
-            //       有効数字あり：編集可（要訂正） 
-            //       有効数字なし：編集不可 */
-            //    for (int i = 0; i < gcMultiRow2.Rows.Count; i++)
-            //    {
-            //        if (Utility.NulltoStr(gcMultiRow2[i, "txtHinCode"].Value) == string.Empty &&
-            //            Utility.NulltoStr(gcMultiRow2[i, "txtSuu"].Value) == string.Empty)
-            //        {
-            //            gcMultiRow2[i, "txtSuu"].ReadOnly = true;
-            //            //gcMultiRow2[i, "txtSuu"].Selectable = false;
-            //        }
-            //        else
-            //        {
-            //            gcMultiRow2[i, "txtSuu"].ReadOnly = false;
-            //            //gcMultiRow2[i, "txtSuu"].Selectable = true;
-            //        }
-
-            //        if (Utility.NulltoStr(gcMultiRow2[i, "txtHinCode2"].Value) == string.Empty &&
-            //            Utility.NulltoStr(gcMultiRow2[i, "txtSuu2"].Value) == string.Empty)
-            //        {
-            //            gcMultiRow2[i, "txtSuu2"].ReadOnly = true;
-            //            //gcMultiRow2[i, "txtSuu2"].Selectable = false;
-            //        }
-            //        else
-            //        {
-            //            gcMultiRow2[i, "txtSuu2"].ReadOnly = false;
-            //            //gcMultiRow2[i, "txtSuu2"].Selectable = true;
-            //        }
-
-            //        // 2017/08/23
-            //        gcMultiRow2[i, "txtHinCode"].ReadOnly = true;
-            //        gcMultiRow2[i, "txtSuu"].ReadOnly = false;
-            //        gcMultiRow2[i, "txtHinCode2"].ReadOnly = true;
-            //        gcMultiRow2[i, "txtSuu2"].ReadOnly = false;
-
-            //        // 注文数欄背景色初期化
-            //        gcMultiRow2[i, "txtHinCode"].Style.BackColor = Color.Empty;
-            //        gcMultiRow2[i, "txtSuu"].Style.BackColor = Color.Empty;
-            //        gcMultiRow2[i, "txtHinCode2"].Style.BackColor = Color.Empty;
-            //        gcMultiRow2[i, "txtSuu2"].Style.BackColor = Color.Empty;
-            //    }
+            //    dataGrid[colNouka, 1].Value = r.G_Nouka1;
             //}
-            //else
+
+            //if (r.G_Baika1 != 0)
             //{
-            //    // フリー入力のとき
-            //    gl.ChangeValueStatus = true;
-
-            //    if (r.Is商品コード1Null())
-            //    {
-            //        mr.SetValue(0, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(0, "txtHinCode", r.商品コード1);
-            //    }
-
-            //    if (r.Is商品コード2Null())
-            //    {
-            //        mr.SetValue(1, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(1, "txtHinCode", r.商品コード2);
-            //    }
-
-            //    if (r.Is商品コード3Null())
-            //    {
-            //        mr.SetValue(2, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(2, "txtHinCode", r.商品コード3);
-            //    }
-
-            //    if (r.Is商品コード4Null())
-            //    {
-            //        mr.SetValue(3, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(3, "txtHinCode", r.商品コード4);
-            //    }
-
-            //    if (r.Is商品コード5Null())
-            //    {
-            //        mr.SetValue(4, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(4, "txtHinCode", r.商品コード5);
-            //    }
-
-            //    if (r.Is商品コード6Null())
-            //    {
-            //        mr.SetValue(5, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(5, "txtHinCode", r.商品コード6);
-            //    }
-
-            //    if (r.Is商品コード7Null())
-            //    {
-            //        mr.SetValue(6, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(6, "txtHinCode", r.商品コード7);
-            //    }
-
-            //    if (r.Is商品コード8Null())
-            //    {
-            //        mr.SetValue(7, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(7, "txtHinCode", r.商品コード8);
-            //    }
-
-            //    if (r.Is商品コード9Null())
-            //    {
-            //        mr.SetValue(8, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(8, "txtHinCode", r.商品コード9);
-            //    }
-
-            //    if (r.Is商品コード10Null())
-            //    {
-            //        mr.SetValue(9, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(9, "txtHinCode", r.商品コード10);
-            //    }
-
-            //    if (r.Is商品コード11Null())
-            //    {
-            //        mr.SetValue(10, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(10, "txtHinCode", r.商品コード11);
-            //    }
-
-            //    if (r.Is商品コード12Null())
-            //    {
-            //        mr.SetValue(11, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(11, "txtHinCode", r.商品コード12);
-            //    }
-
-            //    if (r.Is商品コード13Null())
-            //    {
-            //        mr.SetValue(12, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(12, "txtHinCode", r.商品コード13);
-            //    }
-
-            //    if (r.Is商品コード14Null())
-            //    {
-            //        mr.SetValue(13, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(13, "txtHinCode", r.商品コード14);
-            //    }
-
-            //    if (r.Is商品コード15Null())
-            //    {
-            //        mr.SetValue(14, "txtHinCode", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(14, "txtHinCode", r.商品コード15);
-            //    }
-
-            //    if (r.Is商品コード16Null())
-            //    {
-            //        mr.SetValue(0, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(0, "txtHinCode2", r.商品コード16);
-            //    }
-
-            //    if (r.Is商品コード17Null())
-            //    {
-            //        mr.SetValue(1, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(1, "txtHinCode2", r.商品コード17);
-            //    }
-
-            //    if (r.Is商品コード18Null())
-            //    {
-            //        mr.SetValue(2, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(2, "txtHinCode2", r.商品コード18);
-            //    }
-
-            //    if (r.Is商品コード19Null())
-            //    {
-            //        mr.SetValue(3, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(3, "txtHinCode2", r.商品コード19);
-            //    }
-
-            //    if (r.Is商品コード20Null())
-            //    {
-            //        mr.SetValue(4, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(4, "txtHinCode2", r.商品コード20);
-            //    }
-
-            //    if (r.Is商品コード21Null())
-            //    {
-            //        mr.SetValue(5, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(5, "txtHinCode2", r.商品コード21);
-            //    }
-
-            //    if (r.Is商品コード22Null())
-            //    {
-            //        mr.SetValue(6, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(6, "txtHinCode2", r.商品コード22);
-            //    }
-
-            //    if (r.Is商品コード23Null())
-            //    {
-            //        mr.SetValue(7, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(7, "txtHinCode2", r.商品コード23);
-            //    }
-
-            //    if (r.Is商品コード24Null())
-            //    {
-            //        mr.SetValue(8, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(8, "txtHinCode2", r.商品コード24);
-            //    }
-
-            //    if (r.Is商品コード25Null())
-            //    {
-            //        mr.SetValue(9, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(9, "txtHinCode2", r.商品コード25);
-            //    }
-
-            //    if (r.Is商品コード26Null())
-            //    {
-            //        mr.SetValue(10, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(10, "txtHinCode2", r.商品コード26);
-            //    }
-
-            //    if (r.Is商品コード27Null())
-            //    {
-            //        mr.SetValue(11, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(11, "txtHinCode2", r.商品コード27);
-            //    }
-
-            //    if (r.Is商品コード28Null())
-            //    {
-            //        mr.SetValue(12, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(12, "txtHinCode2", r.商品コード28);
-            //    }
-
-            //    if (r.Is商品コード29Null())
-            //    {
-            //        mr.SetValue(13, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(13, "txtHinCode2", r.商品コード29);
-            //    }
-
-            //    if (r.Is商品コード30Null())
-            //    {
-            //        mr.SetValue(14, "txtHinCode2", "");
-            //    }
-            //    else
-            //    {
-            //        mr.SetValue(14, "txtHinCode2", r.商品コード30);
-            //    }
-
-            //    gl.ChangeValueStatus = false;
-
-            //    // 2017/08/23
-            //    for (int i = 0; i < gcMultiRow2.Rows.Count; i++)
-            //    {
-            //        gcMultiRow2[i, "txtHinCode"].ReadOnly = false;
-            //        gcMultiRow2[i, "txtSuu"].ReadOnly = false;
-            //        gcMultiRow2[i, "txtHinCode2"].ReadOnly = false;
-            //        gcMultiRow2[i, "txtSuu2"].ReadOnly = false;
-
-            //        // 注文数欄背景色初期化
-            //        gcMultiRow2[i, "txtHinCode"].Style.BackColor = Color.Empty;
-            //        gcMultiRow2[i, "txtSuu"].Style.BackColor = Color.Empty;
-            //        gcMultiRow2[i, "txtHinCode2"].Style.BackColor = Color.Empty;
-            //        gcMultiRow2[i, "txtSuu2"].Style.BackColor = Color.Empty;
-            //    }
+            //    dataGrid[colBaika, 1].Value = r.G_Baika1;
             //}
 
-            ////mr.EndEdit();
+            //dataGrid[colDay1, 1].Value = r.Goods1_1;
+            //dataGrid[colDay2, 1].Value = r.Goods1_2;
+            //dataGrid[colDay3, 1].Value = r.Goods1_3;
+            //dataGrid[colDay4, 1].Value = r.Goods1_4;
+            //dataGrid[colDay5, 1].Value = r.Goods1_5;
+            //dataGrid[colDay6, 1].Value = r.Goods1_6;
+            //dataGrid[colDay7, 1].Value = r.Goods1_7;
+
+            //dg1.Rows[1].Cells[colSyubai].Value = global.SyubaiArray[r.G_Syubai1];
+
+            //// ２行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 3].Value = r.G_Code2;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka2 != 0)
+            //{
+            //    dataGrid[colNouka, 3].Value = r.G_Nouka2;
+            //}
+
+            //if (r.G_Baika2 != 0)
+            //{
+            //    dataGrid[colBaika, 3].Value = r.G_Baika2;
+            //}
+
+            //dataGrid[colDay1, 3].Value = r.Goods2_1;
+            //dataGrid[colDay2, 3].Value = r.Goods2_2;
+            //dataGrid[colDay3, 3].Value = r.Goods2_3;
+            //dataGrid[colDay4, 3].Value = r.Goods2_4;
+            //dataGrid[colDay5, 3].Value = r.Goods2_5;
+            //dataGrid[colDay6, 3].Value = r.Goods2_6;
+            //dataGrid[colDay7, 3].Value = r.Goods2_7;
+
+            //dataGrid[colSyubai, 3].Value = global.SyubaiArray[r.G_Syubai2];
+
+            //// ３行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 5].Value = r.G_Code3;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka3 != 0)
+            //{
+            //    dataGrid[colNouka, 5].Value = r.G_Nouka3;
+            //}
+
+            //if (r.G_Baika3 != 0)
+            //{
+            //    dataGrid[colBaika, 5].Value = r.G_Baika3;
+            //}
+
+            //dataGrid[colDay1, 5].Value = r.Goods3_1;
+            //dataGrid[colDay2, 5].Value = r.Goods3_2;
+            //dataGrid[colDay3, 5].Value = r.Goods3_3;
+            //dataGrid[colDay4, 5].Value = r.Goods3_4;
+            //dataGrid[colDay5, 5].Value = r.Goods3_5;
+            //dataGrid[colDay6, 5].Value = r.Goods3_6;
+            //dataGrid[colDay7, 5].Value = r.Goods3_7;
+
+            //dataGrid[colSyubai, 5].Value = global.SyubaiArray[r.G_Syubai3];
+
+            //// ４行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 7].Value = r.G_Code4;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka4 != 0)
+            //{
+            //    dataGrid[colNouka, 7].Value = r.G_Nouka4;
+            //}
+
+            //if (r.G_Baika4 != 0)
+            //{
+            //    dataGrid[colBaika, 7].Value = r.G_Baika4;
+            //}
+
+            //dataGrid[colDay1, 7].Value = r.Goods4_1;
+            //dataGrid[colDay2, 7].Value = r.Goods4_2;
+            //dataGrid[colDay3, 7].Value = r.Goods4_3;
+            //dataGrid[colDay4, 7].Value = r.Goods4_4;
+            //dataGrid[colDay5, 7].Value = r.Goods4_5;
+            //dataGrid[colDay6, 7].Value = r.Goods4_6;
+            //dataGrid[colDay7, 7].Value = r.Goods4_7;
+
+            //dataGrid[colSyubai, 7].Value = global.SyubaiArray[r.G_Syubai4];
+
+            //// ５行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 9].Value = r.G_Code5;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka5 != 0)
+            //{
+            //    dataGrid[colNouka, 9].Value = r.G_Nouka5;
+            //}
+
+            //if (r.G_Baika5 != 0)
+            //{
+            //    dataGrid[colBaika, 9].Value = r.G_Baika5;
+            //}
+
+            //dataGrid[colDay1, 9].Value = r.Goods5_1;
+            //dataGrid[colDay2, 9].Value = r.Goods5_2;
+            //dataGrid[colDay3, 9].Value = r.Goods5_3;
+            //dataGrid[colDay4, 9].Value = r.Goods5_4;
+            //dataGrid[colDay5, 9].Value = r.Goods5_5;
+            //dataGrid[colDay6, 9].Value = r.Goods5_6;
+            //dataGrid[colDay7, 9].Value = r.Goods5_7;
+
+            //dataGrid[colSyubai, 9].Value = global.SyubaiArray[r.G_Syubai5];
+
+            //// ６行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 11].Value = r.G_Code6;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka6 != 0)
+            //{
+            //    dataGrid[colNouka, 11].Value = r.G_Nouka6;
+            //}
+
+            //if (r.G_Baika6 != 0)
+            //{
+            //    dataGrid[colBaika, 11].Value = r.G_Baika6;
+            //}
+
+            //dataGrid[colDay1, 11].Value = r.Goods6_1;
+            //dataGrid[colDay2, 11].Value = r.Goods6_2;
+            //dataGrid[colDay3, 11].Value = r.Goods6_3;
+            //dataGrid[colDay4, 11].Value = r.Goods6_4;
+            //dataGrid[colDay5, 11].Value = r.Goods6_5;
+            //dataGrid[colDay6, 11].Value = r.Goods6_6;
+            //dataGrid[colDay7, 11].Value = r.Goods6_7;
+
+            //dataGrid[colSyubai, 11].Value = global.SyubaiArray[r.G_Syubai6];
+
+            //// ７行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 13].Value = r.G_Code7;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka7 != 0)
+            //{
+            //    dataGrid[colNouka, 13].Value = r.G_Nouka7;
+            //}
+
+            //if (r.G_Baika7 != 0)
+            //{
+            //    dataGrid[colBaika, 13].Value = r.G_Baika7;
+            //}
+
+            //dataGrid[colDay1, 13].Value = r.Goods7_1;
+            //dataGrid[colDay2, 13].Value = r.Goods7_2;
+            //dataGrid[colDay3, 13].Value = r.Goods7_3;
+            //dataGrid[colDay4, 13].Value = r.Goods7_4;
+            //dataGrid[colDay5, 13].Value = r.Goods7_5;
+            //dataGrid[colDay6, 13].Value = r.Goods7_6;
+            //dataGrid[colDay7, 13].Value = r.Goods7_7;
+
+            //dataGrid[colSyubai, 13].Value = global.SyubaiArray[r.G_Syubai7];
+
+            //// ８行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 15].Value = r.G_Code8;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka8 != 0)
+            //{
+            //    dataGrid[colNouka, 15].Value = r.G_Nouka8;
+            //}
+
+            //if (r.G_Baika8 != 0)
+            //{
+            //    dataGrid[colBaika, 15].Value = r.G_Baika8;
+            //}
+
+            //dataGrid[colDay1, 15].Value = r.Goods8_1;
+            //dataGrid[colDay2, 15].Value = r.Goods8_2;
+            //dataGrid[colDay3, 15].Value = r.Goods8_3;
+            //dataGrid[colDay4, 15].Value = r.Goods8_4;
+            //dataGrid[colDay5, 15].Value = r.Goods8_5;
+            //dataGrid[colDay6, 15].Value = r.Goods8_6;
+            //dataGrid[colDay7, 15].Value = r.Goods8_7;
+
+            //dataGrid[colSyubai, 15].Value = global.SyubaiArray[r.G_Syubai8];
+
+            //// ９行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 17].Value = r.G_Code9;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka9 != 0)
+            //{
+            //    dataGrid[colNouka, 17].Value = r.G_Nouka9;
+            //}
+
+            //if (r.G_Baika9 != 0)
+            //{
+            //    dataGrid[colBaika, 17].Value = r.G_Baika9;
+            //}
+
+            //dataGrid[colDay1, 17].Value = r.Goods9_1;
+            //dataGrid[colDay2, 17].Value = r.Goods9_2;
+            //dataGrid[colDay3, 17].Value = r.Goods9_3;
+            //dataGrid[colDay4, 17].Value = r.Goods9_4;
+            //dataGrid[colDay5, 17].Value = r.Goods9_5;
+            //dataGrid[colDay6, 17].Value = r.Goods9_6;
+            //dataGrid[colDay7, 17].Value = r.Goods9_7;
+
+            //dataGrid[colSyubai, 17].Value = global.SyubaiArray[r.G_Syubai9];
+
+            //// 10行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 19].Value = r.G_Code10;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka10 != 0)
+            //{
+            //    dataGrid[colNouka, 19].Value = r.G_Nouka10;
+            //}
+
+            //if (r.G_Baika10 != 0)
+            //{
+            //    dataGrid[colBaika, 19].Value = r.G_Baika10;
+            //}
+
+            //dataGrid[colDay1, 19].Value = r.Goods10_1;
+            //dataGrid[colDay2, 19].Value = r.Goods10_2;
+            //dataGrid[colDay3, 19].Value = r.Goods10_3;
+            //dataGrid[colDay4, 19].Value = r.Goods10_4;
+            //dataGrid[colDay5, 19].Value = r.Goods10_5;
+            //dataGrid[colDay6, 19].Value = r.Goods10_6;
+            //dataGrid[colDay7, 19].Value = r.Goods10_7;
+
+            //dataGrid[colSyubai, 19].Value = global.SyubaiArray[r.G_Syubai10];
+
+            //// 11行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 21].Value = r.G_Code11;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka11 != 0)
+            //{
+            //    dataGrid[colNouka, 21].Value = r.G_Nouka11;
+            //}
+
+            //if (r.G_Baika11 != 0)
+            //{
+            //    dataGrid[colBaika, 21].Value = r.G_Baika11;
+            //}
+
+            //dataGrid[colDay1, 21].Value = r.Goods11_1;
+            //dataGrid[colDay2, 21].Value = r.Goods11_2;
+            //dataGrid[colDay3, 21].Value = r.Goods11_3;
+            //dataGrid[colDay4, 21].Value = r.Goods11_4;
+            //dataGrid[colDay5, 21].Value = r.Goods11_5;
+            //dataGrid[colDay6, 21].Value = r.Goods11_6;
+            //dataGrid[colDay7, 21].Value = r.Goods11_7;
+
+            //dataGrid[colSyubai, 21].Value = global.SyubaiArray[r.G_Syubai11];
+
+            //// 12行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 23].Value = r.G_Code12;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka12 != 0)
+            //{
+            //    dataGrid[colNouka, 23].Value = r.G_Nouka12;
+            //}
+
+            //if (r.G_Baika12 != 0)
+            //{
+            //    dataGrid[colBaika, 23].Value = r.G_Baika12;
+            //}
+
+            //dataGrid[colDay1, 23].Value = r.Goods12_1;
+            //dataGrid[colDay2, 23].Value = r.Goods12_2;
+            //dataGrid[colDay3, 23].Value = r.Goods12_3;
+            //dataGrid[colDay4, 23].Value = r.Goods12_4;
+            //dataGrid[colDay5, 23].Value = r.Goods12_5;
+            //dataGrid[colDay6, 23].Value = r.Goods12_6;
+            //dataGrid[colDay7, 23].Value = r.Goods12_7;
+
+            //dataGrid[colSyubai, 23].Value = global.SyubaiArray[r.G_Syubai12];
+
+            //// 13行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 25].Value = r.G_Code13;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka13 != 0)
+            //{
+            //    dataGrid[colNouka, 25].Value = r.G_Nouka13;
+            //}
+
+            //if (r.G_Baika13 != 0)
+            //{
+            //    dataGrid[colBaika, 25].Value = r.G_Baika13;
+            //}
+
+            //dataGrid[colDay1, 25].Value = r.Goods13_1;
+            //dataGrid[colDay2, 25].Value = r.Goods13_2;
+            //dataGrid[colDay3, 25].Value = r.Goods13_3;
+            //dataGrid[colDay4, 25].Value = r.Goods13_4;
+            //dataGrid[colDay5, 25].Value = r.Goods13_5;
+            //dataGrid[colDay6, 25].Value = r.Goods13_6;
+            //dataGrid[colDay7, 25].Value = r.Goods13_7;
+
+            //dataGrid[colSyubai, 25].Value = global.SyubaiArray[r.G_Syubai13];
+
+            //// 14行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 27].Value = r.G_Code14;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka14 != 0)
+            //{
+            //    dataGrid[colNouka, 27].Value = r.G_Nouka14;
+            //}
+
+            //if (r.G_Baika14 != 0)
+            //{
+            //    dataGrid[colBaika, 27].Value = r.G_Baika14;
+            //}
+
+            //dataGrid[colDay1, 27].Value = r.Goods14_1;
+            //dataGrid[colDay2, 27].Value = r.Goods14_2;
+            //dataGrid[colDay3, 27].Value = r.Goods14_3;
+            //dataGrid[colDay4, 27].Value = r.Goods14_4;
+            //dataGrid[colDay5, 27].Value = r.Goods14_5;
+            //dataGrid[colDay6, 27].Value = r.Goods14_6;
+            //dataGrid[colDay7, 27].Value = r.Goods14_7;
+
+            //dataGrid[colSyubai, 27].Value = global.SyubaiArray[r.G_Syubai14];
+
+            //// 15行目
+            //global.ChangeValueStatus = true;
+            //dataGrid[colHinCode, 29].Value = r.G_Code15;
+            //global.ChangeValueStatus = false;
+
+            //if (r.G_Nouka15 != 0)
+            //{
+            //    dataGrid[colNouka, 29].Value = r.G_Nouka15;
+            //}
+
+            //if (r.G_Baika15 != 0)
+            //{
+            //    dataGrid[colBaika, 29].Value = r.G_Baika15;
+            //}
+
+            //dataGrid[colDay1, 29].Value = r.Goods15_1;
+            //dataGrid[colDay2, 29].Value = r.Goods15_2;
+            //dataGrid[colDay3, 29].Value = r.Goods15_3;
+            //dataGrid[colDay4, 29].Value = r.Goods15_4;
+            //dataGrid[colDay5, 29].Value = r.Goods15_5;
+            //dataGrid[colDay6, 29].Value = r.Goods15_6;
+            //dataGrid[colDay7, 29].Value = r.Goods15_7;
+
+            //dataGrid[colSyubai, 29].Value = global.SyubaiArray[r.G_Syubai15];
 
             //カレントセル選択状態としない
             dg1.CurrentCell = null;
         }
+
+
 
         //private void ptnShow(GcMultiRow mr, int tdkCode, int ptnCode)
         //{

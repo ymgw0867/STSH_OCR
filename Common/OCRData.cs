@@ -283,7 +283,7 @@ namespace STSH_OCR.Common
         /// <param name="dts">
         ///     データセット</param>
         /// <param name="r">
-        ///     勤務票ヘッダ行コレクション</param>
+        ///     発注書行コレクション</param>
         /// <returns>
         ///     エラーなし：true, エラー有り：false</returns>
         ///-----------------------------------------------------------------------------------------------
@@ -459,247 +459,474 @@ namespace STSH_OCR.Common
                 }
             }
 
-
-            // 商品未登録の発注
-            if (r.G_Code1 == string.Empty)
+            // 商品発注明細クラス
+            ClsGoods[] goods = new ClsGoods[15];
+            for (int i = 0; i < 15; i++)
             {
-                if  (r.Goods1_1 != string.Empty || r.Goods1_2 != string.Empty || r.Goods1_3 != string.Empty || r.Goods1_4 != string.Empty ||
-                     r.Goods1_5 != string.Empty || r.Goods1_6 != string.Empty || r.Goods1_7 != string.Empty)
+                goods[i] = new ClsGoods();
+                goods[i].Suu = new string[7];
+
+                switch (i)
                 {
-                    setErrStatus(eHinCode, 1, "商品が登録されていません");
+                    case 0:
+                        goods[i].Code = r.G_Code1;
+                        goods[i].Suu[0] = r.Goods1_1;
+                        goods[i].Suu[1] = r.Goods1_2;
+                        goods[i].Suu[2] = r.Goods1_3;
+                        goods[i].Suu[3] = r.Goods1_4;
+                        goods[i].Suu[4] = r.Goods1_5;
+                        goods[i].Suu[5] = r.Goods1_6;
+                        goods[i].Suu[6] = r.Goods1_7;
+                        goods[i].Syubai = r.G_Syubai1;
+                        break;
+
+                    case 1:
+                        goods[i].Code = r.G_Code2;
+                        goods[i].Suu[0] = r.Goods2_1;
+                        goods[i].Suu[1] = r.Goods2_2;
+                        goods[i].Suu[2] = r.Goods2_3;
+                        goods[i].Suu[3] = r.Goods2_4;
+                        goods[i].Suu[4] = r.Goods2_5;
+                        goods[i].Suu[5] = r.Goods2_6;
+                        goods[i].Suu[6] = r.Goods2_7;
+                        goods[i].Syubai = r.G_Syubai2;
+                        break;
+
+                    case 2:
+                        goods[i].Code = r.G_Code3;
+                        goods[i].Suu[0] = r.Goods3_1;
+                        goods[i].Suu[1] = r.Goods3_2;
+                        goods[i].Suu[2] = r.Goods3_3;
+                        goods[i].Suu[3] = r.Goods3_4;
+                        goods[i].Suu[4] = r.Goods3_5;
+                        goods[i].Suu[5] = r.Goods3_6;
+                        goods[i].Suu[6] = r.Goods3_7;
+                        goods[i].Syubai = r.G_Syubai3;
+                        break;
+
+                    case 3:
+                        goods[i].Code = r.G_Code4;
+                        goods[i].Suu[0] = r.Goods4_1;
+                        goods[i].Suu[1] = r.Goods4_2;
+                        goods[i].Suu[2] = r.Goods4_3;
+                        goods[i].Suu[3] = r.Goods4_4;
+                        goods[i].Suu[4] = r.Goods4_5;
+                        goods[i].Suu[5] = r.Goods4_6;
+                        goods[i].Suu[6] = r.Goods4_7;
+                        goods[i].Syubai = r.G_Syubai4;
+                        break;
+
+                    case 4:
+                        goods[i].Code = r.G_Code5;
+                        goods[i].Suu[0] = r.Goods5_1;
+                        goods[i].Suu[1] = r.Goods5_2;
+                        goods[i].Suu[2] = r.Goods5_3;
+                        goods[i].Suu[3] = r.Goods5_4;
+                        goods[i].Suu[4] = r.Goods5_5;
+                        goods[i].Suu[5] = r.Goods5_6;
+                        goods[i].Suu[6] = r.Goods5_7;
+                        goods[i].Syubai = r.G_Syubai5;
+                        break;
+
+                    case 5:
+                        goods[i].Code = r.G_Code6;
+                        goods[i].Suu[0] = r.Goods6_1;
+                        goods[i].Suu[1] = r.Goods6_2;
+                        goods[i].Suu[2] = r.Goods6_3;
+                        goods[i].Suu[3] = r.Goods6_4;
+                        goods[i].Suu[4] = r.Goods6_5;
+                        goods[i].Suu[5] = r.Goods6_6;
+                        goods[i].Suu[6] = r.Goods6_7;
+                        goods[i].Syubai = r.G_Syubai6;
+                        break;
+
+                    case 6:
+                        goods[i].Code = r.G_Code7;
+                        goods[i].Suu[0] = r.Goods7_1;
+                        goods[i].Suu[1] = r.Goods7_2;
+                        goods[i].Suu[2] = r.Goods7_3;
+                        goods[i].Suu[3] = r.Goods7_4;
+                        goods[i].Suu[4] = r.Goods7_5;
+                        goods[i].Suu[5] = r.Goods7_6;
+                        goods[i].Suu[6] = r.Goods7_7;
+                        goods[i].Syubai = r.G_Syubai7;
+                        break;
+
+                    case 7:
+                        goods[i].Code = r.G_Code8;
+                        goods[i].Suu[0] = r.Goods8_1;
+                        goods[i].Suu[1] = r.Goods8_2;
+                        goods[i].Suu[2] = r.Goods8_3;
+                        goods[i].Suu[3] = r.Goods8_4;
+                        goods[i].Suu[4] = r.Goods8_5;
+                        goods[i].Suu[5] = r.Goods8_6;
+                        goods[i].Suu[6] = r.Goods8_7;
+                        goods[i].Syubai = r.G_Syubai8;
+                        break;
+
+                    case 8:
+                        goods[i].Code = r.G_Code9;
+                        goods[i].Suu[0] = r.Goods9_1;
+                        goods[i].Suu[1] = r.Goods9_2;
+                        goods[i].Suu[2] = r.Goods9_3;
+                        goods[i].Suu[3] = r.Goods9_4;
+                        goods[i].Suu[4] = r.Goods9_5;
+                        goods[i].Suu[5] = r.Goods9_6;
+                        goods[i].Suu[6] = r.Goods9_7;
+                        goods[i].Syubai = r.G_Syubai9;
+                        break;
+
+                    case 9:
+                        goods[i].Code = r.G_Code10;
+                        goods[i].Suu[0] = r.Goods10_1;
+                        goods[i].Suu[1] = r.Goods10_2;
+                        goods[i].Suu[2] = r.Goods10_3;
+                        goods[i].Suu[3] = r.Goods10_4;
+                        goods[i].Suu[4] = r.Goods10_5;
+                        goods[i].Suu[5] = r.Goods10_6;
+                        goods[i].Suu[6] = r.Goods10_7;
+                        goods[i].Syubai = r.G_Syubai10;
+                        break;
+
+                    case 10:
+                        goods[i].Code = r.G_Code11;
+                        goods[i].Suu[0] = r.Goods11_1;
+                        goods[i].Suu[1] = r.Goods11_2;
+                        goods[i].Suu[2] = r.Goods11_3;
+                        goods[i].Suu[3] = r.Goods11_4;
+                        goods[i].Suu[4] = r.Goods11_5;
+                        goods[i].Suu[5] = r.Goods11_6;
+                        goods[i].Suu[6] = r.Goods11_7;
+                        goods[i].Syubai = r.G_Syubai11;
+                        break;
+
+                    case 11:
+                        goods[i].Code = r.G_Code12;
+                        goods[i].Suu[0] = r.Goods12_1;
+                        goods[i].Suu[1] = r.Goods12_2;
+                        goods[i].Suu[2] = r.Goods12_3;
+                        goods[i].Suu[3] = r.Goods12_4;
+                        goods[i].Suu[4] = r.Goods12_5;
+                        goods[i].Suu[5] = r.Goods12_6;
+                        goods[i].Suu[6] = r.Goods12_7;
+                        goods[i].Syubai = r.G_Syubai12;
+                        break;
+
+                    case 12:
+                        goods[i].Code = r.G_Code13;
+                        goods[i].Suu[0] = r.Goods13_1;
+                        goods[i].Suu[1] = r.Goods13_2;
+                        goods[i].Suu[2] = r.Goods13_3;
+                        goods[i].Suu[3] = r.Goods13_4;
+                        goods[i].Suu[4] = r.Goods13_5;
+                        goods[i].Suu[5] = r.Goods13_6;
+                        goods[i].Suu[6] = r.Goods13_7;
+                        goods[i].Syubai = r.G_Syubai13;
+                        break;
+
+                    case 13:
+                        goods[i].Code = r.G_Code14;
+                        goods[i].Suu[0] = r.Goods14_1;
+                        goods[i].Suu[1] = r.Goods14_2;
+                        goods[i].Suu[2] = r.Goods14_3;
+                        goods[i].Suu[3] = r.Goods14_4;
+                        goods[i].Suu[4] = r.Goods14_5;
+                        goods[i].Suu[5] = r.Goods14_6;
+                        goods[i].Suu[6] = r.Goods14_7;
+                        goods[i].Syubai = r.G_Syubai14;
+                        break;
+
+                    case 14:
+                        goods[i].Code = r.G_Code15;
+                        goods[i].Suu[0] = r.Goods15_1;
+                        goods[i].Suu[1] = r.Goods15_2;
+                        goods[i].Suu[2] = r.Goods15_3;
+                        goods[i].Suu[3] = r.Goods15_4;
+                        goods[i].Suu[4] = r.Goods15_5;
+                        goods[i].Suu[5] = r.Goods15_6;
+                        goods[i].Suu[6] = r.Goods15_7;
+                        goods[i].Syubai = r.G_Syubai15;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            bool ha = false;
+
+            // 商品エラーチェック
+            for (int i = 0; i < 15; i++)
+            {
+                ha = false;
+
+                // 発注の有無を調べる
+                for (int iX = 0; iX < 7; iX++)
+                {
+                    if (Utility.StrtoInt(goods[i].Suu[iX]) != global.flgOff)
+                    {
+                        // 発注あり
+                        ha = true;
+                    }
+                }
+
+                if (goods[i].Code == string.Empty)
+                {
+                    // 発注あり
+                    if (ha)
+                    {
+                        setErrStatus(eHinCode, i * 2 + 1, "商品が登録されていません");
+                        return false;
+                    }
+                }
+                else if (!ChkShohin(goods[i].Code, goods[i].Syubai, out eMsg, out eNum, ha))
+                {
+                    setErrStatus(eNum, i * 2 + 1, eMsg);
                     return false;
                 }
             }
-            else if (!ChkShohin(r.G_Code1, r.G_Syubai1, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 1, eMsg);
-                return false;
-            }
+                      
+            
+            //// 商品未登録の発注
+            //if (r.G_Code1 == string.Empty)
+            //{
+            //    if  (r.Goods1_1 != string.Empty || r.Goods1_2 != string.Empty || r.Goods1_3 != string.Empty || r.Goods1_4 != string.Empty ||
+            //         r.Goods1_5 != string.Empty || r.Goods1_6 != string.Empty || r.Goods1_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 1, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code1, r.G_Syubai1, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 1, eMsg);
+            //    return false;
+            //}
 
-            // 商品２
-            if (r.G_Code2 == string.Empty)
-            {
-                if (r.Goods2_1 != string.Empty || r.Goods2_2 != string.Empty || r.Goods2_3 != string.Empty || r.Goods2_4 != string.Empty ||
-                     r.Goods2_5 != string.Empty || r.Goods2_6 != string.Empty || r.Goods2_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 3, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code2, r.G_Syubai2, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 3, eMsg);
-                return false;
-            }
+            //// 商品２
+            //if (r.G_Code2 == string.Empty)
+            //{
+            //    if (r.Goods2_1 != string.Empty || r.Goods2_2 != string.Empty || r.Goods2_3 != string.Empty || r.Goods2_4 != string.Empty ||
+            //         r.Goods2_5 != string.Empty || r.Goods2_6 != string.Empty || r.Goods2_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 3, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code2, r.G_Syubai2, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 3, eMsg);
+            //    return false;
+            //}
 
-            // 商品３
-            if (r.G_Code3 == string.Empty)
-            {
-                if (r.Goods3_1 != string.Empty || r.Goods3_2 != string.Empty || r.Goods3_3 != string.Empty || r.Goods3_4 != string.Empty ||
-                     r.Goods3_5 != string.Empty || r.Goods3_6 != string.Empty || r.Goods3_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode,5, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code3, r.G_Syubai3, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 5, eMsg);
-                return false;
-            }
+            //// 商品３
+            //if (r.G_Code3 == string.Empty)
+            //{
+            //    if (r.Goods3_1 != string.Empty || r.Goods3_2 != string.Empty || r.Goods3_3 != string.Empty || r.Goods3_4 != string.Empty ||
+            //         r.Goods3_5 != string.Empty || r.Goods3_6 != string.Empty || r.Goods3_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode,5, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code3, r.G_Syubai3, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 5, eMsg);
+            //    return false;
+            //}
 
-            // 商品4
-            if (r.G_Code4 == string.Empty)
-            {
-                if (r.Goods4_1 != string.Empty || r.Goods4_2 != string.Empty || r.Goods4_3 != string.Empty || r.Goods4_4 != string.Empty ||
-                     r.Goods4_5 != string.Empty || r.Goods4_6 != string.Empty || r.Goods4_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 7, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code4, r.G_Syubai4, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 7, eMsg);
-                return false;
-            }
+            //// 商品4
+            //if (r.G_Code4 == string.Empty)
+            //{
+            //    if (r.Goods4_1 != string.Empty || r.Goods4_2 != string.Empty || r.Goods4_3 != string.Empty || r.Goods4_4 != string.Empty ||
+            //         r.Goods4_5 != string.Empty || r.Goods4_6 != string.Empty || r.Goods4_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 7, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code4, r.G_Syubai4, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 7, eMsg);
+            //    return false;
+            //}
 
-            // 商品5
-            if (r.G_Code5 == string.Empty)
-            {
-                if (r.Goods5_1 != string.Empty || r.Goods5_2 != string.Empty || r.Goods5_3 != string.Empty || r.Goods5_4 != string.Empty ||
-                     r.Goods5_5 != string.Empty || r.Goods5_6 != string.Empty || r.Goods5_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 9, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code5, r.G_Syubai5, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 9, eMsg);
-                return false;
-            }
+            //// 商品5
+            //if (r.G_Code5 == string.Empty)
+            //{
+            //    if (r.Goods5_1 != string.Empty || r.Goods5_2 != string.Empty || r.Goods5_3 != string.Empty || r.Goods5_4 != string.Empty ||
+            //         r.Goods5_5 != string.Empty || r.Goods5_6 != string.Empty || r.Goods5_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 9, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code5, r.G_Syubai5, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 9, eMsg);
+            //    return false;
+            //}
 
 
-            // 商品6
-            if (r.G_Code6 == string.Empty)
-            {
-                if (r.Goods6_1 != string.Empty || r.Goods6_2 != string.Empty || r.Goods6_3 != string.Empty || r.Goods6_4 != string.Empty ||
-                     r.Goods6_5 != string.Empty || r.Goods6_6 != string.Empty || r.Goods6_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 11, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code6, r.G_Syubai6, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 11, eMsg);
-                return false;
-            }
+            //// 商品6
+            //if (r.G_Code6 == string.Empty)
+            //{
+            //    if (r.Goods6_1 != string.Empty || r.Goods6_2 != string.Empty || r.Goods6_3 != string.Empty || r.Goods6_4 != string.Empty ||
+            //         r.Goods6_5 != string.Empty || r.Goods6_6 != string.Empty || r.Goods6_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 11, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code6, r.G_Syubai6, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 11, eMsg);
+            //    return false;
+            //}
 
-            // 商品7
-            if (r.G_Code7 == string.Empty)
-            {
-                if (r.Goods7_1 != string.Empty || r.Goods7_2 != string.Empty || r.Goods7_3 != string.Empty || r.Goods7_4 != string.Empty ||
-                     r.Goods7_5 != string.Empty || r.Goods7_6 != string.Empty || r.Goods7_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 13, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code7, r.G_Syubai7, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 13, eMsg);
-                return false;
-            }
+            //// 商品7
+            //if (r.G_Code7 == string.Empty)
+            //{
+            //    if (r.Goods7_1 != string.Empty || r.Goods7_2 != string.Empty || r.Goods7_3 != string.Empty || r.Goods7_4 != string.Empty ||
+            //         r.Goods7_5 != string.Empty || r.Goods7_6 != string.Empty || r.Goods7_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 13, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code7, r.G_Syubai7, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 13, eMsg);
+            //    return false;
+            //}
 
-            // 商品8
-            if (r.G_Code8 == string.Empty)
-            {
-                if (r.Goods8_1 != string.Empty || r.Goods8_2 != string.Empty || r.Goods8_3 != string.Empty || r.Goods8_4 != string.Empty ||
-                     r.Goods8_5 != string.Empty || r.Goods8_6 != string.Empty || r.Goods8_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 15, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code8, r.G_Syubai8, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 15, eMsg);
-                return false;
-            }
+            //// 商品8
+            //if (r.G_Code8 == string.Empty)
+            //{
+            //    if (r.Goods8_1 != string.Empty || r.Goods8_2 != string.Empty || r.Goods8_3 != string.Empty || r.Goods8_4 != string.Empty ||
+            //         r.Goods8_5 != string.Empty || r.Goods8_6 != string.Empty || r.Goods8_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 15, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code8, r.G_Syubai8, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 15, eMsg);
+            //    return false;
+            //}
 
-            // 商品9
-            if (r.G_Code9 == string.Empty)
-            {
-                if (r.Goods9_1 != string.Empty || r.Goods9_2 != string.Empty || r.Goods9_3 != string.Empty || r.Goods9_4 != string.Empty ||
-                     r.Goods9_5 != string.Empty || r.Goods9_6 != string.Empty || r.Goods9_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 17, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code9, r.G_Syubai9, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 17, eMsg);
-                return false;
-            }
+            //// 商品9
+            //if (r.G_Code9 == string.Empty)
+            //{
+            //    if (r.Goods9_1 != string.Empty || r.Goods9_2 != string.Empty || r.Goods9_3 != string.Empty || r.Goods9_4 != string.Empty ||
+            //         r.Goods9_5 != string.Empty || r.Goods9_6 != string.Empty || r.Goods9_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 17, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code9, r.G_Syubai9, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 17, eMsg);
+            //    return false;
+            //}
 
-            // 商品10
-            if (r.G_Code10 == string.Empty)
-            {
-                if (r.Goods10_1 != string.Empty || r.Goods10_2 != string.Empty || r.Goods10_3 != string.Empty || r.Goods10_4 != string.Empty ||
-                     r.Goods10_5 != string.Empty || r.Goods10_6 != string.Empty || r.Goods10_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 19, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code10, r.G_Syubai10, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 19, eMsg);
-                return false;
-            }
+            //// 商品10
+            //if (r.G_Code10 == string.Empty)
+            //{
+            //    if (r.Goods10_1 != string.Empty || r.Goods10_2 != string.Empty || r.Goods10_3 != string.Empty || r.Goods10_4 != string.Empty ||
+            //         r.Goods10_5 != string.Empty || r.Goods10_6 != string.Empty || r.Goods10_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 19, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code10, r.G_Syubai10, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 19, eMsg);
+            //    return false;
+            //}
 
-            // 商品11
-            if (r.G_Code11 == string.Empty)
-            {
-                if (r.Goods11_1 != string.Empty || r.Goods11_2 != string.Empty || r.Goods11_3 != string.Empty || r.Goods11_4 != string.Empty ||
-                     r.Goods11_5 != string.Empty || r.Goods11_6 != string.Empty || r.Goods11_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 21, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code11, r.G_Syubai11, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 21, eMsg);
-                return false;
-            }
+            //// 商品11
+            //if (r.G_Code11 == string.Empty)
+            //{
+            //    if (r.Goods11_1 != string.Empty || r.Goods11_2 != string.Empty || r.Goods11_3 != string.Empty || r.Goods11_4 != string.Empty ||
+            //         r.Goods11_5 != string.Empty || r.Goods11_6 != string.Empty || r.Goods11_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 21, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code11, r.G_Syubai11, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 21, eMsg);
+            //    return false;
+            //}
 
-            // 商品12
-            if (r.G_Code12 == string.Empty)
-            {
-                if (r.Goods12_1 != string.Empty || r.Goods12_2 != string.Empty || r.Goods12_3 != string.Empty || r.Goods12_4 != string.Empty ||
-                     r.Goods12_5 != string.Empty || r.Goods12_6 != string.Empty || r.Goods12_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 23, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code12, r.G_Syubai12, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 23, eMsg);
-                return false;
-            }
+            //// 商品12
+            //if (r.G_Code12 == string.Empty)
+            //{
+            //    if (r.Goods12_1 != string.Empty || r.Goods12_2 != string.Empty || r.Goods12_3 != string.Empty || r.Goods12_4 != string.Empty ||
+            //         r.Goods12_5 != string.Empty || r.Goods12_6 != string.Empty || r.Goods12_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 23, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code12, r.G_Syubai12, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 23, eMsg);
+            //    return false;
+            //}
 
-            // 商品13
-            if (r.G_Code13 == string.Empty)
-            {
-                if (r.Goods13_1 != string.Empty || r.Goods13_2 != string.Empty || r.Goods13_3 != string.Empty || r.Goods13_4 != string.Empty ||
-                     r.Goods13_5 != string.Empty || r.Goods13_6 != string.Empty || r.Goods13_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 25, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code13, r.G_Syubai13, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 25, eMsg);
-                return false;
-            }
+            //// 商品13
+            //if (r.G_Code13 == string.Empty)
+            //{
+            //    if (r.Goods13_1 != string.Empty || r.Goods13_2 != string.Empty || r.Goods13_3 != string.Empty || r.Goods13_4 != string.Empty ||
+            //         r.Goods13_5 != string.Empty || r.Goods13_6 != string.Empty || r.Goods13_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 25, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code13, r.G_Syubai13, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 25, eMsg);
+            //    return false;
+            //}
 
-            // 商品14
-            if (r.G_Code14 == string.Empty)
-            {
-                if (r.Goods14_1 != string.Empty || r.Goods14_2 != string.Empty || r.Goods14_3 != string.Empty || r.Goods14_4 != string.Empty ||
-                     r.Goods14_5 != string.Empty || r.Goods14_6 != string.Empty || r.Goods14_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 27, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code14, r.G_Syubai14, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 27, eMsg);
-                return false;
-            }
+            //// 商品14
+            //if (r.G_Code14 == string.Empty)
+            //{
+            //    if (r.Goods14_1 != string.Empty || r.Goods14_2 != string.Empty || r.Goods14_3 != string.Empty || r.Goods14_4 != string.Empty ||
+            //         r.Goods14_5 != string.Empty || r.Goods14_6 != string.Empty || r.Goods14_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 27, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code14, r.G_Syubai14, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 27, eMsg);
+            //    return false;
+            //}
 
-            // 商品15
-            if (r.G_Code15 == string.Empty)
-            {
-                if (r.Goods15_1 != string.Empty || r.Goods15_2 != string.Empty || r.Goods15_3 != string.Empty || r.Goods15_4 != string.Empty ||
-                     r.Goods15_5 != string.Empty || r.Goods15_6 != string.Empty || r.Goods15_7 != string.Empty)
-                {
-                    setErrStatus(eHinCode, 29, "商品が登録されていません");
-                    return false;
-                }
-            }
-            else if (!ChkShohin(r.G_Code15, r.G_Syubai15, out eMsg, out eNum))
-            {
-                setErrStatus(eNum, 29, eMsg);
-                return false;
-            }
+            //// 商品15
+            //if (r.G_Code15 == string.Empty)
+            //{
+            //    if (r.Goods15_1 != string.Empty || r.Goods15_2 != string.Empty || r.Goods15_3 != string.Empty || r.Goods15_4 != string.Empty ||
+            //         r.Goods15_5 != string.Empty || r.Goods15_6 != string.Empty || r.Goods15_7 != string.Empty)
+            //    {
+            //        setErrStatus(eHinCode, 29, "商品が登録されていません");
+            //        return false;
+            //    }
+            //}
+            //else if (!ChkShohin(r.G_Code15, r.G_Syubai15, out eMsg, out eNum))
+            //{
+            //    setErrStatus(eNum, 29, eMsg);
+            //    return false;
+            //}
 
             return true;
         }
@@ -715,11 +942,13 @@ namespace STSH_OCR.Common
         ///     エラーメッセージ</param>
         /// <param name="eNum">
         ///     エラー箇所</param>
+        /// <param name="ha">
+        ///     発注の有無　true:発注あり, false:発注なし</param>
         /// <returns>
         ///     エラーなし：true, エラー有り：false</returns>
         ///------------------------------------------------------------
 
-        private bool ChkShohin(string G_Code, int G_Syubai, out string eMsg, out int eNum)
+        private bool ChkShohin(string G_Code, int G_Syubai, out string eMsg, out int eNum, bool ha)
         {
             // 商品コードマスター登録チェック
             ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター, G_Code);
@@ -732,8 +961,8 @@ namespace STSH_OCR.Common
                 return false;
             }
 
-            // 終売のとき
-            if (syohin.SHUBAI)
+            // 終売で発注ありのとき
+            if (syohin.SHUBAI && ha)
             {
                 if (G_Syubai == global.flgOff)
                 {

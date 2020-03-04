@@ -113,6 +113,7 @@
     <Compile Include="Master\frmComment.Designer.cs">
       <DependentUpon>frmComment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\ClsGoods.cs" />
     <Compile Include="OCR\frmCorrect.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +128,12 @@
     </Compile>
     <Compile Include="OCR\frmFaxSelect.designer.cs">
       <DependentUpon>frmFaxSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OCR\frmNgRecovery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OCR\frmNgRecovery.designer.cs">
+      <DependentUpon>frmNgRecovery.cs</DependentUpon>
     </Compile>
     <Compile Include="Pattern\frmPrnPtn.cs">
       <SubType>Form</SubType>
@@ -177,6 +184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OCR\frmFaxSelect.resx">
       <DependentUpon>frmFaxSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OCR\frmNgRecovery.resx">
+      <DependentUpon>frmNgRecovery.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pattern\frmPrnPtn.resx">
       <DependentUpon>frmPrnPtn.cs</DependentUpon>

@@ -139,5 +139,14 @@ namespace STSH_OCR.Properties {
                 return ((string)(this["TifPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\OCRERROR")]
+        public string NgPath {
+            get {
+                return ((string)(this["NgPath"]));
+            }
+        }
     }
 }
