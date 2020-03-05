@@ -552,7 +552,7 @@ namespace STSH_OCR.Common
                 {
                     cls.TOKUISAKI_CD = t[1].Replace("\"", "");          // 得意先コード
                     cls.YUKO_START_YMD = t[2].Replace("\"", "");        // 有効開始日付
-                    cls.YUKO_END_YMD = t[1].Replace("\"", "");          // 有効終了日付
+                    cls.YUKO_END_YMD = t[3].Replace("\"", "");          // 有効終了日付
                     cls.TOKUISAKI_NM = t[4].Replace("\"", "");          // 得意先名称
                     cls.TOKUISAKI_YUBIN_NO = t[24].Replace("\"", "");   // 郵便番号
                     cls.TOKUISAKI_ZYUSYO1 = t[25].Replace("\"", "");    // 得意先住所
