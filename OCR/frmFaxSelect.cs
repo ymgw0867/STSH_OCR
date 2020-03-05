@@ -313,6 +313,16 @@ namespace STSH_OCR.OCR
                     com.ExecuteNonQuery();
                 }
 
+                // 保留データを削除します
+                string errMsg = "保留データ";
+                sql = "Delete from main.Hold_Fax ";
+                sql += "WHERE ID = '" + iX + "'";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
                 // 画像ファイル名を取得します
                 string sImgNm = ClsHoldFax.ImageFileName;
 
@@ -326,11 +336,6 @@ namespace STSH_OCR.OCR
 
                 // 画像ファイルをローカルDATAフォルダに移動する
                 System.IO.File.Move(Properties.Settings.Default.HoldTifPath + sImgNm, tifName);
-
-                // 保留データを削除します
-                string errMsg = "保留データ";
-                dbHold.DeleteOnSubmit(ClsHoldFax);
-                context.SubmitChanges();
             }
             catch (Exception ex)
             {

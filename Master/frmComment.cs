@@ -172,6 +172,7 @@ namespace STSH_OCR.Master
             //button2.Enabled = false;
             button1.Enabled = false;
             button3.Enabled = false;
+            button5.Enabled = false;
 
             dataGridView1.CurrentCell = null;
 
@@ -190,6 +191,7 @@ namespace STSH_OCR.Master
                 //button2.Enabled = true;
                 button1.Enabled = true;
                 button3.Enabled = true;
+                button5.Enabled = true;
 
                 eMode = EDIT_MODE;
             }
@@ -293,13 +295,14 @@ namespace STSH_OCR.Master
 
         private void button4_Click(object sender, EventArgs e)
         {
+            MyComment = string.Empty;
             Close();
         }
 
         private void frmComment_FormClosing(object sender, FormClosingEventArgs e)
         {
             // 後片付け
-            Dispose();
+            //Dispose();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -310,6 +313,21 @@ namespace STSH_OCR.Master
         private void frmComment_Shown(object sender, EventArgs e)
         {
             dataGridView1.CurrentCell = null;
+        }
+
+        public string MyComment { get; set; }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("表示中の定型コメントを返信ファクスへ引用します。よろしいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            {
+                return;
+            }
+
+            MyComment = textBox1.Text;
+
+            // 終了
+            Close();
         }
     }
 }

@@ -30,8 +30,6 @@ namespace STSH_OCR.OCR
         public frmCorrect(string myCode)
         {
             InitializeComponent();
-
-            _myCode = myCode;       // 担当者コード
         }
 
         // データベース：Sqlite3
@@ -90,12 +88,6 @@ namespace STSH_OCR.OCR
         private const string CELL_SHUBAI = "終売処理";
         #endregion 編集ログ・項目名
 
-        // カレント社員情報
-        //SCCSDataSet.社員所属Row cSR = null;
-        
-        // 社員マスターより取得した所属コード
-        string mSzCode = string.Empty;
-
         #region 終了ステータス定数
         const string END_BUTTON = "btn";
         const string END_MAKEDATA = "data";
@@ -104,12 +96,6 @@ namespace STSH_OCR.OCR
         #endregion
 
         string dID = string.Empty;              // 表示する過去データのID
-        string sDBNM = string.Empty;            // データベース名
-
-        string _dbName = string.Empty;          // 会社領域データベース識別番号
-        string _comNo = string.Empty;           // 会社番号
-        string _comName = string.Empty;         // 会社名
-        string _myCode = string.Empty;          // 担当者コード
         string _img = string.Empty;             // 画像名
 
         bool _eMode = true;
@@ -156,6 +142,9 @@ namespace STSH_OCR.OCR
         private readonly string colDay6 = "c11";
         private readonly string colDay7 = "c12";
         private readonly string colSyubai = "c13";
+
+        // 得意先クラス
+        ClsCsvData.ClsCsvTokuisaki tokuisaki = null;
 
         private void frmCorrect_Load(object sender, EventArgs e)
         {
@@ -230,6 +219,8 @@ namespace STSH_OCR.OCR
         ///-------------------------------------------------------------
         private void keyArrayCreate()
         {
+            //MessageBox.Show(tblFax.Count().ToString());
+
             int iX = 0;
             foreach (var t in tblFax.OrderBy(a => a.ID))
             {
@@ -1257,7 +1248,7 @@ namespace STSH_OCR.OCR
         ///     １．指定した勤務票ヘッダデータと勤務票明細データを削除する　
         ///     ２．該当する画像データを削除する</summary>
         ///-------------------------------------------------------------------------------
-        private void DataDelete()
+        private void DataDelete(int iX)
         {
             string errMsg = string.Empty;
 
@@ -1265,12 +1256,19 @@ namespace STSH_OCR.OCR
             try
             {
                 // 画像ファイル名を取得します
-                string sImgNm = ClsFaxOrder.ImageFileName;
+                string sImgNm = System.IO.Path.GetFileName(_img);
 
                 // 発注書データを削除します
-                errMsg = "FAX発注書データ";
-                tblFax.DeleteOnSubmit(ClsFaxOrder);
-                context2.SubmitChanges();
+                errMsg = "FAX発注書データ削除";
+                                             
+                // 発注書データを削除します
+                string sql = "Delete from FAX_Order ";
+                sql += "WHERE ID = '" + cID[iX] + "'";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
 
                 // 画像ファイルを削除します
                 errMsg = "FAX発注書画像";
@@ -1673,466 +1671,6 @@ namespace STSH_OCR.OCR
             //}
         }
 
-        /// ---------------------------------------------------------------------------------
-        /// <summary>
-        ///     設定月数分経過した過去画像と過去勤務データ、過去応援移動票データを削除する </summary> 
-        /// ---------------------------------------------------------------------------------
-        private void deleteArchived()
-        {
-            //// 削除月設定が0のとき、「過去画像削除しない」とみなし終了する
-            //if (Properties.Settings.Default.dataDelSpan == global.flgOff) return;
-
-            //try
-            //{
-            //    // 削除年月の取得
-            //    DateTime dt = DateTime.Parse(DateTime.Today.Year.ToString() + "/" + DateTime.Today.Month.ToString() + "/01");
-            //    DateTime delDate = dt.AddMonths(Properties.Settings.Default.dataDelSpan * (-1));
-            //    int _dYY = delDate.Year;            //基準年
-            //    int _dMM = delDate.Month;           //基準月
-            //    int _dYYMM = _dYY * 100 + _dMM;     //基準年月
-            //    int _waYYMM = (delDate.Year - Properties.Settings.Default.rekiHosei) * 100 + _dMM;   //基準年月(和暦）
-
-            //    // 設定月数分経過した過去画像・過去勤務票データを削除する
-            //    deleteLastDataArchived(_dYYMM);
-
-            //    // 設定月数分経過した過去画像・過去応援移動票データを削除する
-            //    deleteLastOuenDataArchived(_dYYMM);
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show("過去画像・過去勤務票データ削除中" + Environment.NewLine + e.Message, "エラー", MessageBoxButtons.OK);
-            //    return;
-            //}
-            //finally
-            //{
-            //    //if (ocr.sCom.Connection.State == ConnectionState.Open) ocr.sCom.Connection.Close();
-            //}
-        }
-
-        /// ---------------------------------------------------------------------------
-        /// <summary>
-        ///     過去勤務票データ削除～登録 </summary>
-        /// ---------------------------------------------------------------------------
-        private void saveLastData()
-        {
-            //try
-            //{
-            //    // データベース更新
-            //    adpMn.UpdateAll(dts);
-            //    pAdpMn.UpdateAll(dts);
-
-            //    //  過去勤務票ヘッダデータとその明細データを削除します
-            //    //deleteLastData();
-            //    delPastData();
-
-            //    // データセットへデータを再読み込みします
-            //    getDataSet();
-
-            //    // 過去勤務票ヘッダデータと過去勤務票明細データを作成します
-            //    addLastdata();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message, "過去勤務票データ作成エラー", MessageBoxButtons.OK);
-            //}
-            //finally
-            //{
-            //}
-        }
-
-
-        ///------------------------------------------------------
-        /// <summary>
-        ///     過去勤務票データ削除 </summary>
-        ///------------------------------------------------------
-        private void delPastData()
-        {
-            //// 過去勤務票ヘッダデータ削除
-            //foreach (var t in dts.勤務票ヘッダ)
-            //{
-            //    string sBusho = t.部署コード;
-            //    int sYY = t.年;
-            //    int sMM = t.月;
-            //    int sDD = t.日;
-
-            //    // 過去勤務票ヘッダ削除
-            //    delPastHeader(sBusho, sYY, sMM, sDD);
-            //}
-
-            //// 過去勤務票明細データ削除
-            //delPastItem();
-        }
-
-        ///----------------------------------------------------------------
-        /// <summary>
-        ///     過去勤務票ヘッダデータ削除 </summary>
-        /// <param name="bCode">
-        ///     部署コード</param>
-        /// <param name="syy">
-        ///     対象年</param>
-        /// <param name="smm">
-        ///     対象月</param>
-        /// <param name="sdd">
-        ///     対象日</param>
-        ///----------------------------------------------------------------
-        private void delPastHeader(string bCode, int syy, int smm, int sdd)
-        {
-            //OleDbCommand sCom = new OleDbCommand();
-            //mdbControl mdb = new mdbControl();
-            //mdb.dbConnect(sCom);
-
-            //try
-            //{
-            //    StringBuilder sb = new StringBuilder();
-
-            //    sb.Clear();
-            //    sb.Append("delete from 過去勤務票ヘッダ ");
-            //    sb.Append("where 部署コード = ? and 年 = ? and 月 = ? and 日 = ?");
-
-            //    sCom.CommandText = sb.ToString();
-            //    sCom.Parameters.Clear();
-            //    sCom.Parameters.AddWithValue("@b", bCode);
-            //    sCom.Parameters.AddWithValue("@y", syy);
-            //    sCom.Parameters.AddWithValue("@m", smm);
-            //    sCom.Parameters.AddWithValue("@d", sdd);
-
-            //    sCom.ExecuteNonQuery();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    throw;
-            //}
-            //finally
-            //{
-            //    if (sCom.Connection.State == ConnectionState.Open)
-            //    {
-            //        sCom.Connection.Close();
-            //    }
-            //}
-        }
-
-        ///--------------------------------------------------------
-        /// <summary>
-        ///     過去勤務票明細データ削除 </summary>
-        ///--------------------------------------------------------
-        private void delPastItem()
-        {
-            //OleDbCommand sCom = new OleDbCommand();
-            //mdbControl mdb = new mdbControl();
-            //mdb.dbConnect(sCom);
-
-            //try
-            //{
-            //    StringBuilder sb = new StringBuilder();
-
-            //    sb.Clear();
-            //    sb.Append("delete a.ヘッダID from  過去勤務票明細 as a ");
-            //    sb.Append("where not EXISTS (select * from 過去勤務票ヘッダ ");
-            //    sb.Append("WHERE 過去勤務票ヘッダ.ID = a.ヘッダID)");
-                
-            //    sCom.CommandText = sb.ToString();
-            //    sCom.ExecuteNonQuery();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //    throw;
-            //}
-            //finally
-            //{
-            //    if (sCom.Connection.State == ConnectionState.Open)
-            //    {
-            //        sCom.Connection.Close();
-            //    }
-            //}
-        }
-
-        /// -------------------------------------------------------------------------
-        /// <summary>
-        ///     過去勤務票ヘッダデータとその明細データを削除します</summary>    
-        ///     
-        /// -------------------------------------------------------------------------
-        private void deleteLastData()
-        {
-            //OleDbCommand sCom = new OleDbCommand();
-            //OleDbCommand sCom2 = new OleDbCommand();
-            //OleDbCommand sCom3 = new OleDbCommand();
-
-            //mdbControl mdb = new mdbControl();
-            //mdb.dbConnect(sCom);
-            //mdb.dbConnect(sCom2);
-            //mdb.dbConnect(sCom3);
-
-            //OleDbDataReader dR = null;
-            //OleDbDataReader dR2 = null;
-
-            //StringBuilder sb = new StringBuilder();
-            //StringBuilder sbd = new StringBuilder();
-
-            //try
-            //{
-            //    // 対象データ : 取消は対象外とする
-            //    sb.Clear();
-            //    sb.Append("Select 勤務票明細.ヘッダID, 勤務票明細.ID,");
-            //    sb.Append("勤務票ヘッダ.年, 勤務票ヘッダ.月, 勤務票ヘッダ.日,");
-            //    sb.Append("勤務票明細.社員番号 from 勤務票ヘッダ inner join 勤務票明細 ");
-            //    sb.Append("on 勤務票ヘッダ.ID = 勤務票明細.ヘッダID ");
-            //    sb.Append("where 勤務票明細.取消 = '").Append(global.FLGOFF).Append("'");
-            //    sb.Append("order by 勤務票明細.ヘッダID, 勤務票明細.ID");
-
-            //    sCom.CommandText = sb.ToString();
-            //    dR = sCom.ExecuteReader();
-
-            //    while (dR.Read())
-            //    {
-            //        // ヘッダID
-            //        string hdID = string.Empty;
-
-            //        // 日付と社員番号で過去データを抽出（該当するのは1件）
-            //        sb.Clear();
-            //        sb.Append("Select 過去勤務票明細.ヘッダID,過去勤務票明細.ID,");
-            //        sb.Append("過去勤務票ヘッダ.年, 過去勤務票ヘッダ.月, 過去勤務票ヘッダ.日,");
-            //        sb.Append("過去勤務票明細.社員番号 from 過去勤務票ヘッダ inner join 過去勤務票明細 ");
-            //        sb.Append("on 過去勤務票ヘッダ.ID = 過去勤務票明細.ヘッダID ");
-            //        sb.Append("where ");
-            //        sb.Append("過去勤務票ヘッダ.年 = ? and ");
-            //        sb.Append("過去勤務票ヘッダ.月 = ? and ");
-            //        sb.Append("過去勤務票ヘッダ.日 = ? and ");
-            //        sb.Append("過去勤務票ヘッダ.データ領域名 = ? and ");
-            //        sb.Append("過去勤務票明細.社員番号 = ?");
-
-            //        sCom2.CommandText = sb.ToString();
-            //        sCom2.Parameters.Clear();
-            //        sCom2.Parameters.AddWithValue("@yy", dR["年"].ToString());
-            //        sCom2.Parameters.AddWithValue("@mm", dR["月"].ToString());
-            //        sCom2.Parameters.AddWithValue("@dd", dR["日"].ToString());
-            //        sCom2.Parameters.AddWithValue("@db", _dbName);
-            //        sCom2.Parameters.AddWithValue("@n", dR["社員番号"].ToString());
-
-            //        dR2 = sCom2.ExecuteReader();
-
-            //        while (dR2.Read())
-            //        {
-            //            //// ヘッダIDを取得
-            //            //if (hdID == string.Empty)
-            //            //{
-            //            //    hdID = dR2["ヘッダID"].ToString();
-            //            //}
-
-            //            // 過去勤務票明細レコード削除
-            //            sbd.Clear();
-            //            sbd.Append("delete from 過去勤務票明細 ");
-            //            sbd.Append("where ID = ?");
-
-            //            sCom3.CommandText = sbd.ToString();
-            //            sCom3.Parameters.Clear();
-            //            sCom3.Parameters.AddWithValue("@id", dR2["ID"].ToString());
-
-            //            sCom3.ExecuteNonQuery();
-            //        }
-
-            //        dR2.Close();
-            //    }
-
-            //    dR.Close();
-
-            //    // データベース接続解除
-            //    if (sCom.Connection.State == ConnectionState.Open)
-            //    {
-            //        sCom.Connection.Close();
-            //    }
-
-            //    if (sCom2.Connection.State == ConnectionState.Open)
-            //    {
-            //        sCom2.Connection.Close();
-            //    }
-
-            //    if (sCom3.Connection.State == ConnectionState.Open)
-            //    {
-            //        sCom3.Connection.Close();
-            //    }
-
-            //    // データベース再接続
-            //    mdb.dbConnect(sCom);
-            //    mdb.dbConnect(sCom2);
-
-            //    // 明細データのない過去勤務票ヘッダデータを抽出
-            //    sb.Clear();
-            //    sb.Append("Select 過去勤務票ヘッダ.ID,過去勤務票明細.ヘッダID ");
-            //    sb.Append("from 過去勤務票ヘッダ left join 過去勤務票明細 ");
-            //    sb.Append("on 過去勤務票ヘッダ.ID = 過去勤務票明細.ヘッダID ");
-            //    sb.Append("where ");
-            //    sb.Append("過去勤務票明細.ヘッダID is null");
-            //    sCom.CommandText = sb.ToString();
-            //    dR = sCom.ExecuteReader();
-
-            //    while (dR.Read())
-            //    {
-            //        // 過去勤務票ヘッダレコード削除
-            //        sbd.Clear();
-
-            //        sbd.Append("delete from 過去勤務票ヘッダ ");
-            //        sbd.Append("where ID = ?");
-
-            //        sCom2.CommandText = sbd.ToString();
-            //        sCom2.Parameters.Clear();
-            //        sCom2.Parameters.AddWithValue("@id", dR["ID"].ToString());
-
-            //        sCom2.ExecuteNonQuery();
-            //    }
-
-            //    dR.Close();
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show(e.Message);
-            //}
-            //finally
-            //{
-            //    if (sCom.Connection.State == ConnectionState.Open)
-            //    {
-            //        sCom.Connection.Close();
-            //    }
-
-            //    if (sCom2.Connection.State == ConnectionState.Open)
-            //    {
-            //        sCom2.Connection.Close();
-            //    }
-
-            //    if (sCom3.Connection.State == ConnectionState.Open)
-            //    {
-            //        sCom3.Connection.Close();
-            //    }
-            //}
-        }
-
-
-        /// -------------------------------------------------------------------------
-        /// <summary>
-        ///     過去勤務票ヘッダデータと過去勤務票明細データを作成します</summary>
-        ///     
-        /// -------------------------------------------------------------------------
-        private void addLastdata()
-        {
-            //for (int i = 0; i < dts.勤務票ヘッダ.Rows.Count; i++)
-            //{
-            //    // -------------------------------------------------------------------------
-            //    //      過去勤務票ヘッダレコードを作成します
-            //    // -------------------------------------------------------------------------
-            //    DataSet1.勤務票ヘッダRow hr = (DataSet1.勤務票ヘッダRow)dts.勤務票ヘッダ.Rows[i];
-            //    DataSet1.過去勤務票ヘッダRow nr = dts.過去勤務票ヘッダ.New過去勤務票ヘッダRow();
-
-            //    #region テーブルカラム名比較～データコピー
-
-            //    // 勤務票ヘッダのカラムを順番に読む
-            //    for (int j = 0; j < dts.勤務票ヘッダ.Columns.Count; j++)
-            //    {
-            //        // 過去勤務票ヘッダのカラムを順番に読む
-            //        for (int k = 0; k < dts.過去勤務票ヘッダ.Columns.Count; k++)
-            //        {
-            //            // フィールド名が同じであること
-            //            if (dts.勤務票ヘッダ.Columns[j].ColumnName == dts.過去勤務票ヘッダ.Columns[k].ColumnName)
-            //            {
-            //                if (dts.過去勤務票ヘッダ.Columns[k].ColumnName == "更新年月日")
-            //                {
-            //                    nr[k] = DateTime.Now;   // 更新年月日はこの時点のタイムスタンプを登録
-            //                }
-            //                else
-            //                {
-            //                    nr[k] = hr[j];          // データをコピー
-            //                }
-            //                break;
-            //            }
-            //        }
-            //    }
-            //    #endregion
-
-            //    // 過去勤務票ヘッダデータテーブルに追加
-            //    dts.過去勤務票ヘッダ.Add過去勤務票ヘッダRow(nr);
-
-            //    // -------------------------------------------------------------------------
-            //    //      過去勤務票明細レコードを作成します
-            //    // -------------------------------------------------------------------------
-            //    var mm = dts.勤務票明細
-            //        .Where(a => a.RowState != DataRowState.Deleted && a.RowState != DataRowState.Detached &&
-            //               a.ヘッダID == hr.ID)
-            //        .OrderBy(a => a.ID);
-
-            //    foreach (var item in mm)
-            //    {
-            //        DataSet1.勤務票明細Row m = (DataSet1.勤務票明細Row)dts.勤務票明細.Rows.Find(item.ID);
-            //        DataSet1.過去勤務票明細Row nm = dts.過去勤務票明細.New過去勤務票明細Row();
-
-            //        // 取消は対象外：2015/10/01
-            //        if (m.取消 == global.FLGON) continue;
-
-            //        // 社員番号が空白のレコードは対象外とします
-            //        if (m.社員番号 == string.Empty) continue;
-
-            //        #region  テーブルカラム名比較～データコピー
-
-            //        // 勤務票明細のカラムを順番に読む
-            //        for (int j = 0; j < dts.勤務票明細.Columns.Count; j++)
-            //        {
-            //            // IDはオートナンバーのため値はコピーしない
-            //            if (dts.勤務票明細.Columns[j].ColumnName != "ID")
-            //            {
-            //                // 過去勤務票ヘッダのカラムを順番に読む
-            //                for (int k = 0; k < dts.過去勤務票明細.Columns.Count; k++)
-            //                {
-            //                    // フィールド名が同じであること
-            //                    if (dts.勤務票明細.Columns[j].ColumnName == dts.過去勤務票明細.Columns[k].ColumnName)
-            //                    {
-            //                        if (dts.過去勤務票明細.Columns[k].ColumnName == "更新年月日")
-            //                        {
-            //                            nm[k] = DateTime.Now;   // 更新年月日はこの時点のタイムスタンプを登録
-            //                        }
-            //                        else
-            //                        {
-            //                            nm[k] = m[j];          // データをコピー
-            //                        }
-            //                        break;
-            //                    }
-            //                }
-            //            }
-            //        }
-            //        #endregion
-
-            //        // 過去勤務票明細データテーブルに追加
-            //        dts.過去勤務票明細.Add過去勤務票明細Row(nm);
-            //    }
-            //}
-
-            //// データベース更新
-            //pAdpMn.UpdateAll(dts);
-        }
-
-        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-        {
-        //    //if (e.RowIndex < 0) return;
-
-        //    string colName = dGV.Columns[e.ColumnIndex].Name;
-
-        //    if (colName == cSH || colName == cSE || colName == cEH || colName == cEE ||
-        //        colName == cZH || colName == cZE || colName == cSIH || colName == cSIE)
-        //    {
-        //        e.AdvancedBorderStyle.Right = DataGridViewAdvancedCellBorderStyle.None;
-        //    }
-        }
-
-        private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        {
-            //string colName = dGV.Columns[dGV.CurrentCell.ColumnIndex].Name;
-            ////if (colName == cKyuka || colName == cCheck)
-            ////{
-            ////    if (dGV.IsCurrentCellDirty)
-            ////    {
-            ////        dGV.CommitEdit(DataGridViewDataErrorContexts.Commit);
-            ////        dGV.RefreshEdit();
-            ////    }
-            ////}
-        }
 
         private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
@@ -2148,7 +1686,7 @@ namespace STSH_OCR.OCR
                 // 納価
                 if (e.ColumnIndex == 4)
                 {
-                    cellName = CELL_BAIKA;
+                    cellName = CELL_NOUKA;
                 }
 
                 // 売価
@@ -2209,103 +1747,6 @@ namespace STSH_OCR.OCR
             }
         }
 
-
-        /// ------------------------------------------------------------------------------
-        /// <summary>
-        ///     伝票画像表示 </summary>
-        /// <param name="iX">
-        ///     現在の伝票</param>
-        /// <param name="tempImgName">
-        ///     画像名</param>
-        /// ------------------------------------------------------------------------------
-        public void ShowImage(string tempImgName)
-        {
-            ////修正画面へ組み入れた画像フォームの表示    
-            ////画像の出力が無い場合は、画像表示をしない。
-            //if (tempImgName == string.Empty)
-            //{
-            //    leadImg.Visible = false;
-            //    lblNoImage.Visible = false;
-            //    //global.pblImagePath = string.Empty;
-            //    return;
-            //}
-
-            ////画像ファイルがあるとき表示
-            //if (File.Exists(tempImgName))
-            //{
-            //    lblNoImage.Visible = false;
-            //    leadImg.Visible = true;
-
-            //    // 画像操作ボタン
-            //    btnPlus.Enabled = true;
-            //    btnMinus.Enabled = true;
-
-            //    // 画像回転ボタン
-            //    btnLeft.Enabled = true;
-            //    btnRight.Enabled = true;
-
-            //    //画像ロード
-            //    Leadtools.Codecs.RasterCodecs.Startup();
-            //    Leadtools.Codecs.RasterCodecs cs = new Leadtools.Codecs.RasterCodecs();
-
-            //    // 描画時に使用される速度、品質、およびスタイルを制御します。 
-            //    Leadtools.RasterPaintProperties prop = new Leadtools.RasterPaintProperties();
-            //    prop = Leadtools.RasterPaintProperties.Default;
-            //    prop.PaintDisplayMode = Leadtools.RasterPaintDisplayModeFlags.Resample;
-            //    leadImg.PaintProperties = prop;
-
-            //    leadImg.Image = cs.Load(tempImgName, 0, Leadtools.Codecs.CodecsLoadByteOrder.BgrOrGray, 1, 1);
-
-            //    //画像表示倍率設定
-            //    if (gl.miMdlZoomRate == 0f)
-            //    {
-            //        leadImg.ScaleFactor *= gl.ZOOM_RATE;
-            //    }
-            //    else
-            //    {
-            //        leadImg.ScaleFactor *= gl.miMdlZoomRate;
-            //    }
-
-            //    //画像のマウスによる移動を可能とする
-            //    leadImg.InteractiveMode = Leadtools.WinForms.RasterViewerInteractiveMode.Pan;
-
-            //    // グレースケールに変換
-            //    Leadtools.ImageProcessing.GrayscaleCommand grayScaleCommand = new Leadtools.ImageProcessing.GrayscaleCommand();
-            //    grayScaleCommand.BitsPerPixel = 8;
-            //    grayScaleCommand.Run(leadImg.Image);
-            //    leadImg.Refresh();
-
-            //    cs.Dispose();
-            //    Leadtools.Codecs.RasterCodecs.Shutdown();
-            //    //global.pblImagePath = tempImgName;
-            //}
-            //else
-            //{
-            //    //画像ファイルがないとき
-            //    lblNoImage.Visible = true;
-
-            //    // 画像操作ボタン
-            //    btnPlus.Enabled = false;
-            //    btnMinus.Enabled = false;
-
-            //    leadImg.Visible = false;
-            //    //global.pblImagePath = string.Empty;
-
-            //    // 画像回転ボタン
-            //    btnLeft.Enabled = false;
-            //    btnRight.Enabled = false;
-            //}
-        }
-
-        private void leadImg_MouseLeave(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.Default;
-        }
-
-        private void leadImg_MouseMove(object sender, MouseEventArgs e)
-        {
-            this.Cursor = Cursors.Hand;
-        }
 
         /// -------------------------------------------------------------------------
         /// <summary>
@@ -2690,596 +2131,6 @@ namespace STSH_OCR.OCR
             //}
         }
 
-        //private void gcMultiRow2_EditingControlShowing(object sender, EditingControlShowingEventArgs e)
-        //{
-            //if (e.Control is TextBoxEditingControl)
-            //{
-            //    //イベントハンドラが複数回追加されてしまうので最初に削除する
-            //    e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
-            //    //e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress2);
-            //    e.Control.KeyDown -= new KeyEventHandler(Control_KeyDownHinM2);
-
-            //    // 数字のみ入力可能とする
-            //    if (gcMultiRow2.CurrentCell.Name == "txtHinCode" || gcMultiRow2.CurrentCell.Name == "txtHinCode2" || 
-            //        gcMultiRow2.CurrentCell.Name == "txtSuu" || gcMultiRow2.CurrentCell.Name == "txtSuu2")
-            //    {
-            //        //イベントハンドラを追加する
-            //        e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
-            //    }
-                
-            //    // 商品検索画面呼出
-            //    if (gcMultiRow2.CurrentCell.Name == "txtHinCode" || gcMultiRow2.CurrentCell.Name == "txtHinCode2")
-            //    {
-            //        //イベントハンドラを追加する
-            //        e.Control.KeyDown += new KeyEventHandler(Control_KeyDownHinM2);
-            //    }
-            //}
-        //}
-
-        //private void gcMultiRow2_CellValueChanged(object sender, CellEventArgs e)
-        //{
-        //    if (!gl.ChangeValueStatus)
-        //    {
-        //        return;
-        //    }
-
-        //    if (e.RowIndex < 0)
-        //    {
-        //        return;
-        //    }
-            
-        //    // 商品名表示
-        //    if (e.CellName == "txtHinCode" || e.CellName == "txtHinCode2")
-        //    {
-        //        gl.ChangeValueStatus = false;
-
-        //        gcHinCodeChange(gcMultiRow2, e.CellName, e.RowIndex, true);
-
-        //        //if (!showStatus)
-        //        //{
-        //        //    // 出荷基準判定
-        //        //    kijunCheckMain();
-        //        //}
-
-        //        // パターンIDが０のときフリー入力可能とする：2017/08/21
-        //        int ptnCode = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow1[0, "txtPtnNum"].Value));
-
-        //        if (ptnCode == global.flgOff)
-        //        {
-        //            gcMultiRow2[e.RowIndex, e.CellName].ReadOnly = false;
-        //            gcMultiRow2[e.RowIndex, e.CellName].Selectable = true;
-        //        }
-        //        else
-        //        {
-        //            gcMultiRow2[e.RowIndex, e.CellName].ReadOnly = true;
-        //            gcMultiRow2[e.RowIndex, e.CellName].Selectable = false;
-        //        }
-
-        //        gl.ChangeValueStatus = true;
-        //    }
-
-        //    // 発注数
-        //    if (e.CellName == "txtSuu" || e.CellName == "txtSuu2")
-        //    {
-        //        gl.ChangeValueStatus = false;
-
-        //        if (!showStatus)
-        //        {
-        //            // 出荷基準判定
-        //            kijunCheckMain();
-        //        }
-
-        //        gl.ChangeValueStatus = true;
-        //    }
-
-
-        //}
-
-        ///-------------------------------------------------------------------------
-        /// <summary>
-        ///     奉行シリーズ部署名取得 </summary>
-        /// <param name="dName">
-        ///     取得する部署名</param>
-        /// <param name="dCode">
-        ///     部署コード</param>
-        /// <param name="r">
-        ///     MultiRowRowIndex</param>
-        /// <returns>
-        ///     true:該当あり, false:該当なし</returns>
-        ///-------------------------------------------------------------------------
-        private bool getDepartMentName(out string dName, string dCode, int r)
-        {
-            bool rtn = false;
-            //int c = 0;
-
-            //// 部署名を初期化
-            dName = string.Empty;
-
-            //// 奉行データベースより部署名を取得して表示します
-            //if (Utility.NulltoStr(gcMultiRow2[r, "txtBushoCode"].Value) != string.Empty)
-            //{
-            //    string b = string.Empty;
-
-            //    // 検索用部署コード
-            //    if (Utility.StrtoInt(gcMultiRow2[r, "txtBushoCode"].Value.ToString()) != global.flgOff)
-            //    {
-            //        b = gcMultiRow2[r, "txtBushoCode"].Value.ToString().Trim().PadLeft(15, '0');
-            //    }
-            //    else
-            //    {
-            //        b = gcMultiRow2[r, "txtBushoCode"].Value.ToString().Trim().PadRight(15, ' ');
-            //    }
-
-            //    // 接続文字列取得
-            //    string sc = sqlControl.obcConnectSting.get(_dbName);
-            //    sqlControl.DataControl sdCon = new Common.sqlControl.DataControl(sc);
-
-            //    string dt = DateTime.Today.ToShortDateString();
-            //    StringBuilder sb = new StringBuilder();
-            //    sb.Append("SELECT DepartmentID, DepartmentCode, DepartmentName ");
-            //    sb.Append("FROM tbDepartment ");
-            //    sb.Append("where EstablishDate <= '").Append(dt).Append("'");
-            //    sb.Append(" and AbolitionDate >= '").Append(dt).Append("'");
-            //    sb.Append(" and ValidDate <= '").Append(dt).Append("'");
-            //    sb.Append(" and InValidDate >= '").Append(dt).Append("'");
-            //    sb.Append(" and DepartmentCode = '").Append(b).Append("'");
-
-            //    SqlDataReader dR = sdCon.free_dsReader(sb.ToString());
-
-            //    while (dR.Read())
-            //    {
-            //        dName = dR["DepartmentName"].ToString().Trim();
-            //        c++;
-            //    }
-
-            //    dR.Close();
-            //    sdCon.Close();
-
-            //    if (c > 0)
-            //    {
-            //        rtn = true;
-            //    }
-            //}
-            
-            return rtn;
-        }
-
-        ///-------------------------------------------------------------------
-        /// <summary>
-        ///     ライン・部門・製品群コード配列取得   </summary>
-        /// <returns>
-        ///     ID,コード配列</returns>
-        ///-------------------------------------------------------------------
-        private string[] getCategoryArray()
-        {
-            //// 接続文字列取得
-            //string sc = sqlControl.obcConnectSting.get(_dbName);
-            //sqlControl.DataControl sdCon = new sqlControl.DataControl(sc);
-
-            //StringBuilder sb = new StringBuilder();
-            //sb.Append("select CategoryID, CategoryCode from tbHistoryDivisionCategory");
-            //SqlDataReader dr = sdCon.free_dsReader(sb.ToString());
-
-            //int iX = 0;
-            string[] hArray = new string[1];
-
-            //while (dr.Read())
-            //{
-            //    if (iX > 0)
-            //    {
-            //        Array.Resize(ref hArray, iX + 1);
-            //    }
-
-            //    hArray[iX] = dr["CategoryID"].ToString() + "," + dr["CategoryCode"].ToString();
-            //    iX++;
-            //}
-
-            //dr.Close();
-            //sdCon.Close();
-
-            return hArray;
-        }
-
-        //private void gcMultiRow2_CellEnter(object sender, CellEventArgs e)
-        //{
-        //    if (gcMultiRow2.EditMode == EditMode.EditProgrammatically)
-        //    {
-        //        gcMultiRow2.BeginEdit(true);
-        //    }
-        //}
-
-        //private void gcMultiRow1_CellEnter(object sender, CellEventArgs e)
-        //{
-        //    if (gcMultiRow1.EditMode == EditMode.EditProgrammatically)
-        //    {
-        //        gcMultiRow1.BeginEdit(true);
-        //    }
-        //}
-
-        //private void gcMultiRow1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        //{
-        //    string colName = gcMultiRow1.CurrentCell.Name;
-
-        //    if (colName == "chkReFax")
-        //    {
-        //        if (gcMultiRow1.IsCurrentCellDirty)
-        //        {
-        //            gcMultiRow1.CommitEdit(DataErrorContexts.Commit);
-        //            gcMultiRow1.Refresh();
-        //        }
-        //    }
-        //}
-
-        //private void gcMultiRow1_CellLeave(object sender, CellEventArgs e)
-        //{
-           
-        //}
-
-        //private void gcMultiRow1_CellContentClick(object sender, CellEventArgs e)
-        //{
-        //    // 2018/08/02
-        //    if (e.CellName == "chkReFax")
-        //    {
-        //        if (Convert.ToInt32(gcMultiRow1[0, "chkReFax"].Value) == global.flgOn)
-        //        {
-        //            gcMultiRow1[0, "labelCell2"].Style.BackColor = Color.Red;
-        //        }
-        //        else
-        //        {
-        //            gcMultiRow1[0, "labelCell2"].Style.BackColor = Color.FromArgb(225, 243, 190);
-        //        }
-        //    }
-
-        //    // 2018/08/02
-        //    if (e.CellName == "buttonCell1")
-        //    {
-        //        if (Convert.ToInt32(gcMultiRow1[0, "chkReFax"].Value) == global.flgOff)
-        //        {
-        //            return;
-        //        }
-        //        else
-        //        {
-        //            if (MessageBox.Show("表示中の発注書を再FAXフォルダへ移動しますか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.No)
-        //            {
-        //                return;
-        //            }
-        //            else
-        //            {
-        //                // 画像を再FAXフォルダへ移動
-        //                moveReFax(cI);
-        //                MessageBox.Show("発注書データを再FAXフォルダへ移動しました", "発注書移動", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        
-        //                // 件数カウント
-        //                if (dtsC.FAX注文書.Count() > 0)
-        //                {
-        //                    // カレントレコードインデックスを再設定
-        //                    if (dtsC.FAX注文書.Count() - 1 < cI) cI = dtsC.FAX注文書.Count() - 1;
-
-        //                    // データ画面表示
-        //                    showOcrData(cI);
-        //                }
-        //                else
-        //                {
-        //                    // ゼロならばプログラム終了
-        //                    MessageBox.Show("全ての発注書データが削除されました。処理を終了します。", "発注書削除", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
-        //                    //終了処理
-        //                    this.Tag = END_NODATA;
-        //                    this.Close();
-        //                }
-        //            }                        
-        //        }               
-        //    }
-
-            //if (e.CellName == "btnCell")
-            //{
-            //    //カレントデータの更新
-            //    CurDataUpDate(cID[cI]);
-                
-            //    int sMID = Utility.StrtoInt(gcMultiRow1[e.RowIndex, "txtID"].Value.ToString());
-
-            //    if (dts.勤務票明細.Any(a => a.ID == sMID))
-            //    {
-            //        var s = dts.勤務票明細.Single(a => a.ID == sMID);
-            //        string kID = s.帰宅後勤務ID;
-            //        frmKitakugo frm = new frmKitakugo(_dbName, sMID, kID, hArray, bs, true);
-            //        frm.ShowDialog();
-
-            //        // 帰宅後勤務データ再読み込み
-            //        tAdp.Fill(dts.帰宅後勤務);
-
-            //        //// 勤務票明細再読み込み
-            //        //adpMn.勤務票明細TableAdapter.Fill(dts.勤務票明細);
-
-            //        // データ再表示
-            //        showOcrData(cI);
-            //    }
-            //}
-        //}
-
-        ///------------------------------------------------------------------------
-        /// <summary>
-        ///     画像ファイルを再FAXフォルダへ移動して勤務データを削除 </summary>
-        /// <param name="i">
-        ///     IDインデックス</param>
-        ///------------------------------------------------------------------------
-        private void moveReFax(int i)
-        {
-            //string sImgNm = string.Empty;
-            //string _fromImgFile = string.Empty;
-            //string _toImgFile = string.Empty;
-            //string errMsg = string.Empty;
-
-            //// 勤務票データ再FAXフォルダへ移動
-            //try
-            //{
-            //    // IDを取得します
-            //    STSH_CLIDataSet.FAX注文書Row r = dtsC.FAX注文書.Single(a => a.ID == cID[i]);
-                
-            //    // 画像ファイルを再FAXフォルダへ移動
-            //    _fromImgFile = Properties.Settings.Default.mydataPath + r.画像名.ToString();
-            //    _toImgFile = Properties.Settings.Default.reFaxPath + r.画像名.ToString();
-                
-            //    System.IO.File.Move(_fromImgFile, _toImgFile);
-
-            //    // データテーブルから勤務票データを削除します
-            //    errMsg = "FAX注文書データ";
-            //    r.Delete();
-
-            //    // データベース更新
-            //    fAdp.Update(dtsC.FAX注文書);
-                
-            //    // 配列キー再構築
-            //    keyArrayCreate();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(errMsg + "の削除に失敗しました" + Environment.NewLine + ex.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            //}
-            //finally
-            //{
-            //}
-
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //frmOCRIndex frm = new frmOCRIndex(_dbName, dts, hAdp, iAdp);
-            //frm.ShowDialog();
-            //string hID = frm.hdID;
-            //frm.Dispose();
-
-            //if (hID != string.Empty)
-            //{
-            //    //カレントデータの更新
-            //    CurDataUpDate(cID[cI]);
-
-            //    // レコード検索
-            //    for (int i = 0; i < cID.Length; i++)
-            //    {
-            //        if (cID[i] == hID)
-            //        {
-            //            cI = i;
-            //            showOcrData(cI);
-            //            break;
-            //        }
-            //    }
-            //}
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-        }
-
-        private void lnkLblClr_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-        }
-
-        private void lnkLblDelete_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-        }
-
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-        }
-
-        //private void gcMultiRow3_CellEnter(object sender, CellEventArgs e)
-        //{
-        //    if (gcMultiRow3.EditMode == EditMode.EditProgrammatically)
-        //    {
-        //        gcMultiRow3.BeginEdit(true);
-        //    }
-        //}
-
-        //private void gcMultiRow3_CellValueChanged(object sender, CellEventArgs e)
-        //{
-        //    if (!gl.ChangeValueStatus)
-        //    {
-        //        return;
-        //    }
-
-        //    if (e.RowIndex < 0)
-        //    {
-        //        return;
-        //    }
-
-        //    gl.ChangeValueStatus = false;
-
-        //    // 商品名表示
-        //    if (e.CellName == "txtHinCode" || e.CellName == "txtHinCode2")
-        //    {
-        //        gcHinCodeChange(gcMultiRow3, e.CellName, e.RowIndex, false);
-
-        //        if (!showStatus)
-        //        {
-        //            // 出荷基準判定
-        //            kijunCheckMain();
-        //        }
-        //    }
-
-        //    gl.ChangeValueStatus = true;
-
-        //    // 追加記入があるとき行を赤表示します
-        //    if (e.CellName == "txtSuu")
-        //    {
-        //        if (Utility.NulltoStr(gcMultiRow3[e.RowIndex, "txtSuu"].Value) != string.Empty)
-        //        {
-        //            gcMultiRow3[e.RowIndex, "txtHinCode"].Style.BackColor = Color.MistyRose;
-        //            gcMultiRow3[e.RowIndex, "lblHinName"].Style.BackColor = Color.MistyRose;
-        //            gcMultiRow3[e.RowIndex, "txtSuu"].Style.BackColor = Color.MistyRose;
-        //        }
-        //        else
-        //        {
-        //            gcMultiRow3[e.RowIndex, "txtHinCode"].Style.BackColor = Color.White;
-        //            gcMultiRow3[e.RowIndex, "lblHinName"].Style.BackColor = Color.White;
-        //            gcMultiRow3[e.RowIndex, "txtSuu"].Style.BackColor = Color.White;
-        //        }
-
-        //        if (!showStatus)
-        //        {
-        //            // 出荷基準判定
-        //            kijunCheckMain();
-        //        }
-        //    }
-
-        //    if (e.CellName == "txtSuu2")
-        //    {
-        //        if (Utility.NulltoStr(gcMultiRow3[e.RowIndex, "txtSuu2"].Value) != string.Empty)
-        //        {
-        //            gcMultiRow3[e.RowIndex, "txtHinCode2"].Style.BackColor = Color.MistyRose;
-        //            gcMultiRow3[e.RowIndex, "lblHinName2"].Style.BackColor = Color.MistyRose;
-        //            gcMultiRow3[e.RowIndex, "txtSuu2"].Style.BackColor = Color.MistyRose;
-        //        }
-        //        else
-        //        {
-        //            gcMultiRow3[e.RowIndex, "txtHinCode2"].Style.BackColor = Color.White;
-        //            gcMultiRow3[e.RowIndex, "lblHinName2"].Style.BackColor = Color.White;
-        //            gcMultiRow3[e.RowIndex, "txtSuu2"].Style.BackColor = Color.White;
-        //        }
-                                
-        //        if (!showStatus)
-        //        {
-        //            // 出荷基準判定
-        //            kijunCheckMain();
-        //        }
-        //    }
-        //}
-
-        /////------------------------------------------------------------------------
-        ///// <summary>
-        /////     商品コードから商品名を表示する </summary>
-        ///// <param name="gc">
-        /////     GcMultiRowオブジェクト</param>
-        ///// <param name="cCellName">
-        /////     該当セルの名前</param>
-        ///// <param name="rIndex">
-        /////     該当セルのrowIndex</param>
-        ///// <param name="iriTani">
-        /////     true:入数、単位も表示する、false:入数、単位は表示しない</param>
-        /////------------------------------------------------------------------------
-        //private void gcHinCodeChange(GcMultiRow gc, string cCellName, int rIndex, bool iriTani)
-        //{
-        //    string hinCode = string.Empty;
-
-        //    if (cCellName == "txtHinCode")
-        //    {
-        //        hinCode = Utility.NulltoStr(gc[rIndex, "txtHinCode"].Value).PadLeft(8, '0');
-
-        //        if (hinCode != "00000000")
-        //        {
-        //            gc[rIndex, "txtHinCode"].Value = hinCode;
-        //        }
-
-        //        gc[rIndex, "lblHinName"].Value = string.Empty;
-
-        //        if (iriTani)
-        //        {
-        //            gc[rIndex, "lblIrisu"].Value = string.Empty;
-        //            gc[rIndex, "lblTani"].Value = string.Empty;
-        //        }
-        //    }
-        //    else if (cCellName == "txtHinCode2")
-        //    {
-        //        hinCode = Utility.NulltoStr(gc[rIndex, "txtHinCode2"].Value).PadLeft(8, '0');
-
-        //        if (hinCode != "00000000")
-        //        {
-        //            gc[rIndex, "txtHinCode2"].Value = hinCode;
-        //        }
-
-        //        gc[rIndex, "lblHinName2"].Value = string.Empty;
-
-        //        if (iriTani)
-        //        {
-        //            gc[rIndex, "lblIrisu2"].Value = string.Empty;
-        //            gc[rIndex, "lblTani2"].Value = string.Empty;
-        //        }
-        //    }
-
-        //    string strSQL = "select SYO_ID, SYO_NAME, SYO_IRI_KESU, SYO_TANI from RAKUSYO_FAXOCR.V_SYOHIN WHERE SYO_ID = '" + hinCode + "'";
-        //    OracleCommand Cmd = new OracleCommand(strSQL, Conn);
-        //    OracleDataReader dR = Cmd.ExecuteReader();
-
-        //    while (dR.Read())
-        //    {
-        //        if (cCellName == "txtHinCode")
-        //        {
-        //            gc[rIndex, "lblHinName"].Value = dR["SYO_NAME"].ToString().Trim();
-
-        //            if (iriTani)
-        //            {
-        //                gc[rIndex, "lblIrisu"].Value = dR["SYO_IRI_KESU"].ToString().Trim();
-        //                gc[rIndex, "lblTani"].Value = dR["SYO_TANI"].ToString().Trim();
-        //            }
-        //        }
-        //        else if (cCellName == "txtHinCode2")
-        //        {
-        //            gc[rIndex, "lblHinName2"].Value = dR["SYO_NAME"].ToString().Trim();
-
-        //            if (iriTani)
-        //            {
-        //                gc[rIndex, "lblIrisu2"].Value = dR["SYO_IRI_KESU"].ToString().Trim();
-        //                gc[rIndex, "lblTani2"].Value = dR["SYO_TANI"].ToString().Trim();
-        //            }
-        //        }
-        //    }
-
-        //    dR.Dispose();
-        //    Cmd.Dispose();
-        //}
-
-
-
-        //private void gcMultiRow3_EditingControlShowing(object sender, EditingControlShowingEventArgs e)
-        //{
-        //    if (e.Control is TextBoxEditingControl)
-        //    {
-        //        //イベントハンドラが複数回追加されてしまうので最初に削除する
-        //        e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
-        //        e.Control.KeyDown -= new KeyEventHandler(Control_KeyDownHin);
-
-        //        // 数字のみ入力可能とする
-        //        if (gcMultiRow3.CurrentCell.Name == "txtHinCode" || gcMultiRow3.CurrentCell.Name == "txtHinCode2" ||
-        //            gcMultiRow3.CurrentCell.Name == "txtSuu" || gcMultiRow3.CurrentCell.Name == "txtSuu2")
-        //        {
-        //            //イベントハンドラを追加する
-        //            e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
-        //        }
-
-        //        // 商品検索画面呼出
-        //        if (gcMultiRow3.CurrentCell.Name == "txtHinCode" || gcMultiRow3.CurrentCell.Name == "txtHinCode2")
-        //        {
-        //            //イベントハンドラを追加する
-        //            e.Control.KeyDown += new KeyEventHandler(Control_KeyDownHin);
-        //        }
-        //    }
-        //}
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -3324,9 +2175,6 @@ namespace STSH_OCR.OCR
         }
 
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-        }
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -3341,13 +2189,15 @@ namespace STSH_OCR.OCR
         private void faxDelete()
         {
             if (MessageBox.Show("表示中のＦＡＸ発注書を削除します。よろしいですか", "削除確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No)
+            {
                 return;
+            }
 
             // 非ログ書き込み状態とする
             editLogStatus = false;
 
             // レコードと画像ファイルを削除する
-            DataDelete();
+            DataDelete(cI);
 
             // 件数カウント
             if (tblFax.Count() > 0)
@@ -3381,25 +2231,7 @@ namespace STSH_OCR.OCR
             this.Tag = END_BUTTON;
             this.Close();
         }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            //if (leadImg.ScaleFactor < gl.ZOOM_MAX)
-            //{
-            //    leadImg.ScaleFactor += gl.ZOOM_STEP;
-            //}
-            //gl.miMdlZoomRate = (float)leadImg.ScaleFactor;
-        }
-
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            //if (leadImg.ScaleFactor > gl.ZOOM_MIN)
-            //{
-            //    leadImg.ScaleFactor -= gl.ZOOM_STEP;
-            //}
-            //gl.miMdlZoomRate = (float)leadImg.ScaleFactor;
-        }
-
+        
         private void button3_Click_1(object sender, EventArgs e)
         {
             //カレントデータの更新
@@ -3446,20 +2278,6 @@ namespace STSH_OCR.OCR
             showOcrData(cI);
         }
 
-        private void gcMultiRow3_Leave(object sender, EventArgs e)
-        {
-            //gcMultiRow3.EndEdit();  
-        }
-
-        private void gcMultiRow1_Leave(object sender, EventArgs e)
-        {
-            //gcMultiRow1.EndEdit();
-        }
-
-        private void gcMultiRow2_Leave(object sender, EventArgs e)
-        {
-            //gcMultiRow2.EndEdit();
-        }
 
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
@@ -3495,7 +2313,7 @@ namespace STSH_OCR.OCR
         ///----------------------------------------------------------
         private void setHoldData(string iX)
         {
-            cn2.Open();
+            //cn2.Open();
 
             try
             {
@@ -3508,6 +2326,7 @@ namespace STSH_OCR.OCR
                     com.ExecuteNonQuery();
                 }
 
+                // 保留テーブルに発注書データを移動する
                 sql = "INSERT INTO db.Hold_Fax ";
                 sql += "SELECT * FROM main.FAX_Order ";
                 sql += "WHERE ID = '" + ClsFaxOrder.ID + "'";
@@ -3517,8 +2336,17 @@ namespace STSH_OCR.OCR
                     com.ExecuteNonQuery();
                 }
 
+                // 発注書データを削除します
+                sql = "Delete from FAX_Order ";
+                sql += "WHERE ID= '" + ClsFaxOrder.ID + "'";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    com.ExecuteNonQuery();
+                }
+
                 // 画像ファイル名を取得します
-                string sImgNm = ClsFaxOrder.ImageFileName;
+                string sImgNm = System.IO.Path.GetFileName(_img);
 
                 // 移動先に同じ名前のファイルが存在する場合、既にあるファイルを削除する
                 string tifName = Properties.Settings.Default.HoldTifPath + sImgNm;
@@ -3529,12 +2357,12 @@ namespace STSH_OCR.OCR
                 }
 
                 // 画像ファイルを保留フォルダに移動する
-                System.IO.File.Move(Properties.Settings.Default.MyDataPath + sImgNm, tifName);
+                System.IO.File.Move(_img, tifName);
 
-                // 発注書データを削除します
-                string errMsg = "FAX発注書データ";
-                tblFax.DeleteOnSubmit(ClsFaxOrder);
-                context2.SubmitChanges();
+                //// 発注書データを削除します
+                //string errMsg = "FAX発注書データ";
+                //tblFax.DeleteOnSubmit(ClsFaxOrder);
+                //context2.SubmitChanges();
 
                 // 終了メッセージ
                 MessageBox.Show("注文書が保留されました", "ＦＡＸ発注書保留", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -3570,7 +2398,17 @@ namespace STSH_OCR.OCR
             }
             finally
             {
-                cn2.Close();
+                if (cn.State == ConnectionState.Open)
+                {
+                    cn.Close();
+                }
+
+                if (cn2.State == ConnectionState.Open)
+                {
+                    // いったん閉じて又開く
+                    cn2.Close();
+                    cn2.Open();
+                }
             }
         }
 
@@ -3586,11 +2424,6 @@ namespace STSH_OCR.OCR
 
             // 保留処理
             setHoldData(cID[cI]);
-        }
-
-        private void button2_Click_2(object sender, EventArgs e)
-        {
-            //kijunCheckMain();
         }
 
         private void btnRight_Click(object sender, EventArgs e)
@@ -4134,7 +2967,55 @@ namespace STSH_OCR.OCR
 
         private void frmCorrect_KeyDown(object sender, KeyEventArgs e)
         {
+            // ＦＡＸ発注書削除
+            if (e.KeyData == Keys.F8 && btnDelete.Enabled)
+            {
+                faxDelete();
+            }
 
+            // 画像印刷
+            if (e.KeyData == Keys.F9 && btnPrint.Enabled)
+            {
+                if (MessageBox.Show("画像を印刷します。よろしいですか？", "印刷確認", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
+                {
+                    return;
+                }
+
+                // 印刷実行
+                printDocument1.DefaultPageSettings.Landscape = true;
+                printDocument1.Print();
+            }
+
+            // エラーチェック実行
+            if (e.KeyData == Keys.F10 && btnErrCheck.Enabled)
+            {
+                errCheckClick();
+            }
+
+            // 保留処理
+            if (e.KeyData == Keys.F11 && btnHold.Enabled)
+            {
+                if (MessageBox.Show("表示中のＦＡＸ発注書を保留にします。よろしいですか", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return;
+                }
+
+                //カレントデータの更新
+                CurDataUpDate(cI);
+
+                // 保留処理
+                setHoldData(cID[cI]);
+            }
+
+            //  発注データ作成
+            if (e.KeyData == Keys.F12 && btnData.Enabled)
+            {
+                // 非ログ書き込み状態とする
+                editLogStatus = false;
+
+                // 発注データ出力
+                textDataMake();
+            }
         }
 
         private void txtPID_TextChanged(object sender, EventArgs e)
@@ -4147,6 +3028,16 @@ namespace STSH_OCR.OCR
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
         }
 
+        ///----------------------------------------------------------------------------------
+        /// <summary>
+        ///     発注パターンを表示する </summary>
+        /// <param name="TokuisakiCD">
+        ///     得意先コード</param>
+        /// <param name="PID">
+        ///     発注書ID</param>
+        /// <param name="SeqNum">
+        ///     発注書ID連番</param>
+        ///----------------------------------------------------------------------------------
         private void ShowFaxPattern(TextBox TokuisakiCD, TextBox PID, TextBox SeqNum)
         {
             string _TokuisakiCD = Utility.NulltoStr(TokuisakiCD.Text);
@@ -4281,18 +3172,15 @@ namespace STSH_OCR.OCR
 
         private void txtTokuisakiCD_TextChanged(object sender, EventArgs e)
         {
-            string _tel = string.Empty;
-            string _Jyu = string.Empty;
-
             // 得意先名表示
-            lblTokuisakiName.Text = Utility.getNouhinName(txtTokuisakiCD.Text, out _tel, out _Jyu);
+            //lblTokuisakiName.Text = Utility.getNouhinName(txtTokuisakiCD.Text, out _tel, out _Jyu);
+            tokuisaki = Utility.GetTokuisaki(txtTokuisakiCD.Text);
+            lblTokuisakiName.Text = tokuisaki.TOKUISAKI_NM;
 
             // 発注書パターン表示
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
         }
-
-
-
+               
         ///-----------------------------------------------------------
         /// <summary>
         ///     画像表示 openCV：2018/10/24 </summary>
@@ -4568,6 +3456,14 @@ namespace STSH_OCR.OCR
 
             // 発注データ出力
             textDataMake();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Hide();
+            frmReFax reFax = new frmReFax(_img, tokuisaki.TOKUISAKI_NM, tokuisaki.TOKUISAKI_FAX);
+            reFax.ShowDialog();
+            Show();
         }
     }
 }

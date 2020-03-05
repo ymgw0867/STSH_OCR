@@ -148,5 +148,23 @@ namespace STSH_OCR.Properties {
                 return ((string)(this["NgPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\XLS\\ReFAX.xlsx")]
+        public string ReFAXTempXlsx {
+            get {
+                return ((string)(this["ReFAXTempXlsx"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\XLS\\返信FAX.xlsx")]
+        public string ReFaxSaveFile {
+            get {
+                return ((string)(this["ReFaxSaveFile"]));
+            }
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace STSH_OCR.Common
         ///----------------------------------------------------------------------
         public static void WindowsMinSize(Form tempFrm, int wSize, int hSize)
         {
-            tempFrm.MinimumSize = new Size(wSize, hSize);
+            tempFrm.MinimumSize = new System.Drawing.Size(wSize, hSize);
         }
 
         ///----------------------------------------------------------------------
@@ -41,7 +41,7 @@ namespace STSH_OCR.Common
         ///----------------------------------------------------------------------
         public static void WindowsMaxSize(Form tempFrm, int wSize, int hSize)
         {
-            tempFrm.MaximumSize = new Size(wSize, hSize);
+            tempFrm.MaximumSize = new System.Drawing.Size(wSize, hSize);
         }
 
         ///------------------------------------------------------------------------
@@ -476,6 +476,96 @@ namespace STSH_OCR.Common
             }
 
             return val;
+        }
+
+
+        ///-------------------------------------------------------------------
+        /// <summary>
+        ///     得意先情報取得 </summary>
+        /// <param name="tID">
+        ///     得意先番号</param>
+        /// <param name="sTel">
+        ///     電話番号</param>
+        /// <param name="sJyu">
+        ///     住所</param>
+        /// <returns>
+        ///     得意先名</returns>
+        ///-------------------------------------------------------------------
+        public static ClsCsvData.ClsCsvTokuisaki GetTokuisaki(string tID)
+        {
+            // 返り値クラス初期化
+            ClsCsvData.ClsCsvTokuisaki cls = new ClsCsvData.ClsCsvTokuisaki
+            {
+                TOKUISAKI_CD = "",
+                YUKO_START_YMD = "",
+                YUKO_END_YMD = "",
+                TOKUISAKI_NM = "",
+                TOKUISAKI_YUBIN_NO = "",
+                TOKUISAKI_ZYUSYO1 = "",
+                TOKUISAKI_ZYUSYO2 = "",
+                TOKUISAKI_TEL = "",
+                TOKUISAKI_FAX = "",
+                DELFLG = global.FLGOFF
+            };
+
+            // 得意先CSVデータ配列読み込み
+            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            
+            foreach (var item in Tk_Array)
+            {
+                string[] t = item.Split(',');
+
+                // 削除フラグ
+                string DelFlg = t[119].Replace("\"", "");
+
+                // 1行目見出し行は読み飛ばす
+                if (DelFlg == "DELFLG")
+                {
+                    continue;
+                }
+
+                if (DelFlg == global.FLGON)
+                {
+                    continue;
+                }
+
+                // 有効開始日、有効終了日を検証する
+                string cYuko_Start_Date = t[2].Replace("\"", "");   // 有効開始日付
+                string cYuko_End_Date = t[3].Replace("\"", "");     // 有効終了日付
+
+                int toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
+
+                if (Utility.StrtoInt(cYuko_Start_Date) > toDate)
+                {
+                    continue;
+                }
+
+                if (toDate > Utility.StrtoInt(cYuko_End_Date))
+                {
+                    continue;
+                }
+
+                // 得意先コード
+                string cTkCD = t[1].Replace("\"", "");
+
+                if (cTkCD == tID)
+                {
+                    cls.TOKUISAKI_CD = t[1].Replace("\"", "");          // 得意先コード
+                    cls.YUKO_START_YMD = t[2].Replace("\"", "");        // 有効開始日付
+                    cls.YUKO_END_YMD = t[1].Replace("\"", "");          // 有効終了日付
+                    cls.TOKUISAKI_NM = t[4].Replace("\"", "");          // 得意先名称
+                    cls.TOKUISAKI_YUBIN_NO = t[24].Replace("\"", "");   // 郵便番号
+                    cls.TOKUISAKI_ZYUSYO1 = t[25].Replace("\"", "");    // 得意先住所
+                    cls.TOKUISAKI_ZYUSYO2 = t[26].Replace("\"", "");    // 得意先住所
+                    cls.TOKUISAKI_TEL = t[27].Replace("\"", "");        // 得意先TEL
+                    cls.TOKUISAKI_FAX = t[28].Replace("\"", "");        // 得意先FAX
+                    cls.DELFLG = t[119].Replace("\"", "");              // 削除フラグ
+                    
+                    break;
+                }
+            }
+
+            return cls;
         }
 
 

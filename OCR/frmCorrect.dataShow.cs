@@ -138,7 +138,6 @@ namespace STSH_OCR.OCR
             // フォーム初期化
             formInitialize(dID, iX);
 
-
             // 発注データを取得
             ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
 
@@ -183,6 +182,8 @@ namespace STSH_OCR.OCR
                     _img = Properties.Settings.Default.MyDataPath + dataReader["画像名"].ToString();
                     showImage_openCv(_img);
                     trackBar1.Enabled = true;
+
+                    label3.Text = "[" + dataReader["ID"].ToString() + "]";
                 }
 
                 dataReader.Close();
@@ -193,9 +194,6 @@ namespace STSH_OCR.OCR
 
             showStatus = false;
             Cursor = Cursors.Default;
-
-            //ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
-            //label3.Text = ClsFaxOrder.Month.ToString();
         }
 
 
@@ -1735,7 +1733,7 @@ namespace STSH_OCR.OCR
                 btnData.Visible = true;
 
                 //データ数表示
-                lblPage.Text = string.Empty;
+                lblPages.Text = string.Empty;
             }
         }
 

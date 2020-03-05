@@ -75,11 +75,12 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.button1 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.dg1 = new STSH_OCR.DataGridViewEx();
             this.label1 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.lblPage = new System.Windows.Forms.Label();
+            this.lblPages = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.lblPage = new System.Windows.Forms.Label();
+            this.dg1 = new STSH_OCR.DataGridViewEx();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -92,7 +93,7 @@
             // 
             this.hScrollBar1.Location = new System.Drawing.Point(11, 852);
             this.hScrollBar1.Name = "hScrollBar1";
-            this.hScrollBar1.Size = new System.Drawing.Size(330, 45);
+            this.hScrollBar1.Size = new System.Drawing.Size(330, 37);
             this.hScrollBar1.TabIndex = 13;
             this.toolTip1.SetToolTip(this.hScrollBar1, "出勤簿を移動します");
             this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
@@ -165,7 +166,7 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBox1.Location = new System.Drawing.Point(1801, 791);
+            this.checkBox1.Location = new System.Drawing.Point(1801, 792);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(88, 23);
             this.checkBox1.TabIndex = 5;
@@ -177,7 +178,7 @@
             this.txtMemo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtMemo.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtMemo.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtMemo.Location = new System.Drawing.Point(1124, 784);
+            this.txtMemo.Location = new System.Drawing.Point(1123, 784);
             this.txtMemo.Multiline = true;
             this.txtMemo.Name = "txtMemo";
             this.txtMemo.Size = new System.Drawing.Size(668, 40);
@@ -188,7 +189,7 @@
             this.label2.BackColor = System.Drawing.Color.Lavender;
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(1064, 784);
+            this.label2.Location = new System.Drawing.Point(1063, 784);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(61, 40);
             this.label2.TabIndex = 307;
@@ -383,7 +384,7 @@
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label7.Location = new System.Drawing.Point(1266, 59);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(144, 34);
+            this.label7.Size = new System.Drawing.Size(137, 34);
             this.label7.TabIndex = 369;
             this.label7.Text = "発注書番号";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -391,10 +392,10 @@
             // txtPID
             // 
             this.txtPID.Font = new System.Drawing.Font("ＭＳ ゴシック", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtPID.Location = new System.Drawing.Point(1409, 59);
+            this.txtPID.Location = new System.Drawing.Point(1402, 59);
             this.txtPID.MaxLength = 3;
             this.txtPID.Name = "txtPID";
-            this.txtPID.Size = new System.Drawing.Size(68, 34);
+            this.txtPID.Size = new System.Drawing.Size(60, 34);
             this.txtPID.TabIndex = 370;
             this.txtPID.Text = "100";
             this.txtPID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -405,10 +406,10 @@
             // txtSeqNum
             // 
             this.txtSeqNum.Font = new System.Drawing.Font("ＭＳ ゴシック", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtSeqNum.Location = new System.Drawing.Point(1476, 59);
+            this.txtSeqNum.Location = new System.Drawing.Point(1461, 59);
             this.txtSeqNum.MaxLength = 2;
             this.txtSeqNum.Name = "txtSeqNum";
-            this.txtSeqNum.Size = new System.Drawing.Size(41, 34);
+            this.txtSeqNum.Size = new System.Drawing.Size(45, 34);
             this.txtSeqNum.TabIndex = 371;
             this.txtSeqNum.Text = "10";
             this.txtSeqNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -435,9 +436,9 @@
             this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label9.Font = new System.Drawing.Font("ＭＳ ゴシック", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label9.Location = new System.Drawing.Point(1516, 59);
+            this.label9.Location = new System.Drawing.Point(1505, 59);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(168, 34);
+            this.label9.Size = new System.Drawing.Size(171, 34);
             this.label9.TabIndex = 373;
             this.label9.Text = "得意先コード";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -446,10 +447,10 @@
             // txtTokuisakiCD
             // 
             this.txtTokuisakiCD.Font = new System.Drawing.Font("ＭＳ ゴシック", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtTokuisakiCD.Location = new System.Drawing.Point(1683, 59);
+            this.txtTokuisakiCD.Location = new System.Drawing.Point(1675, 59);
             this.txtTokuisakiCD.MaxLength = 7;
             this.txtTokuisakiCD.Name = "txtTokuisakiCD";
-            this.txtTokuisakiCD.Size = new System.Drawing.Size(207, 34);
+            this.txtTokuisakiCD.Size = new System.Drawing.Size(121, 34);
             this.txtTokuisakiCD.TabIndex = 374;
             this.txtTokuisakiCD.Text = "1001001";
             this.txtTokuisakiCD.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -621,6 +622,62 @@
             this.panel3.Size = new System.Drawing.Size(827, 619);
             this.panel3.TabIndex = 592;
             // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.Color.Lavender;
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.label1.Location = new System.Drawing.Point(1063, 123);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(443, 31);
+            this.label1.TabIndex = 593;
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.linkLabel1.Location = new System.Drawing.Point(12, 827);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(135, 15);
+            this.linkLabel1.TabIndex = 595;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "返信ファクス送信";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // lblPages
+            // 
+            this.lblPages.BackColor = System.Drawing.Color.Lavender;
+            this.lblPages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblPages.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblPages.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.lblPages.Location = new System.Drawing.Point(1834, 123);
+            this.lblPages.Name = "lblPages";
+            this.lblPages.Size = new System.Drawing.Size(56, 31);
+            this.lblPages.TabIndex = 596;
+            this.lblPages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(9, 889);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(169, 17);
+            this.label3.TabIndex = 597;
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblPage
+            // 
+            this.lblPage.BackColor = System.Drawing.SystemColors.Control;
+            this.lblPage.Font = new System.Drawing.Font("ＭＳ ゴシック", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblPage.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.lblPage.Location = new System.Drawing.Point(1802, 59);
+            this.lblPage.Name = "lblPage";
+            this.lblPage.Size = new System.Drawing.Size(89, 33);
+            this.lblPage.TabIndex = 598;
+            this.lblPage.Text = "100/100";
+            this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // dg1
             // 
             this.dg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -637,57 +694,14 @@
             this.dg1.CurrentCellDirtyStateChanged += new System.EventHandler(this.dg1_CurrentCellDirtyStateChanged);
             this.dg1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg1_EditingControlShowing);
             // 
-            // label1
-            // 
-            this.label1.BackColor = System.Drawing.Color.Lavender;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.label1.Location = new System.Drawing.Point(1063, 123);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(443, 31);
-            this.label1.TabIndex = 593;
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.linkLabel1.Location = new System.Drawing.Point(12, 827);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(135, 15);
-            this.linkLabel1.TabIndex = 595;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "返信ファクス送信";
-            // 
-            // lblPage
-            // 
-            this.lblPage.BackColor = System.Drawing.Color.Lavender;
-            this.lblPage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblPage.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblPage.ForeColor = System.Drawing.SystemColors.MenuText;
-            this.lblPage.Location = new System.Drawing.Point(1834, 123);
-            this.lblPage.Name = "lblPage";
-            this.lblPage.Size = new System.Drawing.Size(56, 31);
-            this.lblPage.TabIndex = 596;
-            this.lblPage.Text = "(100/100)";
-            this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label3
-            // 
-            this.label3.Location = new System.Drawing.Point(888, 827);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(169, 17);
-            this.label3.TabIndex = 597;
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // frmCorrect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1904, 906);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.lblPage);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.lblPages);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.trackBar1);
@@ -804,7 +818,8 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.Label lblPage;
+        private System.Windows.Forms.Label lblPages;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblPage;
     }
 }
