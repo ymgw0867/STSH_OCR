@@ -161,7 +161,8 @@ namespace STSH_OCR.OCR
             context = new DataContext(cn);
             tblPtn = context.GetTable<Common.ClsOrderPattern>();    // 登録パターンテーブル
             tblHold = context.GetTable<Common.ClsHoldFax>();        // 保留テーブル
-                                                                    //tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
+            //tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
+
             // ローカルDB接続
             cn2 = new SQLiteConnection("DataSource=" + Local_DB);
             context2 = new DataContext(cn2);
