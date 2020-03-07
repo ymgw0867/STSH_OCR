@@ -103,6 +103,7 @@
             this.btnS.Text = "(&R)";
             this.btnS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnS.UseVisualStyleBackColor = false;
+            this.btnS.Click += new System.EventHandler(this.btnS_Click);
             // 
             // button1
             // 
@@ -121,27 +122,26 @@
             this.button2.TabIndex = 17;
             this.button2.Text = "終了(&E)";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.CustomFormat = "yyyy/mm/dd(ddd)";
+            this.dateTimePicker1.CustomFormat = "yyyy/M/dd(ddd)";
             this.dateTimePicker1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateTimePicker1.Location = new System.Drawing.Point(103, 18);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.ShowCheckBox = true;
-            this.dateTimePicker1.Size = new System.Drawing.Size(166, 22);
+            this.dateTimePicker1.Size = new System.Drawing.Size(153, 22);
             this.dateTimePicker1.TabIndex = 18;
             // 
             // dateTimePicker2
             // 
-            this.dateTimePicker2.CustomFormat = "yyyy/mm/dd(ddd)";
+            this.dateTimePicker2.CustomFormat = "yyyy/M/dd(ddd)";
             this.dateTimePicker2.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker2.Location = new System.Drawing.Point(298, 18);
+            this.dateTimePicker2.Location = new System.Drawing.Point(277, 18);
             this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.ShowCheckBox = true;
-            this.dateTimePicker2.Size = new System.Drawing.Size(166, 22);
+            this.dateTimePicker2.Size = new System.Drawing.Size(153, 22);
             this.dateTimePicker2.TabIndex = 19;
             // 
             // label2
@@ -149,7 +149,7 @@
             this.label2.BackColor = System.Drawing.SystemColors.Control;
             this.label2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(268, 18);
+            this.label2.Location = new System.Drawing.Point(250, 18);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(31, 22);
             this.label2.TabIndex = 20;
@@ -200,6 +200,7 @@
             this.Name = "frmEditLogRep";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "発注データ編集ログ";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmEditLogRep_FormClosing);
             this.Load += new System.EventHandler(this.frmEditLogRep_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

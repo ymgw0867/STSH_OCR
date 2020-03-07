@@ -327,5 +327,13 @@ namespace STSH_OCR
                 // 何もしない
             }
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Hide();
+            frmEditLogRep logRep = new frmEditLogRep();
+            logRep.ShowDialog();
+            Show();
+        }
     }
 }

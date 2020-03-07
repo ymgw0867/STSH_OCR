@@ -1888,7 +1888,46 @@ namespace STSH_OCR.OCR
                     // 変更のとき編集ログデータを書き込み
                     if (cellBeforeValue != cellAfterValue)
                     {
-                        LogDataUpdate(e.RowIndex, e.ColumnIndex, global.flgOn, cellName, lblTokuisakiName.Text, Utility.NulltoStr(dg1[colHinCode, e.RowIndex].Value).PadLeft(8, '0'), Utility.NulltoStr(dg1[colMaker, e.RowIndex].Value));
+                        // 店着日付
+                        string TenDay = string.Empty;
+
+                        if (e.ColumnIndex == 6)
+                        {
+                            TenDay = txtTenDay1.Text;
+                        }
+
+                        if (e.ColumnIndex == 7)
+                        {
+                            TenDay = txtTenDay2.Text;
+                        }
+
+                        if (e.ColumnIndex == 8)
+                        {
+                            TenDay = txtTenDay3.Text;
+                        }
+
+                        if (e.ColumnIndex == 9)
+                        {
+                            TenDay = txtTenDay4.Text;
+                        }
+
+                        if (e.ColumnIndex == 10)
+                        {
+                            TenDay = txtTenDay5.Text;
+                        }
+
+                        if (e.ColumnIndex == 11)
+                        {
+                            TenDay = txtTenDay6.Text;
+                        }
+
+                        if (e.ColumnIndex == 12)
+                        {
+                            TenDay = txtTenDay7.Text;
+                        }
+
+                        LogDataUpdate(e.RowIndex, e.ColumnIndex, global.flgOn, cellName, lblTokuisakiName.Text, 
+                                      Utility.NulltoStr(dg1[colHinCode, e.RowIndex].Value).PadLeft(8, '0'), Utility.NulltoStr(dg1[colMaker, e.RowIndex].Value), TenDay);
                     }
                 }
             }
@@ -1987,7 +2026,7 @@ namespace STSH_OCR.OCR
                 // 変更のとき編集ログデータを書き込み
                 if (cellBeforeValue != cellAfterValue)
                 {
-                    LogDataUpdate(0, 0, global.flgOff, cellName, lblTokuisakiName.Text, "", "");
+                    LogDataUpdate(0, 0, global.flgOff, cellName, lblTokuisakiName.Text, string.Empty, string.Empty, string.Empty);
                 }
             }
         }
@@ -2004,7 +2043,7 @@ namespace STSH_OCR.OCR
         /// <param name="colName">
         ///     カラム名</param>
         /// ----------------------------------------------------------------------
-        private void LogDataUpdate(int rIndex, int iX, int dType, string colName, string TokuisakiName, string SyohinCD, string SyohinName)
+        private void LogDataUpdate(int rIndex, int iX, int dType, string colName, string TokuisakiName, string SyohinCD, string SyohinName, string TenDay)
         {
             //cn.Open();
 
@@ -2024,7 +2063,7 @@ namespace STSH_OCR.OCR
                 sql += ClsFaxOrder.SeqNumber + "','";           // 発注書ID連番
                 sql += SyohinCD + "','";                        // 商品コード
                 sql += SyohinName + "','";                      // 商品名
-                sql += "','";                                   // 店着日付
+                sql += TenDay + "','";                          // 店着日付
                 sql += rIndex + "','";                          // 行番号
                 sql += iX + "','";                              // 列番号
                 sql += colName + "','";                         // カラム名

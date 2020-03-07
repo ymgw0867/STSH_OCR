@@ -36,6 +36,8 @@ namespace STSH_OCR.OCR
             context = new DataContext(cn);
             tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
 
+            GridViewSetting(dataGridView1);
+
         }
 
         string colStaffCode = "c1";
@@ -106,7 +108,7 @@ namespace STSH_OCR.OCR
             tempDGV.Columns.Add(colField, "編集項目");
             tempDGV.Columns.Add(colBefore, "編集前");
             tempDGV.Columns.Add(colAfter, "編集後");
-            tempDGV.Columns.Add(colAccount, "発注書ID");
+            tempDGV.Columns.Add(colID, "発注書ID");
 
             tempDGV.Columns[colEditDate].Width = 160;
             tempDGV.Columns[colPcName].Width = 100;
@@ -171,20 +173,20 @@ namespace STSH_OCR.OCR
         /// <param name="sCode">
         ///     指定所属コード</param>
         /// ----------------------------------------------------------------------
-        private void GridViewShowData(DataGridView g, int sYY, int sMM, int sYYto, int sMMto, int sCode)
+        private void GridViewShowData(DataGridView g)
         {
             // カーソル待機中
             this.Cursor = Cursors.WaitCursor;
-
-            int sYYMM = sYY * 100 + sMM;
-            int eYYMM = sYYto * 100 + sMMto;
 
             // データグリッド行クリア
             g.Rows.Clear();
 
             try
             {
-                var s = tblEditLog.OrderByDescending(a => a.Date_Time);
+                DateTime edt = new DateTime(dateTimePicker2.Value.Year, dateTimePicker2.Value.Month, dateTimePicker2.Value.Day, 23, 59, 59);
+                var s = tblEditLog.Where(a => a.Date_Time.CompareTo(dateTimePicker1.Value.ToString()) >= 0 && 
+                    a.Date_Time.CompareTo(edt.ToString()) <= 0)
+                    .OrderByDescending(a => a.Date_Time);
 
                 // PC指定
                 if (comboBox1.SelectedIndex != -1)
@@ -203,37 +205,17 @@ namespace STSH_OCR.OCR
                     g.Rows.Add();
 
                     g[colEditDate, g.Rows.Count - 1].Value = t.Date_Time;
-                    g[colStaffCode, g.Rows.Count - 1].Value = t.出勤簿スタッフコード.ToString("D5");
-                    g[colStaffName, g.Rows.Count - 1].Value = Utility.NulltoStr(t.出勤簿氏名);
-                    if (t.出勤簿日 != string.Empty)
-                    {
-                        g[colDate, g.Rows.Count - 1].Value = t.出勤簿年 + "/" + t.出勤簿月.ToString("D2") + "/" + t.出勤簿日.PadLeft(2, '0');
-                    }
-                    else
-                    {
-                        g[colDate, g.Rows.Count - 1].Value = t.出勤簿年 + "/" + t.出勤簿月.ToString("D2") + "   ";
-                    }
-
-                    if (t.Is項目名Null())
-                    {
-                        g[colField, g.Rows.Count - 1].Value = "";
-                    }
-                    else
-                    {
-                        g[colField, g.Rows.Count - 1].Value = Utility.NulltoStr(t.項目名);
-                    }
-
-                    g[colBefore, g.Rows.Count - 1].Value = Utility.NulltoStr(t.編集前値);
-                    g[colAfter, g.Rows.Count - 1].Value = Utility.NulltoStr(t.編集後値);
-
-                    if (t.ログインユーザーRow == null)
-                    {
-                        g[colAccount, g.Rows.Count - 1].Value = string.Empty;
-                    }
-                    else
-                    {
-                        g[colAccount, g.Rows.Count - 1].Value = t.ログインユーザーRow.名前;
-                    }
+                    g[colPcName, g.Rows.Count - 1].Value = t.ComputerName;
+                    g[colTokuisakiCD, g.Rows.Count - 1].Value = t.TokuisakiCode;
+                    g[colTokuisakiNM, g.Rows.Count - 1].Value = t.TokuisakiName;
+                    g[colPatternID, g.Rows.Count - 1].Value = t.patternID.PadLeft(2, '0') + t.patternIDSeq.PadLeft(2, '0');
+                    g[colYear, g.Rows.Count - 1].Value = t.Year;
+                    g[colMonth, g.Rows.Count - 1].Value = t.Month;
+                    g[colDay, g.Rows.Count - 1].Value = t.TenchakuDate;
+                    g[colField, g.Rows.Count - 1].Value = t.ShohinName + " " + t.FieldName;
+                    g[colBefore, g.Rows.Count - 1].Value = t.BeforeValue;
+                    g[colAfter, g.Rows.Count - 1].Value = t.AfterValue;
+                    g[colID, g.Rows.Count - 1].Value = t.ID;
                 }
 
                 g.CurrentCell = null;
@@ -251,17 +233,33 @@ namespace STSH_OCR.OCR
             // 該当するデータがないとき
             if (g.RowCount == 0)
             {
-                MessageBox.Show("該当するデータはありませんでした", appName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("該当するデータはありませんでした", "発注データ編集ログ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 button1.Enabled = false;
-                lblCnt.Visible = false;
+                //lblCnt.Visible = false;
             }
             else
             {
                 button1.Enabled = true;
-                lblCnt.Visible = true;
-                lblCnt.Text = g.RowCount.ToString("#,##0") + "件";
+                //lblCnt.Visible = true;
+                //lblCnt.Text = g.RowCount.ToString("#,##0") + "件";
             }
         }
 
+        private void btnS_Click(object sender, EventArgs e)
+        {
+            GridViewShowData(dataGridView1);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // 閉じる
+            Close();
+        }
+
+        private void frmEditLogRep_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // 後片付け
+            Dispose();
+        }
     }
 }
