@@ -50,7 +50,7 @@
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label3.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(12, 43);
+            this.label3.Location = new System.Drawing.Point(12, 39);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(92, 22);
             this.label3.TabIndex = 12;
@@ -61,10 +61,10 @@
             // 
             this.sTokuisakiNM.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.sTokuisakiNM.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf;
-            this.sTokuisakiNM.Location = new System.Drawing.Point(103, 43);
+            this.sTokuisakiNM.Location = new System.Drawing.Point(103, 39);
             this.sTokuisakiNM.Name = "sTokuisakiNM";
-            this.sTokuisakiNM.Size = new System.Drawing.Size(361, 22);
-            this.sTokuisakiNM.TabIndex = 11;
+            this.sTokuisakiNM.Size = new System.Drawing.Size(327, 22);
+            this.sTokuisakiNM.TabIndex = 2;
             this.sTokuisakiNM.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label1
@@ -82,12 +82,16 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(12, 82);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 21;
-            this.dataGridView1.Size = new System.Drawing.Size(1295, 722);
+            this.dataGridView1.Size = new System.Drawing.Size(1596, 722);
             this.dataGridView1.TabIndex = 13;
+            this.dataGridView1.TabStop = false;
             // 
             // btnS
             // 
@@ -96,10 +100,10 @@
             this.btnS.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnS.Image = ((System.Drawing.Image)(resources.GetObject("btnS.Image")));
             this.btnS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnS.Location = new System.Drawing.Point(1242, 12);
+            this.btnS.Location = new System.Drawing.Point(1543, 12);
             this.btnS.Name = "btnS";
             this.btnS.Size = new System.Drawing.Size(65, 64);
-            this.btnS.TabIndex = 15;
+            this.btnS.TabIndex = 4;
             this.btnS.Text = "(&R)";
             this.btnS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnS.UseVisualStyleBackColor = false;
@@ -107,19 +111,22 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1071, 824);
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(1372, 824);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(115, 37);
-            this.button1.TabIndex = 16;
+            this.button1.TabIndex = 5;
             this.button1.Text = "Excel出力(&X)";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1192, 824);
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(1493, 824);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(115, 37);
-            this.button2.TabIndex = 17;
+            this.button2.TabIndex = 6;
             this.button2.Text = "終了(&E)";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -132,7 +139,7 @@
             this.dateTimePicker1.Location = new System.Drawing.Point(103, 18);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(153, 22);
-            this.dateTimePicker1.TabIndex = 18;
+            this.dateTimePicker1.TabIndex = 0;
             // 
             // dateTimePicker2
             // 
@@ -142,7 +149,7 @@
             this.dateTimePicker2.Location = new System.Drawing.Point(277, 18);
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(153, 22);
-            this.dateTimePicker2.TabIndex = 19;
+            this.dateTimePicker2.TabIndex = 1;
             // 
             // label2
             // 
@@ -162,27 +169,27 @@
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label4.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(470, 43);
+            this.label4.Location = new System.Drawing.Point(439, 38);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(93, 23);
             this.label4.TabIndex = 21;
-            this.label4.Text = "編集ＰＣ";
+            this.label4.Text = "編集ＰＣ名";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // comboBox1
             // 
             this.comboBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(562, 43);
+            this.comboBox1.Location = new System.Drawing.Point(531, 38);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(215, 23);
-            this.comboBox1.TabIndex = 22;
+            this.comboBox1.TabIndex = 3;
             // 
             // frmEditLogRep
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1319, 873);
+            this.ClientSize = new System.Drawing.Size(1620, 873);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.dateTimePicker2);

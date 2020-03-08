@@ -1632,8 +1632,37 @@ namespace STSH_OCR.OCR
             dg1.Rows.Clear();   // 行数をクリア
             dg1.Rows.Add(30);   // 行数を設定
 
-            for (int i = 1; i < dg1.RowCount; i+=2)
+            // 編集不可行
+            for (int i = 0; i < dg1.RowCount; i+= 2)
             {
+                dg1[colNouka, i].ReadOnly = true;
+                dg1[colBaika, i].ReadOnly = true;
+                dg1[colDay1, i].ReadOnly = true;
+                dg1[colDay2, i].ReadOnly = true;
+                dg1[colDay3, i].ReadOnly = true;
+                dg1[colDay4, i].ReadOnly = true;
+                dg1[colDay5, i].ReadOnly = true;
+                dg1[colDay6, i].ReadOnly = true;
+                dg1[colDay7, i].ReadOnly = true;
+                dg1[colSyubai, i].ReadOnly = true;
+            }
+
+            for (int i = 1; i < dg1.RowCount; i += 2)
+            {
+                if (i % 2 == 0)
+                {
+                    dg1[colNouka, i].ReadOnly = true;
+                    dg1[colBaika, i].ReadOnly = true;
+                    dg1[colDay1, i].ReadOnly = true;
+                    dg1[colDay2, i].ReadOnly = true;
+                    dg1[colDay3, i].ReadOnly = true;
+                    dg1[colDay4, i].ReadOnly = true;
+                    dg1[colDay5, i].ReadOnly = true;
+                    dg1[colDay6, i].ReadOnly = true;
+                    dg1[colDay7, i].ReadOnly = true;
+                    dg1[colSyubai, i].ReadOnly = true;
+                }
+
                 dg1[colSyubai, i] = new DataGridViewComboBoxCell();
                 dg1[colSyubai, i].ReadOnly = false; // 編集可能に設定
 

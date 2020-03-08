@@ -68,23 +68,23 @@ namespace STSH_OCR.OCR
         private const string LOG_TOKUISAKICD = "得意先コード";
         private const string LOG_PID = "発注書ID";
         private const string LOG_PSEQNUM = "発注書連番";
-        private const string LOG_DAY_1 = "店着日月曜";
-        private const string LOG_DAY_2 = "店着日火曜";
-        private const string LOG_DAY_3 = "店着日水曜";
-        private const string LOG_DAY_4 = "店着日木曜";
-        private const string LOG_DAY_5 = "店着日金曜";
-        private const string LOG_DAY_6 = "店着日土曜";
-        private const string LOG_DAY_7 = "店着日日曜";
+        private const string LOG_DAY_1 = "月曜日付";
+        private const string LOG_DAY_2 = "火曜日付";
+        private const string LOG_DAY_3 = "水曜日付";
+        private const string LOG_DAY_4 = "木曜日付";
+        private const string LOG_DAY_5 = "金曜日付";
+        private const string LOG_DAY_6 = "土曜日付";
+        private const string LOG_DAY_7 = "日曜日付";
         private const string CELL_SYOHINCD = "商品コード";
         private const string CELL_NOUKA = "納価";
         private const string CELL_BAIKA = "売価";
-        private const string CELL_MON = "月曜発注数";
-        private const string CELL_TUE = "火曜発注数";
-        private const string CELL_WED = "水曜発注数";
-        private const string CELL_THU = "木曜発注数";
-        private const string CELL_FRI = "金曜発注数";
-        private const string CELL_SAT = "土曜発注数";
-        private const string CELL_SUN = "日曜発注数";
+        private const string CELL_MON = "(月)発注数";
+        private const string CELL_TUE = "(火)発注数";
+        private const string CELL_WED = "(水)発注数";
+        private const string CELL_THU = "(木)発注数";
+        private const string CELL_FRI = "(金)発注数";
+        private const string CELL_SAT = "(土)発注数";
+        private const string CELL_SUN = "(日)発注数";
         private const string CELL_SHUBAI = "終売処理";
         #endregion 編集ログ・項目名
 
@@ -2049,12 +2049,15 @@ namespace STSH_OCR.OCR
 
             try
             {
+                DateTime NowDate = DateTime.Now;
+
                 // データ追加
                 string sql = "insert into DataEditLog ";
                 sql += "(年月日時刻, 得意先コード, 得意先名, 年, 月, 発注書ID, 発注書ID連番, 商品コード, 商品名, 店着日付, 行番号, 列番号, " +
                         "項目名, 変更前値, 変更後値, 画像名, 編集アカウントID, コンピュータ名, 更新年月日, 発注データID) ";
                 sql += "values ('";
-                sql += DateTime.Now.ToString() + "','";                     // 年月日時刻
+                sql += NowDate.Year + "/" + NowDate.Month.ToString("D2") + "/" + NowDate.Day.ToString("D2") + " " + 
+                       NowDate.Hour.ToString("D2") + ":" + NowDate.Minute.ToString("D2") + ":" + NowDate.Second.ToString("D2") + "','";    // 年月日時刻
                 sql += ClsFaxOrder.TokuisakiCode.ToString("D7") + "','";    // 得意先コード
                 sql += TokuisakiName + "','";                   // 得意先名
                 sql += ClsFaxOrder.Year + "','";                // 年
@@ -3382,11 +3385,11 @@ namespace STSH_OCR.OCR
 
         private void dg1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
+            DataGridView dgv = (DataGridView)sender;
+
             //表示されているコントロールがDataGridViewComboBoxEditingControlか調べる
             if (e.Control is DataGridViewComboBoxEditingControl)
             {
-                DataGridView dgv = (DataGridView)sender;
-
                 //該当する列か調べる
                 //if (dgv.CurrentCell.OwningColumn.Name == "ComboBox")
                 //{
@@ -3397,39 +3400,39 @@ namespace STSH_OCR.OCR
                 //    this.dataGridViewComboBox.SelectedIndexChanged +=
                 //        new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
                 //}
+            }
 
-                if (e.Control is DataGridViewTextBoxEditingControl)
+            if (e.Control is DataGridViewTextBoxEditingControl)
+            {
+                // 数字のみ入力可能とする
+                if (dgv.CurrentCell.ColumnIndex == 3 || dgv.CurrentCell.ColumnIndex == 4 || dgv.CurrentCell.ColumnIndex == 5 || dgv.CurrentCell.ColumnIndex == 6 ||
+                    dgv.CurrentCell.ColumnIndex == 7 || dgv.CurrentCell.ColumnIndex == 8 || dgv.CurrentCell.ColumnIndex == 9 || dgv.CurrentCell.ColumnIndex == 10 ||
+                    dgv.CurrentCell.ColumnIndex == 11 || dgv.CurrentCell.ColumnIndex == 12)
                 {
-                    // 数字のみ入力可能とする
-                    if (dgv.CurrentCell.ColumnIndex == 3 || dgv.CurrentCell.ColumnIndex == 4 || dgv.CurrentCell.ColumnIndex == 5 || dgv.CurrentCell.ColumnIndex == 6 || 
-                        dgv.CurrentCell.ColumnIndex == 7 || dgv.CurrentCell.ColumnIndex == 8 || dgv.CurrentCell.ColumnIndex == 9 || dgv.CurrentCell.ColumnIndex == 10 || 
-                        dgv.CurrentCell.ColumnIndex == 11 || dgv.CurrentCell.ColumnIndex == 12)
+                    if (dgv.CurrentCell.ColumnIndex != 2)
                     {
-                        if (dgv.CurrentCell.ColumnIndex != 2)
-                        {
-                            //イベントハンドラが複数回追加されてしまうので最初に削除する
-                            e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
-                            e.Control.KeyPress -= new KeyPressEventHandler(dataGridViewComboBox_SelectedIndexChanged);
+                        //イベントハンドラが複数回追加されてしまうので最初に削除する
+                        e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
+                        e.Control.KeyPress -= new KeyPressEventHandler(dataGridViewComboBox_SelectedIndexChanged);
 
-                            //イベントハンドラを追加する
-                            e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
-                        }
+                        //イベントハンドラを追加する
+                        e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
                     }
                 }
+            }
 
-                // 終売処理の列か調べる
-                if (dgv.CurrentCell.OwningColumn.Name == colSyubai && dgv.CurrentCell.OwningRow.Index % 2  != 0)
-                {
-                    //編集のために表示されているコントロールを取得
-                    this.dataGridViewComboBox = (DataGridViewComboBoxEditingControl)e.Control;
+            // 終売処理の列か調べる
+            if (dgv.CurrentCell.OwningColumn.Name == colSyubai && dgv.CurrentCell.OwningRow.Index % 2 != 0)
+            {
+                //編集のために表示されているコントロールを取得
+                this.dataGridViewComboBox = (DataGridViewComboBoxEditingControl)e.Control;
 
-                    //イベントハンドラが複数回追加されてしまうので最初に削除する
-                    e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
-                    e.Control.KeyPress -= new KeyPressEventHandler(dataGridViewComboBox_SelectedIndexChanged);
+                //イベントハンドラが複数回追加されてしまうので最初に削除する
+                e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
+                e.Control.KeyPress -= new KeyPressEventHandler(dataGridViewComboBox_SelectedIndexChanged);
 
-                    //SelectedIndexChangedイベントハンドラを追加
-                    this.dataGridViewComboBox.SelectedIndexChanged +=　new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
-                }
+                //SelectedIndexChangedイベントハンドラを追加
+                this.dataGridViewComboBox.SelectedIndexChanged += new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
             }
         }
 

@@ -31,6 +31,7 @@ namespace STSH_OCR
         // ローカルマスター：Sqlite3
         SQLiteConnection cn = null;
         DataContext context = null;
+
         SQLiteConnection cn2 = null;
         DataContext context2 = null;
 
@@ -56,6 +57,27 @@ namespace STSH_OCR
 
         private void button6_Click(object sender, EventArgs e)
         {
+            // 環境設定データ
+            Table<Common.ClsSystemConfig> tblCnf = context.GetTable<Common.ClsSystemConfig>();
+            var cnf = tblCnf.Single(a => a.ID == global.configKEY);
+            int dM = cnf.LogSpan;
+
+            // 編集ログデータ
+            Table<Common.ClsDataEditLog> tblLog = context.GetTable<Common.ClsDataEditLog>();
+
+            // 日付
+            DateTime sdt = DateTime.Now.AddMonths(-1 * dM);
+
+            string _sdt = sdt.Year + "/" + sdt.Month.ToString("D2") + "/" + sdt.Day.ToString("D2") + " " +
+                          sdt.Hour.ToString("D2") + ":" + sdt.Minute.ToString("D2") + ":" + sdt.Second.ToString("D2") + "','";
+
+            foreach (ClsDataEditLog item in tblLog.Where(a => a.Date_Time.CompareTo(sdt) <= 0))
+            {
+                tblLog.DeleteOnSubmit(item);
+            }
+
+            context.SubmitChanges();
+
             // メニューを閉じる
             Close();
         }
