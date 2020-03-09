@@ -3330,8 +3330,7 @@ namespace STSH_OCR.OCR
             {
                 if ((e.RowIndex % 2) != 0)
                 {
-                    ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, 
-                        Properties.Settings.Default.仕入先マスター, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
+                    ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
 
                     dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;       // 仕入先名
                     dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;             // 商品名

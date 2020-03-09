@@ -461,7 +461,7 @@ namespace STSH_OCR.Common
 
             // 商品発注明細クラス
             ClsGoods[] goods = new ClsGoods[15];
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < global.MAX_GYO; i++)
             {
                 goods[i] = new ClsGoods();
                 goods[i].Suu = new string[7];
@@ -951,7 +951,7 @@ namespace STSH_OCR.Common
         private bool ChkShohin(string G_Code, int G_Syubai, out string eMsg, out int eNum, bool ha)
         {
             // 商品コードマスター登録チェック
-            ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター, G_Code);
+            ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(G_Code);
 
             // 商品マスター未登録
             if (syohin.SYOHIN_CD == string.Empty)

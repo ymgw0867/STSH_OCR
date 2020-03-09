@@ -122,5 +122,11 @@ namespace STSH_OCR.Common
 
         // 終売処理
         public static string[] SyubaiArray = { "", "取消", "有効" };
+        public static int SYUBAI_TORIKESHI = 1;
+        public static int SYUBAI_YUKO = 2;
+        public static int SYUBAI_NON = 0;
+
+        // CSVデータ
+        public static string DTKBN = "1";
     }
 }

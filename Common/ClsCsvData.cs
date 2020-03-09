@@ -8,6 +8,10 @@ namespace STSH_OCR.Common
 {
     class ClsCsvData
     {
+        ///--------------------------------------------------
+        /// <summary>
+        ///     商品情報クラス </summary>
+        ///--------------------------------------------------
         public class ClsCsvSyohin
         {
             // 商品コード
@@ -219,8 +223,14 @@ namespace STSH_OCR.Common
 
                 return syohins;
             }
+            ///--------------------------------------------------
+            ///--------------------------------------------------
         }
-
+        
+        ///--------------------------------------------------
+        /// <summary>
+        ///     得意先情報クラス </summary>
+        ///--------------------------------------------------
         public class ClsCsvTokuisaki
         {
             // 得意先コード
@@ -314,6 +324,40 @@ namespace STSH_OCR.Common
 
                 return tokuisakis;
             }
+        }
+        
+        ///--------------------------------------------------
+        /// <summary>
+        ///     CSVデータクラス </summary>
+        ///--------------------------------------------------
+        public class ClsCsvCSV
+        {
+            // 得意先コード
+            public string TOKUISAKI_CD { get; set; }
+
+            // 得意先名称
+            public string TOKUISAKI_NM { get; set; }
+
+            // 納品日
+            public string NOUHIN_DATE { get; set; }
+
+            // 商品コード
+            public string SYOHIN_CD { get; set; }
+
+            // 商品名
+            public string SYOHIN_NM { get; set; }
+
+            // 数量
+            public string SUU { get; set; }
+
+            // 納価
+            public string NOUKA { get; set; }
+
+            // 売価
+            public string BAIKA { get; set; }
+
+            // ＤＴ区分
+            public string DT_KBN { get; set; }
         }
     }
 }

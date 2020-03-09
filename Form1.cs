@@ -57,30 +57,41 @@ namespace STSH_OCR
 
         private void button6_Click(object sender, EventArgs e)
         {
+            // 保存期間経過ログデータ削除
+            LogDeleteSpan();
+
+            // メニューを閉じる
+            Close();
+        }
+
+        private void LogDeleteSpan()
+        {
             // 環境設定データ
             Table<Common.ClsSystemConfig> tblCnf = context.GetTable<Common.ClsSystemConfig>();
+
+            // ログデータ保存期間取得
             var cnf = tblCnf.Single(a => a.ID == global.configKEY);
             int dM = cnf.LogSpan;
 
             // 編集ログデータ
             Table<Common.ClsDataEditLog> tblLog = context.GetTable<Common.ClsDataEditLog>();
 
-            // 日付
+            // 削除基準日付
             DateTime sdt = DateTime.Now.AddMonths(-1 * dM);
 
             string _sdt = sdt.Year + "/" + sdt.Month.ToString("D2") + "/" + sdt.Day.ToString("D2") + " " +
-                          sdt.Hour.ToString("D2") + ":" + sdt.Minute.ToString("D2") + ":" + sdt.Second.ToString("D2") + "','";
+                          sdt.Hour.ToString("D2") + ":" + sdt.Minute.ToString("D2") + ":" + sdt.Second.ToString("D2");
 
-            foreach (ClsDataEditLog item in tblLog.Where(a => a.Date_Time.CompareTo(sdt) <= 0))
+            // 保存期間経過ログデータ削除
+            foreach (ClsDataEditLog item in tblLog.Where(a => a.Date_Time.CompareTo(_sdt) <= 0))
             {
                 tblLog.DeleteOnSubmit(item);
             }
 
             context.SubmitChanges();
-
-            // メニューを閉じる
-            Close();
         }
+
+
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -355,6 +366,14 @@ namespace STSH_OCR
             Hide();
             frmEditLogRep logRep = new frmEditLogRep();
             logRep.ShowDialog();
+            Show();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            Hide();
+            frmCsvDataCreate frmCsv = new frmCsvDataCreate();
+            frmCsv.ShowDialog();
             Show();
         }
     }

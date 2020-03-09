@@ -750,7 +750,7 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     clsCsvSyohinクラス</returns>
         ///-------------------------------------------------------------------
-        public static ClsCsvData.ClsCsvSyohin GetSyohinData(string SyPath, string SySzPath, string ShiirePath, string tID)
+        public static ClsCsvData.ClsCsvSyohin GetSyohinData(string tID)
         {
             // 商品CSVデータ配列読み込み
             string[] Sy_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);

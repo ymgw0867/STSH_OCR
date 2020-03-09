@@ -135,6 +135,12 @@
       <DependentUpon>frmComment.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\ClsGoods.cs" />
+    <Compile Include="OCR\frmCsvDataCreate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OCR\frmCsvDataCreate.Designer.cs">
+      <DependentUpon>frmCsvDataCreate.cs</DependentUpon>
+    </Compile>
     <Compile Include="OCR\frmEditLogRep.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,6 +217,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Master\frmComment.resx">
       <DependentUpon>frmComment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OCR\frmCsvDataCreate.resx">
+      <DependentUpon>frmCsvDataCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OCR\frmEditLogRep.resx">
       <DependentUpon>frmEditLogRep.cs</DependentUpon>

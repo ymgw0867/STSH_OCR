@@ -195,12 +195,12 @@ namespace STSH_OCR.OCR
                 // 開始日付
                 DateTime sdt = new DateTime(dateTimePicker1.Value.Year, dateTimePicker1.Value.Month, dateTimePicker1.Value.Day, 0, 0, 0);
                 string _sdt = sdt.Year + "/" + sdt.Month.ToString("D2") + "/" + sdt.Day.ToString("D2") + " " +
-                              sdt.Hour.ToString("D2") + ":" + sdt.Minute.ToString("D2") + ":" + sdt.Second.ToString("D2") + "','";
+                              sdt.Hour.ToString("D2") + ":" + sdt.Minute.ToString("D2") + ":" + sdt.Second.ToString("D2");
 
                 // 終了日付
                 DateTime edt = new DateTime(dateTimePicker2.Value.Year, dateTimePicker2.Value.Month, dateTimePicker2.Value.Day, 23, 59, 59);
                 string _edt = edt.Year + "/" + edt.Month.ToString("D2") + "/" + edt.Day.ToString("D2") + " " +
-                              edt.Hour.ToString("D2") + ":" + edt.Minute.ToString("D2") + ":" + edt.Second.ToString("D2") + "','";
+                              edt.Hour.ToString("D2") + ":" + edt.Minute.ToString("D2") + ":" + edt.Second.ToString("D2");
 
                 var s = tblEditLog.Where(a => a.Date_Time.CompareTo(_sdt) >= 0 && a.Date_Time.CompareTo(_edt) <= 0).OrderByDescending(a => a.Date_Time);
 

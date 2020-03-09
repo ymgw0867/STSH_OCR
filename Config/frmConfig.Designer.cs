@@ -54,11 +54,11 @@
             // 
             this.button2.BackColor = System.Drawing.SystemColors.Control;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button2.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button2.Location = new System.Drawing.Point(360, 276);
+            this.button2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button2.Location = new System.Drawing.Point(364, 324);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(81, 32);
+            this.button2.Size = new System.Drawing.Size(92, 41);
             this.button2.TabIndex = 3;
             this.button2.Text = "登録(&D)";
             this.button2.UseVisualStyleBackColor = false;
@@ -68,11 +68,11 @@
             // 
             this.button3.BackColor = System.Drawing.SystemColors.Control;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button3.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button3.Location = new System.Drawing.Point(447, 276);
+            this.button3.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button3.Location = new System.Drawing.Point(472, 324);
             this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(81, 32);
+            this.button3.Size = new System.Drawing.Size(92, 41);
             this.button3.TabIndex = 4;
             this.button3.Text = "終了(&E)";
             this.button3.UseVisualStyleBackColor = false;
@@ -82,21 +82,22 @@
             // 
             this.groupBox2.Controls.Add(this.button5);
             this.groupBox2.Controls.Add(this.txtPath2);
-            this.groupBox2.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.groupBox2.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.groupBox2.Location = new System.Drawing.Point(10, 21);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(518, 52);
+            this.groupBox2.Size = new System.Drawing.Size(554, 52);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "【受注ＣＳＶデータ出力先】";
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(452, 21);
+            this.button5.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button5.Location = new System.Drawing.Point(471, 21);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(60, 24);
+            this.button5.Size = new System.Drawing.Size(77, 24);
             this.button5.TabIndex = 1;
             this.button5.Text = "参照...";
             this.button5.UseVisualStyleBackColor = true;
@@ -104,35 +105,35 @@
             // 
             // txtPath2
             // 
-            this.txtPath2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtPath2.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtPath2.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.txtPath2.Location = new System.Drawing.Point(17, 21);
             this.txtPath2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtPath2.Name = "txtPath2";
-            this.txtPath2.Size = new System.Drawing.Size(429, 21);
+            this.txtPath2.Size = new System.Drawing.Size(448, 22);
             this.txtPath2.TabIndex = 0;
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.txtDataSpan);
-            this.groupBox3.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.groupBox3.Location = new System.Drawing.Point(12, 204);
+            this.groupBox3.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.groupBox3.Location = new System.Drawing.Point(12, 241);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(248, 52);
+            this.groupBox3.Size = new System.Drawing.Size(263, 52);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "【データ保存月数】";
             // 
             // txtDataSpan
             // 
-            this.txtDataSpan.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtDataSpan.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtDataSpan.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.txtDataSpan.Location = new System.Drawing.Point(15, 21);
+            this.txtDataSpan.Location = new System.Drawing.Point(143, 21);
             this.txtDataSpan.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtDataSpan.Name = "txtDataSpan";
-            this.txtDataSpan.Size = new System.Drawing.Size(114, 21);
+            this.txtDataSpan.Size = new System.Drawing.Size(114, 22);
             this.txtDataSpan.TabIndex = 0;
             this.txtDataSpan.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtDataSpan.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
@@ -141,49 +142,48 @@
             // 
             this.groupBox1.Controls.Add(this.txtImgPath);
             this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 133);
+            this.groupBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.groupBox1.Location = new System.Drawing.Point(10, 166);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(516, 52);
+            this.groupBox1.Size = new System.Drawing.Size(552, 52);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "【画像保存先】";
             // 
             // txtImgPath
             // 
-            this.txtImgPath.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtImgPath.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtImgPath.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.txtImgPath.Location = new System.Drawing.Point(15, 23);
             this.txtImgPath.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtImgPath.Name = "txtImgPath";
-            this.txtImgPath.Size = new System.Drawing.Size(429, 21);
+            this.txtImgPath.Size = new System.Drawing.Size(451, 22);
             this.txtImgPath.TabIndex = 1;
             // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.SystemColors.Control;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button1.Location = new System.Drawing.Point(451, 21);
+            this.button1.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button1.Location = new System.Drawing.Point(472, 23);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(60, 24);
+            this.button1.Size = new System.Drawing.Size(76, 24);
             this.button1.TabIndex = 0;
             this.button1.Text = "参照...";
-            this.button1.UseVisualStyleBackColor = false;
+            this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.comboBox1);
-            this.groupBox4.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.groupBox4.Location = new System.Drawing.Point(10, 77);
+            this.groupBox4.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.groupBox4.Location = new System.Drawing.Point(10, 95);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox4.Size = new System.Drawing.Size(518, 52);
+            this.groupBox4.Size = new System.Drawing.Size(554, 52);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "【受注ＣＳＶデータ同名ファイル書き込み処理】";
@@ -204,24 +204,24 @@
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.txtLogSpan);
-            this.groupBox5.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.groupBox5.Location = new System.Drawing.Point(280, 204);
+            this.groupBox5.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.groupBox5.Location = new System.Drawing.Point(301, 241);
             this.groupBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox5.Size = new System.Drawing.Size(248, 52);
+            this.groupBox5.Size = new System.Drawing.Size(263, 52);
             this.groupBox5.TabIndex = 3;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "【ログデータ保存月数】";
             // 
             // txtLogSpan
             // 
-            this.txtLogSpan.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtLogSpan.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtLogSpan.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.txtLogSpan.Location = new System.Drawing.Point(15, 21);
+            this.txtLogSpan.Location = new System.Drawing.Point(143, 21);
             this.txtLogSpan.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtLogSpan.Name = "txtLogSpan";
-            this.txtLogSpan.Size = new System.Drawing.Size(114, 21);
+            this.txtLogSpan.Size = new System.Drawing.Size(114, 22);
             this.txtLogSpan.TabIndex = 0;
             this.txtLogSpan.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtLogSpan.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLogSpan_KeyPress);
@@ -230,7 +230,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(541, 318);
+            this.ClientSize = new System.Drawing.Size(580, 376);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox1);
