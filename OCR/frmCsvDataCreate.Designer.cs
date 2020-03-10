@@ -29,23 +29,17 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCsvDataCreate));
-            this.listView1 = new System.Windows.Forms.ListView();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.lblFileName = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // listView1
-            // 
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(22, 16);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(626, 306);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(413, 347);
+            this.button1.Location = new System.Drawing.Point(604, 397);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(132, 42);
             this.button1.TabIndex = 1;
@@ -55,7 +49,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(551, 347);
+            this.button2.Location = new System.Drawing.Point(742, 397);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(97, 42);
             this.button2.TabIndex = 2;
@@ -63,14 +57,54 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(23, 361);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(816, 20);
+            this.progressBar1.TabIndex = 3;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(23, 39);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(816, 316);
+            this.listBox1.TabIndex = 4;
+            // 
+            // lblFileName
+            // 
+            this.lblFileName.BackColor = System.Drawing.Color.White;
+            this.lblFileName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblFileName.Location = new System.Drawing.Point(165, 10);
+            this.lblFileName.Name = "lblFileName";
+            this.lblFileName.Size = new System.Drawing.Size(674, 26);
+            this.lblFileName.TabIndex = 5;
+            this.lblFileName.Text = "label1";
+            this.lblFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(24, 16);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(135, 15);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "出力ファイル名：";
+            // 
             // frmCsvDataCreate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(664, 403);
+            this.ClientSize = new System.Drawing.Size(851, 451);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lblFileName);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.listView1);
             this.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -80,13 +114,16 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmCsvDataCreate_FormClosing);
             this.Load += new System.EventHandler(this.frmCsvDataCreate_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Label lblFileName;
+        private System.Windows.Forms.Label label2;
     }
 }

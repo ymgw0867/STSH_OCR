@@ -32,6 +32,7 @@ namespace STSH_OCR.OCR
         // CSVデータ出力方法
         int _FileAppend = 0;
 
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("CSVデータを出力します。よろしいですか？","確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
@@ -39,18 +40,71 @@ namespace STSH_OCR.OCR
                 return;
             }
 
+            button1.Enabled = false;
+
             // CSVデータ出力処理
             int Cnt = CsvDataOutput();
 
-            // CSVデータ出力ログデータ書き込み
             if (Cnt > 0)
             {
+                // CSVデータ出力ログデータ書き込み
                 CsvDataLogWrite(Cnt);
+
+                // 発注データ削除
+                DeleteOrderData();
             }
 
             // 終了
-            Close();
+            //Close();
         }
+
+        ///------------------------------------------------------
+        /// <summary>
+        ///     発注データ削除 </summary>
+        ///------------------------------------------------------
+        private void DeleteOrderData()
+        {
+            cn.Open();
+
+            try
+            {
+                // 発注データバックアップテーブルに追加
+                string sql = "INSERT INTO OrderData_Backup ";
+                sql += "SELECT * FROM OrderData ";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                listBox1.Items.Add("発注データのバックアップを行いました"); 
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+
+                // 発注データテーブル全件削除
+                sql = "DELETE FROM OrderData ";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                listBox1.Items.Add("発注データを削除しました");
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                if (cn.State == ConnectionState.Open)
+                {
+                    cn.Close();
+                }
+            }
+
+        }
+
 
         private int CsvDataOutput()
         {
@@ -58,8 +112,17 @@ namespace STSH_OCR.OCR
             Table<Common.ClsOrder> tblOrder = context.GetTable<Common.ClsOrder>();
             ClsOrder order  = null;
 
+            int orderCnt = tblOrder.Count();
+            if (orderCnt == 0)
+            {
+                MessageBox.Show("発注データはありません","対象データなし",MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return 0;
+            }
+
             ClsCsvData.ClsCsvCSV[] csvDatas = null;
 
+            progressBar1.Visible = true;
+            int rCnt = 0;
             int dCnt = 0;
 
             try
@@ -380,17 +443,37 @@ namespace STSH_OCR.OCR
                                 DT_KBN = global.DTKBN
                             };
 
+                            // リストビューに表示
+                            listBox1.Items.Add(cTokuisakiCD + " " + cTokuisakiNM + " " + cNouhinDT.Substring(0, 4) + "/" + cNouhinDT.Substring(4, 2) + "/" + cNouhinDT.Substring(6, 2) + " " +
+                                goods[i].Code.PadLeft(8, '0') + " " + syohin.SYOHIN_NM + "(" + goods[i].Suu[iX] + ")");
+
+                            listBox1.TopIndex = listBox1.Items.Count - 1;
+
+                            // プログレスバー
+                            progressBar1.Value = (rCnt + 1) * 100 / orderCnt;
+                            //System.Threading.Thread.Sleep(10);
+                            Application.DoEvents();
+
                             dCnt++;
                         }
                     }
+
+                    rCnt++;
                 }
+
+
+                listBox1.Items.Add("終了しました..... 出力件数 " + dCnt.ToString("#,##0") + "件");
+
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+                System.Threading.Thread.Sleep(500);
+                Application.DoEvents();
 
                 Cursor = Cursors.Default;
 
                 if (csvDatas != null)
                 {
                     // ファイルへ書き出し
-                    CsvDataWrite(_sPath, csvDatas);
+                    CsvDataWrite(csvDatas);
 
                     // 終了メッセージ
                     MessageBox.Show(csvDatas.Length + "件のCSVデータ出力が終了しました", "処理完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -427,7 +510,7 @@ namespace STSH_OCR.OCR
         /// <param name="arrayData">
         ///     書き込む配列データ</param>
         ///----------------------------------------------------------------------------
-        private void CsvDataWrite(string sPath, ClsCsvData.ClsCsvCSV [] clsCsvs)
+        private void CsvDataWrite(ClsCsvData.ClsCsvCSV [] clsCsvs)
         {
             string[] arrayData = null;
 
@@ -450,23 +533,15 @@ namespace STSH_OCR.OCR
                     arrayData[i] = str;
                 }
 
-                // 付加文字列（タイムスタンプ）
-                string newFileName = DateTime.Now.Year.ToString() +
-                                     DateTime.Now.Month.ToString().PadLeft(2, '0') +
-                                     DateTime.Now.Day.ToString().PadLeft(2, '0');
-
-                // ファイル名
-                string outFileName = sPath + "FAX受注" + newFileName + ".csv";
-
                 if (_FileAppend == global.flgOff)
                 {
                     // 追加書き込み
-                    System.IO.File.AppendAllLines(outFileName, arrayData, System.Text.Encoding.GetEncoding(932));
+                    System.IO.File.AppendAllLines(lblFileName.Text, arrayData, System.Text.Encoding.GetEncoding(932));
                 }
                 else
                 {
                     // 上書き
-                    System.IO.File.WriteAllLines(outFileName, arrayData, System.Text.Encoding.GetEncoding(932));
+                    System.IO.File.WriteAllLines(lblFileName.Text, arrayData, System.Text.Encoding.GetEncoding(932));
                 }
             }
             catch (Exception ex)
@@ -517,6 +592,9 @@ namespace STSH_OCR.OCR
 
         private void frmCsvDataCreate_Load(object sender, EventArgs e)
         {
+            Utility.WindowsMaxSize(this, Width, Height);
+            Utility.WindowsMinSize(this, Width, Height);
+
             // データベース接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
@@ -525,8 +603,21 @@ namespace STSH_OCR.OCR
             Table<Common.ClsSystemConfig> tblCnf = context.GetTable<Common.ClsSystemConfig>();
 
             var cnf = tblCnf.Single(a => a.ID == global.configKEY);
-            _sPath = cnf.DataPath;
+            //_sPath = cnf.DataPath;
             _FileAppend = cnf.FileWriteStatus;
+
+            // プログレスバー初期設定
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = 100;
+            progressBar1.Visible = false;
+
+            // 付加文字列（タイムスタンプ）
+            string newFileName = DateTime.Now.Year.ToString() +
+                                 DateTime.Now.Month.ToString().PadLeft(2, '0') +
+                                 DateTime.Now.Day.ToString().PadLeft(2, '0');
+
+            // ファイル名
+            lblFileName.Text = cnf.DataPath + "FAX受注" + newFileName + ".csv";
         }
 
         private void button2_Click(object sender, EventArgs e)
