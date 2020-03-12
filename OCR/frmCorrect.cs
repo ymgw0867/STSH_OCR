@@ -144,7 +144,8 @@ namespace STSH_OCR.OCR
         private readonly string colSyubai = "c13";
 
         // 得意先クラス
-        ClsCsvData.ClsCsvTokuisaki tokuisaki = null;
+        ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
+
 
         private void frmCorrect_Load(object sender, EventArgs e)
         {
@@ -168,6 +169,13 @@ namespace STSH_OCR.OCR
             context2 = new DataContext(cn2);
             tblFax = context2.GetTable<Common.ClsFaxOrder>();        // ＦＡＸ発注書テーブル
             tblEditLog = context2.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
+
+            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
+
+            // 得意先マスタークラス配列取得
+            tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+
 
             // データ登録
             if (dID == string.Empty)
@@ -1412,22 +1420,25 @@ namespace STSH_OCR.OCR
                 }
 
                 // 発注書画像移動処理
-                foreach (var file in System.IO.Directory.GetFiles(Properties.Settings.Default.MyDataPath, "*.tif"))
-                {
-                    // 画像ファイル名を取得します
-                    string sImgNm = System.IO.Path.GetFileName(file);
+                //foreach (var file in System.IO.Directory.GetFiles(Properties.Settings.Default.MyDataPath, "*.tif"))
+                //{
+                //    // 画像ファイル名を取得します
+                //    string sImgNm = System.IO.Path.GetFileName(file);
 
-                    // 移動先に同じ名前のファイルが存在するとき削除する
-                    string tifName = Properties.Settings.Default.TifPath + sImgNm;
+                //    // 移動先に同じ名前のファイルが存在するとき削除する
+                //    string tifName = Properties.Settings.Default.TifPath + sImgNm;
 
-                    if (System.IO.File.Exists(tifName))
-                    {
-                        System.IO.File.Delete(tifName);
-                    }
+                //    if (System.IO.File.Exists(tifName))
+                //    {
+                //        System.IO.File.Delete(tifName);
+                //    }
 
-                    // 画像ファイルをTIFフォルダに移動する
-                    System.IO.File.Move(file, tifName);
-                }
+                //    // 画像ファイルをTIFフォルダに移動する
+                //    System.IO.File.Move(file, tifName);
+                //}
+
+                MoveFaxImage();
+
 
                 // 発注書データを削除します
                 errMsg = "FAX発注書データ削除";
@@ -1470,6 +1481,79 @@ namespace STSH_OCR.OCR
                 //{
                 //    cn2.Close();
                 //}
+            }
+        }
+
+        ///-----------------------------------------------------------------
+        /// <summary>
+        ///     FAX発注書画像保存 </summary>
+        ///-----------------------------------------------------------------
+        private void MoveFaxImage()
+        {
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                Table<Common.ClsSystemConfig> systemConfigs = context.GetTable<Common.ClsSystemConfig>();
+
+                var s = systemConfigs.Single(a => a.ID == global.configKEY);
+
+                // 画像保存先パス
+                string _ImgPath = s.ImgPath;
+
+                string sql = "select 得意先コード, 画像名 from Fax_Order order by ID";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+                {
+                    SQLiteDataReader sqlData = com.ExecuteReader();
+
+                    while(sqlData.Read())
+                    {
+                        // 得意先名取得
+                        string TokuiNM = string.Empty;
+
+                        for (int i = 0; i < tokuisaki.Length; i++)
+                        {
+                            if (tokuisaki[i].TOKUISAKI_CD == sqlData["得意先コード"].ToString().PadLeft(7, '0'))
+                            {
+                                TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+                                break;
+                            }
+                        }
+
+                        // フォルダ名
+                        string DirNM = sqlData["得意先コード"].ToString().PadLeft(7, '0') + "_" + TokuiNM;
+
+                        if (!System.IO.Directory.Exists(_ImgPath + DirNM))
+                        {
+                            // 保存先フォルダ未作成の場合は作成する
+                            System.IO.Directory.CreateDirectory(_ImgPath + DirNM);
+                        }
+
+                        // 画像名
+                        string imgFile = Properties.Settings.Default.MyDataPath + sqlData["画像名"];
+
+                        // 保存先画像名パス
+                        string NewFile = _ImgPath + DirNM + @"\" + sqlData["画像名"];
+
+                        // 移動先に同名ファイルが登録済みのとき削除する
+                        if (System.IO.File.Exists(NewFile))
+                        {
+                            System.IO.File.Delete(NewFile);
+                        }
+
+                        // 画像移動
+                        System.IO.File.Move(imgFile, NewFile);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
@@ -3216,9 +3300,18 @@ namespace STSH_OCR.OCR
         private void txtTokuisakiCD_TextChanged(object sender, EventArgs e)
         {
             // 得意先名表示
-            //lblTokuisakiName.Text = Utility.getNouhinName(txtTokuisakiCD.Text, out _tel, out _Jyu);
-            tokuisaki = Utility.GetTokuisaki(txtTokuisakiCD.Text);
-            lblTokuisakiName.Text = tokuisaki.TOKUISAKI_NM;
+            string TokuiNM = string.Empty;
+
+            for (int i = 0; i < tokuisaki.Length; i++)
+            {
+                if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
+                {
+                    TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+                    break;
+                }
+            }
+            
+            lblTokuisakiName.Text = TokuiNM;
 
             // 発注書パターン表示
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
@@ -3502,8 +3595,22 @@ namespace STSH_OCR.OCR
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            // 得意先名・FAX番号取得
+            string TokuiNM = string.Empty;
+            string TokuiFax = string.Empty;
+
+            for (int i = 0; i < tokuisaki.Length; i++)
+            {
+                if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
+                {
+                    TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+                    TokuiFax = tokuisaki[i].TOKUISAKI_FAX;
+                    break;
+                }
+            }
+
             Hide();
-            frmReFax reFax = new frmReFax(_img, tokuisaki.TOKUISAKI_NM, tokuisaki.TOKUISAKI_FAX);
+            frmReFax reFax = new frmReFax(_img, TokuiNM, TokuiFax);
             reFax.ShowDialog();
             Show();
         }

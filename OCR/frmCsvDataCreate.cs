@@ -26,13 +26,16 @@ namespace STSH_OCR.OCR
 
         string db_file = Properties.Settings.Default.DB_File;
 
+        // FAX発注書データ
+        Table<Common.ClsOrder> tblOrder = null;
+        ClsOrder order = null;
+
         // CSVデータ出力先
         string _sPath = "";
 
         // CSVデータ出力方法
         int _FileAppend = 0;
-
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("CSVデータを出力します。よろしいですか？","確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
@@ -105,13 +108,14 @@ namespace STSH_OCR.OCR
 
         }
 
-
+        ///----------------------------------------------------------------
+        /// <summary>
+        ///     基幹システムCSVデータ作成 </summary>
+        /// <returns>
+        ///     作成件数</returns>
+        ///----------------------------------------------------------------
         private int CsvDataOutput()
         {
-            // FAX発注書データ
-            Table<Common.ClsOrder> tblOrder = context.GetTable<Common.ClsOrder>();
-            ClsOrder order  = null;
-
             int orderCnt = tblOrder.Count();
             if (orderCnt == 0)
             {
@@ -553,6 +557,12 @@ namespace STSH_OCR.OCR
             }
         }
 
+        ///----------------------------------------------------------
+        /// <summary>
+        ///     CSVデータ作成履歴データ作成 </summary> 
+        /// <param name="Cnt">
+        ///     CSVデータ作成件数</param>
+        ///----------------------------------------------------------
         private void CsvDataLogWrite(int Cnt)
         {
             // CSVデータ作成履歴
@@ -598,6 +608,9 @@ namespace STSH_OCR.OCR
             // データベース接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
+
+            // FAX発注書データ
+            tblOrder = context.GetTable<Common.ClsOrder>();
 
             // 環境設定データ
             Table<Common.ClsSystemConfig> tblCnf = context.GetTable<Common.ClsSystemConfig>();

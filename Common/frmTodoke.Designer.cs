@@ -68,7 +68,7 @@
             // sFuri
             // 
             this.sFuri.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.sFuri.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
+            this.sFuri.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf;
             this.sFuri.Location = new System.Drawing.Point(696, 28);
             this.sFuri.Name = "sFuri";
             this.sFuri.Size = new System.Drawing.Size(248, 22);

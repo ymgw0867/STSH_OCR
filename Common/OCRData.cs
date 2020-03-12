@@ -316,6 +316,13 @@ namespace STSH_OCR.Common
                 return false;
             }
 
+            // 得意先コード
+            if (!getTdkStatus(r.TokuisakiCode.ToString().PadLeft(7, '0')))
+            {
+                setErrStatus(eTdkNo, 0, "不明な得意先コードです");
+                return false;
+            }
+
             // パターンID : 「０」はフリー入力可能とする 2017/08/22
             if (r.patternID != global.flgOff)
             {
@@ -324,13 +331,6 @@ namespace STSH_OCR.Common
                     setErrStatus(ePattern, 0, "登録されていない発注書番号です");
                     return false;
                 }
-            }
-
-            // 得意先コード
-            if (!getTdkStatus(r.TokuisakiCode.ToString().PadLeft(7, '0')))
-            {
-                setErrStatus(eTdkNo, 0, "不明な得意先コードです");
-                return false;
             }
 
             // 店着日付

@@ -264,6 +264,16 @@ namespace STSH_OCR.Common
             public string DELFLG { get; set; }
 
 
+            ///-----------------------------------------------------------------
+            /// <summary>
+            ///     得意先クラス配列作成 </summary>
+            /// <param name="Tk_Array">
+            ///     得意先マスターcsvデータ配列</param>
+            /// <param name="sDate">
+            ///     基準日</param>
+            /// <returns>
+            ///     ClsCsvTokuisakiクラス配列</returns>
+            ///-----------------------------------------------------------------
             public static ClsCsvTokuisaki[] Load(string[] Tk_Array, int sDate)
             {
                 ClsCsvTokuisaki[] tokuisakis = null;
