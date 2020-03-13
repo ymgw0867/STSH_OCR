@@ -9,7 +9,6 @@ using System.Data.Linq;
 using System.Data.SqlClient;
 using System.Data.OleDb;
 using System.IO;
-//using Oracle.ManagedDataAccess.Client;
 
 namespace STSH_OCR.Common
 {
@@ -254,6 +253,85 @@ namespace STSH_OCR.Common
 
             return eCheck;
         }
+
+
+        ///--------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     エラーチェックメイン処理。
+        ///     エラーのときOCRDataクラスのヘッダ行インデックス、フィールド番号、明細行インデックス、
+        ///     エラーメッセージが記録される </summary>
+        /// <param name="sIx">
+        ///     開始ヘッダ行インデックス</param>
+        /// <param name="eIx">
+        ///     終了ヘッダ行インデックス</param>
+        /// <param name="frm">
+        ///     親フォーム</param>
+        /// <param name="dtsC">
+        ///     NHBR_CLIDataSet </param>
+        /// <param name="dts">
+        ///     NHBRDataSet </param>
+        /// <param name="cID">
+        ///     FAX注文書@ID配列</param>
+        /// <returns>
+        ///     True:エラーなし、false:エラーあり</returns>
+        ///-----------------------------------------------------------------------------------------------
+        public Boolean errCheckMain(int sIx, int eIx, Form frm, Table<ClsOrder> tblOrder, Table<ClsOrderPattern> tblPtn, string[] cID)
+        {
+            int rCnt = 0;
+
+            // オーナーフォームを無効にする
+            frm.Enabled = false;
+
+            // プログレスバーを表示する
+            frmPrg frmP = new frmPrg();
+            frmP.Owner = frm;
+            frmP.Show();
+
+            // レコード件数取得
+            int cTotal = cID.Length;
+
+            // 出勤簿データ読み出し
+            Boolean eCheck = true;
+
+            for (int i = 0; i < cTotal; i++)
+            {
+                //データ件数加算
+                rCnt++;
+
+                //プログレスバー表示
+                frmP.Text = "エラーチェック実行中　" + rCnt.ToString() + "/" + cTotal.ToString();
+                frmP.progressValue = rCnt * 100 / cTotal;
+                frmP.ProgressStep();
+
+                //指定範囲ならエラーチェックを実施する：（i:行index）
+                if (i >= sIx && i <= eIx)
+                {
+                    // FAX注文書データのコレクションを取得します
+                    ClsOrder r = tblOrder.Single(a => a.ID == cID[i]);
+
+                    // エラーチェック実施
+                    eCheck = errCheckData(r, tblPtn);
+
+                    if (!eCheck)　//エラーがあったとき
+                    {
+                        _errHeaderIndex = i;     // エラーとなったヘッダRowIndex
+                        break;
+                    }
+                }
+            }
+
+            // いったんオーナーをアクティブにする
+            frm.Activate();
+
+            // 進行状況ダイアログを閉じる
+            frmP.Close();
+
+            // オーナーのフォームを有効に戻す
+            frm.Enabled = true;
+
+            return eCheck;
+        }
+
 
         ///---------------------------------------------------------------------------------
         /// <summary>
@@ -937,6 +1015,375 @@ namespace STSH_OCR.Common
 
             return true;
         }
+
+        ///-----------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     項目別エラーチェック。
+        ///     エラーのときヘッダ行インデックス、フィールド番号、明細行インデックス、エラーメッセージが記録される </summary>
+        /// <param name="dts">
+        ///     データセット</param>
+        /// <param name="r">
+        ///     発注書行コレクション</param>
+        /// <returns>
+        ///     エラーなし：true, エラー有り：false</returns>
+        ///-----------------------------------------------------------------------------------------------
+        /// 
+        public Boolean errCheckData(ClsOrder r, Table<ClsOrderPattern> ptn)
+        {
+            string sDate;
+            DateTime eDate;
+            int eNum = 0;
+
+            // 確認チェック
+            if (r.Veri == global.flgOff)
+            {
+                setErrStatus(eDataCheck, 0, "未確認の発注書です");
+                return false;
+            }
+
+            // 年月
+            int rDate = r.Year * 100 + r.Month;
+            int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Month;
+            if (rDate < toDate)
+            {
+                setErrStatus(eYearMonth, 0, "年月が正しくありません");
+                return false;
+            }
+
+            if (r.Month < 1 || r.Month > 12)
+            {
+                setErrStatus(eMonth, 0, "月が正しくありません");
+                return false;
+            }
+
+            // 得意先コード
+            if (!getTdkStatus(r.TokuisakiCode.ToString().PadLeft(7, '0')))
+            {
+                setErrStatus(eTdkNo, 0, "不明な得意先コードです");
+                return false;
+            }
+
+            // パターンID : 「０」はフリー入力可能とする 2017/08/22
+            if (r.patternID != global.flgOff)
+            {
+                if (!ptn.Any(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber))
+                {
+                    setErrStatus(ePattern, 0, "登録されていない発注書番号です");
+                    return false;
+                }
+            }
+
+            ClsTenDate[] tenDates = new ClsTenDate[7];
+
+            Utility.SetTenDate(tenDates, r);
+
+
+            string eMsg = "";
+            string strDate = "";
+            string strDD = "";
+            int dYear = r.Year;
+            int dMonth = r.Month;
+
+            for (int i = 0; i < 7; i++)
+            {
+
+                strDate = tenDates[i].Year + "/" + tenDates[i].Month.ToString("D2") + "/" + tenDates[i].Day.ToString("D2");
+
+                switch (i)
+                {
+                    case 0:
+                        if (!ChkTenDate(strDate, out eMsg, Mon))
+                        {
+                            setErrStatus(eTenDate1, 0, eMsg);
+                            return false;
+                        }
+
+                        break;
+
+                    case 1:
+                        if (!ChkTenDate(strDate, out eMsg, Tue))
+                        {
+                            setErrStatus(eTenDate2, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 2:
+                        if (!ChkTenDate(strDate, out eMsg, Wed))
+                        {
+                            setErrStatus(eTenDate3, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 3:
+                        if (!ChkTenDate(strDate, out eMsg, Thu))
+                        {
+                            setErrStatus(eTenDate4, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 4:
+                        if (!ChkTenDate(strDate, out eMsg, Fri))
+                        {
+                            setErrStatus(eTenDate5, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 5:
+                        if (!ChkTenDate(strDate, out eMsg, Sat))
+                        {
+                            setErrStatus(eTenDate6, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    case 6:
+                        if (!ChkTenDate(strDate, out eMsg, Sun))
+                        {
+                            setErrStatus(eTenDate7, 0, eMsg);
+                            return false;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            // 商品発注明細クラス
+            ClsGoods[] goods = new ClsGoods[15];
+            for (int i = 0; i < global.MAX_GYO; i++)
+            {
+                goods[i] = new ClsGoods();
+                goods[i].Suu = new string[7];
+
+                switch (i)
+                {
+                    case 0:
+                        goods[i].Code = r.G_Code1;
+                        goods[i].Suu[0] = r.Goods1_1;
+                        goods[i].Suu[1] = r.Goods1_2;
+                        goods[i].Suu[2] = r.Goods1_3;
+                        goods[i].Suu[3] = r.Goods1_4;
+                        goods[i].Suu[4] = r.Goods1_5;
+                        goods[i].Suu[5] = r.Goods1_6;
+                        goods[i].Suu[6] = r.Goods1_7;
+                        goods[i].Syubai = r.G_Syubai1;
+                        break;
+
+                    case 1:
+                        goods[i].Code = r.G_Code2;
+                        goods[i].Suu[0] = r.Goods2_1;
+                        goods[i].Suu[1] = r.Goods2_2;
+                        goods[i].Suu[2] = r.Goods2_3;
+                        goods[i].Suu[3] = r.Goods2_4;
+                        goods[i].Suu[4] = r.Goods2_5;
+                        goods[i].Suu[5] = r.Goods2_6;
+                        goods[i].Suu[6] = r.Goods2_7;
+                        goods[i].Syubai = r.G_Syubai2;
+                        break;
+
+                    case 2:
+                        goods[i].Code = r.G_Code3;
+                        goods[i].Suu[0] = r.Goods3_1;
+                        goods[i].Suu[1] = r.Goods3_2;
+                        goods[i].Suu[2] = r.Goods3_3;
+                        goods[i].Suu[3] = r.Goods3_4;
+                        goods[i].Suu[4] = r.Goods3_5;
+                        goods[i].Suu[5] = r.Goods3_6;
+                        goods[i].Suu[6] = r.Goods3_7;
+                        goods[i].Syubai = r.G_Syubai3;
+                        break;
+
+                    case 3:
+                        goods[i].Code = r.G_Code4;
+                        goods[i].Suu[0] = r.Goods4_1;
+                        goods[i].Suu[1] = r.Goods4_2;
+                        goods[i].Suu[2] = r.Goods4_3;
+                        goods[i].Suu[3] = r.Goods4_4;
+                        goods[i].Suu[4] = r.Goods4_5;
+                        goods[i].Suu[5] = r.Goods4_6;
+                        goods[i].Suu[6] = r.Goods4_7;
+                        goods[i].Syubai = r.G_Syubai4;
+                        break;
+
+                    case 4:
+                        goods[i].Code = r.G_Code5;
+                        goods[i].Suu[0] = r.Goods5_1;
+                        goods[i].Suu[1] = r.Goods5_2;
+                        goods[i].Suu[2] = r.Goods5_3;
+                        goods[i].Suu[3] = r.Goods5_4;
+                        goods[i].Suu[4] = r.Goods5_5;
+                        goods[i].Suu[5] = r.Goods5_6;
+                        goods[i].Suu[6] = r.Goods5_7;
+                        goods[i].Syubai = r.G_Syubai5;
+                        break;
+
+                    case 5:
+                        goods[i].Code = r.G_Code6;
+                        goods[i].Suu[0] = r.Goods6_1;
+                        goods[i].Suu[1] = r.Goods6_2;
+                        goods[i].Suu[2] = r.Goods6_3;
+                        goods[i].Suu[3] = r.Goods6_4;
+                        goods[i].Suu[4] = r.Goods6_5;
+                        goods[i].Suu[5] = r.Goods6_6;
+                        goods[i].Suu[6] = r.Goods6_7;
+                        goods[i].Syubai = r.G_Syubai6;
+                        break;
+
+                    case 6:
+                        goods[i].Code = r.G_Code7;
+                        goods[i].Suu[0] = r.Goods7_1;
+                        goods[i].Suu[1] = r.Goods7_2;
+                        goods[i].Suu[2] = r.Goods7_3;
+                        goods[i].Suu[3] = r.Goods7_4;
+                        goods[i].Suu[4] = r.Goods7_5;
+                        goods[i].Suu[5] = r.Goods7_6;
+                        goods[i].Suu[6] = r.Goods7_7;
+                        goods[i].Syubai = r.G_Syubai7;
+                        break;
+
+                    case 7:
+                        goods[i].Code = r.G_Code8;
+                        goods[i].Suu[0] = r.Goods8_1;
+                        goods[i].Suu[1] = r.Goods8_2;
+                        goods[i].Suu[2] = r.Goods8_3;
+                        goods[i].Suu[3] = r.Goods8_4;
+                        goods[i].Suu[4] = r.Goods8_5;
+                        goods[i].Suu[5] = r.Goods8_6;
+                        goods[i].Suu[6] = r.Goods8_7;
+                        goods[i].Syubai = r.G_Syubai8;
+                        break;
+
+                    case 8:
+                        goods[i].Code = r.G_Code9;
+                        goods[i].Suu[0] = r.Goods9_1;
+                        goods[i].Suu[1] = r.Goods9_2;
+                        goods[i].Suu[2] = r.Goods9_3;
+                        goods[i].Suu[3] = r.Goods9_4;
+                        goods[i].Suu[4] = r.Goods9_5;
+                        goods[i].Suu[5] = r.Goods9_6;
+                        goods[i].Suu[6] = r.Goods9_7;
+                        goods[i].Syubai = r.G_Syubai9;
+                        break;
+
+                    case 9:
+                        goods[i].Code = r.G_Code10;
+                        goods[i].Suu[0] = r.Goods10_1;
+                        goods[i].Suu[1] = r.Goods10_2;
+                        goods[i].Suu[2] = r.Goods10_3;
+                        goods[i].Suu[3] = r.Goods10_4;
+                        goods[i].Suu[4] = r.Goods10_5;
+                        goods[i].Suu[5] = r.Goods10_6;
+                        goods[i].Suu[6] = r.Goods10_7;
+                        goods[i].Syubai = r.G_Syubai10;
+                        break;
+
+                    case 10:
+                        goods[i].Code = r.G_Code11;
+                        goods[i].Suu[0] = r.Goods11_1;
+                        goods[i].Suu[1] = r.Goods11_2;
+                        goods[i].Suu[2] = r.Goods11_3;
+                        goods[i].Suu[3] = r.Goods11_4;
+                        goods[i].Suu[4] = r.Goods11_5;
+                        goods[i].Suu[5] = r.Goods11_6;
+                        goods[i].Suu[6] = r.Goods11_7;
+                        goods[i].Syubai = r.G_Syubai11;
+                        break;
+
+                    case 11:
+                        goods[i].Code = r.G_Code12;
+                        goods[i].Suu[0] = r.Goods12_1;
+                        goods[i].Suu[1] = r.Goods12_2;
+                        goods[i].Suu[2] = r.Goods12_3;
+                        goods[i].Suu[3] = r.Goods12_4;
+                        goods[i].Suu[4] = r.Goods12_5;
+                        goods[i].Suu[5] = r.Goods12_6;
+                        goods[i].Suu[6] = r.Goods12_7;
+                        goods[i].Syubai = r.G_Syubai12;
+                        break;
+
+                    case 12:
+                        goods[i].Code = r.G_Code13;
+                        goods[i].Suu[0] = r.Goods13_1;
+                        goods[i].Suu[1] = r.Goods13_2;
+                        goods[i].Suu[2] = r.Goods13_3;
+                        goods[i].Suu[3] = r.Goods13_4;
+                        goods[i].Suu[4] = r.Goods13_5;
+                        goods[i].Suu[5] = r.Goods13_6;
+                        goods[i].Suu[6] = r.Goods13_7;
+                        goods[i].Syubai = r.G_Syubai13;
+                        break;
+
+                    case 13:
+                        goods[i].Code = r.G_Code14;
+                        goods[i].Suu[0] = r.Goods14_1;
+                        goods[i].Suu[1] = r.Goods14_2;
+                        goods[i].Suu[2] = r.Goods14_3;
+                        goods[i].Suu[3] = r.Goods14_4;
+                        goods[i].Suu[4] = r.Goods14_5;
+                        goods[i].Suu[5] = r.Goods14_6;
+                        goods[i].Suu[6] = r.Goods14_7;
+                        goods[i].Syubai = r.G_Syubai14;
+                        break;
+
+                    case 14:
+                        goods[i].Code = r.G_Code15;
+                        goods[i].Suu[0] = r.Goods15_1;
+                        goods[i].Suu[1] = r.Goods15_2;
+                        goods[i].Suu[2] = r.Goods15_3;
+                        goods[i].Suu[3] = r.Goods15_4;
+                        goods[i].Suu[4] = r.Goods15_5;
+                        goods[i].Suu[5] = r.Goods15_6;
+                        goods[i].Suu[6] = r.Goods15_7;
+                        goods[i].Syubai = r.G_Syubai15;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            bool ha = false;
+
+            // 商品エラーチェック
+            for (int i = 0; i < 15; i++)
+            {
+                ha = false;
+
+                // 発注の有無を調べる
+                for (int iX = 0; iX < 7; iX++)
+                {
+                    if (Utility.StrtoInt(goods[i].Suu[iX]) != global.flgOff)
+                    {
+                        // 発注あり
+                        ha = true;
+                    }
+                }
+
+                if (goods[i].Code == string.Empty)
+                {
+                    // 発注あり
+                    if (ha)
+                    {
+                        setErrStatus(eHinCode, i * 2 + 1, "商品が登録されていません");
+                        return false;
+                    }
+                }
+                else if (!ChkShohin(goods[i].Code, goods[i].Syubai, out eMsg, out eNum, ha))
+                {
+                    setErrStatus(eNum, i * 2 + 1, eMsg);
+                    return false;
+                }
+            }
+
+
+            return true;
+        }
+
 
         ///------------------------------------------------------------
         /// <summary>

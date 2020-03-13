@@ -39,6 +39,12 @@ namespace STSH_OCR.OCR
         // 店着日付クラス
         ClsTenDate[] tenDates = new ClsTenDate[7];
 
+        // 商品マスタークラス
+        ClsCsvData.ClsCsvSyohin[] syohins = null;
+
+        // 得意先マスタークラス
+        ClsCsvData.ClsCsvTokuisaki[] tokuisakis = null; 
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("CSVデータを出力します。よろしいですか？","確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
@@ -142,8 +148,17 @@ namespace STSH_OCR.OCR
                     Utility.SetTenDate(tenDates, r);
 
                     string cTokuisakiCD = r.TokuisakiCode.ToString("D7");
-                    ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisaki(r.TokuisakiCode.ToString("D7"));
-                    string cTokuisakiNM = tokuisaki.TOKUISAKI_NM;
+                    string cTokuisakiNM = "";
+
+                    for (int i = 0; i < tokuisakis.Length; i++)
+                    {
+                        if (tokuisakis[i].TOKUISAKI_CD == cTokuisakiCD)
+                        {
+                            cTokuisakiNM = tokuisakis[i].TOKUISAKI_NM;
+                            break;
+                        }
+                    }
+
                     string cNouhinDT = string.Empty;
                     string cDT = global.DTKBN;
 
@@ -400,7 +415,7 @@ namespace STSH_OCR.OCR
                         }
 
                         // 商品情報取得
-                        ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(goods[i].Code.PadLeft(8, '0'));
+                        ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, goods[i].Code.PadLeft(8, '0'));
 
                         // 店着日別発注数
                         for (int iX = 0; iX < 7; iX++)
@@ -599,6 +614,14 @@ namespace STSH_OCR.OCR
             //_sPath = cnf.DataPath;
             _FileAppend = cnf.FileWriteStatus;
 
+            // 商品マスタークラス配列作成
+            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+
+            // 得意先マスタークラス配列作成
+            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
+            tokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+            
             // プログレスバー初期設定
             progressBar1.Minimum = 0;
             progressBar1.Maximum = 100;

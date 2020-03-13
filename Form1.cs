@@ -57,38 +57,101 @@ namespace STSH_OCR
 
         private void button6_Click(object sender, EventArgs e)
         {
-            // 保存期間経過ログデータ削除
-            LogDeleteSpan();
+            // 環境設定データ
+            Table<Common.ClsSystemConfig> tblCnf = context.GetTable<Common.ClsSystemConfig>();
+
+            var cnf = tblCnf.Single(a => a.ID == global.configKEY);
+
+            Cursor = Cursors.WaitCursor; 
+
+            // 保存期間経過編集ログ削除
+            DeleteDateSpan(cnf.LogSpan);
+
+            // 保存期間経過FAX画像削除
+            ImgDeleteSpan(cnf.ImgPath, cnf.DataSpan);
+
+            Cursor = Cursors.Default;
 
             // メニューを閉じる
             Close();
         }
 
-        private void LogDeleteSpan()
+        ///---------------------------------------------------------------
+        /// <summary>
+        ///     保存期間経過発注書データ、編集ログ削除 </summary>
+        /// <param name="dM">
+        ///     発注書データ保存月数</param>
+        /// <param name="dM2">
+        ///     編集ログ保存月数</param>
+        ///---------------------------------------------------------------
+        private void DeleteDateSpan(int dM2)
         {
-            // 環境設定データ
-            Table<Common.ClsSystemConfig> tblCnf = context.GetTable<Common.ClsSystemConfig>();
+            cn.Open();
 
-            // ログデータ保存期間取得
-            var cnf = tblCnf.Single(a => a.ID == global.configKEY);
-            int dM = cnf.LogSpan;
-
-            // 編集ログデータ
-            Table<Common.ClsDataEditLog> tblLog = context.GetTable<Common.ClsDataEditLog>();
-
-            // 削除基準日付
-            DateTime sdt = DateTime.Now.AddMonths(-1 * dM);
-
-            string _sdt = sdt.Year + "/" + sdt.Month.ToString("D2") + "/" + sdt.Day.ToString("D2") + " " +
-                          sdt.Hour.ToString("D2") + ":" + sdt.Minute.ToString("D2") + ":" + sdt.Second.ToString("D2");
-
-            // 保存期間経過ログデータ削除
-            foreach (ClsDataEditLog item in tblLog.Where(a => a.Date_Time.CompareTo(_sdt) <= 0))
+            try
             {
-                tblLog.DeleteOnSubmit(item);
-            }
+                // 編集ログ
+                DateTime sdt = DateTime.Now.AddMonths(-1 * dM2);
+                //DateTime sdt = DateTime.Now.AddDays(-1 * dM2); // デバッグ用
 
-            context.SubmitChanges();
+                string _sdt = sdt.Year + "/" + sdt.Month.ToString("D2") + "/" + sdt.Day.ToString("D2") + " " +
+                              sdt.Hour.ToString("D2") + ":" + sdt.Minute.ToString("D2") + ":" + sdt.Second.ToString("D2");
+
+                string sql = "delete from DataEditLog  ";
+                sql += "where 年月日時刻 < '" + _sdt + "'";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                if (cn.State == ConnectionState.Open)
+                {
+                    cn.Close();
+                }
+            }
+        }
+
+        ///-------------------------------------------------------------------
+        /// <summary>
+        ///     保存期間経過FAX画像削除 </summary>
+        /// <param name="dM">
+        ///     保存月数</param>
+        ///-------------------------------------------------------------------
+        private void ImgDeleteSpan(string imgPath, int dM)
+        {
+            try
+            {
+                // 削除基準日付
+                DateTime sdt = DateTime.Today.AddMonths(-1 * dM);
+
+                double _sdt = Utility.StrtoDouble(sdt.Year + sdt.Month.ToString("D2") + sdt.Day.ToString("D2") + "235959999");
+
+                // フォルダ毎に中身のファイルを見る
+                foreach (var dir in System.IO.Directory.GetDirectories(imgPath))
+                {
+                    foreach (var file in System.IO.Directory.GetFiles(dir, "*.tif"))
+                    {
+                        double fnm = Utility.StrtoDouble(System.IO.Path.GetFileNameWithoutExtension(file));
+
+                        if (fnm < _sdt)
+                        {
+                            // 画像削除
+                            System.IO.File.Delete(file);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
 
@@ -312,28 +375,6 @@ namespace STSH_OCR
         {
             try
             {
-                // OCR認証件数取得
-                //int imgCnt = System.IO.Directory.GetFiles(Properties.Settings.Default.scanPath, "*.tif").Count();
-
-                //if (Properties.Settings.Default.OCRPC == global.flgOff)
-                //{
-                //    button5.Enabled = false;
-                //    button5.Text = "ＯＣＲ認識処理 (&M)";
-                //}
-                //else
-                //{
-                //    button5.Enabled = true;
-
-                //    if (imgCnt > 0)
-                //    {
-                //        button5.Text = "ＯＣＲ認識処理 (" + imgCnt + ") (&M)";
-                //    }
-                //    else
-                //    {
-                //        button5.Text = "ＯＣＲ認識処理 (&M)";
-                //    }
-                //}
-
                 // NG件数取得
                 int ngCnt = System.IO.Directory.GetFiles(Properties.Settings.Default.NgPath, "*.tif").Count();
 
@@ -348,12 +389,6 @@ namespace STSH_OCR
                     button2.Enabled = false;
                     button2.Text = "ＮＧ画像なし";
                 }
-
-                //// OCR認証件数取得
-                //int ocrCnt = System.IO.Directory.GetFiles(Properties.Settings.Default.dataPath, "*.tif").Count();
-
-                //button1.Enabled = true;
-                //button1.Text = "勤怠データ作成 (" + ocrCnt + ") (&W)";
             }
             catch (Exception)
             {

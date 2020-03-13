@@ -124,7 +124,7 @@
             this.groupBox3.Size = new System.Drawing.Size(263, 52);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "【データ保存月数】";
+            this.groupBox3.Text = "【ＦＡＸ画像保存月数】";
             // 
             // txtDataSpan
             // 
