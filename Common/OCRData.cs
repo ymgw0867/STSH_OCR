@@ -334,14 +334,19 @@ namespace STSH_OCR.Common
             }
 
             // 店着日付
-            String [] tDays = new string [7];
-            tDays[0] = r.Day1.Trim();
-            tDays[1] = r.Day2.Trim();
-            tDays[2] = r.Day3.Trim();
-            tDays[3] = r.Day4.Trim();
-            tDays[4] = r.Day5.Trim();
-            tDays[5] = r.Day6.Trim();
-            tDays[6] = r.Day7.Trim();
+            //String [] tDays = new string [7];
+            //tDays[0] = r.Day1.Trim();
+            //tDays[1] = r.Day2.Trim();
+            //tDays[2] = r.Day3.Trim();
+            //tDays[3] = r.Day4.Trim();
+            //tDays[4] = r.Day5.Trim();
+            //tDays[5] = r.Day6.Trim();
+            //tDays[6] = r.Day7.Trim();
+
+            ClsTenDate[] tenDates = new ClsTenDate[7];
+
+            Utility.SetTenDate(tenDates, r);
+
 
             string eMsg = "";
             string strDate ="";
@@ -349,52 +354,54 @@ namespace STSH_OCR.Common
             int dYear = r.Year;
             int dMonth = r.Month;
 
-            for (int i = 0; i < tDays.Length; i++)
+            for (int i = 0; i < 7; i++)
             {
-                // 店着日付を設定する
-                if (tDays[i] == global.FLGON)
-                {
-                    // 「１」日のとき
-                    if (i == 0)
-                    {
-                        // 当月１日
-                        strDate = dYear + "/" + dMonth + "/"　+ tDays[i];
-                    }
-                    else
-                    {
-                        // 週御途中に「１」日記入
-                        for (int iX = i - 1; iX >= 0; iX--)
-                        {
-                            // 前日までの日付記入を調査
-                            strDD += tDays[iX].Trim();
-                        }
+                //// 店着日付を設定する
+                //if (tDays[i] == global.FLGON)
+                //{
+                //    // 「１」日のとき
+                //    if (i == 0)
+                //    {
+                //        // 当月１日
+                //        strDate = dYear + "/" + dMonth + "/"　+ tDays[i];
+                //    }
+                //    else
+                //    {
+                //        // 週の途中に「１」日記入
+                //        for (int iX = i - 1; iX >= 0; iX--)
+                //        {
+                //            // 前日までの日付記入を調査
+                //            strDD += tDays[iX].Trim();
+                //        }
 
-                        if (strDD != string.Empty)
-                        {
-                            // 「前日まで記入あり」はこれ以降は翌月とみなす
-                            if (r.Month == 12)
-                            {
-                                dYear++;
-                                strDate = dYear + "/01/" + tDays[i];
-                            }
-                            else
-                            {
-                                dMonth++;
-                                strDate = dYear + "/" + dMonth + "/" + tDays[i];
-                            }
-                        }
-                        else
-                        {
-                            // 前日までの記入がないときは当月１日とみなす
-                            strDate = dYear + "/" + dMonth + "/" + tDays[i];
-                        }
-                    }
-                }
-                else
-                {
-                    strDate = dYear + "/" + dMonth + "/" + tDays[i];
-                }
+                //        if (strDD != string.Empty)
+                //        {
+                //            // 「前日まで記入あり」はこれ以降は翌月とみなす
+                //            if (r.Month == 12)
+                //            {
+                //                dYear++;
+                //                strDate = dYear + "/01/" + tDays[i];
+                //            }
+                //            else
+                //            {
+                //                dMonth++;
+                //                strDate = dYear + "/" + dMonth + "/" + tDays[i];
+                //            }
+                //        }
+                //        else
+                //        {
+                //            // 前日までの記入がないときは当月１日とみなす
+                //            strDate = dYear + "/" + dMonth + "/" + tDays[i];
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                //    strDate = dYear + "/" + dMonth + "/" + tDays[i];
+                //}
 
+                strDate = tenDates[i].Year  + "/" + tenDates[i].Month.ToString("D2") + "/" + tenDates[i].Day.ToString("D2");
+                
                 switch (i)
                 {
                     case 0:

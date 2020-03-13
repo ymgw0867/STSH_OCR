@@ -146,6 +146,9 @@ namespace STSH_OCR.OCR
         // 得意先クラス
         ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
 
+        // 商品クラス
+        ClsCsvData.ClsCsvSyohin[] syohins = null;
+
 
         private void frmCorrect_Load(object sender, EventArgs e)
         {
@@ -176,6 +179,8 @@ namespace STSH_OCR.OCR
             // 得意先マスタークラス配列取得
             tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
 
+            // 商品マスタークラス配列取得
+            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             // データ登録
             if (dID == string.Empty)
@@ -3423,8 +3428,8 @@ namespace STSH_OCR.OCR
             {
                 if ((e.RowIndex % 2) != 0)
                 {
-                    ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
-
+                    ClsCsvData.ClsCsvSyohin syohin = GetSyohins(Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
+                    
                     dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;       // 仕入先名
                     dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;             // 商品名
                     dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;    // 規格
@@ -3526,6 +3531,63 @@ namespace STSH_OCR.OCR
                 //SelectedIndexChangedイベントハンドラを追加
                 this.dataGridViewComboBox.SelectedIndexChanged += new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
             }
+        }
+
+        ///------------------------------------------------------------------------
+        /// <summary>
+        ///     商品マスター配列から情報を取得する </summary>
+        /// <param name="sSyohinCD">
+        ///     商品コード  </param>
+        /// <returns>
+        ///     商品マスタークラス</returns>
+        ///------------------------------------------------------------------------
+        private ClsCsvData.ClsCsvSyohin GetSyohins(string sSyohinCD)
+        {
+            ClsCsvData.ClsCsvSyohin cls = new ClsCsvData.ClsCsvSyohin
+            {
+                SYOHIN_CD = "",
+                SYOHIN_NM = "",
+                SYOHIN_SNM = "",
+                SYOHIN_KANA = "",
+                SIRESAKI_CD = "",
+                SIRESAKI_NM = "",
+                SIRESAKI_KANA_NM = "",
+                JAN_CD = "",
+                SYOHIN_KIKAKU = "",
+                CASE_IRISU = global.flgOff,
+                NOUHIN_KARI_TANKA = global.flgOff,
+                RETAIL_TANKA = global.flgOff,
+                HATYU_LIMIT_DAY_CNT = global.flgOff,
+                START_SALE_YMD = "",
+                LAST_SALE_YMD = "",
+                SHUBAI = false
+            };
+
+            for (int i = 0; i < syohins.Length; i++)
+            {
+                if (syohins[i].SYOHIN_CD == sSyohinCD.PadLeft(8, '0'))
+                {
+                    cls.SYOHIN_CD = syohins[i].SYOHIN_CD;
+                    cls.SYOHIN_NM = syohins[i].SYOHIN_NM;
+                    cls.SYOHIN_SNM = syohins[i].SYOHIN_SNM;
+                    cls.SYOHIN_KANA = syohins[i].SIRESAKI_CD;
+                    cls.SIRESAKI_CD = syohins[i].SIRESAKI_CD;
+                    cls.SIRESAKI_NM = syohins[i].SIRESAKI_NM;
+                    cls.SIRESAKI_KANA_NM = syohins[i].SIRESAKI_KANA_NM;
+                    cls.JAN_CD = syohins[i].JAN_CD;
+                    cls.SYOHIN_KIKAKU = syohins[i].SYOHIN_KIKAKU;
+                    cls.CASE_IRISU = syohins[i].CASE_IRISU;
+                    cls.NOUHIN_KARI_TANKA = syohins[i].NOUHIN_KARI_TANKA;
+                    cls.RETAIL_TANKA = syohins[i].RETAIL_TANKA;
+                    cls.HATYU_LIMIT_DAY_CNT = syohins[i].HATYU_LIMIT_DAY_CNT;
+                    cls.START_SALE_YMD = syohins[i].START_SALE_YMD;
+                    cls.LAST_SALE_YMD = syohins[i].LAST_SALE_YMD;
+                    cls.SHUBAI = syohins[i].SHUBAI;
+                    break;
+                }
+            }
+
+            return cls;
         }
 
 

@@ -597,7 +597,11 @@ namespace STSH_OCR.Common
                 SYOHIN_KIKAKU = "",
                 CASE_IRISU = global.flgOff,
                 NOUHIN_KARI_TANKA = global.flgOff,
-                RETAIL_TANKA = global.flgOff
+                RETAIL_TANKA = global.flgOff,
+                HATYU_LIMIT_DAY_CNT = global.flgOff,
+                START_SALE_YMD = "",
+                LAST_SALE_YMD = "",
+                SHUBAI = false
             };
 
             int toDate = 0;
@@ -1099,5 +1103,96 @@ namespace STSH_OCR.Common
 
             return syohins;
         }
+
+        public static void SetTenDate(ClsTenDate [] tenDates, ClsOrder r)
+        {
+            // 店着日付クラス
+            //tenDates = new ClsTenDate[7];
+
+            // 初期化
+            for (int i = 0; i < 7; i++)
+            {
+                tenDates[i] = new ClsTenDate();
+            }
+
+            tenDates[0].Year = r.Year;
+            tenDates[0].Month = r.Month;
+            tenDates[0].Day = Utility.StrtoInt(r.Day1.Trim());
+
+            tenDates[1].Day = Utility.StrtoInt(r.Day2.Trim());
+            tenDates[2].Day = Utility.StrtoInt(r.Day3.Trim());
+            tenDates[3].Day = Utility.StrtoInt(r.Day4.Trim());
+            tenDates[4].Day = Utility.StrtoInt(r.Day5.Trim());
+            tenDates[5].Day = Utility.StrtoInt(r.Day6.Trim());
+            tenDates[6].Day = Utility.StrtoInt(r.Day7.Trim());
+
+            int sYear = r.Year;
+            int sMonth = r.Month;
+
+            for (int i = 1; i < tenDates.Length; i++)
+            {
+                if (tenDates[i].Day == 1)
+                {
+                    // ここから翌月
+                    sMonth++;
+
+                    if (sMonth > 12)
+                    {
+                        // 翌年
+                        sMonth -= 12;
+                        sYear++;
+                    }
+                }
+
+                tenDates[i].Year = sYear;
+                tenDates[i].Month = sMonth;
+            }
+        }
+
+        public static void SetTenDate(ClsTenDate[] tenDates, ClsFaxOrder r)
+        {
+            // 店着日付クラス
+            //tenDates = new ClsTenDate[7];
+
+            // 初期化
+            for (int i = 0; i < 7; i++)
+            {
+                tenDates[i] = new ClsTenDate();
+            }
+
+            tenDates[0].Year = r.Year;
+            tenDates[0].Month = r.Month;
+            tenDates[0].Day = Utility.StrtoInt(r.Day1.Trim());
+
+            tenDates[1].Day = Utility.StrtoInt(r.Day2.Trim());
+            tenDates[2].Day = Utility.StrtoInt(r.Day3.Trim());
+            tenDates[3].Day = Utility.StrtoInt(r.Day4.Trim());
+            tenDates[4].Day = Utility.StrtoInt(r.Day5.Trim());
+            tenDates[5].Day = Utility.StrtoInt(r.Day6.Trim());
+            tenDates[6].Day = Utility.StrtoInt(r.Day7.Trim());
+
+            int sYear = r.Year;
+            int sMonth = r.Month;
+
+            for (int i = 1; i < tenDates.Length; i++)
+            {
+                if (tenDates[i].Day == 1)
+                {
+                    // ここから翌月
+                    sMonth++;
+
+                    if (sMonth > 12)
+                    {
+                        // 翌年
+                        sMonth -= 12;
+                        sYear++;
+                    }
+                }
+
+                tenDates[i].Year = sYear;
+                tenDates[i].Month = sMonth;
+            }
+        }
+
     }
 }

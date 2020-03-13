@@ -35,7 +35,10 @@ namespace STSH_OCR.OCR
 
         // CSVデータ出力方法
         int _FileAppend = 0;
-        
+
+        // 店着日付クラス
+        ClsTenDate[] tenDates = new ClsTenDate[7];
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("CSVデータを出力します。よろしいですか？","確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
@@ -128,13 +131,16 @@ namespace STSH_OCR.OCR
             progressBar1.Visible = true;
             int rCnt = 0;
             int dCnt = 0;
-
+            
             try
             {
                 Cursor = Cursors.WaitCursor;
 
                 foreach (var r in tblOrder.OrderBy(a => a.ID))
                 {
+                    // 店着日付クラス配列作成
+                    Utility.SetTenDate(tenDates, r);
+
                     string cTokuisakiCD = r.TokuisakiCode.ToString("D7");
                     ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisaki(r.TokuisakiCode.ToString("D7"));
                     string cTokuisakiNM = tokuisaki.TOKUISAKI_NM;
@@ -399,38 +405,14 @@ namespace STSH_OCR.OCR
                         // 店着日別発注数
                         for (int iX = 0; iX < 7; iX++)
                         {
-                            if (goods[i].Suu[iX] == string.Empty)
+                            if (Utility.StrtoInt(goods[i].Suu[iX]) == global.flgOff)
                             {
+                                // 発注数空白、０はネグる
                                 continue;
                             }
 
                             // 納品日取得
-                            switch (iX)
-                            {
-                                case 0:
-                                    cNouhinDT = r.Year + r.Month.ToString("D2") + r.Day1.PadLeft(2, '0');
-                                    break;
-                                case 1:
-                                    cNouhinDT = r.Year + r.Month.ToString("D2") + r.Day2.PadLeft(2, '0');
-                                    break;
-                                case 2:
-                                    cNouhinDT = r.Year + r.Month.ToString("D2") + r.Day3.PadLeft(2, '0');
-                                    break;
-                                case 3:
-                                    cNouhinDT = r.Year + r.Month.ToString("D2") + r.Day4.PadLeft(2, '0');
-                                    break;
-                                case 4:
-                                    cNouhinDT = r.Year + r.Month.ToString("D2") + r.Day5.PadLeft(2, '0');
-                                    break;
-                                case 5:
-                                    cNouhinDT = r.Year + r.Month.ToString("D2") + r.Day6.PadLeft(2, '0');
-                                    break;
-                                case 6:
-                                    cNouhinDT = r.Year + r.Month.ToString("D2") + r.Day7.PadLeft(2, '0');
-                                    break;
-                                default:
-                                    break;
-                            }
+                            cNouhinDT = tenDates[iX].Year + tenDates[iX].Month.ToString("D2") + tenDates[iX].Day.ToString("D2");
 
                             // ＣＳＶクラス配列追加
                             Array.Resize(ref csvDatas, dCnt + 1);
@@ -503,9 +485,7 @@ namespace STSH_OCR.OCR
                 }
             }
         }
-
-
-
+        
         ///----------------------------------------------------------------------------
         /// <summary>
         ///     テキストファイルを出力する</summary>
