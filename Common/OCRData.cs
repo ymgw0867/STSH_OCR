@@ -275,60 +275,24 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     True:エラーなし、false:エラーあり</returns>
         ///-----------------------------------------------------------------------------------------------
-        public Boolean errCheckMain(int sIx, int eIx, Form frm, Table<ClsOrder> tblOrder, Table<ClsOrderPattern> tblPtn, string[] cID)
+        public Boolean errCheckMain(string sID, Table<ClsOrder> tblOrder, Table<ClsOrderPattern> tblPtn)
         {
             int rCnt = 0;
 
-            // オーナーフォームを無効にする
-            frm.Enabled = false;
-
-            // プログレスバーを表示する
-            frmPrg frmP = new frmPrg();
-            frmP.Owner = frm;
-            frmP.Show();
-
-            // レコード件数取得
-            int cTotal = cID.Length;
-
-            // 出勤簿データ読み出し
+            // 発注書データ読み出し
             Boolean eCheck = true;
 
-            for (int i = 0; i < cTotal; i++)
-            {
-                //データ件数加算
-                rCnt++;
+            // FAX注文書データのコレクションを取得します
+            ClsOrder r = tblOrder.Single(a => a.ID == sID);
 
-                //プログレスバー表示
-                frmP.Text = "エラーチェック実行中　" + rCnt.ToString() + "/" + cTotal.ToString();
-                frmP.progressValue = rCnt * 100 / cTotal;
-                frmP.ProgressStep();
+            // エラーチェック実施
+            eCheck = errCheckData(r, tblPtn);
 
-                //指定範囲ならエラーチェックを実施する：（i:行index）
-                if (i >= sIx && i <= eIx)
-                {
-                    // FAX注文書データのコレクションを取得します
-                    ClsOrder r = tblOrder.Single(a => a.ID == cID[i]);
-
-                    // エラーチェック実施
-                    eCheck = errCheckData(r, tblPtn);
-
-                    if (!eCheck)　//エラーがあったとき
-                    {
-                        _errHeaderIndex = i;     // エラーとなったヘッダRowIndex
-                        break;
-                    }
-                }
-            }
-
-            // いったんオーナーをアクティブにする
-            frm.Activate();
-
-            // 進行状況ダイアログを閉じる
-            frmP.Close();
-
-            // オーナーのフォームを有効に戻す
-            frm.Enabled = true;
-
+            //if (!eCheck) //エラーがあったとき
+            //{
+            //    _errHeaderIndex = i;     // エラーとなったヘッダRowIndex
+            //}
+            
             return eCheck;
         }
 
@@ -411,16 +375,6 @@ namespace STSH_OCR.Common
                 }
             }
 
-            // 店着日付
-            //String [] tDays = new string [7];
-            //tDays[0] = r.Day1.Trim();
-            //tDays[1] = r.Day2.Trim();
-            //tDays[2] = r.Day3.Trim();
-            //tDays[3] = r.Day4.Trim();
-            //tDays[4] = r.Day5.Trim();
-            //tDays[5] = r.Day6.Trim();
-            //tDays[6] = r.Day7.Trim();
-
             ClsTenDate[] tenDates = new ClsTenDate[7];
 
             Utility.SetTenDate(tenDates, r);
@@ -434,50 +388,6 @@ namespace STSH_OCR.Common
 
             for (int i = 0; i < 7; i++)
             {
-                //// 店着日付を設定する
-                //if (tDays[i] == global.FLGON)
-                //{
-                //    // 「１」日のとき
-                //    if (i == 0)
-                //    {
-                //        // 当月１日
-                //        strDate = dYear + "/" + dMonth + "/"　+ tDays[i];
-                //    }
-                //    else
-                //    {
-                //        // 週の途中に「１」日記入
-                //        for (int iX = i - 1; iX >= 0; iX--)
-                //        {
-                //            // 前日までの日付記入を調査
-                //            strDD += tDays[iX].Trim();
-                //        }
-
-                //        if (strDD != string.Empty)
-                //        {
-                //            // 「前日まで記入あり」はこれ以降は翌月とみなす
-                //            if (r.Month == 12)
-                //            {
-                //                dYear++;
-                //                strDate = dYear + "/01/" + tDays[i];
-                //            }
-                //            else
-                //            {
-                //                dMonth++;
-                //                strDate = dYear + "/" + dMonth + "/" + tDays[i];
-                //            }
-                //        }
-                //        else
-                //        {
-                //            // 前日までの記入がないときは当月１日とみなす
-                //            strDate = dYear + "/" + dMonth + "/" + tDays[i];
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    strDate = dYear + "/" + dMonth + "/" + tDays[i];
-                //}
-
                 strDate = tenDates[i].Year  + "/" + tenDates[i].Month.ToString("D2") + "/" + tenDates[i].Day.ToString("D2");
                 
                 switch (i)
@@ -770,248 +680,7 @@ namespace STSH_OCR.Common
                     return false;
                 }
             }
-                      
-            
-            //// 商品未登録の発注
-            //if (r.G_Code1 == string.Empty)
-            //{
-            //    if  (r.Goods1_1 != string.Empty || r.Goods1_2 != string.Empty || r.Goods1_3 != string.Empty || r.Goods1_4 != string.Empty ||
-            //         r.Goods1_5 != string.Empty || r.Goods1_6 != string.Empty || r.Goods1_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 1, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code1, r.G_Syubai1, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 1, eMsg);
-            //    return false;
-            //}
-
-            //// 商品２
-            //if (r.G_Code2 == string.Empty)
-            //{
-            //    if (r.Goods2_1 != string.Empty || r.Goods2_2 != string.Empty || r.Goods2_3 != string.Empty || r.Goods2_4 != string.Empty ||
-            //         r.Goods2_5 != string.Empty || r.Goods2_6 != string.Empty || r.Goods2_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 3, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code2, r.G_Syubai2, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 3, eMsg);
-            //    return false;
-            //}
-
-            //// 商品３
-            //if (r.G_Code3 == string.Empty)
-            //{
-            //    if (r.Goods3_1 != string.Empty || r.Goods3_2 != string.Empty || r.Goods3_3 != string.Empty || r.Goods3_4 != string.Empty ||
-            //         r.Goods3_5 != string.Empty || r.Goods3_6 != string.Empty || r.Goods3_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode,5, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code3, r.G_Syubai3, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 5, eMsg);
-            //    return false;
-            //}
-
-            //// 商品4
-            //if (r.G_Code4 == string.Empty)
-            //{
-            //    if (r.Goods4_1 != string.Empty || r.Goods4_2 != string.Empty || r.Goods4_3 != string.Empty || r.Goods4_4 != string.Empty ||
-            //         r.Goods4_5 != string.Empty || r.Goods4_6 != string.Empty || r.Goods4_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 7, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code4, r.G_Syubai4, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 7, eMsg);
-            //    return false;
-            //}
-
-            //// 商品5
-            //if (r.G_Code5 == string.Empty)
-            //{
-            //    if (r.Goods5_1 != string.Empty || r.Goods5_2 != string.Empty || r.Goods5_3 != string.Empty || r.Goods5_4 != string.Empty ||
-            //         r.Goods5_5 != string.Empty || r.Goods5_6 != string.Empty || r.Goods5_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 9, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code5, r.G_Syubai5, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 9, eMsg);
-            //    return false;
-            //}
-
-
-            //// 商品6
-            //if (r.G_Code6 == string.Empty)
-            //{
-            //    if (r.Goods6_1 != string.Empty || r.Goods6_2 != string.Empty || r.Goods6_3 != string.Empty || r.Goods6_4 != string.Empty ||
-            //         r.Goods6_5 != string.Empty || r.Goods6_6 != string.Empty || r.Goods6_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 11, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code6, r.G_Syubai6, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 11, eMsg);
-            //    return false;
-            //}
-
-            //// 商品7
-            //if (r.G_Code7 == string.Empty)
-            //{
-            //    if (r.Goods7_1 != string.Empty || r.Goods7_2 != string.Empty || r.Goods7_3 != string.Empty || r.Goods7_4 != string.Empty ||
-            //         r.Goods7_5 != string.Empty || r.Goods7_6 != string.Empty || r.Goods7_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 13, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code7, r.G_Syubai7, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 13, eMsg);
-            //    return false;
-            //}
-
-            //// 商品8
-            //if (r.G_Code8 == string.Empty)
-            //{
-            //    if (r.Goods8_1 != string.Empty || r.Goods8_2 != string.Empty || r.Goods8_3 != string.Empty || r.Goods8_4 != string.Empty ||
-            //         r.Goods8_5 != string.Empty || r.Goods8_6 != string.Empty || r.Goods8_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 15, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code8, r.G_Syubai8, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 15, eMsg);
-            //    return false;
-            //}
-
-            //// 商品9
-            //if (r.G_Code9 == string.Empty)
-            //{
-            //    if (r.Goods9_1 != string.Empty || r.Goods9_2 != string.Empty || r.Goods9_3 != string.Empty || r.Goods9_4 != string.Empty ||
-            //         r.Goods9_5 != string.Empty || r.Goods9_6 != string.Empty || r.Goods9_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 17, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code9, r.G_Syubai9, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 17, eMsg);
-            //    return false;
-            //}
-
-            //// 商品10
-            //if (r.G_Code10 == string.Empty)
-            //{
-            //    if (r.Goods10_1 != string.Empty || r.Goods10_2 != string.Empty || r.Goods10_3 != string.Empty || r.Goods10_4 != string.Empty ||
-            //         r.Goods10_5 != string.Empty || r.Goods10_6 != string.Empty || r.Goods10_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 19, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code10, r.G_Syubai10, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 19, eMsg);
-            //    return false;
-            //}
-
-            //// 商品11
-            //if (r.G_Code11 == string.Empty)
-            //{
-            //    if (r.Goods11_1 != string.Empty || r.Goods11_2 != string.Empty || r.Goods11_3 != string.Empty || r.Goods11_4 != string.Empty ||
-            //         r.Goods11_5 != string.Empty || r.Goods11_6 != string.Empty || r.Goods11_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 21, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code11, r.G_Syubai11, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 21, eMsg);
-            //    return false;
-            //}
-
-            //// 商品12
-            //if (r.G_Code12 == string.Empty)
-            //{
-            //    if (r.Goods12_1 != string.Empty || r.Goods12_2 != string.Empty || r.Goods12_3 != string.Empty || r.Goods12_4 != string.Empty ||
-            //         r.Goods12_5 != string.Empty || r.Goods12_6 != string.Empty || r.Goods12_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 23, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code12, r.G_Syubai12, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 23, eMsg);
-            //    return false;
-            //}
-
-            //// 商品13
-            //if (r.G_Code13 == string.Empty)
-            //{
-            //    if (r.Goods13_1 != string.Empty || r.Goods13_2 != string.Empty || r.Goods13_3 != string.Empty || r.Goods13_4 != string.Empty ||
-            //         r.Goods13_5 != string.Empty || r.Goods13_6 != string.Empty || r.Goods13_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 25, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code13, r.G_Syubai13, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 25, eMsg);
-            //    return false;
-            //}
-
-            //// 商品14
-            //if (r.G_Code14 == string.Empty)
-            //{
-            //    if (r.Goods14_1 != string.Empty || r.Goods14_2 != string.Empty || r.Goods14_3 != string.Empty || r.Goods14_4 != string.Empty ||
-            //         r.Goods14_5 != string.Empty || r.Goods14_6 != string.Empty || r.Goods14_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 27, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code14, r.G_Syubai14, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 27, eMsg);
-            //    return false;
-            //}
-
-            //// 商品15
-            //if (r.G_Code15 == string.Empty)
-            //{
-            //    if (r.Goods15_1 != string.Empty || r.Goods15_2 != string.Empty || r.Goods15_3 != string.Empty || r.Goods15_4 != string.Empty ||
-            //         r.Goods15_5 != string.Empty || r.Goods15_6 != string.Empty || r.Goods15_7 != string.Empty)
-            //    {
-            //        setErrStatus(eHinCode, 29, "商品が登録されていません");
-            //        return false;
-            //    }
-            //}
-            //else if (!ChkShohin(r.G_Code15, r.G_Syubai15, out eMsg, out eNum))
-            //{
-            //    setErrStatus(eNum, 29, eMsg);
-            //    return false;
-            //}
+                 
 
             return true;
         }
@@ -1379,7 +1048,6 @@ namespace STSH_OCR.Common
                     return false;
                 }
             }
-
 
             return true;
         }

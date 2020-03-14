@@ -78,7 +78,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(283, 38);
             this.button4.TabIndex = 7;
-            this.button4.Text = "編集ログ確認(&L)";
+            this.button4.Text = "ログ確認(&L)";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -131,6 +131,7 @@
             this.button9.TabIndex = 5;
             this.button9.Text = "発注書データ編集(&U)";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // button10
             // 

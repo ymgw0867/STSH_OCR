@@ -14,20 +14,20 @@ using STSH_OCR.Common;
 
 namespace STSH_OCR.OCR
 {
-    public partial class frmEditLogRep : Form
+    public partial class frmCsvOutLog : Form
     {
-        public frmEditLogRep()
+        public frmCsvOutLog()
         {
             InitializeComponent();
         }
 
         private void frmEditLogRep_Load(object sender, EventArgs e)
         {
-            //ウィンドウズ最小サイズ
+            // ウィンドウズ最小サイズ
             Utility.WindowsMinSize(this, this.Size.Width, this.Size.Height);
 
-            //ウィンドウズ最大サイズ
-            //Utility.WindowsMaxSize(this, this.Size.Width, this.Size.Height);
+            // ウィンドウズ最大サイズ
+            Utility.WindowsMaxSize(this, this.Size.Width, this.Size.Height);
 
             dateTimePicker1.Value = DateTime.Today;
             dateTimePicker2.Value = DateTime.Today;
@@ -35,10 +35,10 @@ namespace STSH_OCR.OCR
             // 共有DB接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
-            tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
+            tblCsvOut = context.GetTable<Common.ClsCsvOutHistory>(); // 編集ログテーブル
 
             // PC名コンボボックスアイテム追加
-            foreach (var t in tblEditLog.Select(a => a.ComputerName).Distinct())
+            foreach (var t in tblCsvOut.Select(a => a.PcName).Distinct())
             {
                 comboBox1.Items.Add(t);
             }
@@ -50,14 +50,7 @@ namespace STSH_OCR.OCR
 
         string colPcName = "c2";
         string colEditDate = "c4";
-        string colField = "c5";
-        string colBefore = "c6";
-        string colAfter = "c7";
-        string ColSyohinNM = "c8";
-        string colTokuisakiNM = "c10";
-        string colPatternID = "c11";
-        string colYear = "c12";
-        string colID = "c15";
+        string colCount = "c5";
 
         // データベース：Sqlite3
         SQLiteConnection cn = null;
@@ -65,9 +58,9 @@ namespace STSH_OCR.OCR
 
         string db_file = Properties.Settings.Default.DB_File;
         
-        // 編集ログデータ
-        Table<Common.ClsDataEditLog> tblEditLog = null;
-        ClsDataEditLog ClsDataEditLog = null;
+        // CSVデータ作成ログ
+        Table<Common.ClsCsvOutHistory> tblCsvOut = null;
+        ClsCsvOutHistory OutHistory = null;
 
         public void GridViewSetting(DataGridView tempDGV)
         {
@@ -94,45 +87,24 @@ namespace STSH_OCR.OCR
             tempDGV.RowTemplate.Height = 20;
                        
             // 全体の高さ
-            tempDGV.Height = 718;            
+            tempDGV.Height = 722;            
 
             // 奇数行の色
             tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
 
             // 各列幅指定
-            tempDGV.Columns.Add(colEditDate, "編集日時");
+            tempDGV.Columns.Add(colEditDate, "作成日時");
             tempDGV.Columns.Add(colPcName, "ＰＣ名");
             //tempDGV.Columns.Add(colTokuisakiCD, "得意先コード");
-            tempDGV.Columns.Add(colTokuisakiNM, "得意先名");
-            tempDGV.Columns.Add(colPatternID, "PID");
-            tempDGV.Columns.Add(colYear, "発注年月");
-            tempDGV.Columns.Add(ColSyohinNM, "商品名");
-            //tempDGV.Columns.Add(colDay, "着日");
-            tempDGV.Columns.Add(colField, "編集項目");
-            tempDGV.Columns.Add(colBefore, "編集前");
-            tempDGV.Columns.Add(colAfter, "編集後");
-            tempDGV.Columns.Add(colID, "発注書ID");
+            tempDGV.Columns.Add(colCount, "出力件数");
 
-            tempDGV.Columns[colEditDate].Width = 160;
-            tempDGV.Columns[colPcName].Width = 140;
-            //tempDGV.Columns[colTokuisakiCD].Width = 120;
-            tempDGV.Columns[colTokuisakiNM].Width = 300;
-            tempDGV.Columns[colPatternID].Width = 50;
-            tempDGV.Columns[colYear].Width = 76;
-            //tempDGV.Columns[colMonth].Width = 40;
-            tempDGV.Columns[ColSyohinNM].Width = 360;
-            //tempDGV.Columns[colDay].Width = 56;
-            tempDGV.Columns[colField].Width = 120;
-            tempDGV.Columns[colBefore].Width = 100;
-            tempDGV.Columns[colAfter].Width = 100;
-            tempDGV.Columns[colID].Width = 100;
+            tempDGV.Columns[colEditDate].Width = 180;
+            tempDGV.Columns[colPcName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            tempDGV.Columns[colCount].Width = 100;
 
-            tempDGV.Columns[colTokuisakiNM].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-            tempDGV.Columns[colYear].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            tempDGV.Columns[colBefore].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            tempDGV.Columns[colAfter].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;         
-            tempDGV.Columns[colID].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            tempDGV.Columns[colEditDate].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            tempDGV.Columns[colPcName].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            tempDGV.Columns[colCount].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             // 編集可否
             tempDGV.ReadOnly = true;
@@ -192,43 +164,21 @@ namespace STSH_OCR.OCR
                 string _edt = edt.Year + "/" + edt.Month.ToString("D2") + "/" + edt.Day.ToString("D2") + " " +
                               edt.Hour.ToString("D2") + ":" + edt.Minute.ToString("D2") + ":" + edt.Second.ToString("D2");
 
-                var s = tblEditLog.Where(a => a.Date_Time.CompareTo(_sdt) >= 0 && a.Date_Time.CompareTo(_edt) <= 0).OrderByDescending(a => a.Date_Time);
+                var s = tblCsvOut.Where(a => a.WriteDateTime.CompareTo(_sdt) >= 0 && a.WriteDateTime.CompareTo(_edt) <= 0).OrderByDescending(a => a.WriteDateTime);
 
                 // PC指定
                 if (comboBox1.SelectedIndex != -1)
                 {
-                    s = s.Where(a => a.ComputerName.Contains(comboBox1.Text)).OrderByDescending(a => a.Date_Time);
-                }
-
-                // 得意先名指定
-                if (sTokuisakiNM.Text.Trim() != string.Empty)
-                {
-                    s = s.Where(a => a.TokuisakiName.Contains(sTokuisakiNM.Text)).OrderByDescending(a => a.Date_Time);
+                    s = s.Where(a => a.PcName.Contains(comboBox1.Text)).OrderByDescending(a => a.WriteDateTime);
                 }
 
                 foreach (var t in s)
                 {
                     g.Rows.Add();
 
-                    g[colEditDate, g.Rows.Count - 1].Value = t.Date_Time;
-                    g[colPcName, g.Rows.Count - 1].Value = t.ComputerName;
-                    g[colTokuisakiNM, g.Rows.Count - 1].Value = t.TokuisakiCode + " " + t.TokuisakiName;
-                    g[colPatternID, g.Rows.Count - 1].Value = t.patternID.PadLeft(3, '0') + t.patternIDSeq.PadLeft(2, '0');
-                    g[colYear, g.Rows.Count - 1].Value = t.Year + "/" + t.Month.PadLeft(2, '0');
-                    g[ColSyohinNM, g.Rows.Count - 1].Value = t.ShohinName;
-
-                    if (t.TenchakuDate != string.Empty)
-                    {
-                        g[colField, g.Rows.Count - 1].Value = t.TenchakuDate + t.FieldName;
-                    }
-                    else
-                    {
-                        g[colField, g.Rows.Count - 1].Value = t.FieldName;
-                    }
-                    
-                    g[colBefore, g.Rows.Count - 1].Value = t.BeforeValue;
-                    g[colAfter, g.Rows.Count - 1].Value = t.AfterValue;
-                    g[colID, g.Rows.Count - 1].Value = t.ID;
+                    g[colEditDate, g.Rows.Count - 1].Value = t.WriteDateTime;
+                    g[colPcName, g.Rows.Count - 1].Value = t.PcName;
+                    g[colCount, g.Rows.Count - 1].Value = t.OutPutCount.ToString("#,##0");
                 }
 
                 g.CurrentCell = null;
@@ -246,7 +196,7 @@ namespace STSH_OCR.OCR
             // 該当するデータがないとき
             if (g.RowCount == 0)
             {
-                MessageBox.Show("該当するデータはありませんでした", "発注データ編集ログ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("該当するデータはありませんでした", "CSVデータ作成ログ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 button1.Enabled = false;
             }
             else
@@ -274,7 +224,7 @@ namespace STSH_OCR.OCR
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("表示中の編集ログをExcel形式で出力します。よろしいですか。", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (MessageBox.Show("表示中の作成ログをExcel形式で出力します。よろしいですか。", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
@@ -300,85 +250,59 @@ namespace STSH_OCR.OCR
                     bk.Style.Font.FontName = "ＭＳ ゴシック";
                     bk.Style.Font.FontSize = 11;
 
-                    var sheet1 = bk.AddWorksheet("発注書編集ログ");
-
+                    var sheet1 = bk.AddWorksheet("CSVデータ作成ログ");
+                    
                     sheet1.Cell("A1").SetValue("編集日時");
                     sheet1.Cell("B1").SetValue("ＰＣ名");
-                    sheet1.Cell("C1").SetValue("得意先名");
-                    sheet1.Cell("D1").SetValue("PID");
-                    sheet1.Cell("E1").SetValue("発注年月");
-                    sheet1.Cell("F1").SetValue("商品名");
-                    sheet1.Cell("G1").SetValue("編集項目");
-                    sheet1.Cell("H1").SetValue("編集前");
-                    sheet1.Cell("I1").SetValue("編集後");
+                    sheet1.Cell("C1").SetValue("出力件数");
 
                     for (int i = 0; i < g.Rows.Count; i++)
                     {
                         sheet1.Cell(i + 2, 1).Value = g[colEditDate, i].Value.ToString();
                         sheet1.Cell(i + 2, 2).Value = g[colPcName, i].Value.ToString();
-                        sheet1.Cell(i + 2, 3).Value = g[colTokuisakiNM, i].Value.ToString();
-                        sheet1.Cell(i + 2, 4).Value = g[colPatternID, i].Value.ToString();
-                        sheet1.Cell(i + 2, 5).Value = g[colYear, i].Value.ToString();
-                        sheet1.Cell(i + 2, 6).Value = g[ColSyohinNM, i].Value.ToString();
-                        sheet1.Cell(i + 2, 7).Value = g[colField, i].Value.ToString();
-                        sheet1.Cell(i + 2, 8).Value = g[colBefore, i].Value.ToString();
-                        sheet1.Cell(i + 2, 9).Value = g[colAfter, i].Value.ToString();
+                        sheet1.Cell(i + 2, 3).Value = g[colCount, i].Value.ToString();
                     }
 
                     // 表示位置
                     sheet1.Column("A").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     sheet1.Column("B").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    sheet1.Column("C").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                    sheet1.Column("D").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    sheet1.Column("E").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    sheet1.Column("F").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                    sheet1.Column("G").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                    sheet1.Column("H").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    sheet1.Column("I").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    sheet1.Column("C").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                     // 書式設定
                     sheet1.Column("A").Style.NumberFormat.SetFormat("yyyy/mm/dd HH:MM:SS");
-                    sheet1.Column("D").Style.NumberFormat.SetFormat("00000");
-                    sheet1.Column("E").Style.NumberFormat.SetFormat("yyyy年m月");
-                    //sheet1.Column("H").Style.NumberFormat.SetFormat("#,##0");
+                    sheet1.Column("C").Style.NumberFormat.SetFormat("#,##0");
 
                     // セル表示幅
                     sheet1.Column("A").Width = 26;
-                    sheet1.Column("B").Width = 22;
-                    sheet1.Column("C").Width = 62;
-                    sheet1.Column("D").Width = 10;
-                    sheet1.Column("E").Width = 12;
-                    sheet1.Column("F").Width = 50;
-                    sheet1.Column("G").Width = 24;
-                    sheet1.Column("H").Width = 10;
-                    sheet1.Column("I").Width = 10;
+                    sheet1.Column("B").Width = 33;
+                    sheet1.Column("C").Width = 15;
 
                     // 全体を縮小して表示
-                    sheet1.Column("C").Style.Alignment.ShrinkToFit = true;
-                    sheet1.Column("F").Style.Alignment.ShrinkToFit = true;
+                    //sheet1.Column("C").Style.Alignment.ShrinkToFit = true;
+                    //sheet1.Column("F").Style.Alignment.ShrinkToFit = true;
 
                     // 上下罫線
                     sheet1.Row(1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                     //sheet1.Row(2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    sheet1.Range("A1:I1").Style.Fill.BackgroundColor = XLColor.LightGray;
+                    sheet1.Range("A1:C1").Style.Fill.BackgroundColor = XLColor.LightGray;
 
                     // 全体の罫線
-                    sheet1.Range("A1:I1").Style.Border.SetTopBorder(XLBorderStyleValues.Thin);
-                    sheet1.Range("A1:I1").Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
+                    sheet1.Range("A1:c1").Style.Border.SetTopBorder(XLBorderStyleValues.Thin);
+                    sheet1.Range("A1:c1").Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
                     sheet1.Range(sheet1.Cell("A1"), sheet1.LastCellUsed()).Style.Border.SetLeftBorder(XLBorderStyleValues.Thin)
                         .Border.SetRightBorder(XLBorderStyleValues.Thin);
-                    sheet1.Range("A" + (sheet1.RowsUsed().Count()) + ":I" + (sheet1.RowsUsed().Count())).Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
+                    sheet1.Range("A" + (sheet1.RowsUsed().Count()) + ":C" + (sheet1.RowsUsed().Count())).Style.Border.SetBottomBorder(XLBorderStyleValues.Thin);
 
                     // 行の固定
                     sheet1.SheetView.FreezeRows(1);
 
                     DialogResult ret;
 
-                    string fName = "発注書編集ログ";
+                    string fName = "ＣＳＶデータ作成ログ";
 
                     //ダイアログボックスの初期設定
                     SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-                    saveFileDialog1.Title = "発注書編集ログ";
+                    saveFileDialog1.Title = "ＣＳＶデータ作成ログ";
                     saveFileDialog1.OverwritePrompt = true;
                     saveFileDialog1.RestoreDirectory = true;
                     saveFileDialog1.FileName = fName + "_" + DateTime.Today.Year + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2");

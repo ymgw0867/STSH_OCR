@@ -36,7 +36,7 @@ namespace STSH_OCR.OCR
         /// <param name="iX">
         ///     ヘッダデータインデックス</param>
         ///------------------------------------------------------------------------------------
-        private void showOcrData(int iX)
+        private void showOcrData(string sID)
         {
             Cursor = Cursors.WaitCursor;
             showStatus = true;
@@ -45,14 +45,14 @@ namespace STSH_OCR.OCR
             editLogStatus = false;
 
             // フォーム初期化
-            formInitialize(dID, iX);
+            formInitialize(sID);
 
             // 発注データを取得
-            Order = tblOrder.Single(a => a.ID == cID[iX]);
+            Order = tblOrder.Single(a => a.ID == sID);
 
             global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
 
-            string Sql = "select * from OrderData WHERE ID = '" + cID[iX] + "'";
+            string Sql = "select * from OrderData WHERE ID = '" + sID + "'";
 
             using (SQLiteCommand com = new SQLiteCommand(Sql, cn))
             {
@@ -62,7 +62,7 @@ namespace STSH_OCR.OCR
                 {
                     txtYear.Text = dataReader["年"].ToString();
                     txtMonth.Text = dataReader["月"].ToString();
-                    txtTokuisakiCD.Text = dataReader["得意先コード"].ToString().PadLeft(7, '0'); ;
+                    txtTokuisakiCD.Text = dataReader["得意先コード"].ToString().PadLeft(7, '0');
                     txtPID.Text = dataReader["patternID"].ToString();
                     txtSeqNum.Text = dataReader["SeqNumber"].ToString();
 
@@ -88,7 +88,7 @@ namespace STSH_OCR.OCR
                     lblErrMsg.Text = string.Empty;
 
                     // 画像表示
-                    _img = Properties.Settings.Default.DataPath + dataReader["画像名"].ToString();
+                    _img = Utility.GetImageFilePath(Config.ImgPath, dataReader["得意先コード"].ToString().PadLeft(7, '0')) + @"\" + dataReader["画像名"].ToString();
                     showImage_openCv(_img);
                     trackBar1.Enabled = true;
 
@@ -104,7 +104,6 @@ namespace STSH_OCR.OCR
             showStatus = false;
             Cursor = Cursors.Default;
         }
-
 
         ///------------------------------------------------------------------------------------
         /// <summary>
@@ -590,9 +589,8 @@ namespace STSH_OCR.OCR
         /// <param name="cIx">
         ///     勤務票ヘッダカレントレコードインデックス</param>
         ///------------------------------------------------------------------------------------
-        private void formInitialize(string sID, int cIx)
+        private void formInitialize(string sID)
         {
-
             global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
 
             // テキストボックス表示色設定
@@ -689,84 +687,47 @@ namespace STSH_OCR.OCR
             checkBox1.BackColor = SystemColors.Control;
             checkBox1.Checked = false;
 
-            // データ編集のとき
-            if (sID == string.Empty)
-            {
-                // ヘッダ情報
-                txtYear.ReadOnly = false;
-                txtMonth.ReadOnly = false;
+            // ヘッダ情報
+            txtYear.ReadOnly = false;
+            txtMonth.ReadOnly = false;
 
-                // スクロールバー設定
-                hScrollBar1.Enabled = true;
-                hScrollBar1.Minimum = 0;
-                hScrollBar1.Maximum = cID.Length - 1;
-                hScrollBar1.Value = cIx;
-                hScrollBar1.LargeChange = 1;
-                hScrollBar1.SmallChange = 1;
+            //// スクロールバー設定
+            //hScrollBar1.Enabled = true;
+            //hScrollBar1.Minimum = 0;
+            //hScrollBar1.Maximum = cID.Length - 1;
+            //hScrollBar1.Value = cIx;
+            //hScrollBar1.LargeChange = 1;
+            //hScrollBar1.SmallChange = 1;
 
-                //移動ボタン制御
-                btnFirst.Enabled = true;
-                btnNext.Enabled = true;
-                btnBefore.Enabled = true;
-                btnEnd.Enabled = true;
+            ////移動ボタン制御
+            //btnFirst.Enabled = true;
+            //btnNext.Enabled = true;
+            //btnBefore.Enabled = true;
+            //btnEnd.Enabled = true;
 
-                //最初のレコード
-                if (cIx == 0)
-                {
-                    btnBefore.Enabled = false;
-                    btnFirst.Enabled = false;
-                }
+            ////最初のレコード
+            //if (cIx == 0)
+            //{
+            //    btnBefore.Enabled = false;
+            //    btnFirst.Enabled = false;
+            //}
 
-                //最終レコード
-                if ((cIx + 1) == cID.Length)
-                {
-                    btnNext.Enabled = false;
-                    btnEnd.Enabled = false;
-                }
+            ////最終レコード
+            //if ((cIx + 1) == cID.Length)
+            //{
+            //    btnNext.Enabled = false;
+            //    btnEnd.Enabled = false;
+            //}
 
-                // その他のボタンを有効とする
-                btnErrCheck.Visible = true;
-                btnHold.Visible = true;
-                btnDelete.Visible = true;
-                btnPrint.Visible = true;
-                btnData.Visible = true;
+            // その他のボタンを有効とする
+            btnErrCheck.Visible = true;
+            btnDelete.Visible = true;
+            btnPrint.Visible = true;
+            btnUpdate.Visible = true;
 
-                ////エラー情報表示
-                //ErrShow();
+            //データ数表示
+            lblPage.Text = "";
 
-                //データ数表示
-                lblPage.Text = " (" + (cIx + 1).ToString() + "/" + cID.Length + ")";
-            }
-            else
-            {
-                // ヘッダ情報
-                txtYear.ReadOnly = true;
-                txtMonth.ReadOnly = true;
-
-                // スクロールバー設定
-                hScrollBar1.Enabled = true;
-                hScrollBar1.Minimum = 0;
-                hScrollBar1.Maximum = 0;
-                hScrollBar1.Value = 0;
-                hScrollBar1.LargeChange = 1;
-                hScrollBar1.SmallChange = 1;
-
-                //移動ボタン制御
-                btnFirst.Enabled = false;
-                btnNext.Enabled = false;
-                btnBefore.Enabled = false;
-                btnEnd.Enabled = false;
-
-                // その他のボタンを無効とする
-                btnErrCheck.Visible = true;
-                btnHold.Visible = true;
-                btnDelete.Visible = true;
-                btnPrint.Visible = true;
-                btnData.Visible = true;
-
-                //データ数表示
-                lblPages.Text = string.Empty;
-            }
         }
 
         ///------------------------------------------------------------------------------------

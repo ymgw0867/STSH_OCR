@@ -399,7 +399,7 @@ namespace STSH_OCR
         private void button4_Click(object sender, EventArgs e)
         {
             Hide();
-            frmEditLogRep logRep = new frmEditLogRep();
+            frmLogSelect logRep = new frmLogSelect();
             logRep.ShowDialog();
             Show();
         }
@@ -409,6 +409,14 @@ namespace STSH_OCR
             Hide();
             frmCsvDataCreate frmCsv = new frmCsvDataCreate();
             frmCsv.ShowDialog();
+            Show();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            Hide();
+            frmOrderIndex frmOrderIndex = new frmOrderIndex();
+            frmOrderIndex.ShowDialog();
             Show();
         }
     }

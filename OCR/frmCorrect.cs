@@ -1442,8 +1442,8 @@ namespace STSH_OCR.OCR
                 //    System.IO.File.Move(file, tifName);
                 //}
 
+                // 発注書画像移動処理
                 MoveFaxImage();
-
 
                 // 発注書データを削除します
                 errMsg = "FAX発注書データ削除";

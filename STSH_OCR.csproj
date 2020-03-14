@@ -136,6 +136,24 @@
       <DependentUpon>frmComment.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\ClsGoods.cs" />
+    <Compile Include="OCR\frmCsvOutLogRep.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OCR\frmCsvOutLogRep.Designer.cs">
+      <DependentUpon>frmCsvOutLogRep.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OCR\frmLogSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OCR\frmLogSelect.Designer.cs">
+      <DependentUpon>frmLogSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OCR\frmOrderIndex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OCR\frmOrderIndex.designer.cs">
+      <DependentUpon>frmOrderIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="OCR\frmOrder.dataShow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -227,6 +245,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Master\frmComment.resx">
       <DependentUpon>frmComment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OCR\frmCsvOutLogRep.resx">
+      <DependentUpon>frmCsvOutLogRep.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OCR\frmLogSelect.resx">
+      <DependentUpon>frmLogSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OCR\frmOrderIndex.resx">
+      <DependentUpon>frmOrderIndex.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OCR\frmOrder.resx">
       <DependentUpon>frmOrder.cs</DependentUpon>

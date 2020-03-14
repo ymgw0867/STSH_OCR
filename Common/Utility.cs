@@ -1250,5 +1250,30 @@ namespace STSH_OCR.Common
 
             return cls;
         }
+
+
+        ///-----------------------------------------------------------------------------------
+        /// <summary>
+        ///     得意先別画像保存フォルダパス取得 </summary>
+        /// <param name="ImgPath">
+        ///     画像保存先フォルダパス</param>
+        /// <param name="TokuisakiCD">
+        ///     得意先コード</param>
+        /// <returns>
+        ///    フォルダ名</returns>
+        ///-----------------------------------------------------------------------------------
+        public static string GetImageFilePath(string ImgPath, string TokuisakiCD)
+        {
+            string DirNM = string.Empty;
+
+            // フォルダ名に得意先コードが含まれるフォルダ
+            foreach (var dir in System.IO.Directory.GetDirectories(ImgPath, TokuisakiCD + "*"))
+            {
+                DirNM = dir;
+                break;
+            }
+
+            return DirNM;
+        }
     }
 }

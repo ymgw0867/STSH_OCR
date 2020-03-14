@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCorrect));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmOrder));
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnRight = new System.Windows.Forms.Button();
@@ -46,7 +46,6 @@
             this.btnBefore = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnEnd = new System.Windows.Forms.Button();
-            this.btnHold = new System.Windows.Forms.Button();
             this.btnPrint = new System.Windows.Forms.Button();
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.txtErrStatus = new System.Windows.Forms.TextBox();
@@ -70,17 +69,17 @@
             this.txtTenDay4 = new System.Windows.Forms.TextBox();
             this.txtTenDay5 = new System.Windows.Forms.TextBox();
             this.txtTenDay6 = new System.Windows.Forms.TextBox();
-            this.btnData = new System.Windows.Forms.Button();
             this.lblTokuisakiName = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.button1 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.dg1 = new STSH_OCR.DataGridViewEx();
             this.label1 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.lblPages = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblPage = new System.Windows.Forms.Label();
-            this.dg1 = new STSH_OCR.DataGridViewEx();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -96,6 +95,7 @@
             this.hScrollBar1.Size = new System.Drawing.Size(330, 37);
             this.hScrollBar1.TabIndex = 13;
             this.toolTip1.SetToolTip(this.hScrollBar1, "出勤簿を移動します");
+            this.hScrollBar1.Visible = false;
             this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
             // 
             // toolTip1
@@ -201,7 +201,7 @@
             this.btnErrCheck.BackColor = System.Drawing.SystemColors.Control;
             this.btnErrCheck.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnErrCheck.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnErrCheck.Location = new System.Drawing.Point(1359, 848);
+            this.btnErrCheck.Location = new System.Drawing.Point(1498, 848);
             this.btnErrCheck.Name = "btnErrCheck";
             this.btnErrCheck.Size = new System.Drawing.Size(144, 47);
             this.btnErrCheck.TabIndex = 13;
@@ -214,7 +214,7 @@
             this.btnDelete.BackColor = System.Drawing.SystemColors.Control;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnDelete.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnDelete.Location = new System.Drawing.Point(1063, 848);
+            this.btnDelete.Location = new System.Drawing.Point(1200, 848);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(144, 47);
             this.btnDelete.TabIndex = 15;
@@ -231,6 +231,7 @@
             this.btnFirst.TabIndex = 9;
             this.btnFirst.Text = "先頭データ";
             this.btnFirst.UseVisualStyleBackColor = true;
+            this.btnFirst.Visible = false;
             this.btnFirst.Click += new System.EventHandler(this.button3_Click_1);
             // 
             // btnBefore
@@ -242,6 +243,7 @@
             this.btnBefore.TabIndex = 10;
             this.btnBefore.Text = "前データ";
             this.btnBefore.UseVisualStyleBackColor = true;
+            this.btnBefore.Visible = false;
             this.btnBefore.Click += new System.EventHandler(this.button4_Click_1);
             // 
             // btnNext
@@ -253,6 +255,7 @@
             this.btnNext.TabIndex = 11;
             this.btnNext.Text = "次データ";
             this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Visible = false;
             this.btnNext.Click += new System.EventHandler(this.button7_Click);
             // 
             // btnEnd
@@ -264,27 +267,15 @@
             this.btnEnd.TabIndex = 12;
             this.btnEnd.Text = "最終データ";
             this.btnEnd.UseVisualStyleBackColor = true;
+            this.btnEnd.Visible = false;
             this.btnEnd.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // btnHold
-            // 
-            this.btnHold.BackColor = System.Drawing.SystemColors.Control;
-            this.btnHold.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnHold.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnHold.Location = new System.Drawing.Point(1507, 848);
-            this.btnHold.Name = "btnHold";
-            this.btnHold.Size = new System.Drawing.Size(127, 47);
-            this.btnHold.TabIndex = 16;
-            this.btnHold.Text = "保留：F11";
-            this.btnHold.UseVisualStyleBackColor = false;
-            this.btnHold.Click += new System.EventHandler(this.button11_Click);
             // 
             // btnPrint
             // 
             this.btnPrint.BackColor = System.Drawing.SystemColors.Control;
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnPrint.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnPrint.Location = new System.Drawing.Point(1211, 848);
+            this.btnPrint.Location = new System.Drawing.Point(1349, 848);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(144, 47);
             this.btnPrint.TabIndex = 17;
@@ -569,19 +560,6 @@
             this.txtTenDay6.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay6.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
-            // btnData
-            // 
-            this.btnData.BackColor = System.Drawing.SystemColors.Control;
-            this.btnData.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnData.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnData.Location = new System.Drawing.Point(1638, 848);
-            this.btnData.Name = "btnData";
-            this.btnData.Size = new System.Drawing.Size(154, 47);
-            this.btnData.TabIndex = 587;
-            this.btnData.Text = "発注データ登録：F12";
-            this.btnData.UseVisualStyleBackColor = false;
-            this.btnData.Click += new System.EventHandler(this.btnData_Click);
-            // 
             // lblTokuisakiName
             // 
             this.lblTokuisakiName.BackColor = System.Drawing.Color.White;
@@ -621,6 +599,22 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(827, 619);
             this.panel3.TabIndex = 592;
+            // 
+            // dg1
+            // 
+            this.dg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg1.Location = new System.Drawing.Point(0, 0);
+            this.dg1.Name = "dg1";
+            this.dg1.RowTemplate.Height = 21;
+            this.dg1.Size = new System.Drawing.Size(825, 618);
+            this.dg1.TabIndex = 364;
+            this.dg1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellContentDoubleClick);
+            this.dg1.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEnter);
+            this.dg1.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellLeave);
+            this.dg1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewEx1_CellPainting);
+            this.dg1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellValueChanged);
+            this.dg1.CurrentCellDirtyStateChanged += new System.EventHandler(this.dg1_CurrentCellDirtyStateChanged);
+            this.dg1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg1_EditingControlShowing);
             // 
             // label1
             // 
@@ -678,27 +672,24 @@
             this.lblPage.Text = "100/100";
             this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // dg1
+            // btnUpdate
             // 
-            this.dg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dg1.Location = new System.Drawing.Point(0, 0);
-            this.dg1.Name = "dg1";
-            this.dg1.RowTemplate.Height = 21;
-            this.dg1.Size = new System.Drawing.Size(825, 618);
-            this.dg1.TabIndex = 364;
-            this.dg1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellContentDoubleClick);
-            this.dg1.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEnter);
-            this.dg1.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellLeave);
-            this.dg1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewEx1_CellPainting);
-            this.dg1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellValueChanged);
-            this.dg1.CurrentCellDirtyStateChanged += new System.EventHandler(this.dg1_CurrentCellDirtyStateChanged);
-            this.dg1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg1_EditingControlShowing);
+            this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
+            this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnUpdate.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnUpdate.Location = new System.Drawing.Point(1647, 848);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(144, 47);
+            this.btnUpdate.TabIndex = 599;
+            this.btnUpdate.Text = "発注書更新：F11";
+            this.btnUpdate.UseVisualStyleBackColor = false;
             // 
-            // frmCorrect
+            // frmOrder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1904, 906);
+            this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.lblPage);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblPages);
@@ -706,7 +697,6 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.lblTokuisakiName);
-            this.Controls.Add(this.btnData);
             this.Controls.Add(this.label89);
             this.Controls.Add(this.txtTenDay7);
             this.Controls.Add(this.txtTenDay6);
@@ -730,7 +720,6 @@
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.txtErrStatus);
             this.Controls.Add(this.btnPrint);
-            this.Controls.Add(this.btnHold);
             this.Controls.Add(this.btnEnd);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnBefore);
@@ -747,7 +736,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
-            this.Name = "frmCorrect";
+            this.Name = "frmOrder";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FAX発注書データ作成";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmCorrect_FormClosing);
@@ -784,7 +773,6 @@
         private System.Windows.Forms.Button btnBefore;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnEnd;
-        private System.Windows.Forms.Button btnHold;
         private System.Windows.Forms.Button btnPrint;
         private System.Drawing.Printing.PrintDocument printDocument1;
         private System.Windows.Forms.TextBox txtErrStatus;
@@ -811,7 +799,6 @@
         private System.Windows.Forms.TextBox txtTenDay4;
         private System.Windows.Forms.TextBox txtTenDay5;
         private System.Windows.Forms.TextBox txtTenDay6;
-        private System.Windows.Forms.Button btnData;
         private System.Windows.Forms.Label lblTokuisakiName;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Button button1;
@@ -821,5 +808,6 @@
         private System.Windows.Forms.Label lblPages;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblPage;
+        private System.Windows.Forms.Button btnUpdate;
     }
 }
