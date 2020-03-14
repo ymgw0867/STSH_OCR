@@ -166,5 +166,14 @@ namespace STSH_OCR.Properties {
                 return ((string)(this["ReFaxSaveFile"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        public int orderDataBackupDay {
+            get {
+                return ((int)(this["orderDataBackupDay"]));
+            }
+        }
     }
 }

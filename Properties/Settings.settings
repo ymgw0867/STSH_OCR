@@ -50,5 +50,8 @@
     <Setting Name="ReFaxSaveFile" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\STSH_OCR\XLS\返信FAX.xlsx</Value>
     </Setting>
+    <Setting Name="orderDataBackupDay" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

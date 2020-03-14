@@ -62,9 +62,9 @@ namespace STSH_OCR
 
             var cnf = tblCnf.Single(a => a.ID == global.configKEY);
 
-            Cursor = Cursors.WaitCursor; 
+            Cursor = Cursors.WaitCursor;
 
-            // 保存期間経過編集ログ削除
+            // 保存期間経過編集ログ、ＣＳＶデータ作成履歴削除
             DeleteDateSpan(cnf.LogSpan);
 
             // 保存期間経過FAX画像削除
@@ -78,7 +78,7 @@ namespace STSH_OCR
 
         ///---------------------------------------------------------------
         /// <summary>
-        ///     保存期間経過発注書データ、編集ログ削除 </summary>
+        ///     保存期間経過編集ログ、ＣＳＶデータ作成履歴削除 </summary>
         /// <param name="dM">
         ///     発注書データ保存月数</param>
         /// <param name="dM2">
@@ -90,15 +90,35 @@ namespace STSH_OCR
 
             try
             {
-                // 編集ログ
                 DateTime sdt = DateTime.Now.AddMonths(-1 * dM2);
                 //DateTime sdt = DateTime.Now.AddDays(-1 * dM2); // デバッグ用
 
                 string _sdt = sdt.Year + "/" + sdt.Month.ToString("D2") + "/" + sdt.Day.ToString("D2") + " " +
                               sdt.Hour.ToString("D2") + ":" + sdt.Minute.ToString("D2") + ":" + sdt.Second.ToString("D2");
 
+                // 編集ログ
                 string sql = "delete from DataEditLog  ";
                 sql += "where 年月日時刻 < '" + _sdt + "'";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                // ＣＳＶデータ作成履歴
+                sql = "delete from CsvOutHistory ";
+                sql += "where 作成年月日時刻 < '" + _sdt + "'";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                // OrderData_Backup
+                sdt = DateTime.Now.AddDays(-1 * Properties.Settings.Default.orderDataBackupDay);
+                _sdt = sdt.Year + sdt.Month.ToString("D2") + sdt.Day.ToString("D2") + "235959999";
+                sql = "delete from OrderData_Backup ";
+                sql += "where ID < '" + _sdt + "'";
 
                 using (SQLiteCommand com = new SQLiteCommand(sql, cn))
                 {
