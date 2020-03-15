@@ -16,8 +16,15 @@ namespace STSH_OCR.Common
     {
         public OCRData()
         {
-            //_Cn = Cn;
+
         }
+        
+        // 得意先クラス
+        ClsCsvData.ClsCsvTokuisaki[] tokuisaki = null;
+
+        // 商品クラス
+        ClsCsvData.ClsCsvSyohin[] syohins = null;
+
 
         #region エラー項目番号プロパティ
         //---------------------------------------------------
@@ -80,9 +87,10 @@ namespace STSH_OCR.Common
 
         /// <summary> 
         ///     エラー項目 = 発注数 </summary>
-        public int eSuu = 6;
+        public int [] eSuu = new int[7];
+        private const int ESUU_CODE = 100; 
         public int eSuu2 = 11;
-        
+
         /// <summary> 
         ///     エラー項目 = 追加注文コード </summary>
         public int eAddCode = 7;
@@ -103,13 +111,12 @@ namespace STSH_OCR.Common
         public int eTenDate6 = 16;
         public int eTenDate7 = 17;
 
-
         /// <summary> 
         ///     エラー項目 = 終売 </summary>
         public int eShubai = 18;
 
         #endregion
-        
+
         #region 警告項目
         ///     <!--警告項目配列 -->
         public int[] warArray = new int[6];
@@ -156,6 +163,8 @@ namespace STSH_OCR.Common
         const int Fri = 5;
         const int Sat = 6;
 
+        // 発注書パターン
+        ClsOrderPattern OrderPattern = null;
 
         ///----------------------------------------------------------------------------------------
         /// <summary>
@@ -188,10 +197,10 @@ namespace STSH_OCR.Common
         ///     終了ヘッダ行インデックス</param>
         /// <param name="frm">
         ///     親フォーム</param>
-        /// <param name="dtsC">
-        ///     NHBR_CLIDataSet </param>
-        /// <param name="dts">
-        ///     NHBRDataSet </param>
+        /// <param name="tblFax">
+        ///     ClsFaxOrderクラス</param>
+        /// <param name="tblPtn">
+        ///     ClsOrderPatternクラス</param>
         /// <param name="cID">
         ///     FAX注文書@ID配列</param>
         /// <returns>
@@ -199,6 +208,15 @@ namespace STSH_OCR.Common
         ///-----------------------------------------------------------------------------------------------
         public Boolean errCheckMain(int sIx, int eIx, Form frm, Table<ClsFaxOrder> tblFax, Table<ClsOrderPattern> tblPtn, string[] cID)
         {
+            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
+
+            // 得意先マスタークラス配列取得
+            tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+
+            // 商品マスタークラス配列取得
+            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+
             int rCnt = 0;
 
             // オーナーフォームを無効にする
@@ -212,20 +230,20 @@ namespace STSH_OCR.Common
             // レコード件数取得
             int cTotal = cID.Length;
 
-            // 出勤簿データ読み出し
             Boolean eCheck = true;
 
+            // 発注書データ読み出し
             for (int i = 0; i < cTotal; i++)
             {
-                //データ件数加算
+                // データ件数加算
                 rCnt++;
 
-                //プログレスバー表示
+                // プログレスバー表示
                 frmP.Text = "エラーチェック実行中　" + rCnt.ToString() + "/" + cTotal.ToString();
                 frmP.progressValue = rCnt * 100 / cTotal;
                 frmP.ProgressStep();
 
-                //指定範囲ならエラーチェックを実施する：（i:行index）
+                // 指定範囲ならエラーチェックを実施する
                 if (i >= sIx && i <= eIx)
                 {
                     // FAX注文書データのコレクションを取得します
@@ -277,7 +295,14 @@ namespace STSH_OCR.Common
         ///-----------------------------------------------------------------------------------------------
         public Boolean errCheckMain(string sID, Table<ClsOrder> tblOrder, Table<ClsOrderPattern> tblPtn)
         {
-            int rCnt = 0;
+            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
+
+            // 得意先マスタークラス配列取得
+            tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+
+            // 商品マスタークラス配列取得
+            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             // 発注書データ読み出し
             Boolean eCheck = true;
@@ -292,7 +317,7 @@ namespace STSH_OCR.Common
             //{
             //    _errHeaderIndex = i;     // エラーとなったヘッダRowIndex
             //}
-            
+
             return eCheck;
         }
 
@@ -322,19 +347,23 @@ namespace STSH_OCR.Common
         /// <summary>
         ///     項目別エラーチェック。
         ///     エラーのときヘッダ行インデックス、フィールド番号、明細行インデックス、エラーメッセージが記録される </summary>
-        /// <param name="dts">
-        ///     データセット</param>
         /// <param name="r">
         ///     発注書行コレクション</param>
+        /// <param name="ptn">
+        ///     ClsOrderPatternクラス</param>
         /// <returns>
         ///     エラーなし：true, エラー有り：false</returns>
         ///-----------------------------------------------------------------------------------------------
         /// 
         public Boolean errCheckData(ClsFaxOrder r, Table<ClsOrderPattern> ptn)
         {
-            string sDate;
-            DateTime eDate;
             int eNum = 0;
+
+            // 発注数エラーコードセット
+            for (int i = 0; i < 7; i++)
+            {
+                eSuu[i] = ESUU_CODE + i;
+            }
 
             // 確認チェック
             if (r.Veri == global.flgOff)
@@ -366,30 +395,39 @@ namespace STSH_OCR.Common
             }
 
             // パターンID : 「０」はフリー入力可能とする 2017/08/22
-            if (r.patternID != global.flgOff)
+            //if (r.patternID != global.flgOff)
+            //{
+            //    if (!ptn.Any(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber))
+            //    {
+            //        setErrStatus(ePattern, 0, "登録されていない発注書番号です");
+            //        return false;
+            //    }
+            //}
+
+            if (!ptn.Any(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber))
             {
-                if (!ptn.Any(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber))
-                {
-                    setErrStatus(ePattern, 0, "登録されていない発注書番号です");
-                    return false;
-                }
+                setErrStatus(ePattern, 0, "登録されていない発注書番号です");
+                return false;
+            }
+            else
+            {
+                // パターンID取得
+                OrderPattern = ptn.Single(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber);
             }
 
             ClsTenDate[] tenDates = new ClsTenDate[7];
 
             Utility.SetTenDate(tenDates, r);
 
-
             string eMsg = "";
-            string strDate ="";
-            string strDD ="";
+            string strDate = "";
             int dYear = r.Year;
             int dMonth = r.Month;
 
             for (int i = 0; i < 7; i++)
             {
-                strDate = tenDates[i].Year  + "/" + tenDates[i].Month.ToString("D2") + "/" + tenDates[i].Day.ToString("D2");
-                
+                strDate = tenDates[i].Year + "/" + tenDates[i].Month.ToString("D2") + "/" + tenDates[i].Day.ToString("D2");
+
                 switch (i)
                 {
                     case 0:
@@ -454,7 +492,11 @@ namespace STSH_OCR.Common
                 }
             }
 
-            // 商品発注明細クラス
+            //--------------------------------------------------------------------
+            //
+            //      商品発注明細クラス配列を作成
+            //
+            //--------------------------------------------------------------------
             ClsGoods[] goods = new ClsGoods[15];
             for (int i = 0; i < global.MAX_GYO; i++)
             {
@@ -650,37 +692,49 @@ namespace STSH_OCR.Common
 
             bool ha = false;
 
-            // 商品エラーチェック
+            //--------------------------------------------------------------------
+            //
+            //      商品エラーチェック
+            //
+            //--------------------------------------------------------------------
             for (int i = 0; i < 15; i++)
             {
-                ha = false;
+                //ha = false;
 
-                // 発注の有無を調べる
-                for (int iX = 0; iX < 7; iX++)
-                {
-                    if (Utility.StrtoInt(goods[i].Suu[iX]) != global.flgOff)
-                    {
-                        // 発注あり
-                        ha = true;
-                    }
-                }
+                //// 発注の有無を調べる
+                //for (int iX = 0; iX < 7; iX++)
+                //{
+                //    if (Utility.StrtoInt(goods[i].Suu[iX]) != global.flgOff)
+                //    {
+                //        // 発注あり
+                //        ha = true;
+                //        break;
+                //    }
+                //}
 
-                if (goods[i].Code == string.Empty)
-                {
-                    // 発注あり
-                    if (ha)
-                    {
-                        setErrStatus(eHinCode, i * 2 + 1, "商品が登録されていません");
-                        return false;
-                    }
-                }
-                else if (!ChkShohin(goods[i].Code, goods[i].Syubai, out eMsg, out eNum, ha))
+                //if (goods[i].Code == string.Empty)
+                //{
+                //    // 商品登録なしで発注あり
+                //    if (ha)
+                //    {
+                //        setErrStatus(eHinCode, i * 2 + 1, "商品が登録されていません");
+                //        return false;
+                //    }
+                //}
+                //else if (!ChkShohin(goods[i].Code, goods[i].Syubai, out eMsg, out eNum, ha))
+                //{
+                //    setErrStatus(eNum, i * 2 + 1, eMsg);
+                //    return false;
+                //}
+
+
+                if (!ChkShohin_NEW(goods, i, tenDates, out eMsg, out eNum))
                 {
                     setErrStatus(eNum, i * 2 + 1, eMsg);
                     return false;
                 }
             }
-                 
+
 
             return true;
         }
@@ -699,9 +753,13 @@ namespace STSH_OCR.Common
         /// 
         public Boolean errCheckData(ClsOrder r, Table<ClsOrderPattern> ptn)
         {
-            string sDate;
-            DateTime eDate;
             int eNum = 0;
+
+            // 発注数エラーコードセット
+            for (int i = 0; i < 7; i++)
+            {
+                eSuu[i] = ESUU_CODE + i;
+            }
 
             // 確認チェック
             if (r.Veri == global.flgOff)
@@ -732,24 +790,35 @@ namespace STSH_OCR.Common
                 return false;
             }
 
-            // パターンID : 「０」はフリー入力可能とする 2017/08/22
-            if (r.patternID != global.flgOff)
+            //// パターンID : 「０」はフリー入力可能とする 2017/08/22
+            //if (r.patternID != global.flgOff)
+            //{
+            //    if (!ptn.Any(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber))
+            //    {
+            //        setErrStatus(ePattern, 0, "登録されていない発注書番号です");
+            //        return false;
+            //    }
+            //}
+
+            // パターンID
+            if (!ptn.Any(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber))
             {
-                if (!ptn.Any(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber))
-                {
-                    setErrStatus(ePattern, 0, "登録されていない発注書番号です");
-                    return false;
-                }
+                setErrStatus(ePattern, 0, "登録されていない発注書番号です");
+                OrderPattern = null;
+                return false;
+            }
+            else
+            {
+                // パターンID取得
+                OrderPattern = ptn.Single(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber);
             }
 
             ClsTenDate[] tenDates = new ClsTenDate[7];
 
             Utility.SetTenDate(tenDates, r);
 
-
             string eMsg = "";
             string strDate = "";
-            string strDD = "";
             int dYear = r.Year;
             int dMonth = r.Month;
 
@@ -822,7 +891,11 @@ namespace STSH_OCR.Common
                 }
             }
 
-            // 商品発注明細クラス
+            //--------------------------------------------------------------------
+            //
+            //      商品発注明細クラス配列を作成
+            //
+            //--------------------------------------------------------------------
             ClsGoods[] goods = new ClsGoods[15];
             for (int i = 0; i < global.MAX_GYO; i++)
             {
@@ -1018,31 +1091,42 @@ namespace STSH_OCR.Common
 
             bool ha = false;
 
-            // 商品エラーチェック
+            //--------------------------------------------------------------------
+            //
+            //      商品エラーチェック
+            //
+            //--------------------------------------------------------------------
             for (int i = 0; i < 15; i++)
             {
-                ha = false;
+                //ha = false;
 
-                // 発注の有無を調べる
-                for (int iX = 0; iX < 7; iX++)
-                {
-                    if (Utility.StrtoInt(goods[i].Suu[iX]) != global.flgOff)
-                    {
-                        // 発注あり
-                        ha = true;
-                    }
-                }
+                //// 発注の有無を調べる
+                //for (int iX = 0; iX < 7; iX++)
+                //{
+                //    if (Utility.StrtoInt(goods[i].Suu[iX]) != global.flgOff)
+                //    {
+                //        // 発注あり
+                //        ha = true;
+                //    }
+                //}
 
-                if (goods[i].Code == string.Empty)
-                {
-                    // 発注あり
-                    if (ha)
-                    {
-                        setErrStatus(eHinCode, i * 2 + 1, "商品が登録されていません");
-                        return false;
-                    }
-                }
-                else if (!ChkShohin(goods[i].Code, goods[i].Syubai, out eMsg, out eNum, ha))
+                //if (goods[i].Code == string.Empty)
+                //{
+                //    // 発注あり
+                //    if (ha)
+                //    {
+                //        setErrStatus(eHinCode, i * 2 + 1, "商品が登録されていません");
+                //        return false;
+                //    }
+                //}
+                //else if (!ChkShohin(goods[i].Code, goods[i].Syubai, out eMsg, out eNum, ha))
+                //{
+                //    setErrStatus(eNum, i * 2 + 1, eMsg);
+                //    return false;
+                //}
+                
+
+                if (!ChkShohin_NEW(goods, i, tenDates, out eMsg, out eNum))
                 {
                     setErrStatus(eNum, i * 2 + 1, eMsg);
                     return false;
@@ -1099,6 +1183,172 @@ namespace STSH_OCR.Common
             return true;
         }
 
+        ///-----------------------------------------------------------------------------------
+        /// <summary>
+        ///     商品チェック </summary>
+        /// <param name="Goods">
+        ///     商品明細クラス</param>
+        /// <param name="iX">
+        ///     商品明細インデックス</param>
+        /// <param name="tenDates">
+        ///     店着日クラス配列</param>
+        /// <param name="eMsg">
+        ///     エラーメッセージ</param>
+        /// <param name="eNum">
+        ///     エラー箇所番号</param>
+        /// <returns>
+        ///     検証結果 true:エラーなし, false:エラーあり</returns>
+        ///-----------------------------------------------------------------------------------
+        private bool ChkShohin_NEW(ClsGoods[] Goods, int iX, ClsTenDate [] tenDates, out string eMsg, out int eNum)
+        {
+            bool ha = false;
+
+            // 発注の有無を調べる
+            for (int i = 0; i < 7; i++)
+            {
+                if (Utility.StrtoInt(Goods[iX].Suu[i]) != global.flgOff)
+                {
+                    // 発注あり
+                    ha = true;
+                    break;
+                }
+            }
+
+            // 商品登録なしで発注なしのときはネグる
+            if (Goods[iX].Code == string.Empty && !ha)
+            {
+                eNum = global.flgOff;
+                eMsg = "";
+                return true;
+            }
+
+
+            if (Goods[iX].Code == string.Empty)
+            {
+                // 発注あり
+                if (ha)
+                {
+                    eNum = eHinCode;
+                    eMsg = "商品が登録されていません";
+                    return false;
+                }
+            }
+
+            // 商品コードマスター登録チェック
+            ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, Utility.NulltoStr(Goods[iX].Code));
+
+            // 商品マスター未登録
+            if (syohin.SYOHIN_CD == string.Empty)
+            {
+                eNum = eHinCode;
+                eMsg = "マスター未登録または削除済みの商品です";
+                return false;
+            }
+
+            // 店着日付とリード日数
+            int Read = 0;
+            for (int i = 0; i < 7; i++)
+            {
+                if (Utility.StrtoInt(Goods[iX].Suu[i]) != global.flgOff)
+                {
+                    // 店着日
+                    DateTime tDate = new DateTime(tenDates[i].Year, tenDates[i].Month, tenDates[i].Day);
+
+                    // リード日数
+                    switch (iX)
+                    {
+                        case 0:
+                            Read = OrderPattern.G_Read1;
+                            break;
+
+                        case 1:
+                            Read = OrderPattern.G_Read2;
+                            break;
+
+                        case 2:
+                            Read = OrderPattern.G_Read3;
+                            break;
+
+                        case 3:
+                            Read = OrderPattern.G_Read4;
+                            break;
+
+                        case 4:
+                            Read = OrderPattern.G_Read5;
+                            break;
+
+                        case 5:
+                            Read = OrderPattern.G_Read6;
+                            break;
+
+                        case 6:
+                            Read = OrderPattern.G_Read7;
+                            break;
+
+                        case 7:
+                            Read = OrderPattern.G_Read8;
+                            break;
+
+                        case 8:
+                            Read = OrderPattern.G_Read9;
+                            break;
+
+                        case 9:
+                            Read = OrderPattern.G_Read10;
+                            break;
+
+                        case 10:
+                            Read = OrderPattern.G_Read11;
+                            break;
+
+                        case 11:
+                            Read = OrderPattern.G_Read12;
+                            break;
+
+                        case 12:
+                            Read = OrderPattern.G_Read13;
+                            break;
+
+                        case 13:
+                            Read = OrderPattern.G_Read14;
+                            break;
+
+                        case 14:
+                            Read = OrderPattern.G_Read15;
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    if (tDate.AddDays(-1 * Read) < DateTime.Today)
+                    {
+                        eNum = eSuu[i];
+                        eMsg = "店着日：" + tDate.ToShortDateString() + "、リード日数：" + Read;
+                        return false;
+                    }
+                }
+            }
+
+
+            // 終売で発注ありのとき
+            if (syohin.SHUBAI && ha)
+            {
+                if (Goods[iX].Syubai == global.flgOff)
+                {
+                    eNum = eShubai;
+                    eMsg = "該当商品は終売です。終売処理を選択してください";
+                    return false;
+                }
+            }
+
+            eNum = global.flgOff;
+            eMsg = "";
+            return true;
+        }
+
+
+
         ///-------------------------------------------------------------------
         /// <summary>
         ///     店着日付の検証 </summary>
@@ -1145,13 +1395,23 @@ namespace STSH_OCR.Common
         private bool getTdkStatus(string tCode)
         {
             bool rtn = false;
-            string _Tel = "";
-            string _Jyu = "";
+
+            //string _Tel = "";
+            //string _Jyu = "";
 
             // 得意先番号
-            if (Utility.getNouhinName(tCode, out _Tel, out _Jyu) != string.Empty)
+            //if (Utility.getNouhinName(tCode, out _Tel, out _Jyu) != string.Empty)
+            //{
+            //    rtn = true;
+            //}
+
+            for (int i = 0; i < tokuisaki.Length; i++)
             {
-                rtn = true;
+                if (tokuisaki[i].TOKUISAKI_CD == tCode.PadLeft(7, '0'))
+                {
+                    rtn = true;
+                    break;
+                }
             }
 
             return rtn;

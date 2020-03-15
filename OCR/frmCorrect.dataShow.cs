@@ -1904,6 +1904,51 @@ namespace STSH_OCR.OCR
                     txtErrStatus.Text = global.FLGON;
                 }
 
+                // 発注数
+                string col = "";
+                for (int i = 0; i < 7; i++)
+                {
+                    if (ocr._errNumber == ocr.eSuu[i])
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                col = colDay1;
+                                break;
+                            case 1:
+                                col = colDay2;
+                                break;
+                            case 2:
+                                col = colDay3;
+                                break;
+                            case 3:
+                                col = colDay4;
+                                break;
+                            case 4:
+                                col = colDay5;
+                                break;
+                            case 5:
+                                col = colDay6;
+                                break;
+                            case 6:
+                                col = colDay7;
+                                break;
+                            default:
+                                break;
+                        }
+                        
+                        dg1[col, ocr._errRow - 1].Style.BackColor = Color.Yellow;
+                        dg1[col, ocr._errRow].Style.BackColor = Color.Yellow;
+                        dg1.Focus();
+                        dg1.CurrentCell = dg1[col, ocr._errRow];
+
+                        // エラー有りフラグ
+                        txtErrStatus.Text = global.FLGON;
+
+                        break;
+                    }
+                }
+
                 // 終売コンボボックス
                 if (ocr._errNumber == ocr.eShubai)
                 {
@@ -1920,6 +1965,5 @@ namespace STSH_OCR.OCR
                 gridViewCellEnterStatus = true;
             }
         }
-
     }
 }

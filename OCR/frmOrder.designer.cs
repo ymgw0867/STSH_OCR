@@ -79,7 +79,6 @@
             this.lblPages = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblPage = new System.Windows.Forms.Label();
-            this.btnUpdate = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -201,7 +200,7 @@
             this.btnErrCheck.BackColor = System.Drawing.SystemColors.Control;
             this.btnErrCheck.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnErrCheck.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnErrCheck.Location = new System.Drawing.Point(1498, 848);
+            this.btnErrCheck.Location = new System.Drawing.Point(1648, 848);
             this.btnErrCheck.Name = "btnErrCheck";
             this.btnErrCheck.Size = new System.Drawing.Size(144, 47);
             this.btnErrCheck.TabIndex = 13;
@@ -214,7 +213,7 @@
             this.btnDelete.BackColor = System.Drawing.SystemColors.Control;
             this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnDelete.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnDelete.Location = new System.Drawing.Point(1200, 848);
+            this.btnDelete.Location = new System.Drawing.Point(1354, 848);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(144, 47);
             this.btnDelete.TabIndex = 15;
@@ -275,7 +274,7 @@
             this.btnPrint.BackColor = System.Drawing.SystemColors.Control;
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnPrint.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnPrint.Location = new System.Drawing.Point(1349, 848);
+            this.btnPrint.Location = new System.Drawing.Point(1501, 848);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(144, 47);
             this.btnPrint.TabIndex = 17;
@@ -583,7 +582,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button1.Location = new System.Drawing.Point(1796, 848);
+            this.button1.Location = new System.Drawing.Point(1795, 848);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(91, 47);
             this.button1.TabIndex = 591;
@@ -672,24 +671,11 @@
             this.lblPage.Text = "100/100";
             this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnUpdate
-            // 
-            this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
-            this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnUpdate.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnUpdate.Location = new System.Drawing.Point(1647, 848);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(144, 47);
-            this.btnUpdate.TabIndex = 599;
-            this.btnUpdate.Text = "発注書更新：F11";
-            this.btnUpdate.UseVisualStyleBackColor = false;
-            // 
             // frmOrder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1904, 906);
-            this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.lblPage);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblPages);
@@ -808,6 +794,5 @@
         private System.Windows.Forms.Label lblPages;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblPage;
-        private System.Windows.Forms.Button btnUpdate;
     }
 }

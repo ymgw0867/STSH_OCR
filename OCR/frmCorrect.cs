@@ -3465,6 +3465,7 @@ namespace STSH_OCR.OCR
                         dg1[colHinCode, e.RowIndex - 1].Style.ForeColor = SystemColors.ControlText;
 
                         // 終売処理コンボボックスを編集不可とする
+                        dg1[colSyubai, e.RowIndex].Value = "";
                         dg1[colSyubai, e.RowIndex].ReadOnly = true;
                     }
                 }

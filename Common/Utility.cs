@@ -1149,6 +1149,14 @@ namespace STSH_OCR.Common
             }
         }
 
+        ///--------------------------------------------------------------------------------
+        /// <summary>
+        ///     店着日付クラス配列作成 </summary>
+        /// <param name="tenDates">
+        ///     店着日付クラス配列</param>
+        /// <param name="r">
+        ///     ClsFaxOrderクラス</param>
+        ///--------------------------------------------------------------------------------
         public static void SetTenDate(ClsTenDate[] tenDates, ClsFaxOrder r)
         {
             // 店着日付クラス
@@ -1174,6 +1182,7 @@ namespace STSH_OCR.Common
             int sYear = r.Year;
             int sMonth = r.Month;
 
+            // 店着日付（年月日）をセット
             for (int i = 1; i < tenDates.Length; i++)
             {
                 if (tenDates[i].Day == 1)

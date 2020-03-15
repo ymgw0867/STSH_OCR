@@ -2218,22 +2218,6 @@ namespace STSH_OCR.OCR
             {
                 ErrCheckClick();
             }
-
-            // 保留処理
-            if (e.KeyData == Keys.F11 && btnUpdate.Enabled)
-            {
-                //if (MessageBox.Show("表示中のＦＡＸ発注書を保留にします。よろしいですか", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                //{
-                //    return;
-                //}
-
-                //カレントデータの更新
-                CurDataUpDate(dID);
-
-                //// 保留処理
-                //setHoldData(cID[cI]);
-            }
-
         }
 
         private void txtPID_TextChanged(object sender, EventArgs e)
@@ -2695,6 +2679,11 @@ namespace STSH_OCR.OCR
             frmReFax reFax = new frmReFax(_img, TokuiNM, TokuiFax);
             reFax.ShowDialog();
             Show();
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
