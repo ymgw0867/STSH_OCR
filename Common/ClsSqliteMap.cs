@@ -3040,4 +3040,28 @@ namespace STSH_OCR.Common
         public int OutPutCount { get; set; }
     }
 
+
+    // 得意先別受注履歴
+    [Table(Name = "OrderHistory")]
+    public class ClsOrderHistory
+    {
+        [Column(Name = "ID", IsPrimaryKey = true)]
+        public int ID { get; set; }
+
+        [Column(Name = "得意先コード")]
+        public int TokuisakiCD { get; set; }
+
+        [Column(Name = "受注年月日")]
+        public string OrderDate { get; set; }
+
+        [Column(Name = "商品コード")]
+        public string SyohinCD { get; set; }
+
+        [Column(Name = "数量")]
+        public int Suu { get; set; }
+
+        [Column(Name = "更新年月日")]
+        public string YyMmDd { get; set; }
+
+    }
 }

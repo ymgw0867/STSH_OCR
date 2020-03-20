@@ -122,13 +122,14 @@ namespace STSH_OCR.OCR
             //tempDGV.Columns[colMonth].Width = 40;
             tempDGV.Columns[ColSyohinNM].Width = 360;
             //tempDGV.Columns[colDay].Width = 56;
-            tempDGV.Columns[colField].Width = 120;
+            tempDGV.Columns[colField].Width = 140;
             tempDGV.Columns[colBefore].Width = 100;
             tempDGV.Columns[colAfter].Width = 100;
             tempDGV.Columns[colID].Width = 100;
 
             tempDGV.Columns[colTokuisakiNM].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
+            tempDGV.Columns[colEditDate].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             tempDGV.Columns[colYear].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             tempDGV.Columns[colBefore].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             tempDGV.Columns[colAfter].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;         

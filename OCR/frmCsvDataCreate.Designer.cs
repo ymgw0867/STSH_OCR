@@ -35,6 +35,9 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.lblFileName = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblMaisu = new System.Windows.Forms.Label();
+            this.lblMsg = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -59,7 +62,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(23, 361);
+            this.progressBar1.Location = new System.Drawing.Point(23, 363);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(816, 20);
             this.progressBar1.TabIndex = 3;
@@ -69,7 +72,7 @@
             this.listBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(23, 39);
+            this.listBox1.Location = new System.Drawing.Point(23, 41);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(816, 316);
             this.listBox1.TabIndex = 4;
@@ -78,9 +81,9 @@
             // 
             this.lblFileName.BackColor = System.Drawing.Color.White;
             this.lblFileName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblFileName.Location = new System.Drawing.Point(165, 10);
+            this.lblFileName.Location = new System.Drawing.Point(319, 10);
             this.lblFileName.Name = "lblFileName";
-            this.lblFileName.Size = new System.Drawing.Size(674, 26);
+            this.lblFileName.Size = new System.Drawing.Size(520, 26);
             this.lblFileName.TabIndex = 5;
             this.lblFileName.Text = "label1";
             this.lblFileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -88,19 +91,53 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 16);
+            this.label2.Location = new System.Drawing.Point(188, 16);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(135, 15);
             this.label2.TabIndex = 6;
             this.label2.Text = "出力ファイル名：";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(20, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(103, 15);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "発注書枚数：";
+            // 
+            // lblMaisu
+            // 
+            this.lblMaisu.BackColor = System.Drawing.Color.White;
+            this.lblMaisu.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblMaisu.Location = new System.Drawing.Point(118, 10);
+            this.lblMaisu.Name = "lblMaisu";
+            this.lblMaisu.Size = new System.Drawing.Size(57, 26);
+            this.lblMaisu.TabIndex = 8;
+            this.lblMaisu.Text = "label1";
+            this.lblMaisu.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblMsg
+            // 
+            this.lblMsg.AutoSize = true;
+            this.lblMsg.Font = new System.Drawing.Font("游ゴシック", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblMsg.ForeColor = System.Drawing.Color.Red;
+            this.lblMsg.Location = new System.Drawing.Point(28, 409);
+            this.lblMsg.Name = "lblMsg";
+            this.lblMsg.Size = new System.Drawing.Size(414, 19);
+            this.lblMsg.TabIndex = 9;
+            this.lblMsg.Text = "ＣＳＶデータ作成可能な発注書データが登録されていません";
             // 
             // frmCsvDataCreate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(851, 451);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lblMsg);
             this.Controls.Add(this.lblFileName);
+            this.Controls.Add(this.lblMaisu);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button2);
@@ -125,5 +162,8 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label lblFileName;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblMaisu;
+        private System.Windows.Forms.Label lblMsg;
     }
 }

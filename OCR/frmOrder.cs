@@ -89,6 +89,7 @@ namespace STSH_OCR.OCR
         private const string CELL_SAT = "(土)発注数";
         private const string CELL_SUN = "(日)発注数";
         private const string CELL_SHUBAI = "終売処理";
+        private const string LOG_DELETE = "登録済み発注書削除";
         #endregion 編集ログ・項目名
 
         #region 終了ステータス定数
@@ -1787,11 +1788,15 @@ namespace STSH_OCR.OCR
                 return;
             }
 
-            // 非ログ書き込み状態とする
-            editLogStatus = false;
+            //// 非ログ書き込み状態とする
+            //editLogStatus = false;
 
             // レコードと画像ファイルを削除する
             DataDelete(dID);
+
+            // ログ書き込み
+            LogDataUpdate(0, 0, global.flgOff, LOG_DELETE, lblTokuisakiName.Text, string.Empty, string.Empty, string.Empty);
+
 
             // ゼロならばプログラム終了
             MessageBox.Show("発注書データが削除されました", "発注書削除", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

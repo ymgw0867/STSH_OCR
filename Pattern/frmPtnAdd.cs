@@ -10,6 +10,7 @@ using System.Configuration;
 using STSH_OCR.Common;
 using System.Data.SQLite;
 using System.Data.Linq;
+using ClosedXML.Excel;
 
 namespace STSH_OCR.Pattern
 {
@@ -18,12 +19,18 @@ namespace STSH_OCR.Pattern
         public frmPtnAdd()
         {
             InitializeComponent();
+
+            //txtMaker.AutoSize = false;
+            //txtMaker.Height = 24;
+
+            //txtSyohinName.AutoSize = false;
+            //txtSyohinName.Height = 24;
         }
 
         string[] TkArray = null;        // 得意先マスター配列
-        string[] SyArray = null;        // 商品マスター配列
-        string[] SyZkArray = null;      // 商品在庫マスター配列
-        string[] ShiireArray = null;    // 仕入先マスター配列
+        //string[] SyArray = null;        // 商品マスター配列
+        //string[] SyZkArray = null;      // 商品在庫マスター配列
+        //string[] ShiireArray = null;    // 仕入先マスター配列
 
         const int ADDMODE = 0;
         const int EDITMODE = 1;
@@ -56,31 +63,46 @@ namespace STSH_OCR.Pattern
         Table<Common.ClsOrderPattern> dbPtn = null;
         ClsOrderPattern ClsOrderPattern = null;
 
+        // 商品分類コンボボックス
+        ClsMyComboBox[] ClsCombos_L = null;
+        ClsMyComboBox[] ClsCombos_M = null;
+        ClsMyComboBox[] ClsCombos_S = null;
+
+        // 商品マスタークラス配列
+        ClsCsvData.ClsCsvSyohin[] syohins = null;
+
         private void frmPtnAdd_Load(object sender, EventArgs e)
         {
+            // 商品分類リスト読み込み
+            valueChangeStatus = false;
+            SetSyohinBunrui_L();
+            valueChangeStatus = true;
+
             // フォーム最大値
             //Utility.WindowsMaxSize(this, this.Width, this.Height);
 
             // フォーム最小値
             Utility.WindowsMinSize(this, this.Width, this.Height);
 
+            // グリッドビュー初期化
             tdkGridviewSet(dataGridView2);
             GridviewSet(dataGridView1);
             Gridview3Set(dataGridView3);
 
+            // フォーム初期化
             dispInitial();
 
             // 得意先CSVデータ配列読み込み
             TkArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
 
-            // 商品CSVデータ配列読み込み
-            SyArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
+            //// 商品CSVデータ配列読み込み
+            //SyArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
 
-            // 商品在庫CSVデータ配列読み込み
-            SyZkArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
+            //// 商品在庫CSVデータ配列読み込み
+            //SyZkArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
 
-            // 仕入先CSVデータ配列読み込み
-            ShiireArray = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
+            //// 仕入先CSVデータ配列読み込み
+            //ShiireArray = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
 
             // ローカルマスター接続
             cn = new SQLiteConnection("DataSource=" + db_file);
@@ -88,7 +110,61 @@ namespace STSH_OCR.Pattern
 
             // 発注書パターンマスターテーブル読み込み
             dbPtn = context.GetTable<Common.ClsOrderPattern>();
+
+            // 商品マスタークラス配列読み込み
+            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
         }
+
+        private void SetSyohinBunrui_L()
+        {
+            // 商品分類リスト読み込み
+            if (System.IO.File.Exists(Properties.Settings.Default.商品分類リスト))
+            {
+                using (IXLWorkbook bk = new XLWorkbook(Properties.Settings.Default.商品分類リスト, XLEventTracking.Disabled))
+                {
+                    var sheet1 = bk.Worksheet(1);
+                    var tbl = sheet1.RangeUsed().AsTable();
+                    int Cnt = 0;
+
+                    string wCD = "";
+
+                    foreach (var t in tbl.DataRange.Rows())
+                    {
+                        if (t.RowNumber() < 3)
+                        {
+                            continue;
+                        }
+
+                        string BunruiCD = Utility.NulltoStr(t.Cell(1).Value).PadLeft(2, '0');
+
+                        if (wCD != BunruiCD)
+                        {
+                            Array.Resize(ref ClsCombos_L, Cnt + 1);
+                            ClsCombos_L[Cnt] = new ClsMyComboBox();
+                            ClsCombos_L[Cnt].MyID = BunruiCD;
+                            ClsCombos_L[Cnt].MyName = Utility.NulltoStr(t.Cell(2).Value);
+                            //cmbSyohin_L.Items.Add(BunruiCD + " " + Utility.NulltoStr(t.Cell(2).Value));
+                            Cnt++;
+                        }
+
+                        wCD = BunruiCD;
+                    }
+                }
+
+                //表示される値はNAMEプロパティ
+                cmbSyohin_L.DisplayMember = "MyName";
+
+                //対応する値はIDプロパティ
+                cmbSyohin_L.ValueMember = "MyID";
+
+                //DataSourceに上で作成した配列をセット
+                cmbSyohin_L.DataSource = ClsCombos_L;
+
+                // 非選択状態とする
+                cmbSyohin_L.SelectedIndex = -1;
+            }
+        }
+
 
         private void dispInitial()
         {
@@ -293,6 +369,7 @@ namespace STSH_OCR.Pattern
         private string colReadDays = "c12";
         private string colMaker = "c13";
         private string colSeqNum = "c14";
+        private string colKikanUri = "c15";
 
         ///------------------------------------------------------------------------
         /// <summary>
@@ -590,34 +667,53 @@ namespace STSH_OCR.Pattern
                 tempDGV.ColumnHeadersDefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
 
                 // データフォント指定
-                tempDGV.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
+                tempDGV.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 10, FontStyle.Regular);
 
                 // 行の高さ
                 tempDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
                 tempDGV.ColumnHeadersHeight = 20;
-                tempDGV.RowTemplate.Height = 20;
+                tempDGV.RowTemplate.Height = 22;
 
                 // 全体の高さ
-                tempDGV.Height = 382;
+                tempDGV.Height = 638;
 
                 // 奇数行の色
                 tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
 
+
                 // 各列幅指定
+                tempDGV.Columns.Add(colMaker, "メーカー");
                 tempDGV.Columns.Add(colHinCode, "商品コード");
                 tempDGV.Columns.Add(colHinName, "商品名");
-                tempDGV.Columns.Add(colUriDate, "最終売上日");
-                tempDGV.Columns.Add(colSuu, "販売数");
+                tempDGV.Columns.Add(colKikaku, "規格");
+                tempDGV.Columns.Add(colKikanUri, "期間発注");
 
+                tempDGV.Columns[colMaker].Width = 140;
                 tempDGV.Columns[colHinCode].Width = 80;
-                tempDGV.Columns[colUriDate].Width = 90;
-                tempDGV.Columns[colSuu].Width = 70;
-
+                tempDGV.Columns[colKikaku].Width = 80;
+                tempDGV.Columns[colKikanUri].Width = 80;
                 tempDGV.Columns[colHinName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
                 tempDGV.Columns[colHinCode].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                tempDGV.Columns[colUriDate].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                tempDGV.Columns[colSuu].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                tempDGV.Columns[colKikaku].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                tempDGV.Columns[colKikanUri].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+                               
+                //// 各列幅指定
+                //tempDGV.Columns.Add(colHinCode, "商品コード");
+                //tempDGV.Columns.Add(colHinName, "商品名");
+                //tempDGV.Columns.Add(colUriDate, "最終売上日");
+                //tempDGV.Columns.Add(colSuu, "販売数");
+
+                //tempDGV.Columns[colHinCode].Width = 80;
+                //tempDGV.Columns[colUriDate].Width = 90;
+                //tempDGV.Columns[colSuu].Width = 70;
+
+                //tempDGV.Columns[colHinName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+                //tempDGV.Columns[colHinCode].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                //tempDGV.Columns[colUriDate].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                //tempDGV.Columns[colSuu].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
                 // 編集可否
                 tempDGV.ReadOnly = true;
@@ -663,7 +759,8 @@ namespace STSH_OCR.Pattern
             dataGridView1.Columns.Clear();
 
             GridviewSet(dataGridView1);
-            showShohin(dataGridView1, SyArray, SyZkArray, ShiireArray);
+
+            ShowShohin(dataGridView1);
         }
 
         ///--------------------------------------------------------
@@ -672,7 +769,7 @@ namespace STSH_OCR.Pattern
         /// <param name="g">
         ///     データグリッドビューオブジェクト</param>
         ///--------------------------------------------------------
-        private void showShohin(DataGridView g, string [] Sy_Array, string[] SySz_Array, string[] Shiire_Array)
+        private void ShowShohin(DataGridView g)
         {
             this.Cursor = Cursors.WaitCursor;
 
@@ -681,109 +778,12 @@ namespace STSH_OCR.Pattern
             int cnt = 0;
             this.txtMemo.Text = "";
 
-            foreach (var item in Sy_Array)
+            foreach (var t in syohins.OrderBy(a => a.SYOHIN_CD))
             {
-                string[] t = item.Split(',');
-
-                // 削除フラグ
-                string DelFlg = t[63].Replace("\"", "");
-
-                // 1行目見出し行は読み飛ばす
-                if (DelFlg == "DELFLG")
-                {
-                    continue;
-                }
-
-                if (DelFlg == global.FLGON)
-                {
-                    continue;
-                }
-
-                // 商品在庫マスターで終売を調べる
-                bool Shubai = false;
-                foreach (var sz in SySz_Array)
-                {
-                    string[] z = sz.Split(',');
-
-                    // 削除フラグ
-                    string zDelFlg = z[10].Replace("\"", "");
-
-                    // 1行目見出し行は読み飛ばす
-                    if (zDelFlg == "DELFLG")
-                    {
-                        continue;
-                    }
-
-                    if (zDelFlg == global.FLGON)
-                    {
-                        continue;
-                    }
-
-                    if (t[1].Replace("\"", "") != z[2].Replace("\"", ""))
-                    {
-                        continue;
-                    }
-
-                    // 有効開始日、有効終了日を検証する
-                    string cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
-                    string cLast_Sale_YMD = t[4].Replace("\"", "");     // 商品販売終了日付（終売日）
-
-                    int toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
-
-                    if (Utility.StrtoInt(cStart_Sale_YMD) > toDate)
-                    {
-                        continue;
-                    }
-
-                    if (toDate > Utility.StrtoInt(cLast_Sale_YMD))
-                    {
-                        continue;
-                    }
-
-                    Shubai = true;
-                    break;
-                }
-
-                // 終売（商品販売期間に該当しないとき）
-                if (Shubai)
-                {
-                    continue;
-                }
-
-                // メーカー名（仕入先）取得
-                string ShiiresakiName = string.Empty;
-                foreach (var sr in Shiire_Array)
-                {
-                    string[] z = sr.Split(',');
-
-                    // 削除フラグ
-                    string zDelFlg = z[80].Replace("\"", "");
-
-                    // 1行目見出し行は読み飛ばす
-                    if (zDelFlg == "DELFLG")
-                    {
-                        continue;
-                    }
-
-                    if (zDelFlg == global.FLGON)
-                    {
-                        continue;
-                    }
-
-                    // 仕入先コード
-                    if (t[13].Replace("\"", "") != z[1].Replace("\"", ""))
-                    {
-                        continue;
-                    }
-
-                    ShiiresakiName = z[4].Replace("\"", "");
-                    break;
-                }
-
                 // 仕入先名検索のとき
                 if (txtMaker.Text.Trim() != string.Empty)
                 {
-                    if (!ShiiresakiName.Contains(txtMaker.Text))
+                    if (!t.SIRESAKI_NM.Contains(txtMaker.Text))
                     {
                         continue;
                     }
@@ -792,19 +792,51 @@ namespace STSH_OCR.Pattern
                 // 商品名検索のとき
                 if (txtSyohinName.Text.Trim() != string.Empty)
                 {
-                    if (!t[2].Replace("\"", "").Contains(txtSyohinName.Text))
+                    if (!t.SYOHIN_NM.Contains(txtSyohinName.Text))
                     {
                         continue;
                     }
                 }
 
+                // 商品分類検索
+                string Bunrui_L = Utility.NulltoStr(cmbSyohin_L.SelectedValue);
+                string Bunrui_M = Utility.NulltoStr(cmbSyohin_M.SelectedValue);
+                string Bunrui_S = Utility.NulltoStr(cmbSyohin_S.SelectedValue);
+
+                // 大分類
+                if (Bunrui_L != string.Empty)
+                {                    
+                    if (t.SYOHIN_KIND_L_CD != Bunrui_L)
+                    {
+                        continue;
+                    }
+
+                    // 中分類
+                    if (Bunrui_M != string.Empty)
+                    {
+                        if (t.SYOHIN_KIND_M_CD != Bunrui_M)
+                        {
+                            continue;
+                        }
+
+                        // 小分類
+                        if (Bunrui_S != string.Empty)
+                        {
+                            if (t.SYOHIN_KIND_S_CD != Bunrui_S)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+                
                 // 商品表示
                 g.Rows.Add();
-                g[colMaker, cnt].Value = ShiiresakiName;
-                g[colHinCode, cnt].Value = t[1].Replace("\"", "").Trim().PadLeft(8, '0');
-                g[colHinName, cnt].Value = t[2].Replace("\"", "");
-                g[colIrisu, cnt].Value = t[24].Replace("\"", "");
-                g[colKikaku, cnt].Value = t[19].Replace("\"", "");
+                g[colMaker, cnt].Value = t.SIRESAKI_NM;
+                g[colHinCode, cnt].Value = t.SYOHIN_CD.PadLeft(8, '0');
+                g[colHinName, cnt].Value = t.SYOHIN_NM;
+                g[colIrisu, cnt].Value = t.CASE_IRISU;
+                g[colKikaku, cnt].Value = t.SYOHIN_KIKAKU;
 
                 cnt++;
             }
@@ -819,67 +851,107 @@ namespace STSH_OCR.Pattern
         ///     データグリッドに商品履歴を表示する </summary>
         /// <param name="g">
         ///     データグリッドビューオブジェクト</param>
+        /// <param name="S_YYMMDD">
+        ///     期間開始日</param>
+        /// <param name="E_YYMMDD">
+        ///     期間終了日</param>
         ///--------------------------------------------------------
-        private void showShohinRireki(DataGridView g, string sNou_Code, string frDate)
+        private void ShowShohinRireki(DataGridView g, int TokuisakiCD, string S_YYMMDD, string E_YYMMDD)
         {
             this.Cursor = Cursors.WaitCursor;
 
-            g.Rows.Clear();
+            // 商品明細クラス
+            ClsSyohinRireki[] rireki = new ClsSyohinRireki[syohins.Length];
 
-            int cnt = 0;
-            this.txtMemo.Text = "";
-            //using (var Conn = new OracleConnection())
-            //{
-            //    Conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
-            //    Conn.Open();
+            cn.Open();
 
-            //    string strSQL = "SELECT RAKUSYO_FAXOCR.V_URIAGE.SYO_ID, RAKUSYO_FAXOCR.V_URIAGE.KOK_ID, RAKUSYO_FAXOCR.V_SYOHIN.SYO_NAME, ";
-            //    strSQL += "RAKUSYO_FAXOCR.V_URIAGE.IRISU, RAKUSYO_FAXOCR.V_URIAGE.LURIDAY, RAKUSYO_FAXOCR.V_URIAGE.SUU, RAKUSYO_FAXOCR.V_URIAGE.TOTAL_SUU ";
-            //    strSQL += "FROM RAKUSYO_FAXOCR.V_URIAGE INNER JOIN RAKUSYO_FAXOCR.V_SYOHIN ";
-            //    strSQL += "ON RAKUSYO_FAXOCR.V_URIAGE.SYO_ID = RAKUSYO_FAXOCR.V_SYOHIN.SYO_ID ";
-            //    strSQL += "WHERE RTRIM(RAKUSYO_FAXOCR.V_URIAGE.KOK_ID) = '" + sNou_Code + "'";
-            //    //strSQL += "WHERE RAKUSYO_FAXOCR.V_URIAGE.KOK_ID = " + sNou_Code;
+            try
+            {
+                // 商品明細クラスに商品情報をセットする
+                for (int i = 0; i < syohins.Length; i++)
+                {
+                    rireki[i] = new ClsSyohinRireki();
+                    rireki[i].SYOHIN_CD = syohins[i].SYOHIN_CD;
+                    rireki[i].SYOHIN_NM = syohins[i].SYOHIN_NM;
+                    rireki[i].SIRESAKI_NM = syohins[i].SIRESAKI_NM;
+                    rireki[i].SYOHIN_KIKAKU = syohins[i].SYOHIN_KIKAKU;
+                    rireki[i].CASE_IRISU = syohins[i].CASE_IRISU;
+                    rireki[i].Suu = 0;
+                }
 
-            //    if (frDate != string.Empty)
-            //    {
-            //        strSQL += " AND RAKUSYO_FAXOCR.V_URIAGE.LURIDAY >= '" + frDate + "' ";
-            //    }
+                this.txtMemo.Text = "";
 
-            //    strSQL += " ORDER BY SYO_ID";
+                // 該当得意先の商品別の発注数実績を抽出
+                string sql = "select 得意先コード, 商品コード, sum(数量) as suu from orderhistory ";
+                sql += "where 得意先コード = ? and (発注年月日 between ? and ?) ";
+                sql += "group by 得意先コード, 商品コード order by suu desc";
 
-            //    OracleCommand Cmd = new OracleCommand(strSQL, Conn);
-            //    OracleDataReader dR = Cmd.ExecuteReader();
-            //    while (dR.Read())
-            //    {
-            //        // 販売終了商品はネグる 2017/08/01
-            //        if (dR["SYO_NAME"].ToString().Contains("終売") || dR["SYO_NAME"].ToString().Contains("休売"))
-            //        {
-            //            continue;
-            //        }
-                    
-            //        // 商品表示
-            //        g.Rows.Add();
-            //        g[colHinCode, cnt].Value = dR["SYO_ID"].ToString().Trim();
-            //        g[colHinName, cnt].Value = dR["SYO_NAME"].ToString();
-            //        g[colUriDate, cnt].Value = DateTime.Parse(dR["LURIDAY"].ToString()).ToShortDateString();
-            //        g[colSuu, cnt].Value = dR["TOTAL_SUU"].ToString();  // 2017/08/21
+                SQLiteDataReader reader = null;
 
-            //        cnt++;
-            //    }
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.CommandText = sql;
+                    com.Parameters.AddWithValue("@TokCD", TokuisakiCD); // 得意先コード
+                    com.Parameters.AddWithValue("@SYMD", S_YYMMDD);     // 期間開始日
+                    com.Parameters.AddWithValue("@EYMD", E_YYMMDD);     // 期間終了日
 
-            //    dR.Dispose();
-            //    Cmd.Dispose();
+                    reader = com.ExecuteReader();
 
-            //    g.CurrentCell = null;
+                    // 商品明細クラスに発注実績数をセット
+                    while (reader.Read())
+                    {
+                        for (int i = 0; i < rireki.Length; i++)
+                        {
+                            if (rireki[i].SYOHIN_CD == reader["商品コード"].ToString())
+                            {
+                                rireki[i].Suu = Utility.StrtoInt(reader["suu"].ToString());
+                                break;
+                            }
+                        }
+                    }
 
-            //    // 該当なしメッセージ
-            //    if (cnt == 0)
-            //    {
-            //        MessageBox.Show("該当する商品はありませんでした", "結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            //    }
-            //}
+                    reader.Close();
+                }
 
-            this.Cursor = Cursors.Default;
+                g.Rows.Clear();
+
+                int cnt = 0;
+
+                // グリッドビューに表示
+                foreach (var t in rireki.OrderByDescending(a => a.Suu).ThenBy(a => a.SYOHIN_CD))
+                {
+                    // 商品表示
+                    g.Rows.Add();
+                    g[colMaker, cnt].Value = t.SIRESAKI_NM;
+                    g[colHinCode, cnt].Value = t.SYOHIN_CD;
+                    g[colHinName, cnt].Value = t.SYOHIN_NM;
+                    g[colKikaku, cnt].Value = t.SYOHIN_KIKAKU;
+                    g[colKikanUri, cnt].Value = t.Suu;
+
+                    cnt++;
+                }
+
+                g.CurrentCell = null;
+
+                // 該当なしメッセージ
+                if (cnt == 0)
+                {
+                    MessageBox.Show("該当する商品はありませんでした", "結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                this.Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                if (cn.State == ConnectionState.Open)
+                {
+                    cn.Close();
+                }
+            }
         }
 
         //private void gcMultiRow2_CellValueChanged(object sender, CellEventArgs e)
@@ -1517,15 +1589,32 @@ namespace STSH_OCR.Pattern
 
             rirekiGridviewSet(dataGridView1);
 
-            string fDate = string.Empty;
+            int tokCD = 0; 
+
+            for (int i = 0; i < dataGridView2.Rows.Count; i++)
+            {
+                string val = Utility.NulltoStr(dataGridView2[colTdkCode, i].Value);
+                if (val == string.Empty)
+                {
+                    continue;
+                }
+
+                // 得意先コード
+                tokCD = Utility.StrtoInt(val);
+                break;
+            }
+            
+            string SYYMMDD = "19000101";
 
             if (dateTimePicker1.Checked)
             {
-                fDate = dateTimePicker1.Text;
+                SYYMMDD = dateTimePicker1.Value.Year + dateTimePicker1.Value.Month.ToString("D2") + dateTimePicker1.Value.Day.ToString("D2");
             }
 
+            string EYYMMDD = DateTime.Today.Year + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2");
+
             // 商品履歴表示
-            showShohinRireki(dataGridView1, getTdksakiCode(dataGridView2), fDate);
+            ShowShohinRireki(dataGridView1, tokCD, SYYMMDD, EYYMMDD);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -1950,7 +2039,7 @@ namespace STSH_OCR.Pattern
             // 商品コード
             if (e.ColumnIndex == 2)
             {
-                ClsCsvData.ClsCsvSyohin cls = Utility.GetSyohinData(SyArray, SyZkArray, ShiireArray,  Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString());
+                ClsCsvData.ClsCsvSyohin cls = Utility.GetSyohinData(Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString());
 
                 dataGridView3[colMaker, e.RowIndex].Value = cls.SIRESAKI_NM;
                 dataGridView3[colHinName, e.RowIndex].Value = cls.SYOHIN_NM;
@@ -1960,21 +2049,6 @@ namespace STSH_OCR.Pattern
                 dataGridView3[colBaika, e.RowIndex].Value = cls.RETAIL_TANKA;
                 dataGridView3[colJanCD, e.RowIndex].Value = cls.JAN_CD;
                 dataGridView3[colReadDays, e.RowIndex].Value = cls.HATYU_LIMIT_DAY_CNT;
-
-                //if (!valueChangeStatus)
-                //{
-                //    return;
-                //}
-                
-                //// 16行目以降
-                //if (dataGridView3.Rows.Count > global.MAX_GYO)
-                //{
-                //    for (int i = dataGridView3.Rows.Count; i > global.MAX_GYO; i--)
-                //    {
-                //        dataGridView3.Rows[i - 1].ReadOnly = true;
-                //        dataGridView3.Rows[i - 1].DefaultCellStyle.ForeColor = Color.LightGray;
-                //    }
-                //}
             }
 
         }
@@ -2352,6 +2426,176 @@ namespace STSH_OCR.Pattern
         private void dataGridView3_Leave(object sender, EventArgs e)
         {
             dataGridView3.CurrentCell = null;
+        }
+
+        private void frmPtnAdd_Shown(object sender, EventArgs e)
+        {
+        }
+
+        private void cmbSyohin_L_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (cmbSyohin_L.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            if (!valueChangeStatus)
+            {
+                return;
+            }
+
+            valueChangeStatus = false;
+
+            // 中分類コンボ初期化
+            ClsCombos_M = null;
+            cmbSyohin_M.DataSource = null;
+            cmbSyohin_M.SelectedIndex = -1;
+            cmbSyohin_M.Text = "";
+
+            // 小分類コンボ初期化
+            ClsCombos_S = null;
+            cmbSyohin_S.DataSource = null;
+            cmbSyohin_S.SelectedIndex = -1;
+            cmbSyohin_S.Text = "";
+
+            string Cmb_L = cmbSyohin_L.SelectedValue.ToString();
+
+            // 商品中分類リスト読み込み
+            if (System.IO.File.Exists(Properties.Settings.Default.商品分類リスト))
+            {
+                using (IXLWorkbook bk = new XLWorkbook(Properties.Settings.Default.商品分類リスト, XLEventTracking.Disabled))
+                {
+                    var sheet1 = bk.Worksheet(1);
+                    var tbl = sheet1.RangeUsed().AsTable();
+
+                    int Cnt = 0;
+                    string wCD = "";
+
+                    foreach (var t in tbl.DataRange.Rows())
+                    {
+                        if (t.RowNumber() < 3)
+                        {
+                            continue;
+                        }
+
+                        if (Utility.NulltoStr(t.Cell(3).Value) == string.Empty)
+                        {
+                            // 中分類コード空白はネグる
+                            continue;
+                        }
+                                               
+                        string BunruiCD_L = Utility.NulltoStr(t.Cell(1).Value).PadLeft(2, '0'); // 大分類
+
+                        if (Cmb_L == BunruiCD_L)
+                        {
+                            string BunruiCD_M = Utility.NulltoStr(t.Cell(3).Value).PadLeft(2, '0');
+
+                            if (wCD != BunruiCD_M)
+                            {
+                                Array.Resize(ref ClsCombos_M, Cnt + 1);
+                                ClsCombos_M[Cnt] = new ClsMyComboBox();
+                                ClsCombos_M[Cnt].MyID = BunruiCD_M;
+                                ClsCombos_M[Cnt].MyName = Utility.NulltoStr(t.Cell(4).Value);
+
+                                wCD = BunruiCD_M;
+                                Cnt++;
+                            }
+                        }
+                    }
+                }
+
+                //表示される値はNAMEプロパティ
+                cmbSyohin_M.DisplayMember = "MyName";
+
+                //対応する値はIDプロパティ
+                cmbSyohin_M.ValueMember = "MyID";
+
+                //DataSourceに上で作成した配列をセット
+                cmbSyohin_M.DataSource = ClsCombos_M;
+
+                // 非選択状態とする
+                cmbSyohin_M.SelectedIndex = -1;
+            }
+
+            valueChangeStatus = true;
+        }
+
+        private void cmbSyohin_M_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (cmbSyohin_M.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            if (!valueChangeStatus)
+            {
+                return;
+            }
+
+            //valueChangeStatus = false;
+
+            // 小分類初期化
+            ClsCombos_S = null;
+            cmbSyohin_S.DataSource = null;
+            cmbSyohin_S.SelectedIndex = -1;
+            cmbSyohin_S.Text = "";
+
+            string Cmb_L = cmbSyohin_L.SelectedValue.ToString();     // 大分類コンボ選択値
+            string Cmb_M = cmbSyohin_M.SelectedValue.ToString();     // 中分類コンボ選択値
+
+            // 商品小分類リスト読み込み
+            if (System.IO.File.Exists(Properties.Settings.Default.商品分類リスト))
+            {
+                using (IXLWorkbook bk = new XLWorkbook(Properties.Settings.Default.商品分類リスト, XLEventTracking.Disabled))
+                {
+                    var sheet1 = bk.Worksheet(1);
+                    var tbl = sheet1.RangeUsed().AsTable();
+
+                    int Cnt = 0;
+                    string wCD = "";
+
+                    foreach (var t in tbl.DataRange.Rows())
+                    {
+                        if (t.RowNumber() < 3)
+                        {
+                            continue;
+                        }
+                        
+                        if (Utility.NulltoStr(t.Cell(5).Value) == string.Empty)
+                        {
+                            // 小分類コード空白はネグる
+                            continue;
+                        }
+
+                        string BunruiCD_L = Utility.NulltoStr(t.Cell(1).Value).PadLeft(2, '0'); // 大分類
+                        string BunruiCD_M = Utility.NulltoStr(t.Cell(3).Value).PadLeft(2, '0'); // 中分類
+
+                        if (Cmb_L == BunruiCD_L && Cmb_M == BunruiCD_M)
+                        {
+                            string BunruiCD_S = Utility.NulltoStr(t.Cell(5).Value).PadLeft(2, '0');
+
+                            Array.Resize(ref ClsCombos_S, Cnt + 1);
+                            ClsCombos_S[Cnt] = new ClsMyComboBox();
+                            ClsCombos_S[Cnt].MyID = BunruiCD_S;
+                            ClsCombos_S[Cnt].MyName = Utility.NulltoStr(t.Cell(6).Value);
+
+                            Cnt++;
+                        }
+                    }
+                }
+
+                //表示される値はNAMEプロパティ
+                cmbSyohin_S.DisplayMember = "MyName";
+
+                //対応する値はIDプロパティ
+                cmbSyohin_S.ValueMember = "MyID";
+
+                //DataSourceに上で作成した配列をセット
+                cmbSyohin_S.DataSource = ClsCombos_S;
+
+                // 非選択状態とする
+                cmbSyohin_S.SelectedIndex = -1;
+            }
         }
     }
 }

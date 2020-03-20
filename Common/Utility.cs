@@ -601,7 +601,11 @@ namespace STSH_OCR.Common
                 HATYU_LIMIT_DAY_CNT = global.flgOff,
                 START_SALE_YMD = "",
                 LAST_SALE_YMD = "",
-                SHUBAI = false
+                SHUBAI = false,
+                SYOHIN_KIND_L_CD = "",
+                SYOHIN_KIND_M_CD = "",
+                SYOHIN_KIND_S_CD = "",
+                SYOHIN_KIND_CD = ""
             };
 
             int toDate = 0;
@@ -734,6 +738,11 @@ namespace STSH_OCR.Common
 
                 cls.HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", ""));
 
+                cls.SYOHIN_KIND_L_CD = t[44].Replace("\"", "");
+                cls.SYOHIN_KIND_M_CD = t[45].Replace("\"", "");
+                cls.SYOHIN_KIND_S_CD = t[46].Replace("\"", "");
+                cls.SYOHIN_KIND_CD = t[47].Replace("\"", "");
+
                 break;
             }
 
@@ -780,7 +789,11 @@ namespace STSH_OCR.Common
                 RETAIL_TANKA = global.flgOff,
                 START_SALE_YMD = "",
                 LAST_SALE_YMD = "",
-                SHUBAI = false              
+                SHUBAI = false,
+                SYOHIN_KIND_L_CD = "",
+                SYOHIN_KIND_M_CD = "",
+                SYOHIN_KIND_S_CD = "",
+                SYOHIN_KIND_CD = ""
             };
 
             int toDate = 0;
@@ -922,6 +935,10 @@ namespace STSH_OCR.Common
                 cls.START_SALE_YMD = cStart_Sale_YMD;
                 cls.LAST_SALE_YMD = cLast_Sale_YMD;
                 cls.SHUBAI = Syubai;
+                cls.SYOHIN_KIND_L_CD = t[44].Replace("\"", "");
+                cls.SYOHIN_KIND_M_CD = t[45].Replace("\"", "");
+                cls.SYOHIN_KIND_S_CD = t[46].Replace("\"", "");
+                cls.SYOHIN_KIND_CD = t[47].Replace("\"", "");
 
                 break;
             }
@@ -932,7 +949,7 @@ namespace STSH_OCR.Common
 
         ///-------------------------------------------------------------------
         /// <summary>
-        ///     商品情報取得 </summary>
+        ///     商品情報配列取得 </summary>
         /// <param name="SyPath">
         ///     商品マスターCSVファイル</param>
         /// <param name="SySzPath">
@@ -1095,7 +1112,11 @@ namespace STSH_OCR.Common
                     HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", "")),
                     START_SALE_YMD = cStart_Sale_YMD,
                     LAST_SALE_YMD = cLast_Sale_YMD,
-                    SHUBAI = Syubai
+                    SHUBAI = Syubai,
+                    SYOHIN_KIND_L_CD = t[44].Replace("\"", ""),
+                    SYOHIN_KIND_M_CD = t[45].Replace("\"", ""),
+                    SYOHIN_KIND_S_CD = t[46].Replace("\"", ""),
+                    SYOHIN_KIND_CD = t[47].Replace("\"", "")
                 };
 
                 x++;
@@ -1230,7 +1251,11 @@ namespace STSH_OCR.Common
                 HATYU_LIMIT_DAY_CNT = global.flgOff,
                 START_SALE_YMD = "",
                 LAST_SALE_YMD = "",
-                SHUBAI = false
+                SHUBAI = false,
+                SYOHIN_KIND_L_CD = "",
+                SYOHIN_KIND_M_CD = "",
+                SYOHIN_KIND_S_CD = "",
+                SYOHIN_KIND_CD = ""
             };
 
             for (int i = 0; i < syohins.Length; i++)
@@ -1253,6 +1278,10 @@ namespace STSH_OCR.Common
                     cls.START_SALE_YMD = syohins[i].START_SALE_YMD;
                     cls.LAST_SALE_YMD = syohins[i].LAST_SALE_YMD;
                     cls.SHUBAI = syohins[i].SHUBAI;
+                    cls.SYOHIN_KIND_L_CD = syohins[i].SYOHIN_KIND_L_CD;
+                    cls.SYOHIN_KIND_M_CD = syohins[i].SYOHIN_KIND_M_CD;
+                    cls.SYOHIN_KIND_S_CD = syohins[i].SYOHIN_KIND_S_CD;
+                    cls.SYOHIN_KIND_CD = syohins[i].SYOHIN_KIND_CD;
                     break;
                 }
             }

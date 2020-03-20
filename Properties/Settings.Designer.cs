@@ -175,5 +175,14 @@ namespace STSH_OCR.Properties {
                 return ((int)(this["orderDataBackupDay"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\MST\\商品分類リスト.xlsx")]
+        public string 商品分類リスト {
+            get {
+                return ((string)(this["商品分類リスト"]));
+            }
+        }
     }
 }

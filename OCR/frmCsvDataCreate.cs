@@ -43,7 +43,10 @@ namespace STSH_OCR.OCR
         ClsCsvData.ClsCsvSyohin[] syohins = null;
 
         // 得意先マスタークラス
-        ClsCsvData.ClsCsvTokuisaki[] tokuisakis = null; 
+        ClsCsvData.ClsCsvTokuisaki[] tokuisakis = null;
+
+        // 発注書ＣＳＶデータクラス
+        ClsCsvData.ClsCsvCSV[] csvDatas = null;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -66,9 +69,38 @@ namespace STSH_OCR.OCR
                 DeleteOrderData();
             }
 
+            // 終了メッセージ
+            MessageBox.Show("処理が終了しました", "完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            progressBar1.Visible = false;
+
             // 終了
             //Close();
         }
+
+        ///-------------------------------------------------------
+        /// <summary>
+        ///     得意先別受注履歴データ登録 </summary>
+        ///-------------------------------------------------------
+        private void PutOrderHistory()
+        {
+            for (int i = 0; i < csvDatas.Length; i++)
+            {
+                string sql = "INSERT INTO OrderHistory (";
+                sql += "得意先コード, 発注年月日, 商品コード, 数量, 更新年月日) ";
+                sql += "VALUES (";
+                sql += csvDatas[i].TOKUISAKI_CD + ",'";
+                sql += csvDatas[i].NOUHIN_DATE + "','";
+                sql += csvDatas[i].SYOHIN_CD + "',";
+                sql += csvDatas[i].SUU + ",'";
+                sql += DateTime.Now.ToString() + "')";
+
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+            }
+        }
+
 
         ///------------------------------------------------------
         /// <summary>
@@ -80,6 +112,12 @@ namespace STSH_OCR.OCR
 
             try
             {
+                // 得意先別受注履歴データ登録
+                PutOrderHistory();
+
+                listBox1.Items.Add("得意先別受注履歴データを登録しました");
+                listBox1.TopIndex = listBox1.Items.Count - 1;
+
                 // 発注データバックアップテーブルに追加
                 string sql = "INSERT INTO OrderData_Backup ";
                 sql += "SELECT * FROM OrderData ";
@@ -131,8 +169,6 @@ namespace STSH_OCR.OCR
                 MessageBox.Show("発注データはありません","対象データなし",MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return 0;
             }
-
-            ClsCsvData.ClsCsvCSV[] csvDatas = null;
 
             progressBar1.Visible = true;
             int rCnt = 0;
@@ -604,8 +640,21 @@ namespace STSH_OCR.OCR
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
 
-            // FAX発注書データ
+            // 発注書データ
             tblOrder = context.GetTable<Common.ClsOrder>();
+            int Maisu = tblOrder.Count();
+            lblMaisu.Text = Maisu.ToString("N0");
+
+            if (Maisu > 0)
+            {
+                button1.Enabled = true;
+                lblMsg.Visible = false;
+            }
+            else
+            {
+                button1.Enabled = false;
+                lblMsg.Visible = true;
+            }
 
             // 環境設定データ
             Table<Common.ClsSystemConfig> tblCnf = context.GetTable<Common.ClsSystemConfig>();
@@ -628,8 +677,7 @@ namespace STSH_OCR.OCR
             progressBar1.Visible = false;
 
             // 付加文字列（タイムスタンプ）
-            string newFileName = DateTime.Now.Year.ToString() +
-                                 DateTime.Now.Month.ToString().PadLeft(2, '0') +
+            string newFileName = DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString().PadLeft(2, '0') +
                                  DateTime.Now.Day.ToString().PadLeft(2, '0');
 
             // ファイル名

@@ -86,6 +86,7 @@ namespace STSH_OCR.OCR
         private const string CELL_SAT = "(土)発注数";
         private const string CELL_SUN = "(日)発注数";
         private const string CELL_SHUBAI = "終売処理";
+        private const string LOG_DELETE = "FAX発注書削除";
         #endregion 編集ログ・項目名
 
         #region 終了ステータス定数
@@ -1326,10 +1327,10 @@ namespace STSH_OCR.OCR
                 {
                     CurDataUpDate(cI);
                 }
-
-                // 編集ログデータアップロード
-                EditDataUpload();
             }
+            
+            // 編集ログデータアップロード
+            EditDataUpload();
 
             // データベース接続解除
             if (cn.State == ConnectionState.Open)
@@ -2325,11 +2326,14 @@ namespace STSH_OCR.OCR
                 return;
             }
 
-            // 非ログ書き込み状態とする
-            editLogStatus = false;
+            //// 非ログ書き込み状態とする
+            //editLogStatus = false;
 
             // レコードと画像ファイルを削除する
             DataDelete(cI);
+
+            // ログ書き込み
+            LogDataUpdate(0, 0, global.flgOff, LOG_DELETE, lblTokuisakiName.Text, string.Empty, string.Empty, string.Empty);
 
             // 件数カウント
             if (tblFax.Count() > 0)

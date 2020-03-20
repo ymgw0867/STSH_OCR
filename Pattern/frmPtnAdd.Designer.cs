@@ -42,7 +42,6 @@
             this.button7 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.txtMaker = new System.Windows.Forms.TextBox();
-            this.txtSyoBunrui = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtSyohinName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -63,6 +62,11 @@
             this.btnDel = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.cmbSyohin_L = new System.Windows.Forms.ComboBox();
+            this.cmbSyohin_M = new System.Windows.Forms.ComboBox();
+            this.cmbSyohin_S = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.dataGridView3 = new STSH_OCR.DataGridViewEx();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -89,7 +93,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.BackColor = System.Drawing.SystemColors.Control;
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label1.Location = new System.Drawing.Point(774, 972);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(74, 21);
@@ -112,10 +116,10 @@
             // button1
             // 
             this.button1.BackColor = System.Drawing.SystemColors.Control;
-            this.button1.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button1.Location = new System.Drawing.Point(14, 255);
+            this.button1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button1.Location = new System.Drawing.Point(659, 259);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(113, 28);
+            this.button1.Size = new System.Drawing.Size(99, 28);
             this.button1.TabIndex = 1;
             this.button1.Text = "商品一覧(&A)";
             this.button1.UseVisualStyleBackColor = true;
@@ -124,10 +128,10 @@
             // button2
             // 
             this.button2.BackColor = System.Drawing.SystemColors.Control;
-            this.button2.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button2.Location = new System.Drawing.Point(14, 285);
+            this.button2.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button2.Location = new System.Drawing.Point(327, 289);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(113, 28);
+            this.button2.Size = new System.Drawing.Size(99, 28);
             this.button2.TabIndex = 2;
             this.button2.Text = "商品履歴(&L)";
             this.button2.UseVisualStyleBackColor = true;
@@ -150,7 +154,7 @@
             // comboBox1
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.comboBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "期間指定なし",
@@ -159,39 +163,39 @@
             "６ヶ月以内",
             "１年以内",
             "期間を指定"});
-            this.comboBox1.Location = new System.Drawing.Point(139, 289);
+            this.comboBox1.Location = new System.Drawing.Point(14, 292);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(126, 24);
+            this.comboBox1.Size = new System.Drawing.Size(128, 21);
             this.comboBox1.TabIndex = 2;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.dateTimePicker1.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker1.Location = new System.Drawing.Point(271, 288);
+            this.dateTimePicker1.Location = new System.Drawing.Point(148, 292);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.ShowCheckBox = true;
-            this.dateTimePicker1.Size = new System.Drawing.Size(132, 27);
+            this.dateTimePicker1.Size = new System.Drawing.Size(146, 21);
             this.dateTimePicker1.TabIndex = 3;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(407, 294);
+            this.label2.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label2.Location = new System.Drawing.Point(295, 298);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(21, 14);
+            this.label2.Size = new System.Drawing.Size(17, 12);
             this.label2.TabIndex = 14;
             this.label2.Text = "～";
             // 
             // button7
             // 
             this.button7.BackColor = System.Drawing.SystemColors.Control;
-            this.button7.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button7.Location = new System.Drawing.Point(14, 220);
+            this.button7.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button7.Location = new System.Drawing.Point(659, 219);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(113, 28);
+            this.button7.Size = new System.Drawing.Size(99, 28);
             this.button7.TabIndex = 0;
             this.button7.Text = "届先選択(&T)";
             this.button7.UseVisualStyleBackColor = true;
@@ -199,54 +203,51 @@
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(141, 263);
+            this.label3.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label3.Location = new System.Drawing.Point(16, 247);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(83, 19);
             this.label3.TabIndex = 16;
-            this.label3.Text = "メーカー名：";
+            this.label3.Text = "仕入先名：";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtMaker
             // 
+            this.txtMaker.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtMaker.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtMaker.Location = new System.Drawing.Point(220, 260);
+            this.txtMaker.Location = new System.Drawing.Point(14, 264);
             this.txtMaker.Name = "txtMaker";
-            this.txtMaker.Size = new System.Drawing.Size(169, 19);
+            this.txtMaker.Size = new System.Drawing.Size(128, 21);
             this.txtMaker.TabIndex = 17;
-            // 
-            // txtSyoBunrui
-            // 
-            this.txtSyoBunrui.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtSyoBunrui.Location = new System.Drawing.Point(655, 260);
-            this.txtSyoBunrui.Name = "txtSyoBunrui";
-            this.txtSyoBunrui.Size = new System.Drawing.Size(103, 19);
-            this.txtSyoBunrui.TabIndex = 19;
             // 
             // label4
             // 
-            this.label4.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label4.Location = new System.Drawing.Point(590, 263);
+            this.label4.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label4.Location = new System.Drawing.Point(298, 247);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(76, 19);
+            this.label4.Size = new System.Drawing.Size(94, 19);
             this.label4.TabIndex = 18;
-            this.label4.Text = "商品分類：";
+            this.label4.Text = "商品 大分類：";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtSyohinName
             // 
+            this.txtSyohinName.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtSyohinName.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtSyohinName.Location = new System.Drawing.Point(454, 260);
+            this.txtSyohinName.Location = new System.Drawing.Point(148, 264);
             this.txtSyohinName.Name = "txtSyohinName";
-            this.txtSyohinName.Size = new System.Drawing.Size(130, 19);
+            this.txtSyohinName.Size = new System.Drawing.Size(146, 21);
             this.txtSyohinName.TabIndex = 21;
             // 
             // label5
             // 
-            this.label5.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label5.Location = new System.Drawing.Point(401, 263);
+            this.label5.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label5.Location = new System.Drawing.Point(148, 247);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(76, 19);
+            this.label5.Size = new System.Drawing.Size(61, 19);
             this.label5.TabIndex = 20;
             this.label5.Text = "商品名：";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // contextMenuStrip1
             // 
@@ -326,10 +327,10 @@
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.linkLabel1.Location = new System.Drawing.Point(623, 297);
+            this.linkLabel1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.linkLabel1.Location = new System.Drawing.Point(628, 303);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(68, 16);
+            this.linkLabel1.Size = new System.Drawing.Size(65, 12);
             this.linkLabel1.TabIndex = 22;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "すべて選択";
@@ -338,10 +339,10 @@
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.linkLabel2.Location = new System.Drawing.Point(700, 297);
+            this.linkLabel2.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.linkLabel2.Location = new System.Drawing.Point(702, 303);
             this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(56, 16);
+            this.linkLabel2.Size = new System.Drawing.Size(53, 12);
             this.linkLabel2.TabIndex = 23;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "選択解除";
@@ -350,7 +351,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button5.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button5.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.button5.Location = new System.Drawing.Point(14, 966);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(129, 33);
@@ -362,7 +363,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button6.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button6.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.button6.Location = new System.Drawing.Point(149, 966);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(129, 33);
@@ -374,7 +375,7 @@
             // button8
             // 
             this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button8.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button8.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.button8.Location = new System.Drawing.Point(284, 966);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(129, 33);
@@ -386,7 +387,7 @@
             // btnDel
             // 
             this.btnDel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnDel.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnDel.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnDel.Location = new System.Drawing.Point(419, 966);
             this.btnDel.Name = "btnDel";
             this.btnDel.Size = new System.Drawing.Size(129, 33);
@@ -398,7 +399,7 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button3.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.button3.Location = new System.Drawing.Point(1448, 966);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(95, 33);
@@ -410,7 +411,7 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button4.Font = new System.Drawing.Font("游ゴシック", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.button4.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.button4.Location = new System.Drawing.Point(1547, 966);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(95, 33);
@@ -418,6 +419,55 @@
             this.button4.Text = "終了(&E)";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // cmbSyohin_L
+            // 
+            this.cmbSyohin_L.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.cmbSyohin_L.FormattingEnabled = true;
+            this.cmbSyohin_L.Location = new System.Drawing.Point(298, 264);
+            this.cmbSyohin_L.Name = "cmbSyohin_L";
+            this.cmbSyohin_L.Size = new System.Drawing.Size(117, 21);
+            this.cmbSyohin_L.TabIndex = 30;
+            this.cmbSyohin_L.SelectedValueChanged += new System.EventHandler(this.cmbSyohin_L_SelectedValueChanged);
+            // 
+            // cmbSyohin_M
+            // 
+            this.cmbSyohin_M.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.cmbSyohin_M.FormattingEnabled = true;
+            this.cmbSyohin_M.Location = new System.Drawing.Point(418, 263);
+            this.cmbSyohin_M.Name = "cmbSyohin_M";
+            this.cmbSyohin_M.Size = new System.Drawing.Size(117, 21);
+            this.cmbSyohin_M.TabIndex = 31;
+            this.cmbSyohin_M.SelectedValueChanged += new System.EventHandler(this.cmbSyohin_M_SelectedValueChanged);
+            // 
+            // cmbSyohin_S
+            // 
+            this.cmbSyohin_S.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.cmbSyohin_S.FormattingEnabled = true;
+            this.cmbSyohin_S.Location = new System.Drawing.Point(537, 263);
+            this.cmbSyohin_S.Name = "cmbSyohin_S";
+            this.cmbSyohin_S.Size = new System.Drawing.Size(117, 21);
+            this.cmbSyohin_S.TabIndex = 32;
+            // 
+            // label6
+            // 
+            this.label6.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label6.Location = new System.Drawing.Point(418, 247);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(67, 19);
+            this.label6.TabIndex = 33;
+            this.label6.Text = "中分類：";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label7
+            // 
+            this.label7.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label7.Location = new System.Drawing.Point(537, 247);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(60, 19);
+            this.label7.TabIndex = 34;
+            this.label7.Text = "小分類：";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // dataGridView3
             // 
@@ -439,6 +489,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1654, 1008);
+            this.Controls.Add(this.cmbSyohin_S);
+            this.Controls.Add(this.cmbSyohin_M);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.cmbSyohin_L);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.btnDel);
@@ -449,7 +504,6 @@
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.txtSyohinName);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.txtSyoBunrui);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtMaker);
             this.Controls.Add(this.label3);
@@ -472,6 +526,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmPtnAdd_FormClosing);
             this.Load += new System.EventHandler(this.frmPtnAdd_Load);
+            this.Shown += new System.EventHandler(this.frmPtnAdd_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmPtnAdd_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
@@ -497,7 +552,6 @@
         private DataGridViewEx dataGridView3;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtMaker;
-        private System.Windows.Forms.TextBox txtSyoBunrui;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtSyohinName;
         private System.Windows.Forms.Label label5;
@@ -518,5 +572,10 @@
         private System.Windows.Forms.Button btnDel;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ComboBox cmbSyohin_L;
+        private System.Windows.Forms.ComboBox cmbSyohin_M;
+        private System.Windows.Forms.ComboBox cmbSyohin_S;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
     }
 }

@@ -91,7 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ClsCsvData.cs" />
+    <Compile Include="Common\ClsMyCombo.cs" />
     <Compile Include="Common\ClsSqliteMap.cs" />
+    <Compile Include="Common\ClsSyohinRireki.cs" />
     <Compile Include="Common\ClsTenDate.cs" />
     <Compile Include="Common\frmPrg.cs">
       <SubType>Form</SubType>

@@ -62,6 +62,19 @@ namespace STSH_OCR.Common
             // 終売フラグ
             public bool SHUBAI { get; set; }
 
+            // 大分類
+            public string SYOHIN_KIND_L_CD { get; set; }
+
+            // 中分類
+            public string SYOHIN_KIND_M_CD { get; set; }
+
+            // 小分類
+            public string SYOHIN_KIND_S_CD { get; set; }
+
+            // 商品分類
+            public string SYOHIN_KIND_CD { get; set; }
+
+
             public static ClsCsvSyohin[] Load(string[] Sy_Array, string[] SySz_Array, string [] Shiire_Array, int sDate)
             {
                 ClsCsvSyohin[] syohins = null;
@@ -215,7 +228,12 @@ namespace STSH_OCR.Common
                         RETAIL_TANKA = _RETAIL_TANKA,
                         HATYU_LIMIT_DAY_CNT = Utility.StrtoDouble(t[39].Replace("\"", "")),
                         START_SALE_YMD = cStart_Sale_YMD,
-                        LAST_SALE_YMD = cLast_Sale_YMD
+                        LAST_SALE_YMD = cLast_Sale_YMD,
+                        SHUBAI = false,
+                        SYOHIN_KIND_L_CD = t[44].Replace("\"", ""),
+                        SYOHIN_KIND_M_CD = t[45].Replace("\"", ""),
+                        SYOHIN_KIND_S_CD = t[46].Replace("\"", ""),
+                        SYOHIN_KIND_CD = t[47].Replace("\"", "")
                     };
 
                     x++;
