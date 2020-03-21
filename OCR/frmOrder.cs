@@ -1138,7 +1138,7 @@ namespace STSH_OCR.OCR
 
                 // STSH_OCR.db3をAttachする
                 string sql = "ATTACH [";
-                sql += Properties.Settings.Default.DB_File + "] AS db;";
+                sql += Properties.Settings.Default.DB_File.Replace(@"\\\", @"\\") + "] AS db;";
 
                 using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
                 {

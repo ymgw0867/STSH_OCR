@@ -56,6 +56,7 @@ namespace STSH_OCR.OCR
             }
 
             button1.Enabled = false;
+            button2.Enabled = false;
 
             // CSVデータ出力処理
             int Cnt = CsvDataOutput();
@@ -72,6 +73,8 @@ namespace STSH_OCR.OCR
             // 終了メッセージ
             MessageBox.Show("処理が終了しました", "完了", MessageBoxButtons.OK, MessageBoxIcon.Information);
             progressBar1.Visible = false;
+
+            button2.Enabled = true;
 
             // 終了
             //Close();
@@ -108,6 +111,8 @@ namespace STSH_OCR.OCR
         ///------------------------------------------------------
         private void DeleteOrderData()
         {
+            Cursor = Cursors.WaitCursor;
+
             cn.Open();
 
             try
@@ -151,6 +156,8 @@ namespace STSH_OCR.OCR
                 {
                     cn.Close();
                 }
+
+                Cursor = Cursors.Default;
             }
 
         }
@@ -596,6 +603,8 @@ namespace STSH_OCR.OCR
         ///----------------------------------------------------------
         private void CsvDataLogWrite(int Cnt)
         {
+            Cursor = Cursors.WaitCursor;
+
             // CSVデータ作成履歴
             cn.Open();
 
@@ -628,6 +637,8 @@ namespace STSH_OCR.OCR
                 {
                     cn.Close();
                 }
+
+                Cursor = Cursors.Default;
             }
         }
 

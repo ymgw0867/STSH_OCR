@@ -427,6 +427,13 @@ namespace STSH_OCR.Pattern
                 return;
             }
 
+            if (Utility.StrtoInt(txtYear.Text) < 2020)
+            {
+                MessageBox.Show("適切な対象年を入力してください", "確認", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                txtYear.Focus();
+                return;
+            }
+
             if (txtMonth.Text == string.Empty)
             {
                 MessageBox.Show("対象月を入力してください", "確認", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);

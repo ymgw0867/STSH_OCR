@@ -25,7 +25,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\DB\\STSH_OCR.db3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\\\192.168.1.51\\STSH_OCR\\DB\\STSH_OCR.db3")]
         public string DB_File {
             get {
                 return ((string)(this["DB_File"]));
@@ -34,7 +34,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\MST\\syohinmst.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\MST\\syohinmst.csv")]
         public string 商品マスター {
             get {
                 return ((string)(this["商品マスター"]));
@@ -43,7 +43,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\MST\\tokuisakimst.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\MST\\tokuisakimst.csv")]
         public string 得意先マスター {
             get {
                 return ((string)(this["得意先マスター"]));
@@ -52,7 +52,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\MST\\syohinzaiko.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\MST\\syohinzaiko.csv")]
         public string 商品在庫マスター {
             get {
                 return ((string)(this["商品在庫マスター"]));
@@ -61,7 +61,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\MST\\Shiiresaki.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\MST\\Shiiresaki.csv")]
         public string 仕入先マスター {
             get {
                 return ((string)(this["仕入先マスター"]));
@@ -70,7 +70,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\XLS\\FAX注文書.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\XLS\\FAX注文書.xlsx")]
         public string FAX注文書 {
             get {
                 return ((string)(this["FAX注文書"]));
@@ -79,7 +79,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\FaxRoot\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\FaxRoot\\")]
         public string FaxRootDirectory {
             get {
                 return ((string)(this["FaxRootDirectory"]));
@@ -97,7 +97,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\DATA\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\DATA\\")]
         public string DataPath {
             get {
                 return ((string)(this["DataPath"]));
@@ -124,7 +124,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\Hold_Tiff\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\Hold_Tiff\\")]
         public string HoldTifPath {
             get {
                 return ((string)(this["HoldTifPath"]));
@@ -133,7 +133,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\TIF\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\TIF\\")]
         public string TifPath {
             get {
                 return ((string)(this["TifPath"]));
@@ -142,7 +142,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\OCRERROR")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\OCRERROR")]
         public string NgPath {
             get {
                 return ((string)(this["NgPath"]));
@@ -151,7 +151,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\XLS\\ReFAX.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\XLS\\ReFAX.xlsx")]
         public string ReFAXTempXlsx {
             get {
                 return ((string)(this["ReFAXTempXlsx"]));
@@ -160,7 +160,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\XLS\\返信FAX.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\XLS\\返信FAX.xlsx")]
         public string ReFaxSaveFile {
             get {
                 return ((string)(this["ReFaxSaveFile"]));
@@ -178,7 +178,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\STSH_OCR\\MST\\商品分類リスト.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\192.168.1.51\\STSH_OCR\\MST\\商品分類リスト.xlsx")]
         public string 商品分類リスト {
             get {
                 return ((string)(this["商品分類リスト"]));

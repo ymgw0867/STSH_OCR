@@ -1387,6 +1387,14 @@ namespace STSH_OCR.OCR
 
             //終了
             MessageBox.Show("発注書データが登録されました", "発注書登録", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (cn2.State == ConnectionState.Open)
+            {
+                // いったん閉じて又開く
+                cn2.Close();
+                cn2.Open();
+            }
+
             this.Tag = END_MAKEDATA;
             this.Close();
         }
@@ -1410,7 +1418,7 @@ namespace STSH_OCR.OCR
 
                 // STSH_OCR.db3をAttachする
                 string sql = "ATTACH [";
-                sql += Properties.Settings.Default.DB_File + "] AS db;";
+                sql += Properties.Settings.Default.DB_File.Replace(@"\\\", @"\\") + "] AS db;";
 
                 using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
                 {
@@ -1580,7 +1588,7 @@ namespace STSH_OCR.OCR
 
                 // STSH_OCR.db3をAttachする
                 string sql = "ATTACH [";
-                sql += Properties.Settings.Default.DB_File + "] AS db;";
+                sql += Properties.Settings.Default.DB_File.Replace(@"\\\", @"\\") + "] AS db;";
 
                 using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
                 {
@@ -2455,7 +2463,7 @@ namespace STSH_OCR.OCR
             {
                 // STSH_OCR.db3をAttachする
                 string sql = "ATTACH [";
-                sql += Properties.Settings.Default.DB_File + "] AS db;";
+                sql += Properties.Settings.Default.DB_File.Replace(@"\\\", @"\\") + "] AS db;";
 
                 using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
                 {
@@ -2523,6 +2531,13 @@ namespace STSH_OCR.OCR
                     // ゼロならばプログラム終了
                     MessageBox.Show("全ての発注書データが保留されました。処理を終了します。", "発注書保留", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
+                    if (cn2.State == ConnectionState.Open)
+                    {
+                        // いったん閉じて又開く
+                        cn2.Close();
+                        cn2.Open();
+                    }
+
                     //終了処理
                     this.Tag = END_NODATA;
                     this.Close();
@@ -2539,12 +2554,6 @@ namespace STSH_OCR.OCR
                     cn.Close();
                 }
 
-                if (cn2.State == ConnectionState.Open)
-                {
-                    // いったん閉じて又開く
-                    cn2.Close();
-                    cn2.Open();
-                }
             }
         }
 
