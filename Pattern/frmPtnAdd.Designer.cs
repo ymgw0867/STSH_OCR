@@ -197,7 +197,7 @@
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(99, 28);
             this.button7.TabIndex = 0;
-            this.button7.Text = "届先選択(&T)";
+            this.button7.Text = "得意先選択(&T)";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
