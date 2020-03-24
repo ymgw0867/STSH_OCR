@@ -1444,13 +1444,30 @@ namespace STSH_OCR.Pattern
 
         private void dataDelete(int sID)
         {
-            //NHBRDataSet.パターンIDRow r = dts.パターンID.Single(a => a.ID == sID);
-            //r.Delete();
+            cn.Open();
 
-            //// データベース更新
-            //adp.Update(dts.パターンID);
+            try
+            {
+                string sql = "delete from orderpattern where ID = " + sID;
 
-            MessageBox.Show("注文書パターンが削除されました", "処理終了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                MessageBox.Show("発注書パターンが削除されました", "処理終了", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                if (cn.State == ConnectionState.Open)
+                {
+                    cn.Close();
+                }
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)

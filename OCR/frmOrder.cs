@@ -2255,7 +2255,14 @@ namespace STSH_OCR.OCR
             {
                 return;
             }
-            
+
+            // 商品欄初期化
+            for (int i = 1; i < 30; i += 2)
+            {
+                dg1[colHinCode, i].Value = string.Empty;
+                dg1[colMaker, i].Value = string.Empty;
+            }
+
             foreach (var t in tblPtn.Where(a => a.TokuisakiCode ==  Utility.StrtoInt(_TokuisakiCD) && 
                             a.SeqNum == Utility.StrtoInt(_PID) && a.SecondNum == Utility.StrtoInt(_SeqNum)))
             {

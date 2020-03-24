@@ -156,7 +156,7 @@
             this.label2.BackColor = System.Drawing.SystemColors.Control;
             this.label2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(250, 18);
+            this.label2.Location = new System.Drawing.Point(250, 17);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(31, 22);
             this.label2.TabIndex = 20;

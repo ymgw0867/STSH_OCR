@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STSH_FAX", "..\STS_FAX\STSH
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "..\Setup1\Setup1.vdproj", "{BC3729F4-B3B4-4F48-8450-6EFB1A5AB051}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupFAX_Monitoring", "..\SetupFAX_Monitoring\SetupFAX_Monitoring.vdproj", "{2C413944-25A9-4F9E-B871-A9A4C82DD873}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{BC3729F4-B3B4-4F48-8450-6EFB1A5AB051}.Debug|x86.ActiveCfg = Debug
 		{BC3729F4-B3B4-4F48-8450-6EFB1A5AB051}.Release|Any CPU.ActiveCfg = Release
 		{BC3729F4-B3B4-4F48-8450-6EFB1A5AB051}.Release|x86.ActiveCfg = Release
+		{2C413944-25A9-4F9E-B871-A9A4C82DD873}.Debug|Any CPU.ActiveCfg = Debug
+		{2C413944-25A9-4F9E-B871-A9A4C82DD873}.Debug|x86.ActiveCfg = Debug
+		{2C413944-25A9-4F9E-B871-A9A4C82DD873}.Release|Any CPU.ActiveCfg = Release
+		{2C413944-25A9-4F9E-B871-A9A4C82DD873}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

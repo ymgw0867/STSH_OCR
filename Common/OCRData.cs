@@ -699,35 +699,6 @@ namespace STSH_OCR.Common
             //--------------------------------------------------------------------
             for (int i = 0; i < 15; i++)
             {
-                //ha = false;
-
-                //// 発注の有無を調べる
-                //for (int iX = 0; iX < 7; iX++)
-                //{
-                //    if (Utility.StrtoInt(goods[i].Suu[iX]) != global.flgOff)
-                //    {
-                //        // 発注あり
-                //        ha = true;
-                //        break;
-                //    }
-                //}
-
-                //if (goods[i].Code == string.Empty)
-                //{
-                //    // 商品登録なしで発注あり
-                //    if (ha)
-                //    {
-                //        setErrStatus(eHinCode, i * 2 + 1, "商品が登録されていません");
-                //        return false;
-                //    }
-                //}
-                //else if (!ChkShohin(goods[i].Code, goods[i].Syubai, out eMsg, out eNum, ha))
-                //{
-                //    setErrStatus(eNum, i * 2 + 1, eMsg);
-                //    return false;
-                //}
-
-
                 if (!ChkShohin_NEW(goods, i, tenDates, out eMsg, out eNum))
                 {
                     setErrStatus(eNum, i * 2 + 1, eMsg);

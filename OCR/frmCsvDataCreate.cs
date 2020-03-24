@@ -26,7 +26,7 @@ namespace STSH_OCR.OCR
 
         string db_file = Properties.Settings.Default.DB_File;
 
-        // FAX発注書データ
+        // 発注書データ
         Table<Common.ClsOrder> tblOrder = null;
         ClsOrder order = null;
 
@@ -53,6 +53,14 @@ namespace STSH_OCR.OCR
             if (MessageBox.Show("CSVデータを出力します。よろしいですか？","確認", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
+            }
+
+            if (!CheckSameData())
+            {
+                if (MessageBox.Show("発注元、発注期間が同じと思われる発注書が確認されました。CSVデータを出力処理をすすめてよろしいですか？", "確認", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                {
+                    return;
+                }
             }
 
             button1.Enabled = false;
@@ -693,6 +701,60 @@ namespace STSH_OCR.OCR
 
             // ファイル名
             lblFileName.Text = cnf.DataPath + "FAX受注" + newFileName + ".csv";
+        }
+
+        private bool CheckSameData()
+        {
+            faxData[] idArray = new faxData[tblOrder.Count()];
+            int cnt = 0;
+
+            foreach (var t in tblOrder.OrderBy(a => a.ID))
+            {
+                idArray[cnt] = new faxData();
+                idArray[cnt].ID = t.ID;
+                idArray[cnt].Year = t.Year;
+                idArray[cnt].Month = t.Month;
+                idArray[cnt].patternID = t.patternID;
+                idArray[cnt].SeqNumber = t.SeqNumber;
+                idArray[cnt].Day1 = t.Day1;
+
+                cnt++;
+            }
+
+            bool rtn = true;
+
+            for (int i = 0; i < idArray.Length; i++)
+            {
+                var s = tblOrder.Where(a => a.Year == idArray[i].Year && a.Month == idArray[i].Month && a.patternID == idArray[i].patternID && a.SeqNumber == idArray[i].SeqNumber &&
+                                            a.Day1 == idArray[i].Day1 && a.ID != idArray[i].ID);
+
+                foreach (var it in s)
+                {
+                    // リストビューに表示
+                    listBox1.Items.Add("重複発注書 : " + it.Year + "年" + it.Month + "月 得意先コード : " + it.TokuisakiCode + " 発注書番号 : " + it.patternID.ToString("D3") +
+                                       it.SeqNumber.ToString("D2") + " 店着日 : " + it.Day1 + "～");
+
+                    listBox1.TopIndex = listBox1.Items.Count - 1;
+                    //System.Threading.Thread.Sleep(10);
+                    Application.DoEvents();
+
+                    rtn = false;
+                }
+            }
+
+            return rtn;
+
+        }
+
+        private class faxData
+        {
+            public string ID { get; set; }
+            public int Year { get; set; }
+            public int Month { get; set; }
+            public int TokuisakiCode { get; set; }
+            public int patternID { get; set; }
+            public int SeqNumber { get; set; }
+            public string Day1 { get; set; }
         }
 
         private void button2_Click(object sender, EventArgs e)

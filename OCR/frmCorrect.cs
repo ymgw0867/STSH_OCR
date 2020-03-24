@@ -1097,6 +1097,7 @@ namespace STSH_OCR.OCR
 
                 Sql += "メモ = '" + txtMemo.Text + "',";
                 Sql += "確認 = " + Convert.ToInt32(checkBox1.Checked) + ",";
+                Sql += "パターンロード = " + global.FLGON + ",";
                 Sql += "更新年月日 = '" + DateTime.Now.ToString() + "' ";
                 Sql += "WHERE ID = '" + cID[iX] + "'";
 
@@ -2511,6 +2512,13 @@ namespace STSH_OCR.OCR
                 // 終了メッセージ
                 MessageBox.Show("注文書が保留されました", "ＦＡＸ発注書保留", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+                if (cn2.State == ConnectionState.Open)
+                {
+                    // いったん閉じて又開く
+                    cn2.Close();
+                    cn2.Open();
+                }
+
                 // 件数カウント
                 if (tblFax.Count() > 0)
                 {
@@ -2531,12 +2539,12 @@ namespace STSH_OCR.OCR
                     // ゼロならばプログラム終了
                     MessageBox.Show("全ての発注書データが保留されました。処理を終了します。", "発注書保留", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                    if (cn2.State == ConnectionState.Open)
-                    {
-                        // いったん閉じて又開く
-                        cn2.Close();
-                        cn2.Open();
-                    }
+                    //if (cn2.State == ConnectionState.Open)
+                    //{
+                    //    // いったん閉じて又開く
+                    //    cn2.Close();
+                    //    cn2.Open();
+                    //}
 
                     //終了処理
                     this.Tag = END_NODATA;
@@ -3193,7 +3201,15 @@ namespace STSH_OCR.OCR
             {
                 return;
             }
-            
+
+            // 商品欄初期化
+            for (int i = 1; i < 30; i+=2)
+            {
+                dg1[colHinCode, i].Value = string.Empty;
+                dg1[colMaker, i].Value = string.Empty;
+            }
+
+            // 商品パターン表示
             foreach (var t in tblPtn.Where(a => a.TokuisakiCode ==  Utility.StrtoInt(_TokuisakiCD) && 
                             a.SeqNum == Utility.StrtoInt(_PID) && a.SecondNum == Utility.StrtoInt(_SeqNum)))
             {
@@ -3201,21 +3217,18 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 1].Value = t.G_Code1.PadLeft(8, '0');
                     dg1[colMaker, 1].Value = t.G_Name1;
-                    //dg1[colHinCode, 1].Value = t.G_Read1;
                 }
 
                 if (t.G_Code2 != string.Empty)
                 {
                     dg1[colHinCode, 3].Value = t.G_Code2.PadLeft(8, '0');
                     dg1[colMaker, 3].Value = t.G_Name2;
-                    //dg1[colHinCode, 3].Value = t.G_Read2;
                 }
 
                 if (t.G_Code3 != string.Empty)
                 {
                     dg1[colHinCode, 5].Value = t.G_Code3.PadLeft(8, '0');
                     dg1[colMaker, 5].Value = t.G_Name3;
-                    //dg1[colHinCode, 5].Value = t.G_Read3;
                 }
 
 
@@ -3223,7 +3236,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 7].Value = t.G_Code4.PadLeft(8, '0');
                     dg1[colMaker, 7].Value = t.G_Name4;
-                    //dg1[colHinCode, 7].Value = t.G_Read4;
                 }
 
 
@@ -3231,7 +3243,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 9].Value = t.G_Code5.PadLeft(8, '0');
                     dg1[colMaker, 9].Value = t.G_Name5;
-                    //dg1[colHinCode, 9].Value = t.G_Read5;
                 }
 
 
@@ -3239,7 +3250,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 11].Value = t.G_Code6.PadLeft(8, '0');
                     dg1[colMaker, 11].Value = t.G_Name6;
-                    //dg1[colHinCode, 11].Value = t.G_Read6;
                 }
 
 
@@ -3247,7 +3257,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 13].Value = t.G_Code7.PadLeft(8, '0');
                     dg1[colMaker, 13].Value = t.G_Name7;
-                    //dg1[colHinCode, 13].Value = t.G_Read7;
                 }
 
 
@@ -3255,7 +3264,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 15].Value = t.G_Code8.PadLeft(8, '0');
                     dg1[colMaker, 15].Value = t.G_Name8;
-                    //dg1[colHinCode, 15].Value = t.G_Read8;
                 }
 
 
@@ -3263,7 +3271,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 17].Value = t.G_Code9.PadLeft(8, '0');
                     dg1[colMaker, 17].Value = t.G_Name9;
-                    //dg1[colHinCode, 17].Value = t.G_Read9;
                 }
 
 
@@ -3271,7 +3278,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 19].Value = t.G_Code10.PadLeft(8, '0');
                     dg1[colMaker, 19].Value = t.G_Name10;
-                    //dg1[colHinCode, 19].Value = t.G_Read10;
                 }
 
 
@@ -3279,7 +3285,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 21].Value = t.G_Code11.PadLeft(8, '0');
                     dg1[colMaker, 21].Value = t.G_Name11;
-                    //dg1[colHinCode, 21].Value = t.G_Read11;
                 }
 
 
@@ -3287,7 +3292,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 23].Value = t.G_Code12.PadLeft(8, '0');
                     dg1[colMaker, 23].Value = t.G_Name12;
-                    //dg1[colHinCode, 23].Value = t.G_Read12;
                 }
 
 
@@ -3295,7 +3299,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 25].Value = t.G_Code13.PadLeft(8, '0');
                     dg1[colMaker, 25].Value = t.G_Name13;
-                    //dg1[colHinCode, 25].Value = t.G_Read13;
                 }
 
 
@@ -3303,14 +3306,12 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 27].Value = t.G_Code14.PadLeft(8, '0');
                     dg1[colMaker, 27].Value = t.G_Name14;
-                    //dg1[colHinCode, 27].Value = t.G_Read14;
                 }
 
                 if (t.G_Code15 != string.Empty)
                 {
                     dg1[colHinCode, 29].Value = t.G_Code15.PadLeft(8, '0');
                     dg1[colMaker, 29].Value = t.G_Name15;
-                    //dg1[colHinCode, 29].Value = t.G_Read15;
                 }
             }
         }
