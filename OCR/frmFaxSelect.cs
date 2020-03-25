@@ -120,7 +120,7 @@ namespace STSH_OCR.OCR
 
                 // 各列幅指定
                 tempDGV.Columns.Add(colID, "No.");
-                tempDGV.Columns.Add(colDirName, "フォルダ名");
+                tempDGV.Columns.Add(colDirName, "ＯＣＲ認識後フォルダ名");
                 tempDGV.Columns.Add(colCount, "受信件数");
                 tempDGV.Columns.Add(colChk, "");
                 tempDGV.Columns[colChk].Visible = false;
@@ -196,7 +196,8 @@ namespace STSH_OCR.OCR
             {
                 view.Rows.Add();
                 view[colID, view.Rows.Count - 1].Value = view.Rows.Count;
-                view[colDirName, view.Rows.Count - 1].Value = System.IO.Path.GetFileName(dir);
+                //view[colDirName, view.Rows.Count - 1].Value = System.IO.Path.GetFileName(dir);
+                view[colDirName, view.Rows.Count - 1].Value = dir;
                 view[colCount, view.Rows.Count - 1].Value = System.IO.Directory.GetFiles(dir, "*.csv").Count();
                 view[colChk, view.Rows.Count - 1].Value = dir;
             }

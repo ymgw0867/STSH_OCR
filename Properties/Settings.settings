@@ -3,31 +3,31 @@
   <Profiles />
   <Settings>
     <Setting Name="DB_File" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\\192.168.1.51\STSH_OCR\DB\STSH_OCR.db3</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\DB\STSH_OCR.db3</Value>
     </Setting>
     <Setting Name="商品マスター" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\MST\syohinmst.csv</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\MST\syohinmst.csv</Value>
     </Setting>
     <Setting Name="得意先マスター" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\MST\tokuisakimst.csv</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\MST\tokuisakimst.csv</Value>
     </Setting>
     <Setting Name="商品在庫マスター" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\MST\syohinzaiko.csv</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\MST\syohinzaiko.csv</Value>
     </Setting>
     <Setting Name="仕入先マスター" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\MST\Shiiresaki.csv</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\MST\Shiiresaki.csv</Value>
     </Setting>
     <Setting Name="FAX注文書" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\XLS\FAX注文書.xlsx</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\XLS\FAX注文書.xlsx</Value>
     </Setting>
     <Setting Name="FaxRootDirectory" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\FaxRoot\</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\FaxRoot\</Value>
     </Setting>
     <Setting Name="MyDataPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)">C:\STSH_CLI\DATA\</Value>
     </Setting>
     <Setting Name="DataPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\DATA\</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\DATA\</Value>
     </Setting>
     <Setting Name="lockFileName" Type="System.String" Scope="Application">
       <Value Profile="(Default)">PC1</Value>
@@ -36,25 +36,25 @@
       <Value Profile="(Default)">C:\STSH_CLI\DB\STSH_CLI.db3</Value>
     </Setting>
     <Setting Name="HoldTifPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\Hold_Tiff\</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\Hold_Tiff\</Value>
     </Setting>
     <Setting Name="TifPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\TIF\</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\TIF\</Value>
     </Setting>
     <Setting Name="NgPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\OCRERROR</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\OCRERROR</Value>
     </Setting>
     <Setting Name="ReFAXTempXlsx" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\XLS\ReFAX.xlsx</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\XLS\ReFAX.xlsx</Value>
     </Setting>
     <Setting Name="ReFaxSaveFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\XLS\返信FAX.xlsx</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\XLS\返信FAX.xlsx</Value>
     </Setting>
     <Setting Name="orderDataBackupDay" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">14</Value>
     </Setting>
     <Setting Name="商品分類リスト" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\192.168.1.51\STSH_OCR\MST\商品分類リスト.xlsx</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\MST\商品分類リスト.xlsx</Value>
     </Setting>
   </Settings>
 </SettingsFile>
