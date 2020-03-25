@@ -71,7 +71,7 @@
             this.sName.Location = new System.Drawing.Point(584, 24);
             this.sName.Name = "sName";
             this.sName.Size = new System.Drawing.Size(209, 23);
-            this.sName.TabIndex = 7;
+            this.sName.TabIndex = 6;
             // 
             // sAddress
             // 
@@ -80,7 +80,7 @@
             this.sAddress.Location = new System.Drawing.Point(890, 24);
             this.sAddress.Name = "sAddress";
             this.sAddress.Size = new System.Drawing.Size(275, 23);
-            this.sAddress.TabIndex = 8;
+            this.sAddress.TabIndex = 7;
             // 
             // label2
             // 
@@ -105,7 +105,7 @@
             this.button1.Location = new System.Drawing.Point(1214, 13);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(68, 44);
-            this.button1.TabIndex = 3;
+            this.button1.TabIndex = 8;
             this.button1.Text = "(&R)";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button1.UseVisualStyleBackColor = false;
@@ -153,7 +153,7 @@
             this.button3.Location = new System.Drawing.Point(1024, 669);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(126, 35);
-            this.button3.TabIndex = 4;
+            this.button3.TabIndex = 3;
             this.button3.Text = "印刷(&P)";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -194,7 +194,7 @@
             this.sCode.MaxLength = 6;
             this.sCode.Name = "sCode";
             this.sCode.Size = new System.Drawing.Size(113, 23);
-            this.sCode.TabIndex = 5;
+            this.sCode.TabIndex = 4;
             this.sCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.sCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.sCode_KeyPress);
             // 
@@ -219,7 +219,7 @@
             this.sTel.MaxLength = 14;
             this.sTel.Name = "sTel";
             this.sTel.Size = new System.Drawing.Size(153, 23);
-            this.sTel.TabIndex = 6;
+            this.sTel.TabIndex = 5;
             this.sTel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label4

@@ -200,58 +200,6 @@ namespace STSH_OCR.Pattern
             SySzArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
             ShiireArray = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
             csvSyohins = ClsCsvData.ClsCsvSyohin.Load(SyoArray, SySzArray, ShiireArray, toDate);
-
-
-            //int i = 0;
-            //using (var Conn = new OracleConnection())
-            //{
-            //    Conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
-            //    Conn.Open();
-
-            //    // 届先マスターを配列に読み込み
-            //    string strSQL = "SELECT KOK_ID, NOU_NAME, NOU_JYU1, NOU_JYU2, NOU_TEL FROM RAKUSYO_FAXOCR.V_NOUHINSAKI ";
-
-            //    OracleCommand Cmd = new OracleCommand(strSQL, Conn);
-            //    OracleDataReader dR = Cmd.ExecuteReader();
-            //    while (dR.Read())
-            //    {
-            //        Array.Resize(ref vn, i + 1);
-            //        vn[i] = new clsVNouhin();
-
-            //        vn[i].KOK_ID = dR["KOK_ID"].ToString().Trim();
-            //        vn[i].NOU_NAME = dR["NOU_NAME"].ToString();
-            //        vn[i].NOU_TEL = dR["NOU_TEL"].ToString();
-            //        vn[i].NOU_JYU = dR["NOU_JYU1"].ToString() + " " + dR["NOU_JYU2"].ToString();
-
-            //        i++;
-            //    }
-
-            //    dR.Dispose();
-            //    Cmd.Dispose();
-
-            //    i = 0;
-
-            //    // 商品マスターを配列に読み込み
-            //    strSQL = "SELECT SYO_ID,SYO_NAME, SYO_IRI_KESU, SYO_TANI FROM RAKUSYO_FAXOCR.V_SYOHIN ";
-
-            //    Cmd = new OracleCommand(strSQL, Conn);
-            //    dR = Cmd.ExecuteReader();
-            //    while (dR.Read())
-            //    {
-            //        Array.Resize(ref vSyo, i + 1);
-            //        vSyo[i] = new clsVSYOHIN();
-
-            //        vSyo[i].SYO_ID = dR["SYO_ID"].ToString().Trim();
-            //        vSyo[i].SYO_NAME = dR["SYO_NAME"].ToString();
-            //        vSyo[i].SYO_IRI_KESU = dR["SYO_IRI_KESU"].ToString();
-            //        vSyo[i].SYO_TANI = dR["SYO_TANI"].ToString();
-
-            //        i++;
-            //    }
-
-            //    dR.Dispose();
-            //    Cmd.Dispose();
-            //}
         }
 
         private void showPattern(DataGridView g)
