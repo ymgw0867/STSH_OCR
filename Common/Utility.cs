@@ -1083,7 +1083,7 @@ namespace STSH_OCR.Common
 
                 // 小売り単価：新単価適用日で判断
                 double _RETAIL_TANKA = 0;
-                if (toDate < Utility.StrtoInt(t[34].Replace("\"", "")))
+                if (toDate < Utility.StrtoDouble(t[34].Replace("\"", "")))
                 {
                     _RETAIL_TANKA = StrtoDouble(t[32].Replace("\"", ""));
                 }

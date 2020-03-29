@@ -151,7 +151,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\XLS\\ReFAX.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_CLI\\XLS\\ReFAX.xlsx")]
         public string ReFAXTempXlsx {
             get {
                 return ((string)(this["ReFAXTempXlsx"]));
@@ -160,7 +160,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\XLS\\返信FAX.xlsx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_CLI\\XLS\\返信FAX.xlsx")]
         public string ReFaxSaveFile {
             get {
                 return ((string)(this["ReFaxSaveFile"]));

@@ -71,6 +71,8 @@ namespace STSH_OCR.Pattern
         // 商品マスタークラス配列
         ClsCsvData.ClsCsvSyohin[] syohins = null;
 
+        string[] csvArray = null;
+
         private void frmPtnAdd_Load(object sender, EventArgs e)
         {
             // 商品分類リスト読み込み
@@ -93,6 +95,7 @@ namespace STSH_OCR.Pattern
             dispInitial();
 
             // 得意先CSVデータ配列読み込み
+            
             TkArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
 
             //// 商品CSVデータ配列読み込み
@@ -1311,7 +1314,7 @@ namespace STSH_OCR.Pattern
                     for (int iX = 0; iX < m.Rows.Count; iX++)
                     {
                         sCnt++;
-                        sqlSy += ",'" + m[colHinCode, iX].Value.ToString() + "','" + m[colHinName, iX].Value.ToString() + "'," + m[colReadDays, iX].Value.ToString();
+                        sqlSy += ",'" + Utility.NulltoStr(m[colHinCode, iX].Value) + "','" + Utility.NulltoStr(m[colHinName, iX].Value) + "'," + Utility.StrtoInt(Utility.NulltoStr(m[colReadDays, iX].Value));
 
                         if (sCnt == global.MAX_GYO)
                         {
@@ -2056,7 +2059,9 @@ namespace STSH_OCR.Pattern
             // 商品コード
             if (e.ColumnIndex == 2)
             {
-                ClsCsvData.ClsCsvSyohin cls = Utility.GetSyohinData(Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString());
+                //ClsCsvData.ClsCsvSyohin cls = Utility.GetSyohinData(Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString());
+
+                ClsCsvData.ClsCsvSyohin cls = Utility.GetSyohins(syohins, Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString().PadLeft(0, '8'));
 
                 dataGridView3[colMaker, e.RowIndex].Value = cls.SIRESAKI_NM;
                 dataGridView3[colHinName, e.RowIndex].Value = cls.SYOHIN_NM;
@@ -2613,6 +2618,58 @@ namespace STSH_OCR.Pattern
                 // 非選択状態とする
                 cmbSyohin_S.SelectedIndex = -1;
             }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            ArrayToCSV();
+        }
+
+        private void ArrayToCSV()
+        {
+            csvArray = new string[syohins.Length + 1];
+            StringBuilder sb = new StringBuilder();
+            csvArray[0] = "SYOHIN_CD,SYOHIN_NM,SYOHIN_SNM,SIRESAKI_CD,SIRESAKI_NM,SIRESAKI_KANA_NM,JAN_CD,SYOHIN_KIKAKU,CASE_IRISU,NOUHIN_KARI_TANKA,RETAIL_TANKA,HATYU_LIMIT_DAY_CNT,START_SALE_YMD,LAST_SALE_YMD,SHUBAI,SYOHIN_KIND_L_CD,SYOHIN_KIND_M_CD,SYOHIN_KIND_S_CD,SYOHIN_KIND_CD";
+            
+            for (int i = 0; i < syohins.Length; i++)
+            {
+                sb.Clear();
+                sb.Append(syohins[i].SYOHIN_CD).Append(",");
+                sb.Append(syohins[i].SYOHIN_NM).Append(",");
+                sb.Append(syohins[i].SYOHIN_SNM).Append(",");
+                sb.Append(syohins[i].SIRESAKI_CD).Append(",");
+                sb.Append(syohins[i].SIRESAKI_NM).Append(",");
+                sb.Append(syohins[i].SIRESAKI_KANA_NM).Append(",");
+                sb.Append(syohins[i].JAN_CD).Append(",");
+                sb.Append(syohins[i].SYOHIN_KIKAKU).Append(",");
+                sb.Append(syohins[i].CASE_IRISU).Append(",");
+                sb.Append(syohins[i].NOUHIN_KARI_TANKA).Append(",");
+                sb.Append(syohins[i].RETAIL_TANKA).Append(",");
+                sb.Append(syohins[i].HATYU_LIMIT_DAY_CNT).Append(",");
+                sb.Append(syohins[i].START_SALE_YMD).Append(",");
+                sb.Append(syohins[i].LAST_SALE_YMD).Append(",");
+
+                if (syohins[i].SHUBAI)
+                {
+                    sb.Append("1,");
+                }
+                else
+                {
+                    sb.Append("0,");
+                }
+
+                sb.Append(syohins[i].SYOHIN_KIND_L_CD).Append(",");
+                sb.Append(syohins[i].SYOHIN_KIND_M_CD).Append(",");
+                sb.Append(syohins[i].SYOHIN_KIND_S_CD).Append(",");
+                sb.Append(syohins[i].SYOHIN_KIND_CD);
+
+                csvArray[i + 1] = sb.ToString();
+            }
+
+            // 上書き
+            System.IO.File.WriteAllLines(@"C:\STSH_OCR\TESTMST\syohinmst_New.csv", csvArray, System.Text.Encoding.GetEncoding(932));
+
+            MessageBox.Show("Finish!");
         }
     }
 }

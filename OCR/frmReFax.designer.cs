@@ -41,7 +41,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
-            this.lblFaxNum = new System.Windows.Forms.Label();
+            this.txtFaxNum = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -167,24 +167,23 @@
             this.lblName.Text = "label5";
             this.lblName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblFaxNum
+            // txtFaxNum
             // 
-            this.lblFaxNum.BackColor = System.Drawing.Color.White;
-            this.lblFaxNum.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblFaxNum.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblFaxNum.Location = new System.Drawing.Point(685, 9);
-            this.lblFaxNum.Name = "lblFaxNum";
-            this.lblFaxNum.Size = new System.Drawing.Size(150, 25);
-            this.lblFaxNum.TabIndex = 12;
-            this.lblFaxNum.Text = "03-3265-4521";
-            this.lblFaxNum.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.txtFaxNum.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtFaxNum.Location = new System.Drawing.Point(688, 12);
+            this.txtFaxNum.Name = "txtFaxNum";
+            this.txtFaxNum.ReadOnly = true;
+            this.txtFaxNum.Size = new System.Drawing.Size(147, 22);
+            this.txtFaxNum.TabIndex = 12;
+            this.txtFaxNum.Text = "03-3265-2145";
+            this.txtFaxNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // frmReFax
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(847, 771);
-            this.Controls.Add(this.lblFaxNum);
+            this.Controls.Add(this.txtFaxNum);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -225,7 +224,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.Label lblFaxNum;
+        private System.Windows.Forms.TextBox txtFaxNum;
     }
 }
 

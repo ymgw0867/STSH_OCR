@@ -180,7 +180,9 @@ namespace STSH_OCR.Common
         {
             string rVal = str1;
             if (str1 == string.Empty && str2 != string.Empty)
+            {
                 rVal = "0";
+            }
 
             return rVal;
         }

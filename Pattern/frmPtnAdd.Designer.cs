@@ -68,6 +68,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.dataGridView3 = new STSH_OCR.DataGridViewEx();
+            this.button9 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -484,11 +485,22 @@
             this.dataGridView3.Leave += new System.EventHandler(this.dataGridView3_Leave);
             this.dataGridView3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView3_MouseClick);
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(659, 963);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(88, 36);
+            this.button9.TabIndex = 35;
+            this.button9.Text = "button9";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // frmPtnAdd
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1654, 1008);
+            this.Controls.Add(this.button9);
             this.Controls.Add(this.cmbSyohin_S);
             this.Controls.Add(this.cmbSyohin_M);
             this.Controls.Add(this.label7);
@@ -577,5 +589,6 @@
         private System.Windows.Forms.ComboBox cmbSyohin_S;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button9;
     }
 }

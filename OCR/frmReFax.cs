@@ -46,6 +46,8 @@ namespace STSH_OCR.OCR
 
         private void ImageToExcel(string xPath, string ImgPath)
         {
+            Cursor = Cursors.WaitCursor;
+
             string fileName = "";
 
             try
@@ -94,6 +96,8 @@ namespace STSH_OCR.OCR
                     bk.SaveAs(fileName);
                 }
 
+                Cursor = Cursors.Default;
+
                 sReport(fileName, comboBox1.SelectedItem.ToString());
             }
 
@@ -101,6 +105,7 @@ namespace STSH_OCR.OCR
             {
                 MessageBox.Show(ex.Message);
             }
+
         }
 
 
@@ -194,7 +199,7 @@ namespace STSH_OCR.OCR
         private void Form1_Load(object sender, EventArgs e)
         {
             lblName.Text = _UserNM;
-            lblFaxNum.Text = _UserFAX;
+            txtFaxNum.Text = _UserFAX;
 
             // 画像表示
             if (System.IO.File.Exists(_Img))
