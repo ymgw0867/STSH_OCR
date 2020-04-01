@@ -3004,6 +3004,22 @@ namespace STSH_OCR.Common
         // 更新年月日
         [Column(Name = "更新年月日")]
         public string YyMmDd { get; set; }
+
+        // コメント１
+        [Column(Name = "Comment1")]
+        public string comment1 { get; set; }
+
+        // コメント２
+        [Column(Name = "Comment2")]
+        public string comment2 { get; set; }
+
+        // コメント３
+        [Column(Name = "Comment3")]
+        public string comment3 { get; set; }
+
+        // コメント４
+        [Column(Name = "Comment4")]
+        public string comment4 { get; set; }
     }
     
     // 返信ＦＡＸ定型コメント

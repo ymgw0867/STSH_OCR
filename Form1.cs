@@ -285,7 +285,50 @@ namespace STSH_OCR
             cn2 = new SQLiteConnection("DataSource=" + local_DB);
             context2 = new DataContext(cn2);
             tblFax = context2.GetTable<Common.ClsFaxOrder>();
+
+            // orderpattern にコメントフィールド追加：2020/04/01
+            DbAlterTable();
         }
+
+        private void DbAlterTable()
+        {
+            cn.Open();
+            string sql = "";
+
+            try
+            {
+                sql = "ALTER TABLE orderpattern ADD COLUMN Comment1 TEXT";
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                sql = "ALTER TABLE orderpattern ADD COLUMN Comment2 TEXT";
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                sql = "ALTER TABLE orderpattern ADD COLUMN Comment3 TEXT";
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+
+                sql = "ALTER TABLE orderpattern ADD COLUMN Comment4 TEXT";
+                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                {
+                    com.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                // 何もしない
+            }
+
+            cn.Close();
+        }
+
 
         private void timer1_Tick(object sender, EventArgs e)
         {

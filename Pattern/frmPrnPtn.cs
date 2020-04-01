@@ -578,6 +578,30 @@ namespace STSH_OCR.Pattern
 
                     ClsOrderPattern = dbPtn.Single(a => a.ID == Utility.StrtoInt(dataGridView1[colID, i].Value.ToString()));
 
+                    // コメント１：2020/04/01
+                    if (Utility.NulltoStr(ClsOrderPattern.comment1) != string.Empty)
+                    {
+                        rtnArray[5, 1] = Utility.NulltoStr(ClsOrderPattern.comment1);
+                    }
+
+                    // 会社名：2020/04/01
+                    if (Utility.NulltoStr(ClsOrderPattern.comment2) != string.Empty)
+                    {
+                        rtnArray[3, 133] = Utility.NulltoStr(ClsOrderPattern.comment2);
+                    }
+
+                    // 担当者：2020/04/01
+                    if (Utility.NulltoStr(ClsOrderPattern.comment3) != string.Empty)
+                    {
+                        rtnArray[4, 133] = Utility.NulltoStr(ClsOrderPattern.comment3);
+                    }
+                    
+                    // FAX：2020/04/01
+                    if (Utility.NulltoStr(ClsOrderPattern.comment4) != string.Empty)
+                    {
+                        rtnArray[5, 133] = Utility.NulltoStr(ClsOrderPattern.comment4);
+                    }
+
                     string sIrisu = string.Empty;
                     string sTani = string.Empty;
 

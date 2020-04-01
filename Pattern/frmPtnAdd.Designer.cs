@@ -67,8 +67,16 @@
             this.cmbSyohin_S = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.dataGridView3 = new STSH_OCR.DataGridViewEx();
             this.button9 = new System.Windows.Forms.Button();
+            this.txtComment1 = new System.Windows.Forms.TextBox();
+            this.txtComment2 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.txtComment3 = new System.Windows.Forms.TextBox();
+            this.txtComment4 = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.dataGridView3 = new STSH_OCR.DataGridViewEx();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -95,9 +103,9 @@
             this.label1.BackColor = System.Drawing.SystemColors.Control;
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(774, 972);
+            this.label1.Location = new System.Drawing.Point(774, 975);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 21);
+            this.label1.Size = new System.Drawing.Size(42, 21);
             this.label1.TabIndex = 3;
             this.label1.Text = "備考";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -108,10 +116,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMemo.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtMemo.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtMemo.Location = new System.Drawing.Point(847, 972);
+            this.txtMemo.Location = new System.Drawing.Point(815, 975);
             this.txtMemo.MaxLength = 255;
             this.txtMemo.Name = "txtMemo";
-            this.txtMemo.Size = new System.Drawing.Size(575, 21);
+            this.txtMemo.Size = new System.Drawing.Size(489, 21);
             this.txtMemo.TabIndex = 6;
             // 
             // button1
@@ -401,9 +409,9 @@
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button3.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button3.Location = new System.Drawing.Point(1448, 966);
+            this.button3.Location = new System.Drawing.Point(1448, 975);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(95, 33);
+            this.button3.Size = new System.Drawing.Size(95, 28);
             this.button3.TabIndex = 28;
             this.button3.Text = "登録(&U)";
             this.button3.UseVisualStyleBackColor = true;
@@ -413,9 +421,9 @@
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.button4.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button4.Location = new System.Drawing.Point(1547, 966);
+            this.button4.Location = new System.Drawing.Point(1547, 975);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(95, 33);
+            this.button4.Size = new System.Drawing.Size(95, 28);
             this.button4.TabIndex = 29;
             this.button4.Text = "終了(&E)";
             this.button4.UseVisualStyleBackColor = true;
@@ -470,21 +478,6 @@
             this.label7.Text = "小分類：";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // dataGridView3
-            // 
-            this.dataGridView3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView3.Location = new System.Drawing.Point(774, 12);
-            this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.RowTemplate.Height = 21;
-            this.dataGridView3.Size = new System.Drawing.Size(868, 946);
-            this.dataGridView3.TabIndex = 15;
-            this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
-            this.dataGridView3.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView3_EditingControlShowing);
-            this.dataGridView3.Leave += new System.EventHandler(this.dataGridView3_Leave);
-            this.dataGridView3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView3_MouseClick);
-            // 
             // button9
             // 
             this.button9.Location = new System.Drawing.Point(659, 963);
@@ -495,11 +488,136 @@
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
+            // txtComment1
+            // 
+            this.txtComment1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtComment1.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtComment1.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
+            this.txtComment1.Location = new System.Drawing.Point(815, 910);
+            this.txtComment1.MaxLength = 255;
+            this.txtComment1.Multiline = true;
+            this.txtComment1.Name = "txtComment1";
+            this.txtComment1.Size = new System.Drawing.Size(489, 48);
+            this.txtComment1.TabIndex = 36;
+            // 
+            // txtComment2
+            // 
+            this.txtComment2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtComment2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtComment2.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
+            this.txtComment2.Location = new System.Drawing.Point(1367, 910);
+            this.txtComment2.MaxLength = 255;
+            this.txtComment2.Name = "txtComment2";
+            this.txtComment2.Size = new System.Drawing.Size(275, 21);
+            this.txtComment2.TabIndex = 37;
+            this.txtComment2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label8
+            // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label8.BackColor = System.Drawing.SystemColors.Control;
+            this.label8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label8.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label8.Location = new System.Drawing.Point(774, 910);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(42, 48);
+            this.label8.TabIndex = 38;
+            this.label8.Text = "左\r\nコメント\r\n";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label9
+            // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label9.BackColor = System.Drawing.SystemColors.Control;
+            this.label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label9.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label9.Location = new System.Drawing.Point(1317, 910);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(51, 21);
+            this.label9.TabIndex = 39;
+            this.label9.Text = "会社名";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // txtComment3
+            // 
+            this.txtComment3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtComment3.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtComment3.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
+            this.txtComment3.Location = new System.Drawing.Point(1367, 930);
+            this.txtComment3.MaxLength = 255;
+            this.txtComment3.Name = "txtComment3";
+            this.txtComment3.Size = new System.Drawing.Size(275, 21);
+            this.txtComment3.TabIndex = 40;
+            this.txtComment3.Text = "\r\n";
+            this.txtComment3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtComment4
+            // 
+            this.txtComment4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtComment4.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtComment4.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
+            this.txtComment4.Location = new System.Drawing.Point(1367, 950);
+            this.txtComment4.MaxLength = 255;
+            this.txtComment4.Name = "txtComment4";
+            this.txtComment4.Size = new System.Drawing.Size(275, 21);
+            this.txtComment4.TabIndex = 41;
+            this.txtComment4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label10
+            // 
+            this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label10.BackColor = System.Drawing.SystemColors.Control;
+            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label10.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label10.Location = new System.Drawing.Point(1317, 930);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(51, 21);
+            this.label10.TabIndex = 42;
+            this.label10.Text = "担当者";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label11
+            // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label11.BackColor = System.Drawing.SystemColors.Control;
+            this.label11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label11.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label11.Location = new System.Drawing.Point(1317, 950);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(51, 21);
+            this.label11.TabIndex = 43;
+            this.label11.Text = "ＦＡＸ";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // dataGridView3
+            // 
+            this.dataGridView3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView3.Location = new System.Drawing.Point(774, 12);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.RowTemplate.Height = 21;
+            this.dataGridView3.Size = new System.Drawing.Size(868, 892);
+            this.dataGridView3.TabIndex = 15;
+            this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
+            this.dataGridView3.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView3_EditingControlShowing);
+            this.dataGridView3.Leave += new System.EventHandler(this.dataGridView3_Leave);
+            this.dataGridView3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView3_MouseClick);
+            // 
             // frmPtnAdd
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1654, 1008);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.txtComment4);
+            this.Controls.Add(this.txtComment3);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.txtComment2);
+            this.Controls.Add(this.txtComment1);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.cmbSyohin_S);
             this.Controls.Add(this.cmbSyohin_M);
@@ -590,5 +708,13 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.TextBox txtComment1;
+        private System.Windows.Forms.TextBox txtComment2;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox txtComment3;
+        private System.Windows.Forms.TextBox txtComment4;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
     }
 }

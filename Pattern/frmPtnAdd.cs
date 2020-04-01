@@ -73,6 +73,11 @@ namespace STSH_OCR.Pattern
 
         string[] csvArray = null;
 
+        string comm1 = "※機械で読み込みます" + Environment.NewLine + "※２重線での訂正はしないで下さい" + Environment.NewLine + "※FAXは曲がらないようご注意下さい";
+        string comm2 = "佐藤食品株式会社";
+        string comm3 = "担当事務　古城";
+        string comm4 = "FAX:0930-23-3278";
+
         private void frmPtnAdd_Load(object sender, EventArgs e)
         {
             // 商品分類リスト読み込み
@@ -191,6 +196,10 @@ namespace STSH_OCR.Pattern
             dateTimePicker1.Enabled = false;
 
             txtMemo.Text = string.Empty;
+            txtComment1.Text = comm1; 
+            txtComment2.Text = comm2;
+            txtComment3.Text = comm3;
+            txtComment4.Text = comm4;
 
             fMode = ADDMODE;
             btnDel.Visible = false;
@@ -502,7 +511,7 @@ namespace STSH_OCR.Pattern
                 tempDGV.RowTemplate.Height = 22;
 
                 // 全体の高さ
-                tempDGV.Height = 946;
+                tempDGV.Height = 892;
 
                 // 奇数行の色
                 tempDGV.AlternatingRowsDefaultCellStyle.BackColor = Color.Lavender;
@@ -1302,7 +1311,8 @@ namespace STSH_OCR.Pattern
                     sql += "商品6, 商品名6, 商品6リード日数, 商品7, 商品名7, 商品7リード日数, 商品8, 商品名8, 商品8リード日数, 商品9, 商品名9, 商品9リード日数, 商品10, 商品名10, 商品10リード日数, ";
                     sql += "商品11, 商品名11, 商品11リード日数, 商品12, 商品名12, 商品12リード日数, 商品13, 商品名13, 商品13リード日数, 商品14, 商品名14, 商品14リード日数, 商品15, 商品名15, 商品15リード日数, ";
                     sql += "商品16, 商品名16, 商品16リード日数, 商品17, 商品名17, 商品17リード日数, 商品18, 商品名18, 商品18リード日数, 商品19, 商品名19, 商品19リード日数, 商品20, 商品名20, 商品20リード日数, ";
-                    sql += "備考, 更新年月日) ";
+                    //sql += "備考, 更新年月日) ";
+                    sql += "備考, 更新年月日, Comment1, Comment2, Comment3, Comment4) ";
                     sql += "values (";
                     sql += g[colTdkCode, i].Value.ToString() + "," + g[colPtnNum, i].Value.ToString();
 
@@ -1318,7 +1328,8 @@ namespace STSH_OCR.Pattern
 
                         if (sCnt == global.MAX_GYO)
                         {
-                            sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + txtMemo.Text + "','" + DateTime.Now.ToString() + "');";
+                            sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + txtMemo.Text + "','" + DateTime.Now.ToString() + "',";
+                            sqlSy += "'" + txtComment1.Text + "','" + txtComment2.Text + "','" + txtComment3.Text + "','" + txtComment4.Text + "')";
 
                             //MessageBox.Show(sql + sqlSy);
 
@@ -1349,7 +1360,10 @@ namespace STSH_OCR.Pattern
                             }
                         }
 
-                        sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + txtMemo.Text + "','" + DateTime.Now.ToString() + "');";
+                        //sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + txtMemo.Text + "','" + DateTime.Now.ToString() + "');";
+
+                        sqlSy += ",'','',0,'','',0,'','',0,'','',0,'','',0,'" + txtMemo.Text + "','" + DateTime.Now.ToString() + "',";
+                        sqlSy += "'" + txtComment1.Text + "','" + txtComment2.Text + "','" + txtComment3.Text + "','" + txtComment4.Text + "')";
 
                         //MessageBox.Show(sql + sqlSy);
 
@@ -1433,6 +1447,11 @@ namespace STSH_OCR.Pattern
 
                 ClsOrderPattern.Memo = txtMemo.Text;
                 ClsOrderPattern.YyMmDd = DateTime.Now.ToString();
+
+                ClsOrderPattern.comment1 = txtComment1.Text;    // 2020/04/01
+                ClsOrderPattern.comment2 = txtComment2.Text;    // 2020/04/01
+                ClsOrderPattern.comment3 = txtComment3.Text;    // 2020/04/01
+                ClsOrderPattern.comment4 = txtComment4.Text;    // 2020/04/01
 
                 // データベース更新
                 context.SubmitChanges();
@@ -1826,6 +1845,11 @@ namespace STSH_OCR.Pattern
             dataGridView3[colReadDays, 14].Value = ClsOrderPattern.G_Read15;
 
             txtMemo.Text = ClsOrderPattern.Memo;
+
+            txtComment1.Text = ClsOrderPattern.comment1;
+            txtComment2.Text = ClsOrderPattern.comment2;
+            txtComment3.Text = ClsOrderPattern.comment3;
+            txtComment4.Text = ClsOrderPattern.comment4;
 
             dataGridView3.CurrentCell = null;
         }
@@ -2367,13 +2391,14 @@ namespace STSH_OCR.Pattern
             dg.Rows.Remove(RowlData);
 
             // 移動先をカレントセルとする
-            if (n == ROW_MINUS)
+            switch (n)
             {
-                dg.CurrentCell = dg[colHinCode, r + n];
-            }
-            else if (n == ROW_PLUS)
-            {
-                dg.CurrentCell = dg[colHinCode, r + 1];
+                case ROW_MINUS:
+                    dg.CurrentCell = dg[colHinCode, r + n];
+                    break;
+                case ROW_PLUS:
+                    dg.CurrentCell = dg[colHinCode, r + 1];
+                    break;
             }
         }
 
