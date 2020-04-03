@@ -128,5 +128,16 @@ namespace STSH_OCR.Common
 
         // CSVデータ
         public static string DTKBN = "1";
+
+        // 曜日
+        public const int Sun = 0;
+        public const int Mon = 1;
+        public const int Tue = 2;
+        public const int Wed = 3;
+        public const int Thu = 4;
+        public const int Fri = 5;
+        public const int Sat = 6; 
+
+        public static string[] DayWeek = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
     }
 }

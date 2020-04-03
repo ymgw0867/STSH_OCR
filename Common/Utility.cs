@@ -1127,32 +1127,44 @@ namespace STSH_OCR.Common
 
         public static void SetTenDate(ClsTenDate [] tenDates, ClsOrder r)
         {
-            // 店着日付クラス
-            //tenDates = new ClsTenDate[7];
-
             // 初期化
             for (int i = 0; i < 7; i++)
             {
                 tenDates[i] = new ClsTenDate();
             }
 
-            tenDates[0].Year = r.Year;
-            tenDates[0].Month = r.Month;
-            tenDates[0].Day = Utility.StrtoInt(r.Day1.Trim());
+            tenDates[0].Day = r.Day1.Trim();
 
-            tenDates[1].Day = Utility.StrtoInt(r.Day2.Trim());
-            tenDates[2].Day = Utility.StrtoInt(r.Day3.Trim());
-            tenDates[3].Day = Utility.StrtoInt(r.Day4.Trim());
-            tenDates[4].Day = Utility.StrtoInt(r.Day5.Trim());
-            tenDates[5].Day = Utility.StrtoInt(r.Day6.Trim());
-            tenDates[6].Day = Utility.StrtoInt(r.Day7.Trim());
+            if (r.Day1 != string.Empty)
+            {
+                tenDates[0].Year = r.Year.ToString();
+                tenDates[0].Month = r.Month.ToString();
+            }
+            else
+            {
+                tenDates[0].Year = string.Empty;
+                tenDates[0].Month = string.Empty;
+            }
+
+            tenDates[1].Day = r.Day2.Trim();
+            tenDates[2].Day = r.Day3.Trim();
+            tenDates[3].Day = r.Day4.Trim();
+            tenDates[4].Day = r.Day5.Trim();
+            tenDates[5].Day = r.Day6.Trim();
+            tenDates[6].Day = r.Day7.Trim();
 
             int sYear = r.Year;
             int sMonth = r.Month;
+            string wDay = "";
+            bool NextMonth = false;
 
+            // 店着日付（年月日）をセット
             for (int i = 1; i < tenDates.Length; i++)
             {
-                if (tenDates[i].Day == 1)
+                //if (tenDates[i].Day == global.FLGON)
+
+                // 日付が若くなったら翌月扱い
+                if (!NextMonth && Utility.StrtoInt(wDay) > Utility.StrtoInt(tenDates[i].Day))
                 {
                     // ここから翌月
                     sMonth++;
@@ -1163,10 +1175,22 @@ namespace STSH_OCR.Common
                         sMonth -= 12;
                         sYear++;
                     }
+
+                    NextMonth = true;
                 }
 
-                tenDates[i].Year = sYear;
-                tenDates[i].Month = sMonth;
+                if (tenDates[i].Day != string.Empty)
+                {
+                    tenDates[i].Year = sYear.ToString();
+                    tenDates[i].Month = sMonth.ToString();
+                }
+                else
+                {
+                    tenDates[i].Year = string.Empty;
+                    tenDates[i].Month = string.Empty;
+                }
+
+                wDay = tenDates[i].Day;
             }
         }
 
@@ -1180,25 +1204,31 @@ namespace STSH_OCR.Common
         ///--------------------------------------------------------------------------------
         public static void SetTenDate(ClsTenDate[] tenDates, ClsFaxOrder r)
         {
-            // 店着日付クラス
-            //tenDates = new ClsTenDate[7];
-
             // 初期化
             for (int i = 0; i < 7; i++)
             {
                 tenDates[i] = new ClsTenDate();
             }
 
-            tenDates[0].Year = r.Year;
-            tenDates[0].Month = r.Month;
-            tenDates[0].Day = Utility.StrtoInt(r.Day1.Trim());
+            tenDates[0].Day = r.Day1.Trim();
 
-            tenDates[1].Day = Utility.StrtoInt(r.Day2.Trim());
-            tenDates[2].Day = Utility.StrtoInt(r.Day3.Trim());
-            tenDates[3].Day = Utility.StrtoInt(r.Day4.Trim());
-            tenDates[4].Day = Utility.StrtoInt(r.Day5.Trim());
-            tenDates[5].Day = Utility.StrtoInt(r.Day6.Trim());
-            tenDates[6].Day = Utility.StrtoInt(r.Day7.Trim());
+            if (r.Day1 != string.Empty)
+            {
+                tenDates[0].Year = r.Year.ToString();
+                tenDates[0].Month = r.Month.ToString();
+            }
+            else
+            {
+                tenDates[0].Year = string.Empty;
+                tenDates[0].Month = string.Empty;
+            }
+
+            tenDates[1].Day = r.Day2.Trim();
+            tenDates[2].Day = r.Day3.Trim();
+            tenDates[3].Day = r.Day4.Trim();
+            tenDates[4].Day = r.Day5.Trim();
+            tenDates[5].Day = r.Day6.Trim();
+            tenDates[6].Day = r.Day7.Trim();
 
             int sYear = r.Year;
             int sMonth = r.Month;
@@ -1206,7 +1236,7 @@ namespace STSH_OCR.Common
             // 店着日付（年月日）をセット
             for (int i = 1; i < tenDates.Length; i++)
             {
-                if (tenDates[i].Day == 1)
+                if (tenDates[i].Day == global.FLGON)
                 {
                     // ここから翌月
                     sMonth++;
@@ -1219,8 +1249,16 @@ namespace STSH_OCR.Common
                     }
                 }
 
-                tenDates[i].Year = sYear;
-                tenDates[i].Month = sMonth;
+                if (tenDates[i].Day != string.Empty)
+                {
+                    tenDates[i].Year = sYear.ToString();
+                    tenDates[i].Month = sMonth.ToString();
+                }
+                else
+                {
+                    tenDates[i].Year = string.Empty;
+                    tenDates[i].Month = string.Empty;
+                }
             }
         }
 

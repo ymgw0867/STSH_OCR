@@ -155,14 +155,6 @@ namespace STSH_OCR.Common
 
         #endregion
 
-        const int Sun = 0;
-        const int Mon = 1;
-        const int Tue = 2;
-        const int Wed = 3;
-        const int Thu = 4;
-        const int Fri = 5;
-        const int Sat = 6;
-
         // 発注書パターン
         ClsOrderPattern OrderPattern = null;
 
@@ -374,14 +366,14 @@ namespace STSH_OCR.Common
                 return false;
             }
 
-            // 年月
-            int rDate = r.Year * 100 + r.Month;
-            int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Month;
-            if (rDate < toDate)
-            {
-                setErrStatus(eYearMonth, 0, "年月が正しくありません");
-                return false;
-            }
+            // 年月 : 2020/04/02 コメント化
+            //int rDate = r.Year * 100 + r.Month;
+            //int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Month;
+            //if (rDate < toDate)
+            //{
+            //    setErrStatus(eYearMonth, 0, "年月が正しくありません");
+            //    return false;
+            //}
 
             if (r.Month < 1 || r.Month > 12)
             {
@@ -417,8 +409,10 @@ namespace STSH_OCR.Common
                 OrderPattern = ptn.Single(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber);
             }
 
+            // 店着日配列
             ClsTenDate[] tenDates = new ClsTenDate[7];
-
+            
+            // 店着日付クラス配列作成
             Utility.SetTenDate(tenDates, r);
 
             string eMsg = "";
@@ -428,12 +422,18 @@ namespace STSH_OCR.Common
 
             for (int i = 0; i < 7; i++)
             {
-                strDate = tenDates[i].Year + "/" + tenDates[i].Month.ToString("D2") + "/" + tenDates[i].Day.ToString("D2");
+                // 店着日が空白のときはネグる
+                if (tenDates[i].Day == string.Empty)
+                {
+                    continue;
+                }
+
+                strDate = tenDates[i].Year + "/" + tenDates[i].Month.PadLeft(2, '0') + "/" + tenDates[i].Day.PadLeft(2, '0');
 
                 switch (i)
                 {
                     case 0:
-                        if (!ChkTenDate(strDate, out eMsg, Mon))
+                        if (!ChkTenDate(strDate, out eMsg, global.Mon))
                         {
                             setErrStatus(eTenDate1, 0, eMsg);
                             return false;
@@ -442,7 +442,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 1:
-                        if (!ChkTenDate(strDate, out eMsg, Tue))
+                        if (!ChkTenDate(strDate, out eMsg, global.Tue))
                         {
                             setErrStatus(eTenDate2, 0, eMsg);
                             return false;
@@ -450,7 +450,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 2:
-                        if (!ChkTenDate(strDate, out eMsg, Wed))
+                        if (!ChkTenDate(strDate, out eMsg, global.Wed))
                         {
                             setErrStatus(eTenDate3, 0, eMsg);
                             return false;
@@ -458,7 +458,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 3:
-                        if (!ChkTenDate(strDate, out eMsg, Thu))
+                        if (!ChkTenDate(strDate, out eMsg, global.Thu))
                         {
                             setErrStatus(eTenDate4, 0, eMsg);
                             return false;
@@ -466,7 +466,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 4:
-                        if (!ChkTenDate(strDate, out eMsg, Fri))
+                        if (!ChkTenDate(strDate, out eMsg, global.Fri))
                         {
                             setErrStatus(eTenDate5, 0, eMsg);
                             return false;
@@ -474,7 +474,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 5:
-                        if (!ChkTenDate(strDate, out eMsg, Sat))
+                        if (!ChkTenDate(strDate, out eMsg, global.Sat))
                         {
                             setErrStatus(eTenDate6, 0, eMsg);
                             return false;
@@ -482,7 +482,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 6:
-                        if (!ChkTenDate(strDate, out eMsg, Sun))
+                        if (!ChkTenDate(strDate, out eMsg, global.Sun))
                         {
                             setErrStatus(eTenDate7, 0, eMsg);
                             return false;
@@ -797,13 +797,18 @@ namespace STSH_OCR.Common
 
             for (int i = 0; i < 7; i++)
             {
+                // 店着日が空白のときはネグる
+                if (tenDates[i].Day == string.Empty)
+                {
+                    continue;
+                }
 
-                strDate = tenDates[i].Year + "/" + tenDates[i].Month.ToString("D2") + "/" + tenDates[i].Day.ToString("D2");
+                strDate = tenDates[i].Year + "/" + tenDates[i].Month.PadLeft(2, '0') + "/" + tenDates[i].Day.PadLeft(2, '0');
 
                 switch (i)
                 {
                     case 0:
-                        if (!ChkTenDate(strDate, out eMsg, Mon))
+                        if (!ChkTenDate(strDate, out eMsg, global.Mon))
                         {
                             setErrStatus(eTenDate1, 0, eMsg);
                             return false;
@@ -812,7 +817,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 1:
-                        if (!ChkTenDate(strDate, out eMsg, Tue))
+                        if (!ChkTenDate(strDate, out eMsg, global.Tue))
                         {
                             setErrStatus(eTenDate2, 0, eMsg);
                             return false;
@@ -820,7 +825,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 2:
-                        if (!ChkTenDate(strDate, out eMsg, Wed))
+                        if (!ChkTenDate(strDate, out eMsg, global.Wed))
                         {
                             setErrStatus(eTenDate3, 0, eMsg);
                             return false;
@@ -828,7 +833,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 3:
-                        if (!ChkTenDate(strDate, out eMsg, Thu))
+                        if (!ChkTenDate(strDate, out eMsg, global.Thu))
                         {
                             setErrStatus(eTenDate4, 0, eMsg);
                             return false;
@@ -836,7 +841,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 4:
-                        if (!ChkTenDate(strDate, out eMsg, Fri))
+                        if (!ChkTenDate(strDate, out eMsg, global.Fri))
                         {
                             setErrStatus(eTenDate5, 0, eMsg);
                             return false;
@@ -844,7 +849,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 5:
-                        if (!ChkTenDate(strDate, out eMsg, Sat))
+                        if (!ChkTenDate(strDate, out eMsg, global.Sat))
                         {
                             setErrStatus(eTenDate6, 0, eMsg);
                             return false;
@@ -852,7 +857,7 @@ namespace STSH_OCR.Common
                         break;
 
                     case 6:
-                        if (!ChkTenDate(strDate, out eMsg, Sun))
+                        if (!ChkTenDate(strDate, out eMsg, global.Sun))
                         {
                             setErrStatus(eTenDate7, 0, eMsg);
                             return false;
@@ -1176,9 +1181,33 @@ namespace STSH_OCR.Common
         {
             bool ha = false;
 
+            // 終売取消のときネグる
+            if (Goods[iX].Syubai == global.SYUBAI_TORIKESHI)
+            {
+                eNum = global.flgOff;
+                eMsg = "";
+                return true;
+            }
+
             // 発注の有無を調べる
             for (int i = 0; i < 7; i++)
             {
+                // 空白の店着日はネグる
+                if (tenDates[i].Day == string.Empty)
+                {
+                    continue;
+                }
+
+                // 昨日以前の店着日はネグる
+                DateTime dt;
+                if (DateTime.TryParse(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day, out dt))
+                {
+                    if (dt < DateTime.Today)
+                    {
+                        continue;
+                    }
+                }
+
                 if (Utility.StrtoInt(Goods[iX].Suu[i]) != global.flgOff)
                 {
                     // 発注あり
@@ -1187,15 +1216,16 @@ namespace STSH_OCR.Common
                 }
             }
 
-            // 商品登録なしで発注なしのときはネグる
-            if (Goods[iX].Code == string.Empty && !ha)
+            // 発注なしのときはネグる
+            //if (Goods[iX].Code == string.Empty && !ha) // 2020/04/02 コメント化
+            if (!ha)
             {
                 eNum = global.flgOff;
                 eMsg = "";
                 return true;
             }
 
-
+            // 「商品登録なし」で「発注あり」
             if (Goods[iX].Code == string.Empty)
             {
                 // 発注あり
@@ -1218,14 +1248,41 @@ namespace STSH_OCR.Common
                 return false;
             }
 
+            // 終売で発注ありのとき
+            if (syohin.SHUBAI && ha)
+            {
+                if (Goods[iX].Syubai == global.flgOff)
+                {
+                    eNum = eShubai;
+                    eMsg = "該当商品は終売です。終売処理を選択してください";
+                    return false;
+                }
+            }
+
             // 店着日付とリード日数
             int Read = 0;
             for (int i = 0; i < 7; i++)
             {
+                // 空白の店着日はネグる
+                if (tenDates[i].Day == string.Empty)
+                {
+                    continue;
+                }
+
+                // 昨日以前の店着日はネグる
+                DateTime dt;
+                if (DateTime.TryParse(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day, out dt))
+                {
+                    if (dt < DateTime.Today)
+                    {
+                        continue;
+                    }
+                }
+
                 if (Utility.StrtoInt(Goods[iX].Suu[i]) != global.flgOff)
                 {
                     // 店着日
-                    DateTime tDate = new DateTime(tenDates[i].Year, tenDates[i].Month, tenDates[i].Day);
+                    DateTime tDate = new DateTime(Utility.StrtoInt(tenDates[i].Year), Utility.StrtoInt(tenDates[i].Month), Utility.StrtoInt(tenDates[i].Day));
 
                     // リード日数
                     switch (iX)
@@ -1300,18 +1357,6 @@ namespace STSH_OCR.Common
                         eMsg = "店着日：" + tDate.ToShortDateString() + "、リード日数：" + Read;
                         return false;
                     }
-                }
-            }
-
-
-            // 終売で発注ありのとき
-            if (syohin.SHUBAI && ha)
-            {
-                if (Goods[iX].Syubai == global.flgOff)
-                {
-                    eNum = eShubai;
-                    eMsg = "該当商品は終売です。終売処理を選択してください";
-                    return false;
                 }
             }
 

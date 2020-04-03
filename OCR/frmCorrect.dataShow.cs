@@ -141,7 +141,7 @@ namespace STSH_OCR.OCR
             // 発注データを取得
             ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
 
-            global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
+            global.ChangeValueStatus = true;   // これ以下ChangeValueイベントを発生させない
 
             string Sql = "select * from FAX_Order WHERE ID = '" + cID[iX] + "'";
 
@@ -169,7 +169,10 @@ namespace STSH_OCR.OCR
                     checkBox1.Checked = Convert.ToBoolean(Utility.StrtoInt(Utility.NulltoStr(dataReader["確認"])));
                     txtMemo.Text = dataReader["メモ"].ToString();
 
-                    global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
+                    // 店着日配列作成
+                    SetShowTenDate(tenDates);
+
+                    //global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
 
                     // FAX発注書データ表示
                     showItem(dataReader, dg1);
@@ -196,6 +199,254 @@ namespace STSH_OCR.OCR
             Cursor = Cursors.Default;
         }
 
+        ///-----------------------------------------------------------
+        /// <summary>
+        ///     店着日配列を作成する </summary>
+        /// <param name="tenDates">
+        ///     ClstenDate</param>
+        ///-----------------------------------------------------------
+        private void SetShowTenDate(ClsTenDate[] tenDates)
+        {
+            if (!TenDateStatus)
+            {
+                return;
+            }
+
+            // 初期化
+            for (int i = 0; i < 7; i++)
+            {
+                tenDates[i] = new ClsTenDate();
+            }
+
+            tenDates[0].Day = txtTenDay1.Text;
+
+            if (txtTenDay1.Text != string.Empty)
+            {
+                tenDates[0].Year = txtYear.Text.ToString();
+                tenDates[0].Month = txtMonth.Text.ToString();
+            }
+            else
+            {
+                // 日付が無記入のときは年月も空白
+                tenDates[0].Year = string.Empty;
+                tenDates[0].Month = string.Empty;
+            }
+
+            tenDates[1].Day = txtTenDay2.Text.Trim();
+            tenDates[2].Day = txtTenDay3.Text.Trim();
+            tenDates[3].Day = txtTenDay4.Text.Trim();
+            tenDates[4].Day = txtTenDay5.Text.Trim();
+            tenDates[5].Day = txtTenDay6.Text.Trim();
+            tenDates[6].Day = txtTenDay7.Text.Trim();
+
+            int sYear = Utility.StrtoInt(txtYear.Text);
+            int sMonth = Utility.StrtoInt(txtMonth.Text);
+            bool NextMonth = false;
+            string wDay = "";
+
+            // 店着日付（年月日）をセット
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                // 空白はネグる
+                if (tenDates[i].Day == string.Empty)
+                {
+                    tenDates[i].Year = string.Empty;
+                    tenDates[i].Month = string.Empty;
+                    continue;
+                }
+
+                // 日付が若くなったら翌月扱い
+                if (!NextMonth && Utility.StrtoInt(wDay) > Utility.StrtoInt(tenDates[i].Day))
+                {
+                    // ここから翌月
+                    sMonth++;
+
+                    if (sMonth > 12)
+                    {
+                        // 翌年
+                        sMonth -= 12;
+                        sYear++;
+                    }
+
+                    NextMonth = true;
+                }
+
+                if (tenDates[i].Day != string.Empty)
+                {
+                    tenDates[i].Year = sYear.ToString();
+                    tenDates[i].Month = sMonth.ToString();
+                }
+                else
+                {
+                    tenDates[i].Year = string.Empty;
+                    tenDates[i].Month = string.Empty;
+                }
+
+                wDay = tenDates[i].Day;
+
+
+                // 該当テキストボックス
+                TextBox box;
+
+                switch (i)
+                {
+                    case 0:
+                        box = txtTenDay1;
+                        break;
+                    case 1:
+                        box = txtTenDay2;
+                        break;
+                    case 2:
+                        box = txtTenDay3;
+                        break;
+                    case 3:
+                        box = txtTenDay4;
+                        break;
+                    case 4:
+                        box = txtTenDay5;
+                        break;
+                    case 5:
+                        box = txtTenDay6;
+                        break;
+                    case 6:
+                        box = txtTenDay7;
+                        break;
+                    default:
+                        box = txtTenDay1;
+                        break;
+                }
+
+                // 店着日テキストボックス文字色
+                box.ForeColor = global.defaultColor;
+
+                if (tenDates[i].Month != string.Empty)
+                {
+                    if (txtMonth.Text != tenDates[i].Month)
+                    {
+                        box.ForeColor = Color.Green;
+                    }
+                }
+            }
+
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                System.Diagnostics.Debug.WriteLine(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day);
+            }
+
+        }
+
+        private void SetTenDate(ClsTenDate [] tenDates)
+        {
+            int week = 0;
+
+            // 初期化
+            for (int i = 0; i < 7; i++)
+            {
+                tenDates[i] = new ClsTenDate();
+            }
+
+            tenDates[0].Day = txtTenDay1.Text;
+
+            if (txtTenDay1.Text != string.Empty)
+            {
+                tenDates[0].Year = txtYear.ToString();
+                tenDates[0].Month = txtMonth.ToString();
+            }
+            else
+            {
+                // 日付が無記入のときは年月も空白
+                tenDates[0].Year = string.Empty;
+                tenDates[0].Month = string.Empty;
+            }
+
+            tenDates[1].Day = txtTenDay2.Text.Trim();
+            tenDates[2].Day = txtTenDay3.Text.Trim();
+            tenDates[3].Day = txtTenDay4.Text.Trim();
+            tenDates[4].Day = txtTenDay5.Text.Trim();
+            tenDates[5].Day = txtTenDay6.Text.Trim();
+            tenDates[6].Day = txtTenDay7.Text.Trim();
+
+            int sYear = Utility.StrtoInt(txtYear.Text);
+            int sMonth = Utility.StrtoInt(txtMonth.Text);
+
+            // 店着日付（年月日）をセット
+            for (int i = 1; i < tenDates.Length; i++)
+            {
+                if (tenDates[i].Day == string.Empty)
+                {
+                    // 日付無記入は年月も空白にしてネグる
+                    tenDates[i].Year = string.Empty;
+                    tenDates[i].Month = string.Empty;
+                    continue;
+                }
+
+                // 曜日をセット
+                switch (i)
+                {
+                    case 0:
+                        week = global.Mon;
+                        break;
+                    case 1:
+                        week = global.Tue;
+                        break;
+                    case 2:
+                        week = global.Wed;
+                        break;
+                    case 3:
+                        week = global.Thu;
+                        break;
+                    case 4:
+                        week = global.Fri;
+                        break;
+                    case 5:
+                        week = global.Sat;
+                        break;
+                    case 6:
+                        week = global.Sun;
+                        break;
+                    default:
+                        break;
+                }
+
+                tenDates[i].Year = sYear.ToString();
+                tenDates[i].Month = sMonth.ToString();
+
+                DateTime dt;
+                DayOfWeek wk;
+
+                if (DateTime.TryParse(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day, out dt))
+                {
+                    // 曜日を確認
+                    wk = dt.DayOfWeek;
+
+                    if ((Int32)wk != week)
+                    {
+                        // 曜日が一致しないので翌月で検証
+                        int yy = Utility.StrtoInt(tenDates[i].Year);
+                        int mm = Utility.StrtoInt(tenDates[i].Month) + 1;
+
+                        if (mm > 12)
+                        {
+                            yy++;
+                            mm = 1;
+                        }
+
+                        if (DateTime.TryParse(yy + "/" + mm + "/" + tenDates[i].Day, out dt))
+                        {
+                            // 曜日を確認
+                            wk = dt.DayOfWeek;
+
+                            if ((Int32)wk == week)
+                            {
+                                // 曜日が一致したので翌月とみなす
+                                tenDates[i].Year = yy.ToString();
+                                tenDates[i].Month = mm.ToString();
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         ///--------------------------------------------------------------------------
         /// <summary>
@@ -1052,7 +1303,6 @@ namespace STSH_OCR.OCR
 
             }
 
-
             for (int i = 0; i < 15; i++)
             {
                 global.ChangeValueStatus = true;
@@ -1068,7 +1318,8 @@ namespace STSH_OCR.OCR
                 {
                     dataGrid[colBaika, i * 2 + 1].Value = goods[i].Baika;
                 }
-                
+
+                global.ChangeValueStatus = true;
                 dataGrid[colDay1, i * 2 + 1].Value = goods[i].Suu[0];
                 dataGrid[colDay2, i * 2 + 1].Value = goods[i].Suu[1];
                 dataGrid[colDay3, i * 2 + 1].Value = goods[i].Suu[2];
@@ -1076,6 +1327,7 @@ namespace STSH_OCR.OCR
                 dataGrid[colDay5, i * 2 + 1].Value = goods[i].Suu[4];
                 dataGrid[colDay6, i * 2 + 1].Value = goods[i].Suu[5];
                 dataGrid[colDay7, i * 2 + 1].Value = goods[i].Suu[6];
+                global.ChangeValueStatus = false;
 
                 dg1.Rows[i * 2 + 1].Cells[colSyubai].Value = global.SyubaiArray[goods[i].Syubai];
             }
@@ -1134,6 +1386,7 @@ namespace STSH_OCR.OCR
         {
 
             global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
+            TenDateStatus = false;
 
             // テキストボックス表示色設定
             txtYear.BackColor = Color.White;
@@ -1171,6 +1424,14 @@ namespace STSH_OCR.OCR
             txtSeqNum.Text = string.Empty;
             txtTokuisakiCD.Text = string.Empty;
             lblNoImage.Visible = false;
+
+            txtTenDay1.Text = " ";
+            txtTenDay2.Text = " ";
+            txtTenDay3.Text = " ";
+            txtTenDay4.Text = " ";
+            txtTenDay5.Text = " ";
+            txtTenDay6.Text = " ";
+            txtTenDay7.Text = " ";
 
             dg1.Rows.Clear();   // 行数をクリア
             dg1.Rows.Add(30);   // 行数を設定
@@ -1214,6 +1475,12 @@ namespace STSH_OCR.OCR
                 {
                     ((DataGridViewComboBoxCell)dg1[colSyubai, i]).Items.Add(global.SyubaiArray[iX]);
                 }
+            }
+
+            for (int i = 0; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                dg1.Rows[i + 1].DefaultCellStyle.BackColor = Color.White;
             }
 
             for (int i = 2; i < dg1.Rows.Count; i+=4)
@@ -1307,6 +1574,8 @@ namespace STSH_OCR.OCR
                 //データ数表示
                 lblPages.Text = string.Empty;
             }
+
+            TenDateStatus = true;
         }
 
         ///------------------------------------------------------------------------------------

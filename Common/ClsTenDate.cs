@@ -8,8 +8,8 @@ namespace STSH_OCR.Common
 {
     class ClsTenDate
     {
-        public int Year { get; set; }
-        public int Month { get; set; }
-        public int Day { get; set; }
+        public string Year { get; set; }
+        public string Month { get; set; }
+        public string Day { get; set; }
     }
 }

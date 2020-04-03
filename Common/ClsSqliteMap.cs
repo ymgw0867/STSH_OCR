@@ -3056,7 +3056,6 @@ namespace STSH_OCR.Common
         public int OutPutCount { get; set; }
     }
 
-
     // 得意先別受注履歴
     [Table(Name = "OrderHistory")]
     public class ClsOrderHistory
@@ -3067,7 +3066,7 @@ namespace STSH_OCR.Common
         [Column(Name = "得意先コード")]
         public int TokuisakiCD { get; set; }
 
-        [Column(Name = "受注年月日")]
+        [Column(Name = "発注年月日")]
         public string OrderDate { get; set; }
 
         [Column(Name = "商品コード")]

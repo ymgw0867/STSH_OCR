@@ -57,6 +57,10 @@ namespace STSH_OCR.OCR
         Table<Common.ClsFaxOrder> tblFax = null;
         ClsFaxOrder ClsFaxOrder = null;
 
+        // 得意先別発注履歴
+        Table<Common.ClsOrderHistory> tblOrderHistories = null;
+        ClsOrderHistory clsOrderHistory = null;
+
         // セル値
         private string cellName = string.Empty;         // セル名
         private string cellBeforeValue = string.Empty;  // 編集前
@@ -116,6 +120,7 @@ namespace STSH_OCR.OCR
 
         // 画面表示時ステータス
         bool showStatus = false;
+        bool TenDateStatus = false;
 
         //int fCnt = 0;   // データ件数
         
@@ -150,6 +155,8 @@ namespace STSH_OCR.OCR
         // 商品クラス
         ClsCsvData.ClsCsvSyohin[] syohins = null;
 
+        // 店着日配列
+        ClsTenDate[] tenDates = new ClsTenDate[7];
 
         private void frmCorrect_Load(object sender, EventArgs e)
         {
@@ -167,6 +174,7 @@ namespace STSH_OCR.OCR
             tblPtn = context.GetTable<Common.ClsOrderPattern>();    // 登録パターンテーブル
             tblHold = context.GetTable<Common.ClsHoldFax>();        // 保留テーブル
             //tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
+            tblOrderHistories = context.GetTable<Common.ClsOrderHistory>(); // 発注履歴テーブル
 
             // ローカルDB接続
             cn2 = new SQLiteConnection("DataSource=" + Local_DB);
@@ -1752,10 +1760,6 @@ namespace STSH_OCR.OCR
             //{
             //    MessageBox.Show("MDB最適化中" + Environment.NewLine + e.Message, "エラー", MessageBoxButtons.OK);
             //}
-        }
-
-        private void btnPlus_Click(object sender, EventArgs e)
-        {
         }
 
         private void btnMinus_Click(object sender, EventArgs e)
@@ -3438,12 +3442,19 @@ namespace STSH_OCR.OCR
 
         private void dg1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            if (!global.ChangeValueStatus)
+            {
+                return;
+            }
+
+            // 商品コード
             if (e.ColumnIndex == 3)
             {
                 if ((e.RowIndex % 2) != 0)
                 {
-                    ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
-                    
+                    string syCd = Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0');
+                    ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, syCd);
+
                     dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;       // 仕入先名
                     dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;             // 商品名
                     dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;    // 規格
@@ -3456,8 +3467,8 @@ namespace STSH_OCR.OCR
                     {
                         if (syohin.LAST_SALE_YMD.Length > 7)
                         {
-                            dg1[colHinCode, e.RowIndex - 1].Value = syohin.LAST_SALE_YMD.Substring(0, 4) + "/" + 
-                                                                    syohin.LAST_SALE_YMD.Substring(4, 2) + "/" + 
+                            dg1[colHinCode, e.RowIndex - 1].Value = syohin.LAST_SALE_YMD.Substring(0, 4) + "/" +
+                                                                    syohin.LAST_SALE_YMD.Substring(4, 2) + "/" +
                                                                     syohin.LAST_SALE_YMD.Substring(6, 2);
 
                             dg1[colMaker, e.RowIndex].Style.ForeColor = Color.Red;
@@ -3481,6 +3492,41 @@ namespace STSH_OCR.OCR
                         // 終売処理コンボボックスを編集不可とする
                         dg1[colSyubai, e.RowIndex].Value = "";
                         dg1[colSyubai, e.RowIndex].ReadOnly = true;
+                    }
+                }
+            }
+
+            // 発注数
+            if (e.ColumnIndex >= 6 && e.ColumnIndex <= 12)
+            {
+                if ((e.RowIndex % 2) != 0)
+                {
+                    int iX = e.ColumnIndex - 6;
+
+                    if (tenDates[iX].Year != string.Empty)
+                    {
+                        string syCd = Utility.NulltoStr(dg1[colHinCode, e.RowIndex].Value).PadLeft(8, '0'); // 商品コード
+                        string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
+                        int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value));    // 発注数
+
+                        // 得意先毎に同じ商品が同じ日に注文済み
+                        foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
+                        {
+                            if (t.Suu == Suu)
+                            {
+                                // 発注数も一致
+                                dg1[e.ColumnIndex, e.RowIndex].ReadOnly = true;
+                                label1.Text = "注文済み商品があるためロックしています";
+                            }
+                            else
+                            {
+                                // 発注数は不一致
+                                dg1[e.ColumnIndex, e.RowIndex].ReadOnly = false;
+                                dg1[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Red;
+                            }
+
+                            break;
+                        }
                     }
                 }
             }
@@ -3633,6 +3679,156 @@ namespace STSH_OCR.OCR
             frmReFax reFax = new frmReFax(_img, TokuiNM, TokuiFax);
             reFax.ShowDialog();
             Show();
+        }
+
+        private void txtTenDay1_TextChanged(object sender, EventArgs e)
+        {
+            // 店着日配列を更新
+            SetShowTenDate(tenDates);
+
+            // 店着日ロック
+            DayLock(sender, tenDates);
+        }
+
+        ///------------------------------------------------------------------------
+        /// <summary>
+        ///     店着日が空白のときは該当発注列をロックする </summary>
+        /// <param name="txtBox">
+        ///     店着日テキストボックスオブジェクト</param>
+        ///------------------------------------------------------------------------
+        private void DayLock(object txtBox, ClsTenDate [] dates)
+        {
+            if (!TenDateStatus)
+            {
+                return;
+            }
+
+            TextBox textBox = (TextBox)txtBox;
+            string col = "";
+            int week = 0;
+
+            for (int iX = 0; iX < tenDates.Length; iX++)
+            {
+                switch (iX)
+                {
+                    case 0:
+                        col = colDay1;
+                        week = 1;
+                        break;
+                    case 1:
+                        col = colDay2;
+                        week = 2;
+                        break;
+                    case 2:
+                        col = colDay3;
+                        week = 3;
+                        break;
+                    case 3:
+                        col = colDay4;
+                        week = 4;
+                        break;
+                    case 4:
+                        col = colDay5;
+                        week = 5;
+                        break;
+                    case 5:
+                        col = colDay6;
+                        week = 6;
+                        break;
+                    case 6:
+                        col = colDay7;
+                        week = 0;
+                        break;
+                }
+
+                DateTime dt = DateTime.Today;
+
+                if (tenDates[iX].Day == string.Empty)
+                {
+                    // 店着日空白
+                    Dg1ColumnLock(col);
+                }
+                else if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out dt))
+                {
+                    DayOfWeek wk = dt.DayOfWeek;
+
+                    // 記入店着日が正しく過去の日付のとき
+                    //if ((int)wk == week && dt < DateTime.Today)
+
+                    // 過去の日付のとき
+                    if (dt < DateTime.Today)
+                        {
+                        // 過去の日付列
+                        Dg1ColumnLock(col);
+                    }
+                    else
+                    {
+                        // ロック状態解除
+                        Dg1ColumnUnLock(col);
+                    }
+                }
+                else
+                {
+                    // ロック状態解除
+                    Dg1ColumnUnLock(col);
+                }
+            }
+        }
+
+        ///---------------------------------------------------------------------
+        /// <summary>
+        ///     特定の日付列をロックする </summary>
+        /// <param name="col">
+        ///     カラム名</param>
+        ///---------------------------------------------------------------------
+        private void Dg1ColumnLock(string col)
+        {
+            dg1.Columns[col].ReadOnly = true;
+
+            for (int i = 0; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].Cells[col].Style.BackColor = SystemColors.ControlLight;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = SystemColors.ControlLight;
+            }
+
+            for (int i = 2; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].Cells[col].Style.BackColor = SystemColors.ControlLight;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = SystemColors.ControlLight;
+            }
+        }
+
+        ///---------------------------------------------------------------------
+        /// <summary>
+        ///     特定の日付列のロック状態を解除する </summary>
+        /// <param name="col">
+        ///     カラム名</param>
+        ///---------------------------------------------------------------------
+        private void Dg1ColumnUnLock(string col)
+        {
+            for (int i = 0; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].Cells[col].Style.BackColor = Color.White;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = Color.White;
+
+                dg1[col, i].ReadOnly = true;
+                dg1[col, i + 1].ReadOnly = false;
+            }
+
+            for (int i = 2; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].Cells[col].Style.BackColor = Color.Lavender;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = Color.Lavender;
+                dg1[col, i].ReadOnly = true;
+                dg1[col, i + 1].ReadOnly = false;
+            }
+        }
+
+
+
+        private void dg1_Leave(object sender, EventArgs e)
+        {
+            dg1.CurrentCell = null;
         }
     }
 }

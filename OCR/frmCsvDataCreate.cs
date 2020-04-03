@@ -478,7 +478,7 @@ namespace STSH_OCR.OCR
                             }
 
                             // 納品日取得
-                            cNouhinDT = tenDates[iX].Year + tenDates[iX].Month.ToString("D2") + tenDates[iX].Day.ToString("D2");
+                            cNouhinDT = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0');
 
                             // ＣＳＶクラス配列追加
                             Array.Resize(ref csvDatas, dCnt + 1);

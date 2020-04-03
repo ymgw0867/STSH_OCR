@@ -75,12 +75,12 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.button1 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.dg1 = new STSH_OCR.DataGridViewEx();
             this.label1 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.lblPages = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblPage = new System.Windows.Forms.Label();
+            this.dg1 = new STSH_OCR.DataGridViewEx();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -165,13 +165,14 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
+            this.checkBox1.BackColor = System.Drawing.SystemColors.Control;
             this.checkBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.checkBox1.Location = new System.Drawing.Point(1801, 792);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(88, 23);
             this.checkBox1.TabIndex = 5;
             this.checkBox1.Text = "確認済";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.UseVisualStyleBackColor = false;
             // 
             // txtMemo
             // 
@@ -333,8 +334,8 @@
             this.txtYear.Name = "txtYear";
             this.txtYear.Size = new System.Drawing.Size(83, 34);
             this.txtYear.TabIndex = 365;
-            this.txtYear.Text = "2020";
             this.txtYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtYear.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtYear.Enter += new System.EventHandler(this.txtYear_Enter);
             // 
             // label4
@@ -371,8 +372,8 @@
             this.txtMonth.Name = "txtMonth";
             this.txtMonth.Size = new System.Drawing.Size(54, 34);
             this.txtMonth.TabIndex = 368;
-            this.txtMonth.Text = "10";
             this.txtMonth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtMonth.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtMonth.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtMonth.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -397,7 +398,6 @@
             this.txtPID.Name = "txtPID";
             this.txtPID.Size = new System.Drawing.Size(60, 34);
             this.txtPID.TabIndex = 370;
-            this.txtPID.Text = "100";
             this.txtPID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtPID.TextChanged += new System.EventHandler(this.txtPID_TextChanged);
             this.txtPID.Enter += new System.EventHandler(this.txtYear_Enter);
@@ -411,7 +411,6 @@
             this.txtSeqNum.Name = "txtSeqNum";
             this.txtSeqNum.Size = new System.Drawing.Size(45, 34);
             this.txtSeqNum.TabIndex = 371;
-            this.txtSeqNum.Text = "10";
             this.txtSeqNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtSeqNum.TextChanged += new System.EventHandler(this.txtSeqNum_TextChanged);
             this.txtSeqNum.Enter += new System.EventHandler(this.txtYear_Enter);
@@ -452,7 +451,6 @@
             this.txtTokuisakiCD.Name = "txtTokuisakiCD";
             this.txtTokuisakiCD.Size = new System.Drawing.Size(121, 34);
             this.txtTokuisakiCD.TabIndex = 374;
-            this.txtTokuisakiCD.Text = "1001001";
             this.txtTokuisakiCD.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtTokuisakiCD.TextChanged += new System.EventHandler(this.txtTokuisakiCD_TextChanged);
             this.txtTokuisakiCD.Enter += new System.EventHandler(this.txtYear_Enter);
@@ -469,6 +467,7 @@
             this.txtTenDay7.Size = new System.Drawing.Size(40, 31);
             this.txtTenDay7.TabIndex = 579;
             this.txtTenDay7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay7.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay7.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay7.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -496,6 +495,7 @@
             this.txtTenDay1.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay1.TabIndex = 573;
             this.txtTenDay1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay1.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay1.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay1.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -510,6 +510,7 @@
             this.txtTenDay2.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay2.TabIndex = 574;
             this.txtTenDay2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay2.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay2.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay2.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -524,6 +525,7 @@
             this.txtTenDay3.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay3.TabIndex = 575;
             this.txtTenDay3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay3.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay3.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay3.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -538,6 +540,7 @@
             this.txtTenDay4.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay4.TabIndex = 576;
             this.txtTenDay4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay4.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay4.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay4.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -552,6 +555,7 @@
             this.txtTenDay5.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay5.TabIndex = 577;
             this.txtTenDay5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay5.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay5.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay5.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -566,6 +570,7 @@
             this.txtTenDay6.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay6.TabIndex = 578;
             this.txtTenDay6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay6.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay6.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay6.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -622,33 +627,17 @@
             this.panel3.Size = new System.Drawing.Size(827, 619);
             this.panel3.TabIndex = 592;
             // 
-            // dg1
-            // 
-            this.dg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dg1.Location = new System.Drawing.Point(0, 0);
-            this.dg1.Name = "dg1";
-            this.dg1.RowTemplate.Height = 21;
-            this.dg1.Size = new System.Drawing.Size(825, 618);
-            this.dg1.TabIndex = 364;
-            this.dg1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellContentDoubleClick);
-            this.dg1.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEnter);
-            this.dg1.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellLeave);
-            this.dg1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewEx1_CellPainting);
-            this.dg1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellValueChanged);
-            this.dg1.CurrentCellDirtyStateChanged += new System.EventHandler(this.dg1_CurrentCellDirtyStateChanged);
-            this.dg1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg1_EditingControlShowing);
-            // 
             // label1
             // 
             this.label1.BackColor = System.Drawing.Color.Lavender;
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.label1.Font = new System.Drawing.Font("游ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1.ForeColor = System.Drawing.Color.Red;
             this.label1.Location = new System.Drawing.Point(1063, 123);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(443, 31);
             this.label1.TabIndex = 593;
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // linkLabel1
             // 
@@ -693,6 +682,23 @@
             this.lblPage.TabIndex = 598;
             this.lblPage.Text = "100/100";
             this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // dg1
+            // 
+            this.dg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dg1.Location = new System.Drawing.Point(0, 0);
+            this.dg1.Name = "dg1";
+            this.dg1.RowTemplate.Height = 21;
+            this.dg1.Size = new System.Drawing.Size(825, 618);
+            this.dg1.TabIndex = 364;
+            this.dg1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellContentDoubleClick);
+            this.dg1.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellEnter);
+            this.dg1.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellLeave);
+            this.dg1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dataGridViewEx1_CellPainting);
+            this.dg1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dg1_CellValueChanged);
+            this.dg1.CurrentCellDirtyStateChanged += new System.EventHandler(this.dg1_CurrentCellDirtyStateChanged);
+            this.dg1.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dg1_EditingControlShowing);
+            this.dg1.Leave += new System.EventHandler(this.dg1_Leave);
             // 
             // frmCorrect
             // 
