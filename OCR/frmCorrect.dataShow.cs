@@ -50,7 +50,7 @@ namespace STSH_OCR.OCR
         {
 
             Cursor = Cursors.WaitCursor;
-            showStatus = true;
+            showStatus = false;
 
             // 非ログ書き込み状態とする
             editLogStatus = false;
@@ -114,7 +114,7 @@ namespace STSH_OCR.OCR
             // ログ書き込み状態とする
             editLogStatus = true;
 
-            showStatus = false;
+            showStatus = true;
             Cursor = Cursors.Default;
 
             label3.Text = ClsFaxOrder.ID;
@@ -130,7 +130,7 @@ namespace STSH_OCR.OCR
         private void showOcrData(int iX)
         {
             Cursor = Cursors.WaitCursor;
-            showStatus = true;
+            showStatus = false;
 
             // 非ログ書き込み状態とする
             editLogStatus = false;
@@ -151,6 +151,12 @@ namespace STSH_OCR.OCR
 
                 while (dataReader.Read())
                 {
+                    // 画像表示
+                    _img = Properties.Settings.Default.MyDataPath + dataReader["画像名"].ToString();
+                    showImage_openCv(_img);
+                    trackBar1.Enabled = true;
+
+                    // ヘッダ情報
                     txtYear.Text = dataReader["年"].ToString();
                     txtMonth.Text = dataReader["月"].ToString();
                     txtTokuisakiCD.Text = dataReader["得意先コード"].ToString().PadLeft(7, '0'); ;
@@ -181,10 +187,6 @@ namespace STSH_OCR.OCR
                     lblErrMsg.Visible = false;
                     lblErrMsg.Text = string.Empty;
 
-                    // 画像表示
-                    _img = Properties.Settings.Default.MyDataPath + dataReader["画像名"].ToString();
-                    showImage_openCv(_img);
-                    trackBar1.Enabled = true;
 
                     label3.Text = "[" + dataReader["ID"].ToString() + "]";
                 }
@@ -192,10 +194,27 @@ namespace STSH_OCR.OCR
                 dataReader.Close();
             }
 
+            //// 店着日配列を更新
+            //SetShowTenDate(tenDates);
+
+            // 店着日ロック
+            DayLock(tenDates);
+
+            //// 発注済み商品数表示コントロール
+            //for (int i = 0; i < tenDates.Length; i++)
+            //{
+            //    int col = i + 6;
+
+            //    for (int r = 1; r < dg1.RowCount; r += 2)
+            //    {
+            //        ShowPastOrder(i, col, r);
+            //    }
+            //}
+
             // ログ書き込み状態とする
             editLogStatus = true;
 
-            showStatus = false;
+            showStatus = true;
             Cursor = Cursors.Default;
         }
 
@@ -1320,6 +1339,9 @@ namespace STSH_OCR.OCR
                 }
 
                 global.ChangeValueStatus = true;
+
+                dg1.Rows[i * 2 + 1].Cells[colSyubai].Value = global.SyubaiArray[goods[i].Syubai];
+
                 dataGrid[colDay1, i * 2 + 1].Value = goods[i].Suu[0];
                 dataGrid[colDay2, i * 2 + 1].Value = goods[i].Suu[1];
                 dataGrid[colDay3, i * 2 + 1].Value = goods[i].Suu[2];
@@ -1327,9 +1349,7 @@ namespace STSH_OCR.OCR
                 dataGrid[colDay5, i * 2 + 1].Value = goods[i].Suu[4];
                 dataGrid[colDay6, i * 2 + 1].Value = goods[i].Suu[5];
                 dataGrid[colDay7, i * 2 + 1].Value = goods[i].Suu[6];
-                global.ChangeValueStatus = false;
-
-                dg1.Rows[i * 2 + 1].Cells[colSyubai].Value = global.SyubaiArray[goods[i].Syubai];
+                //global.ChangeValueStatus = false;
             }
 
 
@@ -1402,6 +1422,8 @@ namespace STSH_OCR.OCR
             txtTenDay6.BackColor = Color.White;
             txtTenDay7.BackColor = Color.White;
             checkBox1.BackColor = SystemColors.Control;
+
+            label1.Text = string.Empty;
 
             txtYear.ForeColor = global.defaultColor;
             txtMonth.ForeColor = global.defaultColor;

@@ -3113,7 +3113,7 @@ namespace STSH_OCR.OCR
         private void dg1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             string colName = dg1.Columns[dg1.CurrentCell.ColumnIndex].Name;
-            if (colName == colDay1 || colName == colDay2 || colName == colDay3 || colName == colDay4 || colName == colDay5 || colName == colDay6 || colName == colDay7)
+            if (colName == colDay1 || colName == colDay2 || colName == colDay3 || colName == colDay4 || colName == colDay5 || colName == colDay6 || colName == colDay7 || colName == colSyubai)
             {
                 if (dg1.IsCurrentCellDirty)
                 {
@@ -3360,7 +3360,19 @@ namespace STSH_OCR.OCR
         // GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
         public static Bitmap MatToBitmap(Mat image)
         {
-            return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
+            Bitmap bitmap = null;
+
+            try
+            {
+                bitmap = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
+            }
+            catch (Exception)
+            {
+
+                //throw;
+            }
+
+            return bitmap;
         }
 
 
@@ -3447,6 +3459,39 @@ namespace STSH_OCR.OCR
                 return;
             }
 
+            // 終売取消
+            if (e.ColumnIndex == 13)
+            {
+                if ((e.RowIndex % 2) != 0)
+                {
+                    // 終売取消
+                    if (Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value) == global.SyubaiArray[1])
+                    {
+                        //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.LightGray;
+                        //dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGray;
+
+                        dg1.Rows[e.RowIndex - 1].DefaultCellStyle.ForeColor = Color.LightGray;
+                        dg1.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.LightGray;
+                    }
+                    else
+                    {
+                        dg1.Rows[e.RowIndex - 1].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                        dg1.Rows[e.RowIndex].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+
+                        //if (e.RowIndex % 4 == 1)
+                        //{
+                        //    dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.White;
+                        //    dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+                        //}
+                        //else if (e.RowIndex % 4 == 3)
+                        //{
+                        //    dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.Lavender;
+                        //    dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Lavender;
+                        //}
+                    }
+                }
+            }
+
             // 商品コード
             if (e.ColumnIndex == 3)
             {
@@ -3493,7 +3538,16 @@ namespace STSH_OCR.OCR
                         dg1[colSyubai, e.RowIndex].Value = "";
                         dg1[colSyubai, e.RowIndex].ReadOnly = true;
                     }
+
+                    // 注文済み商品発注数表示
+                    //label1.Text = "";
+                    for (int i = 6; i <= 12; i++)
+                    {
+                        ShowPastOrder(i - 6, i, e.RowIndex);
+                    }
                 }
+
+                return;
             }
 
             // 発注数
@@ -3503,34 +3557,89 @@ namespace STSH_OCR.OCR
                 {
                     int iX = e.ColumnIndex - 6;
 
-                    if (tenDates[iX].Year != string.Empty)
+                    ShowPastOrder(iX, e.ColumnIndex, e.RowIndex);
+                }
+            }
+        }
+
+        ///-------------------------------------------------------------------
+        /// <summary>
+        ///     注文済み商品お表示コントロール </summary>
+        /// <param name="iX">
+        ///     tenDate配列指標 </param>
+        /// <param name="col">
+        ///     データグリッド発注数カラムインデックス</param>
+        /// <param name="row">
+        ///     データグリッド行インデックス</param>
+        ///-------------------------------------------------------------------
+        private void ShowPastOrder(int iX, int col, int row)
+        {
+            if (tenDates[0] == null)
+            {
+                return;
+            }
+
+            // 終売取消以外で
+            if (Utility.NulltoStr(dg1[colSyubai, row].Value) != global.SyubaiArray[1])
+            {
+                // 空白日付以外で
+                if (tenDates[iX].Year != string.Empty)
+                {
+                    DateTime cdt;
+                    if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out cdt))
                     {
-                        string syCd = Utility.NulltoStr(dg1[colHinCode, e.RowIndex].Value).PadLeft(8, '0'); // 商品コード
-                        string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
-                        int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value));    // 発注数
-
-                        // 得意先毎に同じ商品が同じ日に注文済み
-                        foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
+                        // 昨日以前も対象外、当日以降で
+                        if (cdt >= DateTime.Today)
                         {
-                            if (t.Suu == Suu)
-                            {
-                                // 発注数も一致
-                                dg1[e.ColumnIndex, e.RowIndex].ReadOnly = true;
-                                label1.Text = "注文済み商品があるためロックしています";
-                            }
-                            else
-                            {
-                                // 発注数は不一致
-                                dg1[e.ColumnIndex, e.RowIndex].ReadOnly = false;
-                                dg1[e.ColumnIndex, e.RowIndex].Style.ForeColor = Color.Red;
-                            }
+                            //// 文字色と背景色を標準に戻す
+                            //dg1[col, row].Style.ForeColor = SystemColors.ControlText;
 
-                            break;
+                            //if (row % 4 == 1)
+                            //{
+                            //    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.White;
+                            //    dg1.Rows[row].Cells[col].Style.BackColor = Color.White;
+                            //}
+                            //else
+                            //{
+                            //    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.Lavender;
+                            //    dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
+                            //}
+
+                            string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
+                            string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
+                            int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[col, row].Value));    // 発注数
+
+                            // 得意先毎に同じ商品が同じ日に注文済み
+                            foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
+                            {
+                                if (t.Suu == Suu)
+                                {
+                                    // 発注数も一致
+                                    dg1[col, row].ReadOnly = false;
+                                    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                    dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+                                    label1.Text = "注文済み商品があります";
+
+                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注:" + Suu);
+                                }
+                                else
+                                {
+                                    // 発注数は不一致
+                                    dg1[col, row].ReadOnly = false;
+                                    dg1[col, row].Style.ForeColor = Color.Red;
+
+                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注:" + Suu);
+                                }
+
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
+
+
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
@@ -3683,11 +3792,27 @@ namespace STSH_OCR.OCR
 
         private void txtTenDay1_TextChanged(object sender, EventArgs e)
         {
+            if (!showStatus)
+            {
+                return;
+            }
+
             // 店着日配列を更新
             SetShowTenDate(tenDates);
 
             // 店着日ロック
-            DayLock(sender, tenDates);
+            DayLock(tenDates);
+
+            // 発注済み商品数表示コントロール
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                int col = i + 6;
+
+                for (int r = 1; r < dg1.RowCount; r += 2)
+                {
+                    ShowPastOrder(i, col, r);
+                }
+            }
         }
 
         ///------------------------------------------------------------------------
@@ -3696,14 +3821,15 @@ namespace STSH_OCR.OCR
         /// <param name="txtBox">
         ///     店着日テキストボックスオブジェクト</param>
         ///------------------------------------------------------------------------
-        private void DayLock(object txtBox, ClsTenDate [] dates)
+        private void DayLock(ClsTenDate [] dates)
         {
             if (!TenDateStatus)
             {
                 return;
             }
 
-            TextBox textBox = (TextBox)txtBox;
+            //TextBox textBox = (TextBox)txtBox;
+
             string col = "";
             int week = 0;
 
@@ -3787,14 +3913,14 @@ namespace STSH_OCR.OCR
 
             for (int i = 0; i < dg1.Rows.Count; i += 4)
             {
-                dg1.Rows[i].Cells[col].Style.BackColor = SystemColors.ControlLight;
-                dg1.Rows[i + 1].Cells[col].Style.BackColor = SystemColors.ControlLight;
+                dg1.Rows[i].Cells[col].Style.BackColor = Color.LightGray;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = Color.LightGray;
             }
 
             for (int i = 2; i < dg1.Rows.Count; i += 4)
             {
-                dg1.Rows[i].Cells[col].Style.BackColor = SystemColors.ControlLight;
-                dg1.Rows[i + 1].Cells[col].Style.BackColor = SystemColors.ControlLight;
+                dg1.Rows[i].Cells[col].Style.BackColor = Color.LightGray;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = Color.LightGray;
             }
         }
 
