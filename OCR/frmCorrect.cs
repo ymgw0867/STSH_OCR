@@ -16,6 +16,7 @@ using STSH_OCR.OCR;
 using System.Configuration;
 using Excel = Microsoft.Office.Interop.Excel;
 using OpenCvSharp;
+using System.Windows.Interop;
 
 namespace STSH_OCR.OCR
 {
@@ -3464,31 +3465,70 @@ namespace STSH_OCR.OCR
             {
                 if ((e.RowIndex % 2) != 0)
                 {
+                    if (e.RowIndex % 4 == 1)
+                    {
+                        //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.White;
+                        //dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+
+                        for (int i = 0; i < dg1.ColumnCount; i++)
+                        {
+                            if (dg1.Rows[e.RowIndex].Cells[i].Style.BackColor != Color.LightGray)
+                            {
+                                dg1.Rows[e.RowIndex - 1].Cells[i].Style.BackColor = Color.White;
+                                dg1.Rows[e.RowIndex].Cells[i].Style.BackColor = Color.White;
+                            }
+                        }
+                    }
+                    else if (e.RowIndex % 4 == 3)
+                    {
+                        //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.Lavender;
+                        //dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Lavender;
+
+                        for (int i = 0; i < dg1.ColumnCount; i++)
+                        {
+                            if (dg1.Rows[e.RowIndex].Cells[i].Style.BackColor != Color.LightGray)
+                            {
+                                dg1.Rows[e.RowIndex - 1].Cells[i].Style.BackColor = Color.Lavender;
+                                dg1.Rows[e.RowIndex].Cells[i].Style.BackColor = Color.Lavender;
+                            }
+                        }
+                    }
+
                     // 終売取消
                     if (Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value) == global.SyubaiArray[1])
                     {
                         //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.LightGray;
                         //dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGray;
 
-                        dg1.Rows[e.RowIndex - 1].DefaultCellStyle.ForeColor = Color.LightGray;
-                        dg1.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.LightGray;
+                        for (int i = 4; i < dg1.ColumnCount; i++)
+                        {
+                            dg1.Rows[e.RowIndex - 1].Cells[i].Style.ForeColor = Color.LightGray;
+                            dg1.Rows[e.RowIndex].Cells[i].Style.ForeColor = Color.LightGray;
+                        }
                     }
                     else
                     {
-                        dg1.Rows[e.RowIndex - 1].DefaultCellStyle.ForeColor = SystemColors.ControlText;
-                        dg1.Rows[e.RowIndex].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                        //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                        //dg1.Rows[e.RowIndex].DefaultCellStyle.ForeColor = SystemColors.ControlText;
 
-                        //if (e.RowIndex % 4 == 1)
-                        //{
-                        //    dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.White;
-                        //    dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-                        //}
-                        //else if (e.RowIndex % 4 == 3)
-                        //{
-                        //    dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.Lavender;
-                        //    dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Lavender;
-                        //}
+                        for (int i = 4; i < dg1.ColumnCount; i++)
+                        {
+                            dg1.Rows[e.RowIndex - 1].Cells[i].Style.ForeColor = SystemColors.ControlText;
+                            dg1.Rows[e.RowIndex].Cells[i].Style.ForeColor = SystemColors.ControlText;
+                        }
+
+                        // 注文済み商品発注数表示
+                        if (showStatus)
+                        {
+                            for (int i = 6; i <= 12; i++)
+                            {
+                                ShowPastOrder(i - 6, i, e.RowIndex);
+                            }
+                        }
                     }
+
+                    // 注文済み商品メッセージコントロール
+                    ShowPastOrderMessage();
                 }
             }
 
@@ -3540,10 +3580,12 @@ namespace STSH_OCR.OCR
                     }
 
                     // 注文済み商品発注数表示
-                    //label1.Text = "";
-                    for (int i = 6; i <= 12; i++)
+                    if (showStatus)
                     {
-                        ShowPastOrder(i - 6, i, e.RowIndex);
+                        for (int i = 6; i <= 12; i++)
+                        {
+                            ShowPastOrder(i - 6, i, e.RowIndex);
+                        }
                     }
                 }
 
@@ -3555,16 +3597,18 @@ namespace STSH_OCR.OCR
             {
                 if ((e.RowIndex % 2) != 0)
                 {
-                    int iX = e.ColumnIndex - 6;
-
-                    ShowPastOrder(iX, e.ColumnIndex, e.RowIndex);
+                    if (showStatus)
+                    {
+                        int iX = e.ColumnIndex - 6;
+                        ShowPastOrder(iX, e.ColumnIndex, e.RowIndex);
+                    }
                 }
             }
         }
 
         ///-------------------------------------------------------------------
         /// <summary>
-        ///     注文済み商品お表示コントロール </summary>
+        ///     注文済み商品表示コントロール </summary>
         /// <param name="iX">
         ///     tenDate配列指標 </param>
         /// <param name="col">
@@ -3591,44 +3635,52 @@ namespace STSH_OCR.OCR
                         // 昨日以前も対象外、当日以降で
                         if (cdt >= DateTime.Today)
                         {
-                            //// 文字色と背景色を標準に戻す
-                            //dg1[col, row].Style.ForeColor = SystemColors.ControlText;
+                            // 文字色と背景色を標準に戻す
+                            dg1[col, row].Style.ForeColor = SystemColors.ControlText;
 
-                            //if (row % 4 == 1)
-                            //{
-                            //    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.White;
-                            //    dg1.Rows[row].Cells[col].Style.BackColor = Color.White;
-                            //}
-                            //else
-                            //{
-                            //    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.Lavender;
-                            //    dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
-                            //}
+                            if (row % 4 == 1)
+                            {
+                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.White;
+                                dg1.Rows[row].Cells[col].Style.BackColor = Color.White;
+                            }
+                            else
+                            {
+                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.Lavender;
+                                dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
+                            }
 
                             string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
                             string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
                             int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[col, row].Value));    // 発注数
 
+                            System.Diagnostics.Debug.WriteLine("得:" + txtTokuisakiCD.Text + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
+
                             // 得意先毎に同じ商品が同じ日に注文済み
                             foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
                             {
+                                dg1[col, row].ReadOnly = false;
+                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+
                                 if (t.Suu == Suu)
                                 {
                                     // 発注数も一致
-                                    dg1[col, row].ReadOnly = false;
-                                    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                    dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
-                                    label1.Text = "注文済み商品があります";
+                                    //dg1[col, row].ReadOnly = false;
+                                    //dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                    //dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
 
-                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注:" + Suu);
+                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
                                 }
                                 else
                                 {
                                     // 発注数は不一致
-                                    dg1[col, row].ReadOnly = false;
+                                    //dg1[col, row].ReadOnly = false;
+                                    //dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                    //dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+
                                     dg1[col, row].Style.ForeColor = Color.Red;
 
-                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注:" + Suu);
+                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
                                 }
 
                                 break;
@@ -3637,8 +3689,39 @@ namespace STSH_OCR.OCR
                     }
                 }
             }
+
+            // 注文済み商品ありメッセージのコントロール
+            ShowPastOrderMessage();
         }
 
+        ///------------------------------------------------------------------
+        /// <summary>
+        ///     注文済み商品ありメッセージのコントロール </summary>
+        ///------------------------------------------------------------------
+        private void ShowPastOrderMessage()
+        {
+            bool msgStatus = false;
+
+            // 注文済み商品ありメッセージのコントロール
+            label1.Text = "";
+            for (int i = 6; i <= 12; i++)
+            {
+                for (int r = 0; r < dg1.RowCount; r++)
+                {
+                    if (dg1.Rows[r].Cells[i].Style.BackColor == Color.MistyRose)
+                    {
+                        label1.Text = "注文済み商品があります";
+                        msgStatus = true;
+                        break;
+                    }
+                }
+
+                if (msgStatus)
+                {
+                    break;
+                }
+            }
+        }
 
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)

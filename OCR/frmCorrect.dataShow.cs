@@ -48,7 +48,6 @@ namespace STSH_OCR.OCR
         ///------------------------------------------------------------------------------------
         private void showOcrData_org(int iX)
         {
-
             Cursor = Cursors.WaitCursor;
             showStatus = false;
 
@@ -129,6 +128,8 @@ namespace STSH_OCR.OCR
         ///------------------------------------------------------------------------------------
         private void showOcrData(int iX)
         {
+            System.Diagnostics.Debug.WriteLine("発注書表示");
+
             Cursor = Cursors.WaitCursor;
             showStatus = false;
 
@@ -200,21 +201,22 @@ namespace STSH_OCR.OCR
             // 店着日ロック
             DayLock(tenDates);
 
-            //// 発注済み商品数表示コントロール
-            //for (int i = 0; i < tenDates.Length; i++)
-            //{
-            //    int col = i + 6;
+            showStatus = true;
 
-            //    for (int r = 1; r < dg1.RowCount; r += 2)
-            //    {
-            //        ShowPastOrder(i, col, r);
-            //    }
-            //}
+            // 発注済み商品数表示コントロール
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                int col = i + 6;
+
+                for (int r = 1; r < dg1.RowCount; r += 2)
+                {
+                    ShowPastOrder(i, col, r);
+                }
+            }
 
             // ログ書き込み状態とする
             editLogStatus = true;
 
-            showStatus = true;
             Cursor = Cursors.Default;
         }
 
@@ -303,7 +305,6 @@ namespace STSH_OCR.OCR
 
                 wDay = tenDates[i].Day;
 
-
                 // 該当テキストボックス
                 TextBox box;
 
@@ -351,7 +352,6 @@ namespace STSH_OCR.OCR
             {
                 System.Diagnostics.Debug.WriteLine(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day);
             }
-
         }
 
         private void SetTenDate(ClsTenDate [] tenDates)
@@ -1341,6 +1341,9 @@ namespace STSH_OCR.OCR
                 global.ChangeValueStatus = true;
 
                 dg1.Rows[i * 2 + 1].Cells[colSyubai].Value = global.SyubaiArray[goods[i].Syubai];
+
+                //// 発注実績表示コントロールオン
+                //showStatus = true;
 
                 dataGrid[colDay1, i * 2 + 1].Value = goods[i].Suu[0];
                 dataGrid[colDay2, i * 2 + 1].Value = goods[i].Suu[1];

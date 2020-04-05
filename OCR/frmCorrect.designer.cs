@@ -631,12 +631,13 @@
             // 
             this.label1.BackColor = System.Drawing.Color.Lavender;
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label1.ForeColor = System.Drawing.Color.Red;
             this.label1.Location = new System.Drawing.Point(1063, 123);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(443, 31);
+            this.label1.Size = new System.Drawing.Size(443, 32);
             this.label1.TabIndex = 593;
+            this.label1.Text = "注文済み商品があります";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // linkLabel1
