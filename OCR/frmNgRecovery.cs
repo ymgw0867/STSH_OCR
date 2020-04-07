@@ -44,6 +44,7 @@ namespace STSH_OCR.OCR
 
             // ボタン
             trackBar1.Enabled = false;
+            btnLeft.Enabled = false;
         }
 
         private void frmNgRecovery_FormClosing(object sender, FormClosingEventArgs e)
@@ -111,12 +112,21 @@ namespace STSH_OCR.OCR
             else
             {
                 trackBar1.Enabled = true;
+                btnLeft.Enabled = true;
+            }
+
+            if (!System.IO.File.Exists(ngf[checkedListBox1.SelectedIndex].ngFileName))
+            {
+                trackBar1.Enabled = false;
+                btnLeft.Enabled = false;
+                return;
             }
 
             //画像イメージ表示
             showImage_openCv(ngf[checkedListBox1.SelectedIndex].ngFileName);
 
             trackBar1.Enabled = true;
+            btnLeft.Enabled = true;
         }
 
         private class clsNG
@@ -169,6 +179,7 @@ namespace STSH_OCR.OCR
             // イメージ表示初期化
             pictureBox1.Image = null;
             trackBar1.Enabled = false;
+            btnLeft.Enabled = false;
         }
 
         ///--------------------------------------------------------------------------
@@ -269,6 +280,7 @@ namespace STSH_OCR.OCR
             // イメージ表示初期化
             pictureBox1.Image = null;
             trackBar1.Enabled = false;
+            btnLeft.Enabled = false;
         }
 
         ///-------------------------------------------------------------
@@ -296,12 +308,18 @@ namespace STSH_OCR.OCR
         ///---------------------------------------------------
         private void NgImagePrint()
         {
+            PrintDialog pd = new PrintDialog();
+            pd.PrinterSettings = new System.Drawing.Printing.PrinterSettings();
+
             // ＮＧ画像印刷
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
             {
                 if (checkedListBox1.GetItemChecked(i))
                 {
                     _img = ngf[i].ngFileName;
+
+                    // デフォルトプリンタ設定
+                    printDocument1.PrinterSettings.PrinterName = pd.PrinterSettings.PrinterName;
 
                     // 印刷実行
                     printDocument1.Print();
@@ -456,7 +474,7 @@ namespace STSH_OCR.OCR
 
 
         // GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
-        public static Bitmap MatToBitmap(Mat image)
+        private Bitmap MatToBitmap(Mat image)
         {
             return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
         }
@@ -522,21 +540,34 @@ namespace STSH_OCR.OCR
         ///---------------------------------------------------------
         private void imgShow(string filePath, float w, float h)
         {
-            mMat = new Mat(filePath, ImreadModes.Grayscale);
-            Bitmap bt = MatToBitmap(mMat);
+            try
+            {
+                //メモリクリア
+                mMat.Dispose();
 
-            // Bitmap を生成
-            Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
+                //mMat = new Mat(filePath, ImreadModes.Grayscale);
+                mMat = new Mat(@filePath);
 
-            Graphics g = Graphics.FromImage(canvas);
+                Bitmap bt = MatToBitmap(mMat);
 
-            g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+                // Bitmap を生成
+                Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
 
-            //メモリクリア
-            bt.Dispose();
-            g.Dispose();
+                Graphics g = Graphics.FromImage(canvas);
 
-            pictureBox1.Image = canvas;
+                g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+
+                //メモリクリア
+                bt.Dispose();
+                g.Dispose();
+
+                pictureBox1.Image = canvas;
+            }
+            catch (Exception ex)
+            {
+                pictureBox1.Image = null;
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void TrackBar1_ValueChanged(object sender, EventArgs e)
@@ -550,6 +581,22 @@ namespace STSH_OCR.OCR
         private void CheckedListBox1_SelectedValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+            ImageRotate(pictureBox1.Image);
+        }
+
+        private void ImageRotate(Image img)
+        {
+            Bitmap bmp = (Bitmap)img;
+
+            // 反転せず時計回りに90度回転する
+            bmp.RotateFlip(RotateFlipType.Rotate90FlipNone);
+
+            //表示
+            pictureBox1.Image = img;
         }
     }
 }

@@ -80,6 +80,7 @@
             this.lblPages = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblPage = new System.Windows.Forms.Label();
+            this.lblWarning = new System.Windows.Forms.Label();
             this.dg1 = new STSH_OCR.DataGridViewEx();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -121,14 +122,14 @@
             this.btnLeft.BackColor = System.Drawing.SystemColors.Control;
             this.btnLeft.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnLeft.Image")));
-            this.btnLeft.Location = new System.Drawing.Point(315, 811);
+            this.btnLeft.Location = new System.Drawing.Point(1022, 852);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(35, 35);
             this.btnLeft.TabIndex = 361;
             this.btnLeft.TabStop = false;
             this.toolTip1.SetToolTip(this.btnLeft, "画像を左回転");
             this.btnLeft.UseVisualStyleBackColor = false;
-            this.btnLeft.Visible = false;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click_1);
             // 
             // lblNoImage
             // 
@@ -603,7 +604,7 @@
             // 
             this.trackBar1.Location = new System.Drawing.Point(778, 852);
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(279, 45);
+            this.trackBar1.Size = new System.Drawing.Size(238, 45);
             this.trackBar1.TabIndex = 590;
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             // 
@@ -684,6 +685,18 @@
             this.lblPage.Text = "100/100";
             this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // lblWarning
+            // 
+            this.lblWarning.BackColor = System.Drawing.Color.Red;
+            this.lblWarning.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblWarning.ForeColor = System.Drawing.Color.White;
+            this.lblWarning.Location = new System.Drawing.Point(1064, 825);
+            this.lblWarning.Name = "lblWarning";
+            this.lblWarning.Size = new System.Drawing.Size(726, 22);
+            this.lblWarning.TabIndex = 599;
+            this.lblWarning.Text = "同じ発注書が受信されています";
+            this.lblWarning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // dg1
             // 
             this.dg1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -706,6 +719,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1904, 906);
+            this.Controls.Add(this.lblWarning);
             this.Controls.Add(this.lblPage);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblPages);
@@ -828,5 +842,6 @@
         private System.Windows.Forms.Label lblPages;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblPage;
+        private System.Windows.Forms.Label lblWarning;
     }
 }

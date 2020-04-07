@@ -58,9 +58,17 @@ namespace STSH_OCR.OCR
         Table<Common.ClsFaxOrder> tblFax = null;
         ClsFaxOrder ClsFaxOrder = null;
 
+        // FAX発注書データ※重複チェック用
+        Table<Common.ClsFaxOrder> tblFaxCheck = null;
+        ClsFaxOrder ClsFaxOrderCheck = null;
+
         // 得意先別発注履歴
         Table<Common.ClsOrderHistory> tblOrderHistories = null;
         ClsOrderHistory clsOrderHistory = null;
+
+        // 発注書データ
+        Table<Common.ClsOrder> tblOrder = null;
+        ClsOrder ClsOrder = null;
 
         // セル値
         private string cellName = string.Empty;         // セル名
@@ -172,15 +180,18 @@ namespace STSH_OCR.OCR
             // 共有DB接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
-            tblPtn = context.GetTable<Common.ClsOrderPattern>();    // 登録パターンテーブル
-            tblHold = context.GetTable<Common.ClsHoldFax>();        // 保留テーブル
-            //tblEditLog = context.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
+
+            tblPtn = context.GetTable<Common.ClsOrderPattern>();            // 登録パターンテーブル
+            tblHold = context.GetTable<Common.ClsHoldFax>();                // 保留テーブル
             tblOrderHistories = context.GetTable<Common.ClsOrderHistory>(); // 発注履歴テーブル
+            tblOrder = context.GetTable<Common.ClsOrder>();                 // 発注書データ ※チェック用
 
             // ローカルDB接続
             cn2 = new SQLiteConnection("DataSource=" + Local_DB);
             context2 = new DataContext(cn2);
+
             tblFax = context2.GetTable<Common.ClsFaxOrder>();        // ＦＡＸ発注書テーブル
+            tblFaxCheck = context2.GetTable<Common.ClsFaxOrder>();   // ＦＡＸ発注書テーブル ※チェック用
             tblEditLog = context2.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
 
             string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
@@ -2451,7 +2462,10 @@ namespace STSH_OCR.OCR
             }
 
             // 印刷実行
+            System.Drawing.Printing.PrintDocument pd = new System.Drawing.Printing.PrintDocument();
+
             printDocument1.DefaultPageSettings.Landscape = true;
+            printDocument1.PrinterSettings.PrinterName = pd.PrinterSettings.PrinterName;       // デフォルトプリンタを設定
             printDocument1.Print();
         }
 
@@ -3392,35 +3406,43 @@ namespace STSH_OCR.OCR
             int cWidth = 0;
             int cHeight = 0;
 
-            Bitmap bt = MatToBitmap(mImg);
-
-            // Bitmapサイズ
-            if (panel1.Width < (bt.Width * w) || panel1.Height < (bt.Height * h))
+            try
             {
-                cWidth = (int)(bt.Width * w);
-                cHeight = (int)(bt.Height * h);
+                Bitmap bt = MatToBitmap(mImg);
+
+                // Bitmapサイズ
+                if (panel1.Width < (bt.Width * w) || panel1.Height < (bt.Height * h))
+                {
+                    cWidth = (int)(bt.Width * w);
+                    cHeight = (int)(bt.Height * h);
+                }
+                else
+                {
+                    cWidth = panel1.Width;
+                    cHeight = panel1.Height;
+                }
+
+                // Bitmap を生成
+                Bitmap canvas = new Bitmap(cWidth, cHeight);
+
+                // ImageオブジェクトのGraphicsオブジェクトを作成する
+                Graphics g = Graphics.FromImage(canvas);
+
+                // 画像をcanvasの座標(0, 0)の位置に指定のサイズで描画する
+                g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+
+                //メモリクリア
+                bt.Dispose();
+                g.Dispose();
+
+                // PictureBox1に表示する
+                pictureBox1.Image = canvas;
             }
-            else
+            catch (Exception ex)
             {
-                cWidth = panel1.Width;
-                cHeight = panel1.Height;
+                pictureBox1.Image = null;
+                MessageBox.Show(ex.Message);
             }
-
-            // Bitmap を生成
-            Bitmap canvas = new Bitmap(cWidth, cHeight);
-
-            // ImageオブジェクトのGraphicsオブジェクトを作成する
-            Graphics g = Graphics.FromImage(canvas);
-
-            // 画像をcanvasの座標(0, 0)の位置に指定のサイズで描画する
-            g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
-
-            //メモリクリア
-            bt.Dispose();
-            g.Dispose();
-
-            // PictureBox1に表示する
-            pictureBox1.Image = canvas;
         }
 
 
@@ -3436,21 +3458,33 @@ namespace STSH_OCR.OCR
         ///---------------------------------------------------------
         private void imgShow(string filePath, float w, float h)
         {
-            mMat = new Mat(filePath, ImreadModes.Grayscale);
-            Bitmap bt = MatToBitmap(mMat);
+            try
+            {
+                // メモリクリア
+                mMat.Dispose();
 
-            // Bitmap を生成
-            Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
+                //mMat = new Mat(filePath, ImreadModes.Grayscale);
+                mMat = new Mat(filePath);
+                Bitmap bt = MatToBitmap(mMat);
 
-            Graphics g = Graphics.FromImage(canvas);
+                // Bitmap を生成
+                Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
 
-            g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+                Graphics g = Graphics.FromImage(canvas);
 
-            //メモリクリア
-            bt.Dispose();
-            g.Dispose();
+                g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
 
-            pictureBox1.Image = canvas;
+                //メモリクリア
+                bt.Dispose();
+                g.Dispose();
+
+                pictureBox1.Image = canvas;
+            }
+            catch (Exception ex)
+            {
+                pictureBox1.Image = null;
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void dg1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -4038,6 +4072,28 @@ namespace STSH_OCR.OCR
         private void dg1_Leave(object sender, EventArgs e)
         {
             dg1.CurrentCell = null;
+        }
+
+        ///-------------------------------------------------------
+        /// <summary>
+        ///     画像回転 </summary>
+        /// <param name="img">
+        ///     Image</param>
+        ///-------------------------------------------------------
+        private void ImageRotate(Image img)
+        {
+            Bitmap bmp = (Bitmap)img;
+
+            // 反転せず時計回りに90度回転する
+            bmp.RotateFlip(RotateFlipType.Rotate90FlipNone);
+
+            //表示
+            pictureBox1.Image = img;
+        }
+
+        private void btnLeft_Click_1(object sender, EventArgs e)
+        {
+            ImageRotate(pictureBox1.Image);
         }
     }
 }

@@ -46,86 +46,6 @@ namespace STSH_OCR.OCR
         /// <param name="iX">
         ///     ヘッダデータインデックス</param>
         ///------------------------------------------------------------------------------------
-        private void showOcrData_org(int iX)
-        {
-            Cursor = Cursors.WaitCursor;
-            showStatus = false;
-
-            // 非ログ書き込み状態とする
-            editLogStatus = false;
-
-            // 発注データを取得
-            tblFax = context2.GetTable<Common.ClsFaxOrder>();
-            ClsFaxOrder = tblFax.Single(a => a.ID == cID[iX]);
-
-            // フォーム初期化
-            formInitialize(dID, iX);
-
-            global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
-
-            txtYear.Text = ClsFaxOrder.Year.ToString();
-            txtMonth.Text = Utility.EmptytoZero(ClsFaxOrder.Month.ToString());
-            txtTokuisakiCD.Text = ClsFaxOrder.TokuisakiCode.ToString("D7");
-            txtPID.Text = ClsFaxOrder.patternID.ToString();
-            txtSeqNum.Text = ClsFaxOrder.SeqNumber.ToString();
-
-            // 店着日
-            txtTenDay1.Text = ClsFaxOrder.Day1.ToString();
-            txtTenDay2.Text = ClsFaxOrder.Day2.ToString();
-            txtTenDay3.Text = ClsFaxOrder.Day3.ToString();
-            txtTenDay4.Text = ClsFaxOrder.Day4.ToString();
-            txtTenDay5.Text = ClsFaxOrder.Day5.ToString();
-            txtTenDay6.Text = ClsFaxOrder.Day6.ToString();
-            txtTenDay7.Text = ClsFaxOrder.Day7.ToString();
-
-            checkBox1.Checked = Convert.ToBoolean(ClsFaxOrder.Veri);
-            txtMemo.Text = ClsFaxOrder.memo;
-
-            global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
-
-            //// 発注書パターン未読み込みの発注データのとき
-            //if (ClsFaxOrder.PatternLoad == global.flgOff)
-            //{
-            //    // 該当するＦＡＸ発注書パターンが存在するとき
-            //    if (tblPtn.Any(a => a.TokuisakiCode == ClsFaxOrder.TokuisakiCode &&
-            //                    a.SeqNum == ClsFaxOrder.patternID && a.SecondNum == ClsFaxOrder.SeqNumber))
-            //    {
-            //        ClsOrderPattern = tblPtn.Single(a => a.TokuisakiCode == ClsFaxOrder.TokuisakiCode &&
-            //                        a.SeqNum == ClsFaxOrder.patternID && a.SecondNum == ClsFaxOrder.SeqNumber);
-
-            //        // ＦＡＸ発注書パターンの商品構成とする
-            //        PatternLoad(ClsOrderPattern, ClsFaxOrder);
-            //    }
-            //}
-
-            // FAX発注書データ表示
-            //showItem(ClsFaxOrder, dg1);
-
-            // エラー情報表示初期化
-            lblErrMsg.Visible = false;
-            lblErrMsg.Text = string.Empty;
-
-            // 画像表示
-            _img = Properties.Settings.Default.MyDataPath + ClsFaxOrder.ImageFileName.ToString();
-            showImage_openCv(_img);
-            trackBar1.Enabled = true;
-
-            // ログ書き込み状態とする
-            editLogStatus = true;
-
-            showStatus = true;
-            Cursor = Cursors.Default;
-
-            label3.Text = ClsFaxOrder.ID;
-        }
-
-
-        ///------------------------------------------------------------------------------------
-        /// <summary>
-        ///     データを画面に表示します </summary>
-        /// <param name="iX">
-        ///     ヘッダデータインデックス</param>
-        ///------------------------------------------------------------------------------------
         private void showOcrData(int iX)
         {
             System.Diagnostics.Debug.WriteLine("発注書表示");
@@ -152,10 +72,69 @@ namespace STSH_OCR.OCR
 
                 while (dataReader.Read())
                 {
+                    string sID = dataReader["ID"].ToString();
+                    int sYear = Utility.StrtoInt(dataReader["年"].ToString());
+                    int sMonth = Utility.StrtoInt(dataReader["月"].ToString());
+                    int TkCD = Utility.StrtoInt(dataReader["得意先コード"].ToString());
+                    int PtID = Utility.StrtoInt(dataReader["patternID"].ToString());
+                    int Seq = Utility.StrtoInt(dataReader["SeqNumber"].ToString());
+
+                    string sDay = dataReader["ID"].ToString().Substring(0, 8);
+                    int cc = 0;
+
+                    // 同じ発注書が存在するとき：Fax発注書
+                    foreach (var t in tblFaxCheck.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
+                                                             a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
+                    {
+                        if (t.ID.Contains(sDay))
+                        {
+                            cc++;
+                        }
+                    }
+
+                    if (cc > 0)
+                    {
+                        lblWarning.Text = "同じ発注書が他に" + cc + "件あります。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
+                                         "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
+
+                        lblWarning.Visible = true;
+                    }
+
+                    cc = 0;
+
+                    // 同じ発注書が存在するとき：発注書データ
+                    foreach (var t in tblOrder.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
+                                                             a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
+                    {
+                        if (t.ID.Contains(sDay))
+                        {
+                            cc++;
+                        }
+                    }
+
+                    if (cc > 0)
+                    {
+                        lblWarning.Text = "発注書データに" + cc + "件、登録済みです。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
+                                         "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
+
+                        lblWarning.Visible = true;
+                    }
+
                     // 画像表示
                     _img = Properties.Settings.Default.MyDataPath + dataReader["画像名"].ToString();
-                    showImage_openCv(_img);
-                    trackBar1.Enabled = true;
+
+                    if (System.IO.File.Exists(_img))
+                    {
+                        showImage_openCv(_img);
+                        trackBar1.Enabled = true;
+                        btnLeft.Enabled = true;
+                    }
+                    else
+                    {
+                        pictureBox1.Image = null;
+                        trackBar1.Enabled = false;
+                        btnLeft.Enabled = false;
+                    }                    
 
                     // ヘッダ情報
                     txtYear.Text = dataReader["年"].ToString();
@@ -1520,6 +1499,8 @@ namespace STSH_OCR.OCR
             // 確認チェック欄
             checkBox1.BackColor = SystemColors.Control;
             checkBox1.Checked = false;
+
+            lblWarning.Visible = false;
 
             // データ編集のとき
             if (sID == string.Empty)

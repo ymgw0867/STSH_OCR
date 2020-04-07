@@ -46,6 +46,7 @@
             this.linkLblOn = new System.Windows.Forms.LinkLabel();
             this.button5 = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.btnLeft = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -82,7 +83,6 @@
             this.checkedListBox1.Size = new System.Drawing.Size(280, 705);
             this.checkedListBox1.TabIndex = 0;
             this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
-            this.checkedListBox1.SelectedValueChanged += new System.EventHandler(this.CheckedListBox1_SelectedValueChanged);
             // 
             // label1
             // 
@@ -215,11 +215,26 @@
             this.trackBar1.TabIndex = 16;
             this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1_ValueChanged);
             // 
+            // btnLeft
+            // 
+            this.btnLeft.BackColor = System.Drawing.SystemColors.Control;
+            this.btnLeft.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnLeft.Image")));
+            this.btnLeft.Location = new System.Drawing.Point(297, 839);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(45, 45);
+            this.btnLeft.TabIndex = 363;
+            this.btnLeft.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnLeft, "画像を回転");
+            this.btnLeft.UseVisualStyleBackColor = false;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
+            // 
             // frmNgRecovery
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1382, 895);
+            this.Controls.Add(this.btnLeft);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.linkLblOff);
@@ -271,5 +286,6 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Button btnLeft;
     }
 }

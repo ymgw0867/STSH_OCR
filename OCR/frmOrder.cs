@@ -1884,8 +1884,11 @@ namespace STSH_OCR.OCR
                 return;
             }
 
+            System.Drawing.Printing.PrintDocument pd = new System.Drawing.Printing.PrintDocument();
+
             // 印刷実行
             printDocument1.DefaultPageSettings.Landscape = true;
+            printDocument1.PrinterSettings.PrinterName = pd.PrinterSettings.PrinterName;    // デフォルトプリンタを設定
             printDocument1.Print();
         }
 
