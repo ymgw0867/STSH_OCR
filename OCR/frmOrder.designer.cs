@@ -120,14 +120,14 @@
             this.btnLeft.BackColor = System.Drawing.SystemColors.Control;
             this.btnLeft.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnLeft.Image")));
-            this.btnLeft.Location = new System.Drawing.Point(315, 811);
+            this.btnLeft.Location = new System.Drawing.Point(1022, 852);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(35, 35);
             this.btnLeft.TabIndex = 361;
             this.btnLeft.TabStop = false;
             this.toolTip1.SetToolTip(this.btnLeft, "画像を左回転");
             this.btnLeft.UseVisualStyleBackColor = false;
-            this.btnLeft.Visible = false;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click_1);
             // 
             // lblNoImage
             // 
@@ -575,7 +575,7 @@
             // 
             this.trackBar1.Location = new System.Drawing.Point(778, 852);
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(279, 45);
+            this.trackBar1.Size = new System.Drawing.Size(238, 45);
             this.trackBar1.TabIndex = 590;
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             // 

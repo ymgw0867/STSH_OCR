@@ -143,11 +143,13 @@ namespace STSH_OCR.OCR
         private readonly string colDay7 = "c12";
         private readonly string colSyubai = "c13";
 
-        // 得意先クラス
-        ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
+        // 2020/04/08 コメント化
+        //// 得意先クラス
+        //ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
 
-        // 商品クラス
-        ClsCsvData.ClsCsvSyohin[] syohins = null;
+        // 2020/04/08 コメント化
+        //// 商品クラス
+        //ClsCsvData.ClsCsvSyohin[] syohins = null;
 
 
         private void frmCorrect_Load(object sender, EventArgs e)
@@ -175,11 +177,13 @@ namespace STSH_OCR.OCR
             string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
 
-            // 得意先マスタークラス配列取得
-            tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+            // 2020/04/08 コメント化
+            //// 得意先マスタークラス配列取得
+            //tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
 
-            // 商品マスタークラス配列取得
-            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+            // 2020/04/08 コメント化
+            //// 商品マスタークラス配列取得
+            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             // 環境設定読み出し
             Config = (ClsSystemConfig)tblConfig.Single(a => a.ID == global.configKEY);
@@ -1052,74 +1056,85 @@ namespace STSH_OCR.OCR
         /// <summary>
         ///     FAX発注書画像保存 </summary>
         ///-----------------------------------------------------------------
-        private void MoveFaxImage()
-        {
-            try
-            {
-                Cursor = Cursors.WaitCursor;
+        //private void MoveFaxImage()
+        //{
+        //    try
+        //    {
+        //        Cursor = Cursors.WaitCursor;
 
-                Table<Common.ClsSystemConfig> systemConfigs = context.GetTable<Common.ClsSystemConfig>();
+        //        Table<Common.ClsSystemConfig> systemConfigs = context.GetTable<Common.ClsSystemConfig>();
 
-                var s = systemConfigs.Single(a => a.ID == global.configKEY);
+        //        var s = systemConfigs.Single(a => a.ID == global.configKEY);
 
-                // 画像保存先パス
-                string _ImgPath = s.ImgPath;
+        //        // 画像保存先パス
+        //        string _ImgPath = s.ImgPath;
 
-                string sql = "select 得意先コード, 画像名 from Fax_Order order by ID";
+        //        string sql = "select 得意先コード, 画像名 from Fax_Order order by ID";
 
-                using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
-                {
-                    SQLiteDataReader sqlData = com.ExecuteReader();
+        //        using (SQLiteCommand com = new SQLiteCommand(sql, cn2))
+        //        {
+        //            SQLiteDataReader sqlData = com.ExecuteReader();
 
-                    while(sqlData.Read())
-                    {
-                        // 得意先名取得
-                        string TokuiNM = string.Empty;
+        //            while(sqlData.Read())
+        //            {
+        //                // 得意先名取得
+        //                string TokuiNM = string.Empty;
 
-                        for (int i = 0; i < tokuisaki.Length; i++)
-                        {
-                            if (tokuisaki[i].TOKUISAKI_CD == sqlData["得意先コード"].ToString().PadLeft(7, '0'))
-                            {
-                                TokuiNM = tokuisaki[i].TOKUISAKI_NM;
-                                break;
-                            }
-                        }
+        //                // 2020/04/08 コメント化
+        //                //for (int i = 0; i < tokuisaki.Length; i++)
+        //                //{
+        //                //    if (tokuisaki[i].TOKUISAKI_CD == sqlData["得意先コード"].ToString().PadLeft(7, '0'))
+        //                //    {
+        //                //        TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+        //                //        break;
+        //                //    }
+        //                //}
 
-                        // フォルダ名
-                        string DirNM = sqlData["得意先コード"].ToString().PadLeft(7, '0') + "_" + TokuiNM;
+        //                // 2020/04/08
+        //                for (int i = 0; i < global.tokuisakis.Length; i++)
+        //                {
+        //                    if (global.tokuisakis[i].TOKUISAKI_CD == sqlData["得意先コード"].ToString().PadLeft(7, '0'))
+        //                    {
+        //                        TokuiNM = global.tokuisakis[i].TOKUISAKI_NM;
+        //                        break;
+        //                    }
+        //                }
 
-                        if (!System.IO.Directory.Exists(_ImgPath + DirNM))
-                        {
-                            // 保存先フォルダ未作成の場合は作成する
-                            System.IO.Directory.CreateDirectory(_ImgPath + DirNM);
-                        }
+        //                // フォルダ名
+        //                string DirNM = sqlData["得意先コード"].ToString().PadLeft(7, '0') + "_" + TokuiNM;
 
-                        // 画像名
-                        string imgFile = Properties.Settings.Default.MyDataPath + sqlData["画像名"];
+        //                if (!System.IO.Directory.Exists(_ImgPath + DirNM))
+        //                {
+        //                    // 保存先フォルダ未作成の場合は作成する
+        //                    System.IO.Directory.CreateDirectory(_ImgPath + DirNM);
+        //                }
 
-                        // 保存先画像名パス
-                        string NewFile = _ImgPath + DirNM + @"\" + sqlData["画像名"];
+        //                // 画像名
+        //                string imgFile = Properties.Settings.Default.MyDataPath + sqlData["画像名"];
 
-                        // 移動先に同名ファイルが登録済みのとき削除する
-                        if (System.IO.File.Exists(NewFile))
-                        {
-                            System.IO.File.Delete(NewFile);
-                        }
+        //                // 保存先画像名パス
+        //                string NewFile = _ImgPath + DirNM + @"\" + sqlData["画像名"];
 
-                        // 画像移動
-                        System.IO.File.Move(imgFile, NewFile);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                Cursor = Cursors.Default;
-            }
-        }
+        //                // 移動先に同名ファイルが登録済みのとき削除する
+        //                if (System.IO.File.Exists(NewFile))
+        //                {
+        //                    System.IO.File.Delete(NewFile);
+        //                }
+
+        //                // 画像移動
+        //                System.IO.File.Move(imgFile, NewFile);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        Cursor = Cursors.Default;
+        //    }
+        //}
 
         ///------------------------------------------------------------------------
         /// <summary>
@@ -1239,11 +1254,12 @@ namespace STSH_OCR.OCR
                 fromImg = Properties.Settings.Default.MyDataPath + t.ImageFileName;
 
                 // 移動先フォルダ
-                string sName = Utility.getNouhinName(t.TokuisakiCode.ToString().PadLeft(7, '0'), out sTel, out sJyu);   // 届先名
+                //string sName = Utility.getNouhinName(t.TokuisakiCode.ToString().PadLeft(7, '0'), out sTel, out sJyu);   // 2020/04/09コメント化
+                string sName = Utility.GetTokuisakiFromDataTable(t.TokuisakiCode.ToString().PadLeft(7, '0'), global.dtTokuisaki).TOKUISAKI_NM;   // 2020/04/09コメント化
 
                 //// 発注書移動先ファイルパス
                 //string userFolder = s.画像保存先パス + t.TokuisakiCode.ToString().PadLeft(7, '0') + "_" + sName;
-                
+
                 //// お客様フォルダがあるか？なければ作成する
                 //if (!System.IO.Directory.Exists(userFolder))
                 //{
@@ -2390,18 +2406,19 @@ namespace STSH_OCR.OCR
         private void txtTokuisakiCD_TextChanged(object sender, EventArgs e)
         {
             // 得意先名表示
-            string TokuiNM = string.Empty;
 
-            for (int i = 0; i < tokuisaki.Length; i++)
-            {
-                if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
-                {
-                    TokuiNM = tokuisaki[i].TOKUISAKI_NM;
-                    break;
-                }
-            }
-            
-            lblTokuisakiName.Text = TokuiNM;
+            // 2020/04/08 コメント化
+            //for (int i = 0; i < tokuisaki.Length; i++)
+            //{
+            //    if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
+            //    {
+            //        TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+            //        break;
+            //    }
+            //}
+
+            // 2020/04/09
+            lblTokuisakiName.Text = Utility.GetTokuisakiFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), global.dtTokuisaki).TOKUISAKI_NM;
 
             // 発注書パターン表示
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
@@ -2513,14 +2530,18 @@ namespace STSH_OCR.OCR
             {
                 if ((e.RowIndex % 2) != 0)
                 {
-                    ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
-                    
+                    // 2020/04/08 コメント化
+                    //ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
+
+                    // 2020/04/09
+                    ClsCsvData.ClsCsvSyohin_New syohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
+
                     dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;       // 仕入先名
                     dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;             // 商品名
                     dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;    // 規格
                     dg1[colIrisu, e.RowIndex].Value = syohin.CASE_IRISU;            // 入数
-                    dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;     // 納価
-                    dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;          // 売価
+                    //dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;     // 納価     // 2020/04/08 コメント化
+                    //dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;          // 売価     // 2020/04/08 コメント化
 
                     // 終売のとき
                     if (syohin.SHUBAI)
@@ -2680,15 +2701,22 @@ namespace STSH_OCR.OCR
             string TokuiNM = string.Empty;
             string TokuiFax = string.Empty;
 
-            for (int i = 0; i < tokuisaki.Length; i++)
-            {
-                if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
-                {
-                    TokuiNM = tokuisaki[i].TOKUISAKI_NM;
-                    TokuiFax = tokuisaki[i].TOKUISAKI_FAX;
-                    break;
-                }
-            }
+            // 2020/04/08 コメント化
+            //for (int i = 0; i < tokuisaki.Length; i++)
+            //{
+            //    if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
+            //    {
+            //        TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+            //        TokuiFax = tokuisaki[i].TOKUISAKI_FAX;
+            //        break;
+            //    }
+            //}
+
+            // 2020/04/09
+            ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisakiFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), global.dtTokuisaki);
+
+            TokuiNM = tokuisaki.TOKUISAKI_NM;
+            TokuiFax = tokuisaki.TOKUISAKI_FAX;
 
             Hide();
             frmReFax reFax = new frmReFax(_img, TokuiNM, TokuiFax);
@@ -2700,5 +2728,28 @@ namespace STSH_OCR.OCR
         {
 
         }
+
+        private void btnLeft_Click_1(object sender, EventArgs e)
+        {
+            ImageRotate(pictureBox1.Image);
+        }
+
+        ///-------------------------------------------------------
+        /// <summary>
+        ///     画像回転 </summary>
+        /// <param name="img">
+        ///     Image</param>
+        ///-------------------------------------------------------
+        private void ImageRotate(Image img)
+        {
+            Bitmap bmp = (Bitmap)img;
+
+            // 反転せず時計回りに90度回転する
+            bmp.RotateFlip(RotateFlipType.Rotate90FlipNone);
+
+            //表示
+            pictureBox1.Image = img;
+        }
+
     }
 }

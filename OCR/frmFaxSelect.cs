@@ -476,14 +476,21 @@ namespace STSH_OCR.OCR
                         string datetime = System.IO.Path.GetFileNameWithoutExtension(files);
                         string ListItem = datetime.Substring(0, 4) + "/" + datetime.Substring(4, 2) + "/" + datetime.Substring(6, 2) + " " + 
                                           datetime.Substring(8, 2) + ":" + datetime.Substring(10, 2) + ":" + datetime.Substring(12, 2) + " ";
-                        string _tkName = Utility.getNouhinName(tkCode, out gTel, out gJyu);
+
+                        // 2020/04/09 コメント化
+                        //string _tkName = Utility.getNouhinName(tkCode, out gTel, out gJyu);
+
+                        // 2020/04/09
+                        string _tkName = Utility.GetTokuisakiFromDataTable(tkCode, global.dtTokuisaki).TOKUISAKI_NM;
                         if (_tkName == string.Empty)
                         {
                             ListItem += "--- 不明 ---";
                         }
                         else
                         {
-                            ListItem += Utility.getNouhinName(tkCode, out gTel, out gJyu);
+                            // 2020/04/09 コメント化
+                            //ListItem += Utility.getNouhinName(tkCode, out gTel, out gJyu);
+                            ListItem += _tkName;    // 2020/04/09
                         }
 
                         listBox1.Items.Add(ListItem);

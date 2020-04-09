@@ -8,6 +8,7 @@ using System.Data.Linq;
 using System.Data.SQLite;
 using System.Linq;
 using STSH_OCR.Common;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace STSH_OCR.OCR
 {
@@ -51,7 +52,8 @@ namespace STSH_OCR.OCR
 
         Mat mMat = new Mat();
         
-        ClsCsvData.ClsCsvTokuisaki[] tokuisakis = null;
+        // 2020/04/08 コメント化
+        //ClsCsvData.ClsCsvTokuisaki[] tokuisakis = null;
 
         bool dgRows = false;
 
@@ -71,10 +73,11 @@ namespace STSH_OCR.OCR
             tblConfig = context.GetTable<Common.ClsSystemConfig>();
             Config = (ClsSystemConfig)tblConfig.Single(a => a.ID == global.configKEY);
 
-            // 得意先マスタークラス配列取得
-            string[] tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-            int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
-            tokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(tk_Array, sDate);
+            // 2020/04/08 コメント化
+            //// 得意先マスタークラス配列取得
+            //string[] tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            //int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
+            //tokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(tk_Array, sDate);
 
             // グリッドビュー設定
             GridViewSetting(dataGridView1);
@@ -194,14 +197,18 @@ namespace STSH_OCR.OCR
                     string jDate = t.ID.Substring(0, 4) + "/" + t.ID.Substring(4, 2) + "/" + t.ID.Substring(6, 2) + " " + t.ID.Substring(8, 2) + ":" + t.ID.Substring(10, 2) + ":" + t.ID.Substring(12, 2);
                     string tkNM = null;
 
-                    for (int i = 0; i < tokuisakis.Length; i++)
-                    {
-                        if (tokuisakis[i].TOKUISAKI_CD == t.TokuisakiCode.ToString("D7"))
-                        {
-                            tkNM = tokuisakis[i].TOKUISAKI_NM;
-                            break;
-                        }
-                    }
+                    // 2020/04/08 コメント化
+                    //for (int i = 0; i < tokuisakis.Length; i++)
+                    //{
+                    //    if (tokuisakis[i].TOKUISAKI_CD == t.TokuisakiCode.ToString("D7"))
+                    //    {
+                    //        tkNM = tokuisakis[i].TOKUISAKI_NM;
+                    //        break;
+                    //    }
+                    //}
+
+                    // 2020/04/09
+                    tkNM = Utility.GetTokuisakiFromDataTable(t.TokuisakiCode.ToString("D7"), global.dtTokuisaki).TOKUISAKI_NM;
 
                     g.Rows.Add();
 
@@ -352,6 +359,9 @@ namespace STSH_OCR.OCR
         ///---------------------------------------------------------
         private void imgShow(string filePath, float w, float h)
         {
+            //メモリクリア
+            mMat.Dispose();
+
             mMat = new Mat(filePath, ImreadModes.Grayscale);
             Bitmap bt = MatToBitmap(mMat);
 
@@ -391,10 +401,18 @@ namespace STSH_OCR.OCR
             var s = tblOrder.Single(a => a.ID == dataGridView1[colID, dataGridView1.SelectedRows[0].Index].Value.ToString());
             string _img = Utility.GetImageFilePath(Config.ImgPath, s.TokuisakiCode.ToString("D7")) + @"\" + s.ImageFileName;
 
-            //画像イメージ表示
-            showImage_openCv(_img);
+            if (System.IO.File.Exists(_img))
+            {
+                //画像イメージ表示
+                showImage_openCv(_img);
 
-            trackBar1.Enabled = true;
+                trackBar1.Enabled = true;
+            }
+            else
+            {
+                pictureBox1.Image = null;
+                trackBar1.Enabled = false;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

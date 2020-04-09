@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -139,5 +140,20 @@ namespace STSH_OCR.Common
         public const int Sat = 6; 
 
         public static string[] DayWeek = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
+        //// マスター
+        //public static ClsCsvData.ClsCsvSyohin_New[] syohin_News;
+        //public static ClsCsvData.ClsCsvTokuisaki[] tokuisakis;
+
+        // CSVデータ配列
+        //public static string[] gl_Tokuisaki;    // 得意先    
+        //public static string[] gl_Syohin;       // 商品    
+
+        // データセット：2020/04/09
+        public static DataSet DataSet;
+
+        // データテーブル：2020/04/09
+        public static DataTable dtSyohin;     // 商品データテーブル
+        public static DataTable dtTokuisaki;  // 得意先データテーブル
     }
 }

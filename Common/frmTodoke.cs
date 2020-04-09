@@ -214,6 +214,190 @@ namespace STSH_OCR.Common
             this.Cursor = Cursors.Default;
         }
 
+        
+        ///-----------------------------------------------------------------------------
+        /// <summary>
+        ///     得意先マスター一覧表示 : 2020/04/08 </summary>
+        /// <param name="g">
+        ///     DataGridViewオブジェクト</param>
+        /// <param name="tokuisakis">
+        ///     ClsCsvData.ClsCsvTokuisakisクラス配列</param>
+        ///-----------------------------------------------------------------------------
+        private void showNouhin(DataGridView g, ClsCsvData.ClsCsvTokuisaki [] tokuisakis)
+        {            
+            this.Cursor = Cursors.WaitCursor;
+
+            g.Rows.Clear();
+
+            int cnt = 0;
+
+            foreach (var t in tokuisakis)
+            {
+                //string[] t = item.Split(',');
+
+                // 削除フラグ
+                //string DelFlg = t[119].Replace("\"", "");
+
+                //// 1行目見出し行は読み飛ばす
+                //if (DelFlg == "DELFLG")
+                //{
+                //    continue;
+                //}
+
+                if (t.DELFLG == global.FLGON)
+                {
+                    continue;
+                }
+
+                // 有効開始日、有効終了日を検証する
+                string cYuko_Start_Date = t.YUKO_START_YMD;     // 有効開始日付
+                string cYuko_End_Date = t.YUKO_END_YMD;         // 有効終了日付
+
+                int toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
+
+                if (Utility.StrtoInt(cYuko_Start_Date) > toDate)
+                {
+                    continue;
+                }
+
+                if (toDate > Utility.StrtoInt(cYuko_End_Date))
+                {
+                    continue;
+                }
+
+                // 得意先コード
+                if (sCode.Text.Trim() != string.Empty)
+                {
+                    if (!t.TOKUISAKI_CD.Contains(sCode.Text))
+                    {
+                        continue;
+                    }
+                }
+
+                // 得意先名称
+                if (sName.Text.Trim() != string.Empty)
+                {
+                    if (!t.TOKUISAKI_NM.Contains(sName.Text))
+                    {
+                        continue;
+                    }
+                }
+
+                // 得意先カナ
+                if (sFuri.Text.Trim() != string.Empty)
+                {
+                    if (!t.TOKUISAKI_KANA_NM.Contains(sFuri.Text))
+                    {
+                        continue;
+                    }
+                }
+
+                g.Rows.Add();
+                g[colNouCode, cnt].Value = t.TOKUISAKI_CD;
+                g[colNouName, cnt].Value = t.TOKUISAKI_NM;
+
+                cnt++;
+            }
+
+            g.CurrentCell = null;
+
+            // 該当なしメッセージ
+            if (cnt == 0)
+            {
+                MessageBox.Show("該当する得意先はありませんでした", "結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+
+            this.Cursor = Cursors.Default;
+        }
+
+
+        ///-----------------------------------------------------------------------------
+        /// <summary>
+        ///     CSVデータから得意先マスター一覧を表示 : 2020/04/09 </summary>
+        /// <param name="g">
+        ///     DataGridViewオブジェクト</param>
+        /// <param name="tokuisakis">
+        ///     得意先CSVデータ配列</param>
+        ///-----------------------------------------------------------------------------
+        private void ShowTokuisaki(DataGridView g, DataTable tokuisakis)
+        {
+            this.Cursor = Cursors.WaitCursor;
+
+            g.Rows.Clear();
+
+            int cnt = 0;
+
+            DataRow[] rows = tokuisakis.AsEnumerable().Where(a => a["DELFLG"].ToString() == global.FLGOFF).OrderBy(a => a["TOKUISAKI_CD"].ToString().PadLeft(7, '0')).ToArray();
+
+            foreach (var t in rows)
+            {
+                // 有効開始日、有効終了日を検証する
+                int cYuko_Start_Date = Utility.StrtoInt(t["YUKO_START_YMD"].ToString());    // 有効開始日付
+                int cYuko_End_Date = Utility.StrtoInt(t["YUKO_END_YMD"].ToString());        // 有効終了日付
+                int toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
+
+                if (cYuko_Start_Date > toDate)
+                {
+                    continue;
+                }
+
+                if (cYuko_End_Date != global.flgOff)
+                {
+                    if (toDate > cYuko_End_Date)
+                    {
+                        continue;
+                    }
+                }
+
+                // 得意先コード
+                if (sCode.Text.Trim() != string.Empty)
+                {
+                    if (!(t["TOKUISAKI_CD"].ToString().Contains(sCode.Text)))
+                    {
+                        continue;
+                    }
+                }
+
+                // 得意先名称
+                if (sName.Text.Trim() != string.Empty)
+                {
+                    if (!t["TOKUISAKI_NM"].ToString().Contains(sName.Text))
+                    {
+                        continue;
+                    }
+                }
+
+                // 得意先カナ
+                if (sFuri.Text.Trim() != string.Empty)
+                {
+                    if (!t["TOKUISAKI_KANA_NM"].ToString().Contains(sFuri.Text))
+                    {
+                        continue;
+                    }
+                }
+
+                g.Rows.Add();
+                g[colNouCode, cnt].Value = t["TOKUISAKI_CD"].ToString().PadLeft(7, '0');
+                g[colNouName, cnt].Value = t["TOKUISAKI_NM"].ToString();
+
+                cnt++;
+            }
+
+            g.CurrentCell = null;
+
+            // 該当なしメッセージ
+            if (cnt == 0)
+            {
+                MessageBox.Show("該当する得意先はありませんでした", "結果", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+
+            this.Cursor = Cursors.Default;
+        }
+
+
+
         private void button1_Click(object sender, EventArgs e)
         {
         }
@@ -231,7 +415,7 @@ namespace STSH_OCR.Common
             _nouCode = null;
 
             // 得意先CSVデータ配列読み込み
-            MstArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            //MstArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -307,7 +491,11 @@ namespace STSH_OCR.Common
 
         private void btnS_Click(object sender, EventArgs e)
         {
-            showNouhin(dataGridView1, MstArray);
+            //showNouhin(dataGridView1, MstArray);
+            //showNouhin(dataGridView1, global.tokuisakis);
+
+            // 2020/04/09
+            ShowTokuisaki(dataGridView1, global.dtTokuisaki);
         }
 
         private void sCode_KeyPress(object sender, KeyPressEventArgs e)

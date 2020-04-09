@@ -39,11 +39,13 @@ namespace STSH_OCR.OCR
         // 店着日付クラス
         ClsTenDate[] tenDates = new ClsTenDate[7];
 
+        // 2020/04/08 コメント化
         // 商品マスタークラス
-        ClsCsvData.ClsCsvSyohin[] syohins = null;
+        //ClsCsvData.ClsCsvSyohin[] syohins = null;
 
+        // 2020/04/08 コメント化
         // 得意先マスタークラス
-        ClsCsvData.ClsCsvTokuisaki[] tokuisakis = null;
+        //ClsCsvData.ClsCsvTokuisaki[] tokuisakis = null;
 
         // 発注書ＣＳＶデータクラス
         ClsCsvData.ClsCsvCSV[] csvDatas = null;
@@ -201,14 +203,18 @@ namespace STSH_OCR.OCR
                     string cTokuisakiCD = r.TokuisakiCode.ToString("D7");
                     string cTokuisakiNM = "";
 
-                    for (int i = 0; i < tokuisakis.Length; i++)
-                    {
-                        if (tokuisakis[i].TOKUISAKI_CD == cTokuisakiCD)
-                        {
-                            cTokuisakiNM = tokuisakis[i].TOKUISAKI_NM;
-                            break;
-                        }
-                    }
+                    // 2020/04/08 コメント化
+                    //for (int i = 0; i < tokuisakis.Length; i++)
+                    //{
+                    //    if (tokuisakis[i].TOKUISAKI_CD == cTokuisakiCD)
+                    //    {
+                    //        cTokuisakiNM = tokuisakis[i].TOKUISAKI_NM;
+                    //        break;
+                    //    }
+                    //}
+
+                    // 2020/04/09
+                    cTokuisakiNM = Utility.GetTokuisakiFromDataTable(cTokuisakiCD, global.dtTokuisaki).TOKUISAKI_NM;
 
                     string cNouhinDT = string.Empty;
                     string cDT = global.DTKBN;
@@ -466,7 +472,8 @@ namespace STSH_OCR.OCR
                         }
 
                         // 商品情報取得
-                        ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, goods[i].Code.PadLeft(8, '0'));
+                        //ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, goods[i].Code.PadLeft(8, '0'));  // 2020/04/08 コメント化
+                        ClsCsvData.ClsCsvSyohin_New syohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, goods[i].Code.PadLeft(8, '0'));  // 2020/04/09
 
                         // 店着日別発注数
                         for (int iX = 0; iX < 7; iX++)
@@ -682,14 +689,16 @@ namespace STSH_OCR.OCR
             //_sPath = cnf.DataPath;
             _FileAppend = cnf.FileWriteStatus;
 
-            // 商品マスタークラス配列作成
-            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+            // 2020/04/08 コメント化
+            //// 商品マスタークラス配列作成
+            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
-            // 得意先マスタークラス配列作成
-            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-            int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
-            tokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
-            
+            // 2020/04/08 コメント化
+            //// 得意先マスタークラス配列作成
+            //string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            //int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
+            //tokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+
             // プログレスバー初期設定
             progressBar1.Minimum = 0;
             progressBar1.Maximum = 100;

@@ -14,6 +14,7 @@ using System.Configuration;
 using STSH_OCR.Pattern;
 using STSH_OCR.OCR;
 using STSH_OCR.Common;
+using STSH_OCR.Master;
 
 namespace STSH_OCR
 {
@@ -185,7 +186,7 @@ namespace STSH_OCR
         private void button7_Click(object sender, EventArgs e)
         {
             Hide();
-            Form frm = new Master.frmComment();
+            frmMasterLoad frm = new frmMasterLoad();
             frm.ShowDialog();
             Show();
         }
@@ -277,6 +278,18 @@ namespace STSH_OCR
             dCountShow();   // 件数表示
             timer1.Enabled = true;
 
+            //// 得意先CSVデータ配列読み込み
+            //global.gl_Tokuisaki = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+
+            // CSVデータをDataSetに読み込む : 2020/04/09
+            global.dtSyohin = readCSV(Properties.Settings.Default.商品マスター);
+            global.dtTokuisaki = readCSV(Properties.Settings.Default.得意先マスター);
+
+            // データセットにデータテーブルを追加 : 2020/04/09
+            global.DataSet = new DataSet();
+            global.DataSet.Tables.Add(global.dtSyohin);
+            global.DataSet.Tables.Add(global.dtTokuisaki);
+
             // データベース接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
@@ -288,6 +301,59 @@ namespace STSH_OCR
 
             // orderpattern にコメントフィールド追加：2020/04/01
             DbAlterTable();
+        }
+
+        ///---------------------------------------------------------
+        /// <summary>
+        ///     ＣＳＶデータからデータテーブルを生成する </summary>
+        /// <param name="sPath">
+        ///     CSVデータファイルパス</param>
+        /// <returns>
+        ///     データテーブル</returns>
+        ///---------------------------------------------------------
+        private DataTable readCSV(string sPath)
+        {
+            System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());
+
+            ////パスの設定
+            //string path = "CSVファイルのパス";
+
+            //StreamReaderクラスのインスタンスの作成
+            System.IO.StreamReader sr = new System.IO.StreamReader(sPath, Encoding.Default);
+
+            //DataTableクラスのインスタンスの作成
+            DataTable dt = new DataTable();
+
+            //1行目を区切り文字(カンマ)で分割し列名を取得
+            string[] items = sr.ReadLine().Split(',');
+
+            //列の作成
+            foreach (string item in items)
+            {
+                dt.Columns.Add(item, typeof(string));
+            }
+
+            //各行を読込み、テーブルを作成
+            while (sr.Peek() != -1)
+            {
+                string[] values = sr.ReadLine().Split(',');
+
+                DataRow dr = dt.NewRow();
+
+                for (int ii = 0; ii < items.Length; ii++)
+                {
+                    dr[items[ii]] = values[ii];
+                }
+
+                dt.Rows.Add(dr);
+            }
+
+            //StreamReaderクラスのインスタンスの破棄
+            sr.Close();
+
+            System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());
+
+            return dt;
         }
 
         private void DbAlterTable()
@@ -481,6 +547,24 @@ namespace STSH_OCR
             frmOrderIndex frmOrderIndex = new frmOrderIndex();
             frmOrderIndex.ShowDialog();
             Show();
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            //Hide();
+            //frmMasterLoad frm = new frmMasterLoad();
+            //frm.ShowDialog();
+
+            //if (frm.syohin_News == null)
+            //{
+            //    Close();
+            //}
+
+            //global.syohin_News = frm.syohin_News;
+            //global.tokuisakis = frm.tokuisakis;
+
+            //frm.Dispose();
+            //Show();
         }
     }
 }

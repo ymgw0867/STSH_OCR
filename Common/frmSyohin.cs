@@ -137,68 +137,69 @@ namespace STSH_OCR.Common
         {            
             this.Cursor = Cursors.WaitCursor;
 
-            ClsCsvData.ClsCsvSyohin [] syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+            // 2020/04/09 コメント化
+            //ClsCsvData.ClsCsvSyohin [] syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             int cnt = 0;
             dataGridView1.Rows.Clear();
 
-            foreach (var t in syohins.OrderBy(a => a.SIRESAKI_CD).ThenBy(a => a.SYOHIN_CD))
+            foreach (var t in global.dtSyohin.AsEnumerable().OrderBy(a => a["SIRESAKI_CD"].ToString()).ThenBy(a => a["SYOHIN_CD"].ToString()))
             {
-                if (!checkBox1.Checked && t.SHUBAI)
+                if (!checkBox1.Checked && t["SHUBAI"].ToString() == global.FLGON)
                 {
                     continue;
                 }
                 
                 // 商品コード検索
-                if (sCode.Text != string.Empty && !t.SYOHIN_CD.Contains(sCode.Text))
+                if (sCode.Text != string.Empty && !t["SYOHIN_CD"].ToString().Contains(sCode.Text))
                 {
                     continue;
                 }
 
                 // 商品名カナ検索
-                if (sName.Text != string.Empty && !t.SYOHIN_KANA.Contains(sName.Text))
+                if (sName.Text != string.Empty && !t["SYOHIN_KANA"].ToString().Contains(sName.Text))
                 {
                     continue;
                 }
 
                 // 仕入先コード検索
-                if (sSCode.Text != string.Empty && !t.SIRESAKI_CD.Contains(sSCode.Text))
+                if (sSCode.Text != string.Empty && !t["SIRESAKI_CD"].ToString().Contains(sSCode.Text))
                 {
                     continue;
                 }
 
                 // 仕入先カナ検索
-                if (sSName.Text != string.Empty && !t.SIRESAKI_KANA_NM.Contains(sSName.Text))
+                if (sSName.Text != string.Empty && !t["SIRESAKI_KANA_NM"].ToString().Contains(sSName.Text))
                 {
                     continue;
                 }
 
                 // JANコード検索
-                if (sJanCode.Text != string.Empty && !t.JAN_CD.Contains(sJanCode.Text))
+                if (sJanCode.Text != string.Empty && !t["JAN_CD"].ToString().Contains(sJanCode.Text))
                 {
                     continue;
                 }
 
                 // 商品表示
                 g.Rows.Add();
-                dataGridView1[colCode, cnt].Value = t.SYOHIN_CD;
-                dataGridView1[colShiireNM, cnt].Value = t.SIRESAKI_NM;
-                dataGridView1[colName, cnt].Value = t.SYOHIN_NM;
-                dataGridView1[colJan, cnt].Value = t.JAN_CD;
-                dataGridView1[colKikaku, cnt].Value = t.SYOHIN_KIKAKU;
+                dataGridView1[colCode, cnt].Value = t["SYOHIN_CD"].ToString();
+                dataGridView1[colShiireNM, cnt].Value = t["SIRESAKI_NM"].ToString();
+                dataGridView1[colName, cnt].Value = t["SYOHIN_NM"].ToString();
+                dataGridView1[colJan, cnt].Value = t["JAN_CD"].ToString();
+                dataGridView1[colKikaku, cnt].Value = t["SYOHIN_KIKAKU"].ToString();
 
-                if (t.LAST_SALE_YMD.Length > 7)
+                if (t["LAST_SALE_YMD"].ToString().Length > 7)
                 {
-                    dataGridView1[colSyubai, cnt].Value = t.LAST_SALE_YMD.Substring(0, 4) + "/" +
-                                                          t.LAST_SALE_YMD.Substring(4, 2) + "/" +
-                                                          t.LAST_SALE_YMD.Substring(6, 2);
+                    dataGridView1[colSyubai, cnt].Value = t["LAST_SALE_YMD"].ToString().Substring(0, 4) + " / " +
+                                                          t["LAST_SALE_YMD"].ToString().Substring(4, 2) + " / " +
+                                                          t["LAST_SALE_YMD"].ToString().Substring(6, 2);
                 }
                 else
                 {
                     dataGridView1[colSyubai, cnt].Value = ""; ;
                 }
 
-                if (t.SHUBAI)
+                if (t["SHUBAI"].ToString() == global.FLGON)
                 {
                     dataGridView1.Rows[cnt].DefaultCellStyle.ForeColor = Color.Red;
                 }

@@ -29,7 +29,7 @@ namespace STSH_OCR.Common
         Table<Common.ClsOrderPattern> dbPtn = null;
         ClsOrderPattern ClsOrderPattern = null;
 
-        ClsCsvData.ClsCsvTokuisaki[] csvTokuisakis = null;
+        //ClsCsvData.ClsCsvTokuisaki[] csvTokuisakis = null;
 
         // カラム定義
         private string colNouCode = "c0";
@@ -160,10 +160,10 @@ namespace STSH_OCR.Common
         private void getVNouhin()
         {
             // 得意先CSVデータ配列読み込み
-            string [] MstArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-            int toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
+            //string [] MstArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);  // 2020/04/08 コメント化
+            //int toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
 
-            csvTokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(MstArray, toDate);
+            //csvTokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(MstArray, toDate);　// 2020/04/08 コメント化
         }
 
         ///----------------------------------------------------------------
@@ -172,7 +172,7 @@ namespace STSH_OCR.Common
         /// <param name="g">
         ///     DataGridViewオブジェクト</param>
         ///----------------------------------------------------------------
-        private void showPattern(DataGridView g)
+        private void ShowPattern(DataGridView g)
         {
             this.Cursor = Cursors.WaitCursor;
 
@@ -190,18 +190,9 @@ namespace STSH_OCR.Common
                 int vI = 0;
                 bool bl = false;
 
-                // 得意先配列から該当得意先を検索
-                for (int iX = 0; iX < csvTokuisakis.Length; iX++)
-                {
-                    if (Utility.StrtoInt(csvTokuisakis[iX].TOKUISAKI_CD) == s.TokuisakiCode)
-                    {
-                        vI = iX;
-                        bl = true;
-                        break;
-                    }
-                }
+                ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisakiFromDataTable(s.TokuisakiCode.ToString("D2"), global.dtTokuisaki);
 
-                if (!bl)
+                if (tokuisaki.TOKUISAKI_CD == "")
                 {
                     continue;
                 }
@@ -209,7 +200,7 @@ namespace STSH_OCR.Common
                 // 検索得意先コード
                 if (sCode.Text != string.Empty)
                 {
-                    if (!csvTokuisakis[vI].TOKUISAKI_CD.Contains(sCode.Text))
+                    if (!tokuisaki.TOKUISAKI_CD.Contains(sCode.Text))
                     {
                         continue;
                     }
@@ -218,7 +209,7 @@ namespace STSH_OCR.Common
                 // 検索電話番号
                 if (sTel.Text != string.Empty)
                 {
-                    if (!csvTokuisakis[vI].TOKUISAKI_TEL.Contains(sTel.Text))
+                    if (!tokuisaki.TOKUISAKI_TEL.Contains(sTel.Text))
                     {
                         continue;
                     }
@@ -227,7 +218,7 @@ namespace STSH_OCR.Common
                 // 検索得意先名称
                 if (sName.Text != string.Empty)
                 {
-                    if (!csvTokuisakis[vI].TOKUISAKI_NM.Contains(sName.Text))
+                    if (!tokuisaki.TOKUISAKI_NM.Contains(sName.Text))
                     {
                         continue;
                     }
@@ -236,8 +227,8 @@ namespace STSH_OCR.Common
                 // 検索住所
                 if (sAddress.Text != string.Empty)
                 {
-                    if (!csvTokuisakis[vI].TOKUISAKI_ZYUSYO1.Contains(sAddress.Text) &&
-                        !csvTokuisakis[vI].TOKUISAKI_ZYUSYO2.Contains(sAddress.Text))
+                    if (!tokuisaki.TOKUISAKI_ZYUSYO1.Contains(sAddress.Text) &&
+                        !tokuisaki.TOKUISAKI_ZYUSYO2.Contains(sAddress.Text))
                     {
                         continue;
                     }
@@ -245,12 +236,12 @@ namespace STSH_OCR.Common
 
                 g.Rows.Add();
                 g[colNouCode, cnt].Value = s.TokuisakiCode;
-                g[colNouName, cnt].Value = csvTokuisakis[vI].TOKUISAKI_NM;
+                g[colNouName, cnt].Value = tokuisaki.TOKUISAKI_NM;
                 g[colPtnID, cnt].Value = s.SeqNum.ToString().PadLeft(3, '0');
                 g[colSecondNum, cnt].Value = s.SecondNum.ToString().PadLeft(3, '0');
                 g[colMemo, cnt].Value = s.Memo;
-                g[colTel, cnt].Value = csvTokuisakis[vI].TOKUISAKI_TEL;
-                g[colAddress, cnt].Value = csvTokuisakis[vI].TOKUISAKI_ZYUSYO1 + " " + csvTokuisakis[vI].TOKUISAKI_ZYUSYO2;
+                g[colTel, cnt].Value = tokuisaki.TOKUISAKI_TEL;
+                g[colAddress, cnt].Value = tokuisaki.TOKUISAKI_ZYUSYO1 + " " + tokuisaki.TOKUISAKI_ZYUSYO2;
                 g[colDate, cnt].Value = s.YyMmDd;
                 g[colID, cnt].Value = s.ID.ToString();
 
@@ -268,7 +259,7 @@ namespace STSH_OCR.Common
 
         private void button1_Click(object sender, EventArgs e)
         {
-            showPattern(dataGridView1);
+            ShowPattern(dataGridView1);
         }
 
         private void frmTodoke_Load(object sender, EventArgs e)

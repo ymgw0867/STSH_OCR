@@ -67,7 +67,6 @@
             this.cmbSyohin_S = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.button9 = new System.Windows.Forms.Button();
             this.txtComment1 = new System.Windows.Forms.TextBox();
             this.txtComment2 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -478,16 +477,6 @@
             this.label7.Text = "小分類：";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(659, 963);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(88, 36);
-            this.button9.TabIndex = 35;
-            this.button9.Text = "button9";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
-            // 
             // txtComment1
             // 
             this.txtComment1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -618,7 +607,6 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txtComment2);
             this.Controls.Add(this.txtComment1);
-            this.Controls.Add(this.button9);
             this.Controls.Add(this.cmbSyohin_S);
             this.Controls.Add(this.cmbSyohin_M);
             this.Controls.Add(this.label7);
@@ -707,7 +695,6 @@
         private System.Windows.Forms.ComboBox cmbSyohin_S;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button button9;
         private System.Windows.Forms.TextBox txtComment1;
         private System.Windows.Forms.TextBox txtComment2;
         private System.Windows.Forms.Label label8;

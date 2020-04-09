@@ -11,6 +11,8 @@ using STSH_OCR.Common;
 using System.Data.SQLite;
 using System.Data.Linq;
 using ClosedXML.Excel;
+using ClosedXML;
+using Microsoft.Office.Interop.Excel;
 
 namespace STSH_OCR.Pattern
 {
@@ -19,12 +21,6 @@ namespace STSH_OCR.Pattern
         public frmPtnAdd()
         {
             InitializeComponent();
-
-            //txtMaker.AutoSize = false;
-            //txtMaker.Height = 24;
-
-            //txtSyohinName.AutoSize = false;
-            //txtSyohinName.Height = 24;
         }
 
         string[] TkArray = null;        // 得意先マスター配列
@@ -69,7 +65,8 @@ namespace STSH_OCR.Pattern
         ClsMyComboBox[] ClsCombos_S = null;
 
         // 商品マスタークラス配列
-        ClsCsvData.ClsCsvSyohin[] syohins = null;
+        //ClsCsvData.ClsCsvSyohin[] global.syohin_News = null;
+        //ClsCsvData.ClsCsvSyohin_New[] syohin_News = null;
 
         string[] csvArray = null;
 
@@ -99,9 +96,8 @@ namespace STSH_OCR.Pattern
             // フォーム初期化
             dispInitial();
 
-            // 得意先CSVデータ配列読み込み
-            
-            TkArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            // 得意先CSVデータ配列読み込み            
+            //TkArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
 
             //// 商品CSVデータ配列読み込み
             //SyArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
@@ -120,9 +116,18 @@ namespace STSH_OCR.Pattern
             dbPtn = context.GetTable<Common.ClsOrderPattern>();
 
             // 商品マスタークラス配列読み込み
-            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+            //global.syohin_News = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+            //System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());            
+            //syohin_News = Utility.GetSyohinData();
+            //System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString()); 
+            //System.Diagnostics.Debug.WriteLine(syohin_News.Length);
         }
 
+
+        ///-------------------------------------------------------
+        /// <summary>
+        ///     商品分類リスト読み込み </summary>
+        ///-------------------------------------------------------
         private void SetSyohinBunrui_L()
         {
             // 商品分類リスト読み込み
@@ -276,10 +281,10 @@ namespace STSH_OCR.Pattern
                 tempDGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
                 // 列ヘッダーフォント指定
-                tempDGV.ColumnHeadersDefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
+                tempDGV.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("ＭＳ ゴシック", 9, FontStyle.Regular);
 
                 // データフォント指定
-                tempDGV.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 10, FontStyle.Regular);
+                tempDGV.DefaultCellStyle.Font = new System.Drawing.Font("ＭＳ ゴシック", 10, FontStyle.Regular);
 
                 // 行の高さ
                 tempDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -405,10 +410,10 @@ namespace STSH_OCR.Pattern
                 tempDGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
                 // 列ヘッダーフォント指定
-                tempDGV.ColumnHeadersDefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
+                tempDGV.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("ＭＳ ゴシック", 9, FontStyle.Regular);
 
                 // データフォント指定
-                tempDGV.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 10, FontStyle.Regular);
+                tempDGV.DefaultCellStyle.Font = new System.Drawing.Font("ＭＳ ゴシック", 10, FontStyle.Regular);
 
                 // 行の高さ
                 tempDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -500,10 +505,10 @@ namespace STSH_OCR.Pattern
                 tempDGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
                 // 列ヘッダーフォント指定
-                tempDGV.ColumnHeadersDefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
+                tempDGV.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("ＭＳ ゴシック", 9, FontStyle.Regular);
 
                 // データフォント指定
-                tempDGV.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 10, FontStyle.Regular);
+                tempDGV.DefaultCellStyle.Font = new System.Drawing.Font("ＭＳ ゴシック", 10, FontStyle.Regular);
 
                 // 行の高さ
                 tempDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -676,10 +681,10 @@ namespace STSH_OCR.Pattern
                 tempDGV.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
                 // 列ヘッダーフォント指定
-                tempDGV.ColumnHeadersDefaultCellStyle.Font = new Font("ＭＳ ゴシック", 9, FontStyle.Regular);
+                tempDGV.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("ＭＳ ゴシック", 9, FontStyle.Regular);
 
                 // データフォント指定
-                tempDGV.DefaultCellStyle.Font = new Font("ＭＳ ゴシック", 10, FontStyle.Regular);
+                tempDGV.DefaultCellStyle.Font = new System.Drawing.Font("ＭＳ ゴシック", 10, FontStyle.Regular);
 
                 // 行の高さ
                 tempDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -772,7 +777,7 @@ namespace STSH_OCR.Pattern
 
             GridviewSet(dataGridView1);
 
-            ShowShohin(dataGridView1);
+            ShowShohin(dataGridView1, global.dtSyohin); // 2020/04/09
         }
 
         ///--------------------------------------------------------
@@ -781,7 +786,7 @@ namespace STSH_OCR.Pattern
         /// <param name="g">
         ///     データグリッドビューオブジェクト</param>
         ///--------------------------------------------------------
-        private void ShowShohin(DataGridView g)
+        private void ShowShohin(DataGridView g, System.Data.DataTable dtSyohin)
         {
             this.Cursor = Cursors.WaitCursor;
 
@@ -790,12 +795,14 @@ namespace STSH_OCR.Pattern
             int cnt = 0;
             this.txtMemo.Text = "";
 
-            foreach (var t in syohins.OrderBy(a => a.SYOHIN_CD))
+            DataRow[] row = dtSyohin.AsEnumerable().OrderBy(a => a["SYOHIN_CD"].ToString().PadLeft(8, '0')).ToArray();
+
+            foreach (var t in row)
             {
                 // 仕入先名検索のとき
                 if (txtMaker.Text.Trim() != string.Empty)
                 {
-                    if (!t.SIRESAKI_NM.Contains(txtMaker.Text))
+                    if (!t["SIRESAKI_NM"].ToString().Contains(txtMaker.Text))
                     {
                         continue;
                     }
@@ -804,7 +811,7 @@ namespace STSH_OCR.Pattern
                 // 商品名検索のとき
                 if (txtSyohinName.Text.Trim() != string.Empty)
                 {
-                    if (!t.SYOHIN_NM.Contains(txtSyohinName.Text))
+                    if (!t["SYOHIN_NM"].ToString().Contains(txtSyohinName.Text))
                     {
                         continue;
                     }
@@ -818,7 +825,7 @@ namespace STSH_OCR.Pattern
                 // 大分類
                 if (Bunrui_L != string.Empty)
                 {                    
-                    if (t.SYOHIN_KIND_L_CD != Bunrui_L)
+                    if (t["SYOHIN_KIND_L_CD"].ToString().PadLeft(2, '0') != Bunrui_L)
                     {
                         continue;
                     }
@@ -826,7 +833,7 @@ namespace STSH_OCR.Pattern
                     // 中分類
                     if (Bunrui_M != string.Empty)
                     {
-                        if (t.SYOHIN_KIND_M_CD != Bunrui_M)
+                        if (t["SYOHIN_KIND_M_CD"].ToString().PadLeft(2, '0') != Bunrui_M)
                         {
                             continue;
                         }
@@ -834,7 +841,7 @@ namespace STSH_OCR.Pattern
                         // 小分類
                         if (Bunrui_S != string.Empty)
                         {
-                            if (t.SYOHIN_KIND_S_CD != Bunrui_S)
+                            if (t["SYOHIN_KIND_S_CD"].ToString().PadLeft(2, '0') != Bunrui_S)
                             {
                                 continue;
                             }
@@ -844,11 +851,11 @@ namespace STSH_OCR.Pattern
                 
                 // 商品表示
                 g.Rows.Add();
-                g[colMaker, cnt].Value = t.SIRESAKI_NM;
-                g[colHinCode, cnt].Value = t.SYOHIN_CD.PadLeft(8, '0');
-                g[colHinName, cnt].Value = t.SYOHIN_NM;
-                g[colIrisu, cnt].Value = t.CASE_IRISU;
-                g[colKikaku, cnt].Value = t.SYOHIN_KIKAKU;
+                g[colMaker, cnt].Value = t["SIRESAKI_NM"].ToString();
+                g[colHinCode, cnt].Value = t["SYOHIN_CD"].ToString().PadLeft(8, '0');
+                g[colHinName, cnt].Value = t["SYOHIN_NM"].ToString();
+                g[colIrisu, cnt].Value = t["CASE_IRISU"].ToString();
+                g[colKikaku, cnt].Value = t["SYOHIN_KIKAKU"].ToString();
 
                 cnt++;
             }
@@ -857,6 +864,93 @@ namespace STSH_OCR.Pattern
 
             this.Cursor = Cursors.Default;
         }
+
+
+        ///--------------------------------------------------------
+        /// <summary>
+        ///     データグリッドに商品一覧を表示する </summary>
+        /// <param name="g">
+        ///     データグリッドビューオブジェクト</param>
+        ///--------------------------------------------------------
+        //private void ShowShohin(DataGridView g, string [] syohin)
+        //{
+        //    this.Cursor = Cursors.WaitCursor;
+
+        //    g.Rows.Clear();
+
+        //    int cnt = 0;
+        //    this.txtMemo.Text = "";
+
+        //    foreach (var t in global.syohin_News.OrderBy(a => a.SYOHIN_CD))
+        //    {
+        //        // 仕入先名検索のとき
+        //        if (txtMaker.Text.Trim() != string.Empty)
+        //        {
+        //            if (!t.SIRESAKI_NM.Contains(txtMaker.Text))
+        //            {
+        //                continue;
+        //            }
+        //        }
+
+        //        // 商品名検索のとき
+        //        if (txtSyohinName.Text.Trim() != string.Empty)
+        //        {
+        //            if (!t.SYOHIN_NM.Contains(txtSyohinName.Text))
+        //            {
+        //                continue;
+        //            }
+        //        }
+
+        //        // 商品分類検索
+        //        string Bunrui_L = Utility.NulltoStr(cmbSyohin_L.SelectedValue);
+        //        string Bunrui_M = Utility.NulltoStr(cmbSyohin_M.SelectedValue);
+        //        string Bunrui_S = Utility.NulltoStr(cmbSyohin_S.SelectedValue);
+
+        //        // 大分類
+        //        if (Bunrui_L != string.Empty)
+        //        {
+        //            if (t.SYOHIN_KIND_L_CD != Bunrui_L)
+        //            {
+        //                continue;
+        //            }
+
+        //            // 中分類
+        //            if (Bunrui_M != string.Empty)
+        //            {
+        //                if (t.SYOHIN_KIND_M_CD != Bunrui_M)
+        //                {
+        //                    continue;
+        //                }
+
+        //                // 小分類
+        //                if (Bunrui_S != string.Empty)
+        //                {
+        //                    if (t.SYOHIN_KIND_S_CD != Bunrui_S)
+        //                    {
+        //                        continue;
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        // 商品表示
+        //        g.Rows.Add();
+        //        g[colMaker, cnt].Value = t.SIRESAKI_NM;
+        //        g[colHinCode, cnt].Value = t.SYOHIN_CD.PadLeft(8, '0');
+        //        g[colHinName, cnt].Value = t.SYOHIN_NM;
+        //        g[colIrisu, cnt].Value = t.CASE_IRISU;
+        //        g[colKikaku, cnt].Value = t.SYOHIN_KIKAKU;
+
+        //        cnt++;
+        //    }
+
+        //    g.CurrentCell = null;
+
+        //    this.Cursor = Cursors.Default;
+        //}
+
+
+
 
         ///--------------------------------------------------------
         /// <summary>
@@ -873,22 +967,25 @@ namespace STSH_OCR.Pattern
             this.Cursor = Cursors.WaitCursor;
 
             // 商品明細クラス
-            ClsSyohinRireki[] rireki = new ClsSyohinRireki[syohins.Length];
+            //ClsSyohinRireki[] rireki = new ClsSyohinRireki[global.syohin_News.Length];  // 2020/04/09 コメント化            
+            ClsSyohinRireki[] rireki = new ClsSyohinRireki[global.dtSyohin.Rows.Count];     // 2020/04/09
 
             cn.Open();
 
             try
             {
                 // 商品明細クラスに商品情報をセットする
-                for (int i = 0; i < syohins.Length; i++)
+                int i = 0;
+                foreach (var t in global.dtSyohin.AsEnumerable())
                 {
                     rireki[i] = new ClsSyohinRireki();
-                    rireki[i].SYOHIN_CD = syohins[i].SYOHIN_CD;
-                    rireki[i].SYOHIN_NM = syohins[i].SYOHIN_NM;
-                    rireki[i].SIRESAKI_NM = syohins[i].SIRESAKI_NM;
-                    rireki[i].SYOHIN_KIKAKU = syohins[i].SYOHIN_KIKAKU;
-                    rireki[i].CASE_IRISU = syohins[i].CASE_IRISU;
+                    rireki[i].SYOHIN_CD = t["SYOHIN_CD"].ToString();
+                    rireki[i].SYOHIN_NM = t["SYOHIN_NM"].ToString();
+                    rireki[i].SIRESAKI_NM = t["SIRESAKI_NM"].ToString();
+                    rireki[i].SYOHIN_KIKAKU = t["SYOHIN_KIKAKU"].ToString();
+                    rireki[i].CASE_IRISU = Utility.StrtoDouble(t["CASE_IRISU"].ToString());
                     rireki[i].Suu = 0;
+                    i++;
                 }
 
                 this.txtMemo.Text = "";
@@ -912,11 +1009,11 @@ namespace STSH_OCR.Pattern
                     // 商品明細クラスに発注実績数をセット
                     while (reader.Read())
                     {
-                        for (int i = 0; i < rireki.Length; i++)
+                        for (int iX = 0; iX < rireki.Length; iX++)
                         {
-                            if (rireki[i].SYOHIN_CD == reader["商品コード"].ToString())
+                            if (rireki[iX].SYOHIN_CD == reader["商品コード"].ToString())
                             {
-                                rireki[i].Suu = Utility.StrtoInt(reader["suu"].ToString());
+                                rireki[iX].Suu = Utility.StrtoInt(reader["suu"].ToString());
                                 break;
                             }
                         }
@@ -1127,23 +1224,24 @@ namespace STSH_OCR.Pattern
 
                 dataGridView2[colTdkName, e.RowIndex].Value = string.Empty;
 
+                // 2020/04/08 コメント化
                 // 得意先名、電話番号、住所表示
-                string gName = string.Empty;
-                string gTel = string.Empty;
-                string gJyu = string.Empty;
+                //string gName = string.Empty;
+                //string gTel = string.Empty;
+                //string gJyu = string.Empty;
 
-                gName = Utility.getNouhinName(tdkCode, out gTel, out gJyu);
+                ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisakiFromDataTable(tdkCode, global.dtTokuisaki);  // 2020/04/08
 
-                if (tdkCode != "000000" && gName == string.Empty)
+                // 2020/04/08
+                if (tdkCode != "000000" && tokuisaki.TOKUISAKI_NM == "")
                 {
                     MessageBox.Show("未登録の得意先コードです", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
                 else
                 {
-                    //dataGridView2[colTdkName, e.RowIndex].Value = Utility.getNouhinName(TkArray, tdkCode, out gTel, out gJyu);
-                    dataGridView2[colTdkName, e.RowIndex].Value = gName;
-                    dataGridView2[colTel, e.RowIndex].Value = gTel;
-                    dataGridView2[colAddress, e.RowIndex].Value = gJyu;
+                    dataGridView2[colTdkName, e.RowIndex].Value = tokuisaki.TOKUISAKI_NM;   // 2020/04/08
+                    dataGridView2[colTel, e.RowIndex].Value = tokuisaki.TOKUISAKI_TEL;      // 2020/04/08
+                    dataGridView2[colAddress, e.RowIndex].Value = tokuisaki.TOKUISAKI_ZYUSYO1 + tokuisaki.TOKUISAKI_ZYUSYO2;    // 2020/04/08
                 }
 
                 // パターンID取得
@@ -2083,18 +2181,17 @@ namespace STSH_OCR.Pattern
             // 商品コード
             if (e.ColumnIndex == 2)
             {
-                //ClsCsvData.ClsCsvSyohin cls = Utility.GetSyohinData(Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString());
-
-                ClsCsvData.ClsCsvSyohin cls = Utility.GetSyohins(syohins, Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString().PadLeft(0, '8'));
+                // 2020/04/09
+                ClsCsvData.ClsCsvSyohin_New cls = Utility.GetSyohinsFromDataTable(global.dtSyohin, Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString().PadLeft(0, '8'));
 
                 dataGridView3[colMaker, e.RowIndex].Value = cls.SIRESAKI_NM;
                 dataGridView3[colHinName, e.RowIndex].Value = cls.SYOHIN_NM;
                 dataGridView3[colKikaku, e.RowIndex].Value = cls.SYOHIN_KIKAKU;
                 dataGridView3[colIrisu, e.RowIndex].Value = cls.CASE_IRISU;
-                dataGridView3[colNouka, e.RowIndex].Value = cls.NOUHIN_KARI_TANKA;
-                dataGridView3[colBaika, e.RowIndex].Value = cls.RETAIL_TANKA;
+                //dataGridView3[colNouka, e.RowIndex].Value = cls.NOUHIN_KARI_TANKA;
+                //dataGridView3[colBaika, e.RowIndex].Value = cls.RETAIL_TANKA;
                 dataGridView3[colJanCD, e.RowIndex].Value = cls.JAN_CD;
-                dataGridView3[colReadDays, e.RowIndex].Value = cls.HATYU_LIMIT_DAY_CNT;
+                //dataGridView3[colReadDays, e.RowIndex].Value = cls.HATYU_LIMIT_DAY_CNT;
             }
 
         }
@@ -2647,54 +2744,55 @@ namespace STSH_OCR.Pattern
 
         private void button9_Click(object sender, EventArgs e)
         {
-            ArrayToCSV();
+            //ArrayToCSV();
         }
 
-        private void ArrayToCSV()
-        {
-            csvArray = new string[syohins.Length + 1];
-            StringBuilder sb = new StringBuilder();
-            csvArray[0] = "SYOHIN_CD,SYOHIN_NM,SYOHIN_SNM,SIRESAKI_CD,SIRESAKI_NM,SIRESAKI_KANA_NM,JAN_CD,SYOHIN_KIKAKU,CASE_IRISU,NOUHIN_KARI_TANKA,RETAIL_TANKA,HATYU_LIMIT_DAY_CNT,START_SALE_YMD,LAST_SALE_YMD,SHUBAI,SYOHIN_KIND_L_CD,SYOHIN_KIND_M_CD,SYOHIN_KIND_S_CD,SYOHIN_KIND_CD";
+        //private void ArrayToCSV()
+        //{
+        //    csvArray = new string[global.syohin_News.Length + 1];
+        //    StringBuilder sb = new StringBuilder();
+        //    csvArray[0] = "SYOHIN_CD,SYOHIN_NM,SYOHIN_SNM,SIRESAKI_CD,SIRESAKI_NM,SIRESAKI_KANA_NM,JAN_CD,SYOHIN_KIKAKU,CASE_IRISU,NOUHIN_KARI_TANKA,RETAIL_TANKA,HATYU_LIMIT_DAY_CNT,START_SALE_YMD,LAST_SALE_YMD,SHUBAI,SYOHIN_KIND_L_CD,SYOHIN_KIND_M_CD,SYOHIN_KIND_S_CD,SYOHIN_KIND_CD";
             
-            for (int i = 0; i < syohins.Length; i++)
-            {
-                sb.Clear();
-                sb.Append(syohins[i].SYOHIN_CD).Append(",");
-                sb.Append(syohins[i].SYOHIN_NM).Append(",");
-                sb.Append(syohins[i].SYOHIN_SNM).Append(",");
-                sb.Append(syohins[i].SIRESAKI_CD).Append(",");
-                sb.Append(syohins[i].SIRESAKI_NM).Append(",");
-                sb.Append(syohins[i].SIRESAKI_KANA_NM).Append(",");
-                sb.Append(syohins[i].JAN_CD).Append(",");
-                sb.Append(syohins[i].SYOHIN_KIKAKU).Append(",");
-                sb.Append(syohins[i].CASE_IRISU).Append(",");
-                sb.Append(syohins[i].NOUHIN_KARI_TANKA).Append(",");
-                sb.Append(syohins[i].RETAIL_TANKA).Append(",");
-                sb.Append(syohins[i].HATYU_LIMIT_DAY_CNT).Append(",");
-                sb.Append(syohins[i].START_SALE_YMD).Append(",");
-                sb.Append(syohins[i].LAST_SALE_YMD).Append(",");
+        //    for (int i = 0; i < global.syohin_News.Length; i++)
+        //    {
+        //        sb.Clear();
+        //        sb.Append(global.syohin_News[i].SYOHIN_CD).Append(",");
+        //        sb.Append(global.syohin_News[i].SYOHIN_NM).Append(",");
+        //        sb.Append(global.syohin_News[i].SYOHIN_SNM).Append(",");
+        //        sb.Append(global.syohin_News[i].SIRESAKI_CD).Append(",");
+        //        sb.Append(global.syohin_News[i].SIRESAKI_NM).Append(",");
+        //        sb.Append(global.syohin_News[i].SIRESAKI_KANA_NM).Append(",");
+        //        sb.Append(global.syohin_News[i].JAN_CD).Append(",");
+        //        sb.Append(global.syohin_News[i].SYOHIN_KIKAKU).Append(",");
+        //        sb.Append(global.syohin_News[i].CASE_IRISU).Append(",");
+        //        sb.Append(global.syohin_News[i].NOUHIN_KARI_TANKA).Append(",");
+        //        sb.Append(global.syohin_News[i].RETAIL_TANKA).Append(",");
+        //        sb.Append(global.syohin_News[i].HATYU_LIMIT_DAY_CNT).Append(",");
+        //        sb.Append(global.syohin_News[i].START_SALE_YMD).Append(",");
+        //        sb.Append(global.syohin_News[i].LAST_SALE_YMD).Append(",");
 
-                if (syohins[i].SHUBAI)
-                {
-                    sb.Append("1,");
-                }
-                else
-                {
-                    sb.Append("0,");
-                }
+        //        if (global.syohin_News[i].SHUBAI)
+        //        {
+        //            sb.Append("1,");
+        //        }
+        //        else
+        //        {
+        //            sb.Append("0,");
+        //        }
 
-                sb.Append(syohins[i].SYOHIN_KIND_L_CD).Append(",");
-                sb.Append(syohins[i].SYOHIN_KIND_M_CD).Append(",");
-                sb.Append(syohins[i].SYOHIN_KIND_S_CD).Append(",");
-                sb.Append(syohins[i].SYOHIN_KIND_CD);
+        //        sb.Append(global.syohin_News[i].SYOHIN_KIND_L_CD).Append(",");
+        //        sb.Append(global.syohin_News[i].SYOHIN_KIND_M_CD).Append(",");
+        //        sb.Append(global.syohin_News[i].SYOHIN_KIND_S_CD).Append(",");
+        //        sb.Append(global.syohin_News[i].SYOHIN_KIND_CD);
 
-                csvArray[i + 1] = sb.ToString();
-            }
+        //        csvArray[i + 1] = sb.ToString();
+        //    }
 
-            // 上書き
-            System.IO.File.WriteAllLines(@"C:\STSH_OCR\TESTMST\syohinmst_New.csv", csvArray, System.Text.Encoding.GetEncoding(932));
+        //    // 上書き
+        //    System.IO.File.WriteAllLines(@"C:\STSH_OCR\TESTMST\syohinmst_New.csv", csvArray, System.Text.Encoding.GetEncoding(932));
 
-            MessageBox.Show("Finish!");
-        }
+        //    MessageBox.Show("Finish!");
+        //}
+
     }
 }

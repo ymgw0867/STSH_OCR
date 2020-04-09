@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STSH_OCR", "STSH_OCR.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STSH_FAX", "..\STS_FAX\STSH_FAX.csproj", "{6F99C82E-BF50-4EE7-9A33-91D063475BD9}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "..\Setup1\Setup1.vdproj", "{BC3729F4-B3B4-4F48-8450-6EFB1A5AB051}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupFAX_OCR", "..\Setup1\Setup1.vdproj", "{BC3729F4-B3B4-4F48-8450-6EFB1A5AB051}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupFAX_Monitoring", "..\SetupFAX_Monitoring\SetupFAX_Monitoring.vdproj", "{2C413944-25A9-4F9E-B871-A9A4C82DD873}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtReadCSV", "..\DtReadCSV\DtReadCSV.csproj", "{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,14 @@ Global
 		{2C413944-25A9-4F9E-B871-A9A4C82DD873}.Debug|x86.ActiveCfg = Debug
 		{2C413944-25A9-4F9E-B871-A9A4C82DD873}.Release|Any CPU.ActiveCfg = Release
 		{2C413944-25A9-4F9E-B871-A9A4C82DD873}.Release|x86.ActiveCfg = Release
+		{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}.Debug|x86.Build.0 = Debug|Any CPU
+		{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFAF60EB-3FB8-49E1-A519-95E96A3ED285}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

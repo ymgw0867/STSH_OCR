@@ -18,12 +18,14 @@ namespace STSH_OCR.Common
         {
 
         }
-        
-        // 得意先クラス
-        ClsCsvData.ClsCsvTokuisaki[] tokuisaki = null;
 
-        // 商品クラス
-        ClsCsvData.ClsCsvSyohin[] syohins = null;
+        // 2020/04/08 コメント化
+        //// 得意先クラス
+        //ClsCsvData.ClsCsvTokuisaki[] tokuisaki = null;
+
+        // 2020/04/08 コメント化
+        //// 商品クラス
+        //ClsCsvData.ClsCsvSyohin[] syohins = null;
 
 
         #region エラー項目番号プロパティ
@@ -202,14 +204,17 @@ namespace STSH_OCR.Common
         ///-----------------------------------------------------------------------------------------------
         public Boolean errCheckMain(int sIx, int eIx, Form frm, Table<ClsFaxOrder> tblFax, Table<ClsOrderPattern> tblPtn, string[] cID)
         {
-            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            // 2020/04/08 コメント化
+            //string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
 
-            // 得意先マスタークラス配列取得
-            tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+            // 2020/04/08 コメント化
+            //// 得意先マスタークラス配列取得
+            //tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
 
-            // 商品マスタークラス配列取得
-            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+            // 2020/04/08 コメント化
+            //// 商品マスタークラス配列取得
+            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             int rCnt = 0;
 
@@ -292,11 +297,13 @@ namespace STSH_OCR.Common
             string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
 
+            // 2020/04/08 コメント化
             // 得意先マスタークラス配列取得
-            tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+            //tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
 
+            // 2020/04/08 コメント化
             // 商品マスタークラス配列取得
-            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             // 発注書データ読み出し
             Boolean eCheck = true;
@@ -1132,34 +1139,34 @@ namespace STSH_OCR.Common
         ///     エラーなし：true, エラー有り：false</returns>
         ///------------------------------------------------------------
 
-        private bool ChkShohin(string G_Code, int G_Syubai, out string eMsg, out int eNum, bool ha)
-        {
-            // 商品コードマスター登録チェック
-            ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(G_Code);
+        //private bool ChkShohin(string G_Code, int G_Syubai, out string eMsg, out int eNum, bool ha)
+        //{
+            //// 商品コードマスター登録チェック
+            //ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(G_Code);
 
-            // 商品マスター未登録
-            if (syohin.SYOHIN_CD == string.Empty)
-            {
-                eNum = eHinCode;
-                eMsg = "マスター未登録または削除済みの商品です";
-                return false;
-            }
+            //// 商品マスター未登録
+            //if (syohin.SYOHIN_CD == string.Empty)
+            //{
+            //    eNum = eHinCode;
+            //    eMsg = "マスター未登録または削除済みの商品です";
+            //    return false;
+            //}
 
-            // 終売で発注ありのとき
-            if (syohin.SHUBAI && ha)
-            {
-                if (G_Syubai == global.flgOff)
-                {
-                    eNum = eShubai;
-                    eMsg = "該当商品は終売です。終売処理を選択してください";
-                    return false;
-                }
-            }
+            //// 終売で発注ありのとき
+            //if (syohin.SHUBAI && ha)
+            //{
+            //    if (G_Syubai == global.flgOff)
+            //    {
+            //        eNum = eShubai;
+            //        eMsg = "該当商品は終売です。終売処理を選択してください";
+            //        return false;
+            //    }
+            //}
 
-            eNum = global.flgOff;
-            eMsg = "";
-            return true;
-        }
+            //eNum = global.flgOff;
+            //eMsg = "";
+            //return true;
+        //}
 
         ///-----------------------------------------------------------------------------------
         /// <summary>
@@ -1238,7 +1245,7 @@ namespace STSH_OCR.Common
             }
 
             // 商品コードマスター登録チェック
-            ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, Utility.NulltoStr(Goods[iX].Code));
+            ClsCsvData.ClsCsvSyohin_New syohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, Utility.NulltoStr(Goods[iX].Code));
 
             // 商品マスター未登録
             if (syohin.SYOHIN_CD == string.Empty)
@@ -1414,27 +1421,16 @@ namespace STSH_OCR.Common
         {
             bool rtn = false;
 
-            //string _Tel = "";
-            //string _Jyu = "";
-
-            // 得意先番号
-            //if (Utility.getNouhinName(tCode, out _Tel, out _Jyu) != string.Empty)
-            //{
-            //    rtn = true;
-            //}
-
-            for (int i = 0; i < tokuisaki.Length; i++)
+            // 2020/04/09
+            if (Utility.GetTokuisakiFromDataTable(tCode.PadLeft(7, '0'), global.dtTokuisaki).TOKUISAKI_CD != "")
             {
-                if (tokuisaki[i].TOKUISAKI_CD == tCode.PadLeft(7, '0'))
-                {
-                    rtn = true;
-                    break;
-                }
+                return true;
             }
-
-            return rtn;
+            else
+            {
+                return false;
+            }
         }
-
 
         ///----------------------------------------------------------
         /// <summary>

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace STSH_OCR.Common
 {
-    class ClsCsvData
+    public class ClsCsvData
     {
         ///--------------------------------------------------
         /// <summary>
         ///     商品情報クラス </summary>
         ///--------------------------------------------------
-        public class ClsCsvSyohin
+        public class ClsCsvSyohin_20200408
         {
             // 商品コード
             public string SYOHIN_CD { get; set; }
@@ -75,9 +75,9 @@ namespace STSH_OCR.Common
             public string SYOHIN_KIND_CD { get; set; }
 
 
-            public static ClsCsvSyohin[] Load(string[] Sy_Array, string[] SySz_Array, string [] Shiire_Array, int sDate)
+            public static ClsCsvSyohin_20200408[] Load(string[] Sy_Array, string[] SySz_Array, string [] Shiire_Array, int sDate)
             {
-                ClsCsvSyohin[] syohins = null;
+                ClsCsvSyohin_20200408[] syohins = null;
                 int x = 0;
 
                 foreach (var item in Sy_Array)
@@ -213,7 +213,7 @@ namespace STSH_OCR.Common
 
                     Array.Resize(ref syohins, x + 1);
 
-                    syohins[x] = new ClsCsvSyohin
+                    syohins[x] = new ClsCsvSyohin_20200408
                     {
                         SYOHIN_CD = t[1].Replace("\"", ""),
                         SYOHIN_NM = t[2].Replace("\"", ""),
@@ -241,10 +241,64 @@ namespace STSH_OCR.Common
 
                 return syohins;
             }
-            ///--------------------------------------------------
-            ///--------------------------------------------------
         }
-        
+
+        ///--------------------------------------------------------------
+        /// <summary>
+        ///     商品情報クラス Ver.2 </summary>        
+        ///--------------------------------------------------------------
+        public class ClsCsvSyohin_New
+        {
+            // 商品コード
+            public string SYOHIN_CD { get; set; }
+
+            // 商品名
+            public string SYOHIN_NM { get; set; }
+
+            // 商品略称
+            public string SYOHIN_SNM { get; set; }
+
+            // 仕入先コード
+            public string SIRESAKI_CD { get; set; }
+
+            // 仕入先名
+            public string SIRESAKI_NM { get; set; }
+
+            // 仕入先名カナ
+            public string SIRESAKI_KANA_NM { get; set; }
+
+            // JANコード
+            public string JAN_CD { get; set; }
+
+            // 規格
+            public string SYOHIN_KIKAKU { get; set; }
+
+            // ケース入数（バラ換算）
+            public double CASE_IRISU { get; set; }
+
+            // 販売開始日付
+            public string START_SALE_YMD { get; set; }
+
+            // 販売終了日付
+            public string LAST_SALE_YMD { get; set; }
+
+            // 終売フラグ
+            public bool SHUBAI { get; set; }
+
+            // 大分類
+            public string SYOHIN_KIND_L_CD { get; set; }
+
+            // 中分類
+            public string SYOHIN_KIND_M_CD { get; set; }
+
+            // 小分類
+            public string SYOHIN_KIND_S_CD { get; set; }
+
+            // 商品分類
+            public string SYOHIN_KIND_CD { get; set; }
+        }
+
+
         ///--------------------------------------------------
         /// <summary>
         ///     得意先情報クラス </summary>
@@ -262,6 +316,9 @@ namespace STSH_OCR.Common
 
             // 得意先名称
             public string TOKUISAKI_NM { get; set; }
+
+            // 得意先カナ名称
+            public string TOKUISAKI_KANA_NM { get; set; }
 
             // 郵便番号
             public string TOKUISAKI_YUBIN_NO { get; set; }
@@ -292,7 +349,7 @@ namespace STSH_OCR.Common
             /// <returns>
             ///     ClsCsvTokuisakiクラス配列</returns>
             ///-----------------------------------------------------------------
-            public static ClsCsvTokuisaki[] Load(string[] Tk_Array, int sDate)
+            public static ClsCsvTokuisaki[] Load_20200408 (string[] Tk_Array, int sDate)
             {
                 ClsCsvTokuisaki[] tokuisakis = null;
                 int x = 0;
@@ -352,8 +409,10 @@ namespace STSH_OCR.Common
 
                 return tokuisakis;
             }
+
+            
         }
-        
+
         ///--------------------------------------------------
         /// <summary>
         ///     CSVデータクラス </summary>

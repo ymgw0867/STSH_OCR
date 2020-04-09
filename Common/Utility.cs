@@ -5,9 +5,11 @@ using System.Text;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
+using System.Data;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Configuration;
+using DocumentFormat.OpenXml.Drawing.Charts;
 //using Excel = Microsoft.Office.Interop.Excel;
 
 namespace STSH_OCR.Common
@@ -411,7 +413,7 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     得意先名</returns>
         ///-------------------------------------------------------------------
-        public static string getNouhinName(string tID, out string sTel, out string sJyu)
+        public static string getNouhinName_20200409(string tID, out string sTel, out string sJyu)
         {
             string val = string.Empty;
             sTel = string.Empty;
@@ -491,7 +493,31 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     得意先名</returns>
         ///-------------------------------------------------------------------
-        public static ClsCsvData.ClsCsvTokuisaki GetTokuisaki(string tID)
+        //public static ClsCsvData.ClsCsvTokuisaki getNouhinName_20200409(string tID)
+        //{
+        //    string val = string.Empty;
+        //    ClsCsvData.ClsCsvTokuisaki tokuisaki = null;
+
+        //    // 得意先データ取得
+        //    foreach (var t in global.tokuisakis.Where(a => a.TOKUISAKI_CD == tID))
+        //    {
+        //        tokuisaki = t;
+        //        break;
+        //    }
+
+        //    return tokuisaki;
+        //}
+
+        ///-----------------------------------------------------------------------------
+        /// <summary>
+        ///     得意先情報をDataTableからClsCsvData.ClsCsvTokuisakiクラスに取得 : 
+        ///     2020/04/09</summary>
+        /// <param name="tID">
+        ///     得意先コード</param>
+        /// <returns>
+        ///     ClsCsvData.ClsCsvTokuisakiクラス</returns>
+        ///-----------------------------------------------------------------------------
+        public static ClsCsvData.ClsCsvTokuisaki GetTokuisakiFromDataTable(string tID, System.Data.DataTable data)
         {
             // 返り値クラス初期化
             ClsCsvData.ClsCsvTokuisaki cls = new ClsCsvData.ClsCsvTokuisaki
@@ -500,6 +526,7 @@ namespace STSH_OCR.Common
                 YUKO_START_YMD = "",
                 YUKO_END_YMD = "",
                 TOKUISAKI_NM = "",
+                TOKUISAKI_KANA_NM = "",
                 TOKUISAKI_YUBIN_NO = "",
                 TOKUISAKI_ZYUSYO1 = "",
                 TOKUISAKI_ZYUSYO2 = "",
@@ -508,65 +535,47 @@ namespace STSH_OCR.Common
                 DELFLG = global.FLGOFF
             };
 
-            // 得意先CSVデータ配列読み込み
-            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-            
-            foreach (var item in Tk_Array)
+            DataRow[] rows = data.AsEnumerable().Where(a => a["TOKUISAKI_CD"].ToString().PadLeft(7, '0') == tID && a["DELFLG"].ToString() == global.FLGOFF).ToArray();
+
+
+            foreach (var t in rows)
             {
-                string[] t = item.Split(',');
-
-                // 削除フラグ
-                string DelFlg = t[119].Replace("\"", "");
-
-                // 1行目見出し行は読み飛ばす
-                if (DelFlg == "DELFLG")
-                {
-                    continue;
-                }
-
-                if (DelFlg == global.FLGON)
-                {
-                    continue;
-                }
-
                 // 有効開始日、有効終了日を検証する
-                string cYuko_Start_Date = t[2].Replace("\"", "");   // 有効開始日付
-                string cYuko_End_Date = t[3].Replace("\"", "");     // 有効終了日付
-
+                int cYuko_Start_Date = Utility.StrtoInt(t["YUKO_START_YMD"].ToString());    // 有効開始日付
+                int cYuko_End_Date = Utility.StrtoInt(t["YUKO_END_YMD"].ToString());        // 有効終了日付
                 int toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
 
-                if (Utility.StrtoInt(cYuko_Start_Date) > toDate)
+                if (cYuko_Start_Date > toDate)
                 {
                     continue;
                 }
 
-                if (toDate > Utility.StrtoInt(cYuko_End_Date))
+                if (cYuko_End_Date != global.flgOff)
                 {
-                    continue;
+                    if (toDate > cYuko_End_Date)
+                    {
+                        continue;
+                    }
                 }
 
-                // 得意先コード
-                string cTkCD = t[1].Replace("\"", "");
+                cls.TOKUISAKI_CD = t["TOKUISAKI_CD"].ToString();                // 得意先コード
+                cls.YUKO_START_YMD = t["YUKO_START_YMD"].ToString();            // 有効開始日付
+                cls.YUKO_END_YMD = t["YUKO_END_YMD"].ToString();                // 有効終了日付
+                cls.TOKUISAKI_NM = t["TOKUISAKI_NM"].ToString();                // 得意先名称
+                cls.TOKUISAKI_KANA_NM = t["TOKUISAKI_KANA_NM"].ToString();      // 得意先カナ名称
+                cls.TOKUISAKI_YUBIN_NO = t["TOKUISAKI_YUBIN_NO"].ToString();    // 郵便番号
+                cls.TOKUISAKI_ZYUSYO1 = t["TOKUISAKI_ZYUSYO1"].ToString();      // 得意先住所
+                cls.TOKUISAKI_ZYUSYO2 = t["TOKUISAKI_ZYUSYO2"].ToString();      // 得意先住所
+                cls.TOKUISAKI_TEL = t["TOKUISAKI_TEL"].ToString();              // 得意先TEL
+                cls.TOKUISAKI_FAX = t["TOKUISAKI_FAX"].ToString();              // 得意先FAX
+                cls.DELFLG = t["DELFLG"].ToString();                            // 削除フラグ
 
-                if (cTkCD == tID)
-                {
-                    cls.TOKUISAKI_CD = t[1].Replace("\"", "");          // 得意先コード
-                    cls.YUKO_START_YMD = t[2].Replace("\"", "");        // 有効開始日付
-                    cls.YUKO_END_YMD = t[3].Replace("\"", "");          // 有効終了日付
-                    cls.TOKUISAKI_NM = t[4].Replace("\"", "");          // 得意先名称
-                    cls.TOKUISAKI_YUBIN_NO = t[24].Replace("\"", "");   // 郵便番号
-                    cls.TOKUISAKI_ZYUSYO1 = t[25].Replace("\"", "");    // 得意先住所
-                    cls.TOKUISAKI_ZYUSYO2 = t[26].Replace("\"", "");    // 得意先住所
-                    cls.TOKUISAKI_TEL = t[27].Replace("\"", "");        // 得意先TEL
-                    cls.TOKUISAKI_FAX = t[28].Replace("\"", "");        // 得意先FAX
-                    cls.DELFLG = t[119].Replace("\"", "");              // 削除フラグ
-                    
-                    break;
-                }
+                break;
             }
 
             return cls;
         }
+
 
 
         ///-------------------------------------------------------------------
@@ -583,171 +592,171 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     clsCsvSyohinクラス</returns>
         ///-------------------------------------------------------------------
-        public static ClsCsvData.ClsCsvSyohin GetSyohinData(string[] Sy_Array, string[] SySz_Array, string [] Shiire_Array,　string tID)
-        {
-            // 返り値クラス初期化
-            ClsCsvData.ClsCsvSyohin cls = new ClsCsvData.ClsCsvSyohin
-            {
-                SYOHIN_CD = "",
-                SYOHIN_NM = "",
-                SYOHIN_SNM = "",
-                SIRESAKI_CD = "",
-                SIRESAKI_NM = "",
-                JAN_CD = "",
-                SYOHIN_KIKAKU = "",
-                CASE_IRISU = global.flgOff,
-                NOUHIN_KARI_TANKA = global.flgOff,
-                RETAIL_TANKA = global.flgOff,
-                HATYU_LIMIT_DAY_CNT = global.flgOff,
-                START_SALE_YMD = "",
-                LAST_SALE_YMD = "",
-                SHUBAI = false,
-                SYOHIN_KIND_L_CD = "",
-                SYOHIN_KIND_M_CD = "",
-                SYOHIN_KIND_S_CD = "",
-                SYOHIN_KIND_CD = ""
-            };
+        //public static ClsCsvData.ClsCsvSyohin GetSyohinData(string[] Sy_Array, string[] SySz_Array, string [] Shiire_Array,　string tID)
+        //{
+        //    // 返り値クラス初期化
+        //    ClsCsvData.ClsCsvSyohin cls = new ClsCsvData.ClsCsvSyohin
+        //    {
+        //        SYOHIN_CD = "",
+        //        SYOHIN_NM = "",
+        //        SYOHIN_SNM = "",
+        //        SIRESAKI_CD = "",
+        //        SIRESAKI_NM = "",
+        //        JAN_CD = "",
+        //        SYOHIN_KIKAKU = "",
+        //        CASE_IRISU = global.flgOff,
+        //        NOUHIN_KARI_TANKA = global.flgOff,
+        //        RETAIL_TANKA = global.flgOff,
+        //        HATYU_LIMIT_DAY_CNT = global.flgOff,
+        //        START_SALE_YMD = "",
+        //        LAST_SALE_YMD = "",
+        //        SHUBAI = false,
+        //        SYOHIN_KIND_L_CD = "",
+        //        SYOHIN_KIND_M_CD = "",
+        //        SYOHIN_KIND_S_CD = "",
+        //        SYOHIN_KIND_CD = ""
+        //    };
 
-            int toDate = 0;
+        //    int toDate = 0;
 
-            foreach (var item in Sy_Array)
-            {
-                string[] t = item.Split(',');
+        //    foreach (var item in Sy_Array)
+        //    {
+        //        string[] t = item.Split(',');
 
-                // 削除フラグ
-                string DelFlg = t[63].Replace("\"", "");
+        //        // 削除フラグ
+        //        string DelFlg = t[63].Replace("\"", "");
 
-                // 1行目見出し行は読み飛ばす
-                if (DelFlg == "DELFLG")
-                {
-                    continue;
-                }
+        //        // 1行目見出し行は読み飛ばす
+        //        if (DelFlg == "DELFLG")
+        //        {
+        //            continue;
+        //        }
 
-                if (DelFlg == global.FLGON)
-                {
-                    continue;
-                }
+        //        if (DelFlg == global.FLGON)
+        //        {
+        //            continue;
+        //        }
 
-                // 該当商品か？
-                if (t[1].Replace("\"", "") != tID)
-                {
-                    continue;
-                }
+        //        // 該当商品か？
+        //        if (t[1].Replace("\"", "") != tID)
+        //        {
+        //            continue;
+        //        }
 
-                // 商品在庫マスターで終売を調べる
-                bool Shubai = false;
-                foreach (var sz in SySz_Array)
-                {
-                    string[] z = sz.Split(',');
+        //        // 商品在庫マスターで終売を調べる
+        //        bool Shubai = false;
+        //        foreach (var sz in SySz_Array)
+        //        {
+        //            string[] z = sz.Split(',');
 
-                    // 削除フラグ
-                    string zDelFlg = z[10].Replace("\"", "");
+        //            // 削除フラグ
+        //            string zDelFlg = z[10].Replace("\"", "");
 
-                    // 1行目見出し行は読み飛ばす
-                    if (zDelFlg == "DELFLG")
-                    {
-                        continue;
-                    }
+        //            // 1行目見出し行は読み飛ばす
+        //            if (zDelFlg == "DELFLG")
+        //            {
+        //                continue;
+        //            }
 
-                    if (zDelFlg == global.FLGON)
-                    {
-                        continue;
-                    }
+        //            if (zDelFlg == global.FLGON)
+        //            {
+        //                continue;
+        //            }
 
-                    // 該当商品か？
-                    if (t[1].Replace("\"", "") != z[2].Replace("\"", ""))
-                    {
-                        continue;
-                    }
+        //            // 該当商品か？
+        //            if (t[1].Replace("\"", "") != z[2].Replace("\"", ""))
+        //            {
+        //                continue;
+        //            }
 
-                    // 有効開始日、有効終了日を検証する
-                    string cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
-                    string cLast_Sale_YMD = t[4].Replace("\"", "");     // 商品販売終了日付（終売日）
+        //            // 有効開始日、有効終了日を検証する
+        //            string cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
+        //            string cLast_Sale_YMD = t[4].Replace("\"", "");     // 商品販売終了日付（終売日）
 
-                    toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
+        //            toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
 
-                    if (Utility.StrtoInt(cStart_Sale_YMD) > toDate)
-                    {
-                        continue;
-                    }
+        //            if (Utility.StrtoInt(cStart_Sale_YMD) > toDate)
+        //            {
+        //                continue;
+        //            }
 
-                    if (toDate > Utility.StrtoInt(cLast_Sale_YMD))
-                    {
-                        continue;
-                    }
+        //            if (toDate > Utility.StrtoInt(cLast_Sale_YMD))
+        //            {
+        //                continue;
+        //            }
 
-                    Shubai = true;
-                    break;
-                }
+        //            Shubai = true;
+        //            break;
+        //        }
 
-                // 仕入先取得
-                string SIRESAKI_NM = string.Empty;
-                string SIRESAKI_KANA = string.Empty;
+        //        // 仕入先取得
+        //        string SIRESAKI_NM = string.Empty;
+        //        string SIRESAKI_KANA = string.Empty;
 
-                foreach (var si in Shiire_Array)
-                {
-                    string[] z = si.Split(',');
+        //        foreach (var si in Shiire_Array)
+        //        {
+        //            string[] z = si.Split(',');
 
-                    // 削除フラグ
-                    string zDelFlg = z[80].Replace("\"", "");
+        //            // 削除フラグ
+        //            string zDelFlg = z[80].Replace("\"", "");
 
-                    // 1行目見出し行は読み飛ばす
-                    if (zDelFlg == "DELFLG")
-                    {
-                        continue;
-                    }
+        //            // 1行目見出し行は読み飛ばす
+        //            if (zDelFlg == "DELFLG")
+        //            {
+        //                continue;
+        //            }
 
-                    if (zDelFlg == global.FLGON)
-                    {
-                        continue;
-                    }
+        //            if (zDelFlg == global.FLGON)
+        //            {
+        //                continue;
+        //            }
 
-                    if (t[13].Replace("\"", "") != z[1].Replace("\"", ""))
-                    {
-                        continue;
-                    }
+        //            if (t[13].Replace("\"", "") != z[1].Replace("\"", ""))
+        //            {
+        //                continue;
+        //            }
 
-                    // 仕入先名称取得
-                    SIRESAKI_NM = z[4].Replace("\"", "");
-                    SIRESAKI_KANA = z[6].Replace("\"", "");
-                    break;
-                }
+        //            // 仕入先名称取得
+        //            SIRESAKI_NM = z[4].Replace("\"", "");
+        //            SIRESAKI_KANA = z[6].Replace("\"", "");
+        //            break;
+        //        }
 
-                // 返り値
-                cls.SYOHIN_CD = t[1].Replace("\"", "");
-                cls.SYOHIN_NM = t[2].Replace("\"", "");
-                cls.SYOHIN_SNM = t[3].Replace("\"", "");
-                cls.SYOHIN_KANA = t[4].Replace("\"", "");
-                cls.SIRESAKI_CD = t[13].Replace("\"", "");
-                cls.SIRESAKI_NM = SIRESAKI_NM;
-                cls.SIRESAKI_KANA_NM = SIRESAKI_KANA;
-                cls.JAN_CD = t[16].Replace("\"", "");
-                cls.SYOHIN_KIKAKU = t[19].Replace("\"", "");
-                cls.CASE_IRISU = StrtoDouble(t[24].Replace("\"", ""));
-                cls.NOUHIN_KARI_TANKA = StrtoDouble(t[31].Replace("\"", ""));
+        //        // 返り値
+        //        cls.SYOHIN_CD = t[1].Replace("\"", "");
+        //        cls.SYOHIN_NM = t[2].Replace("\"", "");
+        //        cls.SYOHIN_SNM = t[3].Replace("\"", "");
+        //        cls.SYOHIN_KANA = t[4].Replace("\"", "");
+        //        cls.SIRESAKI_CD = t[13].Replace("\"", "");
+        //        cls.SIRESAKI_NM = SIRESAKI_NM;
+        //        cls.SIRESAKI_KANA_NM = SIRESAKI_KANA;
+        //        cls.JAN_CD = t[16].Replace("\"", "");
+        //        cls.SYOHIN_KIKAKU = t[19].Replace("\"", "");
+        //        cls.CASE_IRISU = StrtoDouble(t[24].Replace("\"", ""));
+        //        cls.NOUHIN_KARI_TANKA = StrtoDouble(t[31].Replace("\"", ""));
 
-                // 小売り単価：新単価適用日で判断
-                if (toDate < Utility.StrtoInt(t[34].Replace("\"", "")))
-                {
-                    cls.RETAIL_TANKA = StrtoDouble(t[32].Replace("\"", ""));
-                }
-                else
-                {
-                    cls.RETAIL_TANKA = StrtoDouble(t[35].Replace("\"", ""));
-                }
+        //        // 小売り単価：新単価適用日で判断
+        //        if (toDate < Utility.StrtoInt(t[34].Replace("\"", "")))
+        //        {
+        //            cls.RETAIL_TANKA = StrtoDouble(t[32].Replace("\"", ""));
+        //        }
+        //        else
+        //        {
+        //            cls.RETAIL_TANKA = StrtoDouble(t[35].Replace("\"", ""));
+        //        }
 
-                cls.HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", ""));
+        //        cls.HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", ""));
 
-                cls.SYOHIN_KIND_L_CD = t[44].Replace("\"", "");
-                cls.SYOHIN_KIND_M_CD = t[45].Replace("\"", "");
-                cls.SYOHIN_KIND_S_CD = t[46].Replace("\"", "");
-                cls.SYOHIN_KIND_CD = t[47].Replace("\"", "");
+        //        cls.SYOHIN_KIND_L_CD = t[44].Replace("\"", "");
+        //        cls.SYOHIN_KIND_M_CD = t[45].Replace("\"", "");
+        //        cls.SYOHIN_KIND_S_CD = t[46].Replace("\"", "");
+        //        cls.SYOHIN_KIND_CD = t[47].Replace("\"", "");
 
-                break;
-            }
+        //        break;
+        //    }
 
-            return cls;
-        }
+        //    return cls;
+        //}
         
         ///-------------------------------------------------------------------
         /// <summary>
@@ -763,188 +772,188 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     clsCsvSyohinクラス</returns>
         ///-------------------------------------------------------------------
-        public static ClsCsvData.ClsCsvSyohin GetSyohinData(string tID)
-        {
-            // 商品CSVデータ配列読み込み
-            string[] Sy_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
+        //public static ClsCsvData.ClsCsvSyohin GetSyohinData(string tID)
+        //{
+        //    // 商品CSVデータ配列読み込み
+        //    string[] Sy_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
 
-            // 商品在庫CSVデータ配列読み込み
-            string[] SySz_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
+        //    // 商品在庫CSVデータ配列読み込み
+        //    string[] SySz_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
 
-            // 仕入先CSVデータ配列読み込み
-            string[] Shiire_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
+        //    // 仕入先CSVデータ配列読み込み
+        //    string[] Shiire_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
 
-            // 返り値クラス初期化
-            ClsCsvData.ClsCsvSyohin cls = new ClsCsvData.ClsCsvSyohin
-            {
-                SYOHIN_CD = "",
-                SYOHIN_NM = "",
-                SYOHIN_SNM = "",
-                SIRESAKI_CD = "",
-                SIRESAKI_NM = "",
-                JAN_CD = "",
-                SYOHIN_KIKAKU = "",
-                CASE_IRISU = global.flgOff,
-                NOUHIN_KARI_TANKA = global.flgOff,
-                RETAIL_TANKA = global.flgOff,
-                START_SALE_YMD = "",
-                LAST_SALE_YMD = "",
-                SHUBAI = false,
-                SYOHIN_KIND_L_CD = "",
-                SYOHIN_KIND_M_CD = "",
-                SYOHIN_KIND_S_CD = "",
-                SYOHIN_KIND_CD = ""
-            };
+        //    // 返り値クラス初期化
+        //    ClsCsvData.ClsCsvSyohin cls = new ClsCsvData.ClsCsvSyohin
+        //    {
+        //        SYOHIN_CD = "",
+        //        SYOHIN_NM = "",
+        //        SYOHIN_SNM = "",
+        //        SIRESAKI_CD = "",
+        //        SIRESAKI_NM = "",
+        //        JAN_CD = "",
+        //        SYOHIN_KIKAKU = "",
+        //        CASE_IRISU = global.flgOff,
+        //        NOUHIN_KARI_TANKA = global.flgOff,
+        //        RETAIL_TANKA = global.flgOff,
+        //        START_SALE_YMD = "",
+        //        LAST_SALE_YMD = "",
+        //        SHUBAI = false,
+        //        SYOHIN_KIND_L_CD = "",
+        //        SYOHIN_KIND_M_CD = "",
+        //        SYOHIN_KIND_S_CD = "",
+        //        SYOHIN_KIND_CD = ""
+        //    };
 
-            int toDate = 0;
+        //    int toDate = 0;
 
-            foreach (var item in Sy_Array)
-            {
-                string[] t = item.Split(',');
-                string cStart_Sale_YMD = "";    // 商品販売開始日付
-                string cLast_Sale_YMD = "";     // 商品販売終了日付
+        //    foreach (var item in Sy_Array)
+        //    {
+        //        string[] t = item.Split(',');
+        //        string cStart_Sale_YMD = "";    // 商品販売開始日付
+        //        string cLast_Sale_YMD = "";     // 商品販売終了日付
 
-                // 削除フラグ
-                string DelFlg = t[63].Replace("\"", "");
+        //        // 削除フラグ
+        //        string DelFlg = t[63].Replace("\"", "");
 
-                // 1行目見出し行は読み飛ばす
-                if (DelFlg == "DELFLG")
-                {
-                    continue;
-                }
+        //        // 1行目見出し行は読み飛ばす
+        //        if (DelFlg == "DELFLG")
+        //        {
+        //            continue;
+        //        }
 
-                if (DelFlg == global.FLGON)
-                {
-                    continue;
-                }
+        //        if (DelFlg == global.FLGON)
+        //        {
+        //            continue;
+        //        }
 
-                // 該当商品か？
-                if (t[1].Replace("\"", "") != tID)
-                {
-                    continue;
-                }
+        //        // 該当商品か？
+        //        if (t[1].Replace("\"", "") != tID)
+        //        {
+        //            continue;
+        //        }
 
-                // 商品在庫マスターで終売を調べる
-                bool Syubai = false;
-                foreach (var sz in SySz_Array)
-                {
-                    string[] z = sz.Split(',');
+        //        // 商品在庫マスターで終売を調べる
+        //        bool Syubai = false;
+        //        foreach (var sz in SySz_Array)
+        //        {
+        //            string[] z = sz.Split(',');
 
-                    // 削除フラグ
-                    string zDelFlg = z[10].Replace("\"", "");
+        //            // 削除フラグ
+        //            string zDelFlg = z[10].Replace("\"", "");
 
-                    // 1行目見出し行は読み飛ばす
-                    if (zDelFlg == "DELFLG")
-                    {
-                        continue;
-                    }
+        //            // 1行目見出し行は読み飛ばす
+        //            if (zDelFlg == "DELFLG")
+        //            {
+        //                continue;
+        //            }
 
-                    if (zDelFlg == global.FLGON)
-                    {
-                        continue;
-                    }
+        //            if (zDelFlg == global.FLGON)
+        //            {
+        //                continue;
+        //            }
 
-                    // 該当商品か？
-                    if (t[1].Replace("\"", "") != z[2].Replace("\"", ""))
-                    {
-                        continue;
-                    }
+        //            // 該当商品か？
+        //            if (t[1].Replace("\"", "") != z[2].Replace("\"", ""))
+        //            {
+        //                continue;
+        //            }
 
-                    // 有効開始日、有効終了日を検証する
-                    cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
-                    cLast_Sale_YMD = z[4].Replace("\"", "");     // 商品販売終了日付（終売日）
+        //            // 有効開始日、有効終了日を検証する
+        //            cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
+        //            cLast_Sale_YMD = z[4].Replace("\"", "");     // 商品販売終了日付（終売日）
 
-                    toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
+        //            toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
 
-                    if (Utility.StrtoInt(cStart_Sale_YMD) > toDate)
-                    {
-                        continue;
-                    }
+        //            if (Utility.StrtoInt(cStart_Sale_YMD) > toDate)
+        //            {
+        //                continue;
+        //            }
 
-                    if (toDate > Utility.StrtoInt(cLast_Sale_YMD))
-                    {
-                        // 終売商品
-                        Syubai = true;
-                    }
-                    else
-                    {
-                        // 終売ではない
-                        Syubai = false;
-                    }
+        //            if (toDate > Utility.StrtoInt(cLast_Sale_YMD))
+        //            {
+        //                // 終売商品
+        //                Syubai = true;
+        //            }
+        //            else
+        //            {
+        //                // 終売ではない
+        //                Syubai = false;
+        //            }
 
-                    break;
-                }
+        //            break;
+        //        }
 
-                // 仕入先取得
-                string SIRESAKI_NM = string.Empty;
-                string SIRESAKI_KANA = string.Empty;
+        //        // 仕入先取得
+        //        string SIRESAKI_NM = string.Empty;
+        //        string SIRESAKI_KANA = string.Empty;
 
-                foreach (var si in Shiire_Array)
-                {
-                    string[] z = si.Split(',');
+        //        foreach (var si in Shiire_Array)
+        //        {
+        //            string[] z = si.Split(',');
 
-                    // 削除フラグ
-                    string zDelFlg = z[80].Replace("\"", "");
+        //            // 削除フラグ
+        //            string zDelFlg = z[80].Replace("\"", "");
 
-                    // 1行目見出し行は読み飛ばす
-                    if (zDelFlg == "DELFLG")
-                    {
-                        continue;
-                    }
+        //            // 1行目見出し行は読み飛ばす
+        //            if (zDelFlg == "DELFLG")
+        //            {
+        //                continue;
+        //            }
 
-                    if (zDelFlg == global.FLGON)
-                    {
-                        continue;
-                    }
+        //            if (zDelFlg == global.FLGON)
+        //            {
+        //                continue;
+        //            }
 
-                    if (t[13].Replace("\"", "") != z[1].Replace("\"", ""))
-                    {
-                        continue;
-                    }
+        //            if (t[13].Replace("\"", "") != z[1].Replace("\"", ""))
+        //            {
+        //                continue;
+        //            }
 
-                    // 仕入先名称取得
-                    SIRESAKI_NM = z[4].Replace("\"", "");
-                    SIRESAKI_KANA = z[6].Replace("\"", "");
-                    break;
-                }
+        //            // 仕入先名称取得
+        //            SIRESAKI_NM = z[4].Replace("\"", "");
+        //            SIRESAKI_KANA = z[6].Replace("\"", "");
+        //            break;
+        //        }
 
-                // 返り値
-                cls.SYOHIN_CD = t[1].Replace("\"", "");
-                cls.SYOHIN_NM = t[2].Replace("\"", "");
-                cls.SYOHIN_SNM = t[3].Replace("\"", "");
-                cls.SYOHIN_KANA = t[4].Replace("\"", "");
-                cls.SIRESAKI_CD = t[13].Replace("\"", "");
-                cls.SIRESAKI_NM = SIRESAKI_NM;
-                cls.SIRESAKI_KANA_NM = SIRESAKI_KANA;
-                cls.JAN_CD = t[16].Replace("\"", "");
-                cls.SYOHIN_KIKAKU = t[19].Replace("\"", "");
-                cls.CASE_IRISU = StrtoDouble(t[24].Replace("\"", ""));
-                cls.NOUHIN_KARI_TANKA = StrtoDouble(t[31].Replace("\"", ""));
+        //        // 返り値
+        //        cls.SYOHIN_CD = t[1].Replace("\"", "");
+        //        cls.SYOHIN_NM = t[2].Replace("\"", "");
+        //        cls.SYOHIN_SNM = t[3].Replace("\"", "");
+        //        cls.SYOHIN_KANA = t[4].Replace("\"", "");
+        //        cls.SIRESAKI_CD = t[13].Replace("\"", "");
+        //        cls.SIRESAKI_NM = SIRESAKI_NM;
+        //        cls.SIRESAKI_KANA_NM = SIRESAKI_KANA;
+        //        cls.JAN_CD = t[16].Replace("\"", "");
+        //        cls.SYOHIN_KIKAKU = t[19].Replace("\"", "");
+        //        cls.CASE_IRISU = StrtoDouble(t[24].Replace("\"", ""));
+        //        cls.NOUHIN_KARI_TANKA = StrtoDouble(t[31].Replace("\"", ""));
 
-                // 小売り単価：新単価適用日で判断
-                if (toDate < Utility.StrtoInt(t[34].Replace("\"", "")))
-                {
-                    cls.RETAIL_TANKA = StrtoDouble(t[32].Replace("\"", ""));
-                }
-                else
-                {
-                    cls.RETAIL_TANKA = StrtoDouble(t[35].Replace("\"", ""));
-                }
+        //        // 小売り単価：新単価適用日で判断
+        //        if (toDate < Utility.StrtoInt(t[34].Replace("\"", "")))
+        //        {
+        //            cls.RETAIL_TANKA = StrtoDouble(t[32].Replace("\"", ""));
+        //        }
+        //        else
+        //        {
+        //            cls.RETAIL_TANKA = StrtoDouble(t[35].Replace("\"", ""));
+        //        }
 
-                cls.HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", ""));
-                cls.START_SALE_YMD = cStart_Sale_YMD;
-                cls.LAST_SALE_YMD = cLast_Sale_YMD;
-                cls.SHUBAI = Syubai;
-                cls.SYOHIN_KIND_L_CD = t[44].Replace("\"", "");
-                cls.SYOHIN_KIND_M_CD = t[45].Replace("\"", "");
-                cls.SYOHIN_KIND_S_CD = t[46].Replace("\"", "");
-                cls.SYOHIN_KIND_CD = t[47].Replace("\"", "");
+        //        cls.HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", ""));
+        //        cls.START_SALE_YMD = cStart_Sale_YMD;
+        //        cls.LAST_SALE_YMD = cLast_Sale_YMD;
+        //        cls.SHUBAI = Syubai;
+        //        cls.SYOHIN_KIND_L_CD = t[44].Replace("\"", "");
+        //        cls.SYOHIN_KIND_M_CD = t[45].Replace("\"", "");
+        //        cls.SYOHIN_KIND_S_CD = t[46].Replace("\"", "");
+        //        cls.SYOHIN_KIND_CD = t[47].Replace("\"", "");
 
-                break;
-            }
+        //        break;
+        //    }
 
-            return cls;
-        }
+        //    return cls;
+        //}
 
 
         ///-------------------------------------------------------------------
@@ -961,79 +970,211 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     clsCsvSyohinクラス配列</returns>
         ///-------------------------------------------------------------------
-        public static ClsCsvData.ClsCsvSyohin [] GetSyohinData(string SyPath, string SySzPath, string ShiirePath)
+        //public static ClsCsvData.ClsCsvSyohin [] GetSyohinData(string SyPath, string SySzPath, string ShiirePath)
+        //{
+        //    // 商品CSVデータ配列読み込み
+        //    string[] Sy_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
+
+        //    // 商品在庫CSVデータ配列読み込み
+        //    string[] SySz_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
+
+        //    // 仕入先CSVデータ配列読み込み
+        //    string[] Shiire_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
+            
+        //    int toDate = 0;
+        //    int x = 0;
+
+        //    ClsCsvData.ClsCsvSyohin[] syohins = null;
+
+        //    foreach (var item in Sy_Array)
+        //    {
+        //        string[] t = item.Split(',');
+        //        string cStart_Sale_YMD = "";    // 商品販売開始日付
+        //        string cLast_Sale_YMD = "";     // 商品販売終了日付
+
+        //        // 削除フラグ
+        //        string DelFlg = t[63].Replace("\"", "");
+
+        //        // 1行目見出し行は読み飛ばす
+        //        if (DelFlg == "DELFLG")
+        //        {
+        //            continue;
+        //        }
+
+        //        if (DelFlg == global.FLGON)
+        //        {
+        //            continue;
+        //        }
+
+        //        // 商品在庫マスターで終売を調べる
+        //        bool Syubai = false;
+        //        foreach (var sz in SySz_Array)
+        //        {
+        //            string[] z = sz.Split(',');
+
+        //            // 削除フラグ
+        //            string zDelFlg = z[10].Replace("\"", "");
+
+        //            // 1行目見出し行は読み飛ばす
+        //            if (zDelFlg == "DELFLG")
+        //            {
+        //                continue;
+        //            }
+
+        //            if (zDelFlg == global.FLGON)
+        //            {
+        //                continue;
+        //            }
+
+        //            // 該当商品か？
+        //            if (t[1].Replace("\"", "") != z[2].Replace("\"", ""))
+        //            {
+        //                continue;
+        //            }
+
+        //            // 有効開始日、有効終了日を検証する
+        //            cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
+        //            cLast_Sale_YMD = z[4].Replace("\"", "");     // 商品販売終了日付（終売日）
+
+        //            toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
+
+        //            if (Utility.StrtoInt(cStart_Sale_YMD) > toDate)
+        //            {
+        //                continue;
+        //            }
+
+        //            if (toDate > Utility.StrtoInt(cLast_Sale_YMD))
+        //            {
+        //                // 終売商品
+        //                Syubai = true;
+        //            }
+        //            else
+        //            {
+        //                // 終売ではない
+        //                Syubai = false;
+        //            }
+
+        //            break;
+        //        }
+
+        //        // 仕入先取得
+        //        string SIRESAKI_NM = string.Empty;
+        //        string SIRESAKI_KANA = string.Empty;
+
+        //        foreach (var si in Shiire_Array)
+        //        {
+        //            string[] z = si.Split(',');
+
+        //            // 削除フラグ
+        //            string zDelFlg = z[80].Replace("\"", "");
+
+        //            // 1行目見出し行は読み飛ばす
+        //            if (zDelFlg == "DELFLG")
+        //            {
+        //                continue;
+        //            }
+
+        //            if (zDelFlg == global.FLGON)
+        //            {
+        //                continue;
+        //            }
+
+        //            if (t[13].Replace("\"", "") != z[1].Replace("\"", ""))
+        //            {
+        //                continue;
+        //            }
+
+        //            // 仕入先名称取得
+        //            SIRESAKI_NM = z[4].Replace("\"", "");
+        //            SIRESAKI_KANA = z[6].Replace("\"", "");
+        //            break;
+        //        }
+
+        //        // 小売り単価：新単価適用日で判断
+        //        double _RETAIL_TANKA = 0;
+        //        if (toDate < Utility.StrtoDouble(t[34].Replace("\"", "")))
+        //        {
+        //            _RETAIL_TANKA = StrtoDouble(t[32].Replace("\"", ""));
+        //        }
+        //        else
+        //        {
+        //            _RETAIL_TANKA = StrtoDouble(t[35].Replace("\"", ""));
+        //        }
+
+        //        Array.Resize(ref syohins, x + 1);
+
+        //        // 返り値
+        //        syohins[x] = new ClsCsvData.ClsCsvSyohin
+        //        {
+        //            SYOHIN_CD = t[1].Replace("\"", ""),
+        //            SYOHIN_NM = t[2].Replace("\"", ""),
+        //            SYOHIN_SNM = t[3].Replace("\"", ""),
+        //            SYOHIN_KANA = t[4].Replace("\"", ""),
+        //            SIRESAKI_CD = t[13].Replace("\"", ""),
+        //            SIRESAKI_NM = SIRESAKI_NM,
+        //            SIRESAKI_KANA_NM = SIRESAKI_KANA,
+        //            JAN_CD = t[16].Replace("\"", ""),
+        //            SYOHIN_KIKAKU = t[19].Replace("\"", ""),
+        //            CASE_IRISU = StrtoDouble(t[24].Replace("\"", "")),
+        //            NOUHIN_KARI_TANKA = StrtoDouble(t[31].Replace("\"", "")),
+        //            RETAIL_TANKA = _RETAIL_TANKA,
+        //            HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", "")),
+        //            START_SALE_YMD = cStart_Sale_YMD,
+        //            LAST_SALE_YMD = cLast_Sale_YMD,
+        //            SHUBAI = Syubai,
+        //            SYOHIN_KIND_L_CD = t[44].Replace("\"", ""),
+        //            SYOHIN_KIND_M_CD = t[45].Replace("\"", ""),
+        //            SYOHIN_KIND_S_CD = t[46].Replace("\"", ""),
+        //            SYOHIN_KIND_CD = t[47].Replace("\"", "")
+        //        };
+
+        //        x++;
+        //    }
+
+        //    return syohins;
+        //}
+
+        
+        ///-------------------------------------------------------------------
+        /// <summary>
+        ///     商品情報配列取得 : 2020/04/08</summary>
+        /// <returns>
+        ///     clsCsvSyohinクラス配列</returns>
+        ///-------------------------------------------------------------------
+        public static ClsCsvData.ClsCsvSyohin_New[] GetSyohinData()
         {
             // 商品CSVデータ配列読み込み
             string[] Sy_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
 
-            // 商品在庫CSVデータ配列読み込み
-            string[] SySz_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
-
-            // 仕入先CSVデータ配列読み込み
-            string[] Shiire_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
-            
             int toDate = 0;
             int x = 0;
+            bool Syubai = false;
 
-            ClsCsvData.ClsCsvSyohin[] syohins = null;
+            ClsCsvData.ClsCsvSyohin_New [] syohins = null;
 
             foreach (var item in Sy_Array)
             {
                 string[] t = item.Split(',');
-                string cStart_Sale_YMD = "";    // 商品販売開始日付
-                string cLast_Sale_YMD = "";     // 商品販売終了日付
+                //string cStart_Sale_YMD = "";      // 商品販売開始日付
+                string cLast_Sale_YMD = "";         // 商品販売終了日付
 
                 // 削除フラグ
-                string DelFlg = t[63].Replace("\"", "");
+                string Header = t[0].Replace("\"", "");
 
                 // 1行目見出し行は読み飛ばす
-                if (DelFlg == "DELFLG")
+                if (Header == "SYOHIN_CD")
                 {
                     continue;
                 }
 
-                if (DelFlg == global.FLGON)
+                // 有効開始日、有効終了日で終売を調べる
+                //cStart_Sale_YMD = t[9].Replace("\"", "");   // 商品販売開始日付
+                cLast_Sale_YMD = t[10].Replace("\"", "");     // 商品販売終了日付（終売日）
+
+                toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
+
+                if (Utility.StrtoInt(cLast_Sale_YMD) > 0)
                 {
-                    continue;
-                }
-
-                // 商品在庫マスターで終売を調べる
-                bool Syubai = false;
-                foreach (var sz in SySz_Array)
-                {
-                    string[] z = sz.Split(',');
-
-                    // 削除フラグ
-                    string zDelFlg = z[10].Replace("\"", "");
-
-                    // 1行目見出し行は読み飛ばす
-                    if (zDelFlg == "DELFLG")
-                    {
-                        continue;
-                    }
-
-                    if (zDelFlg == global.FLGON)
-                    {
-                        continue;
-                    }
-
-                    // 該当商品か？
-                    if (t[1].Replace("\"", "") != z[2].Replace("\"", ""))
-                    {
-                        continue;
-                    }
-
-                    // 有効開始日、有効終了日を検証する
-                    cStart_Sale_YMD = z[3].Replace("\"", "");    // 商品販売開始日付
-                    cLast_Sale_YMD = z[4].Replace("\"", "");     // 商品販売終了日付（終売日）
-
-                    toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
-
-                    if (Utility.StrtoInt(cStart_Sale_YMD) > toDate)
-                    {
-                        continue;
-                    }
-
                     if (toDate > Utility.StrtoInt(cLast_Sale_YMD))
                     {
                         // 終売商品
@@ -1044,79 +1185,29 @@ namespace STSH_OCR.Common
                         // 終売ではない
                         Syubai = false;
                     }
-
-                    break;
-                }
-
-                // 仕入先取得
-                string SIRESAKI_NM = string.Empty;
-                string SIRESAKI_KANA = string.Empty;
-
-                foreach (var si in Shiire_Array)
-                {
-                    string[] z = si.Split(',');
-
-                    // 削除フラグ
-                    string zDelFlg = z[80].Replace("\"", "");
-
-                    // 1行目見出し行は読み飛ばす
-                    if (zDelFlg == "DELFLG")
-                    {
-                        continue;
-                    }
-
-                    if (zDelFlg == global.FLGON)
-                    {
-                        continue;
-                    }
-
-                    if (t[13].Replace("\"", "") != z[1].Replace("\"", ""))
-                    {
-                        continue;
-                    }
-
-                    // 仕入先名称取得
-                    SIRESAKI_NM = z[4].Replace("\"", "");
-                    SIRESAKI_KANA = z[6].Replace("\"", "");
-                    break;
-                }
-
-                // 小売り単価：新単価適用日で判断
-                double _RETAIL_TANKA = 0;
-                if (toDate < Utility.StrtoDouble(t[34].Replace("\"", "")))
-                {
-                    _RETAIL_TANKA = StrtoDouble(t[32].Replace("\"", ""));
-                }
-                else
-                {
-                    _RETAIL_TANKA = StrtoDouble(t[35].Replace("\"", ""));
                 }
 
                 Array.Resize(ref syohins, x + 1);
 
                 // 返り値
-                syohins[x] = new ClsCsvData.ClsCsvSyohin
+                syohins[x] = new ClsCsvData.ClsCsvSyohin_New
                 {
-                    SYOHIN_CD = t[1].Replace("\"", ""),
-                    SYOHIN_NM = t[2].Replace("\"", ""),
-                    SYOHIN_SNM = t[3].Replace("\"", ""),
-                    SYOHIN_KANA = t[4].Replace("\"", ""),
-                    SIRESAKI_CD = t[13].Replace("\"", ""),
-                    SIRESAKI_NM = SIRESAKI_NM,
-                    SIRESAKI_KANA_NM = SIRESAKI_KANA,
-                    JAN_CD = t[16].Replace("\"", ""),
-                    SYOHIN_KIKAKU = t[19].Replace("\"", ""),
-                    CASE_IRISU = StrtoDouble(t[24].Replace("\"", "")),
-                    NOUHIN_KARI_TANKA = StrtoDouble(t[31].Replace("\"", "")),
-                    RETAIL_TANKA = _RETAIL_TANKA,
-                    HATYU_LIMIT_DAY_CNT = StrtoDouble(t[39].Replace("\"", "")),
-                    START_SALE_YMD = cStart_Sale_YMD,
-                    LAST_SALE_YMD = cLast_Sale_YMD,
+                    SYOHIN_CD = t[0].Replace("\"", ""),
+                    SYOHIN_NM = t[1].Replace("\"", ""),
+                    SYOHIN_SNM = t[2].Replace("\"", ""),
+                    SIRESAKI_CD = t[3].Replace("\"", ""),
+                    SIRESAKI_NM = t[4].Replace("\"", ""),
+                    SIRESAKI_KANA_NM = t[5].Replace("\"", ""),
+                    JAN_CD = t[6].Replace("\"", ""),
+                    SYOHIN_KIKAKU = t[7].Replace("\"", ""),
+                    CASE_IRISU = StrtoDouble(t[8].Replace("\"", "")),
+                    START_SALE_YMD = t[9].Replace("\"", ""),
+                    LAST_SALE_YMD = t[10].Replace("\"", ""),
                     SHUBAI = Syubai,
-                    SYOHIN_KIND_L_CD = t[44].Replace("\"", ""),
-                    SYOHIN_KIND_M_CD = t[45].Replace("\"", ""),
-                    SYOHIN_KIND_S_CD = t[46].Replace("\"", ""),
-                    SYOHIN_KIND_CD = t[47].Replace("\"", "")
+                    SYOHIN_KIND_L_CD = t[12].Replace("\"", ""),
+                    SYOHIN_KIND_M_CD = t[13].Replace("\"", ""),
+                    SYOHIN_KIND_S_CD = t[14].Replace("\"", ""),
+                    SYOHIN_KIND_CD = t[15].Replace("\"", "")
                 };
 
                 x++;
@@ -1124,6 +1215,7 @@ namespace STSH_OCR.Common
 
             return syohins;
         }
+
 
         public static void SetTenDate(ClsTenDate [] tenDates, ClsOrder r)
         {
@@ -1270,23 +1362,90 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     商品マスタークラス</returns>
         ///------------------------------------------------------------------------
-        public static ClsCsvData.ClsCsvSyohin GetSyohins(ClsCsvData.ClsCsvSyohin [] syohins, string sSyohinCD)
+        //public static ClsCsvData.ClsCsvSyohin GetSyohins_20200408(ClsCsvData.ClsCsvSyohin [] syohins, string sSyohinCD)
+        //{
+        //    ClsCsvData.ClsCsvSyohin cls = new ClsCsvData.ClsCsvSyohin
+        //    {
+        //        SYOHIN_CD = "",
+        //        SYOHIN_NM = "",
+        //        SYOHIN_SNM = "",
+        //        SYOHIN_KANA = "",
+        //        SIRESAKI_CD = "",
+        //        SIRESAKI_NM = "",
+        //        SIRESAKI_KANA_NM = "",
+        //        JAN_CD = "",
+        //        SYOHIN_KIKAKU = "",
+        //        CASE_IRISU = global.flgOff,
+        //        NOUHIN_KARI_TANKA = global.flgOff,
+        //        RETAIL_TANKA = global.flgOff,
+        //        HATYU_LIMIT_DAY_CNT = global.flgOff,
+        //        START_SALE_YMD = "",
+        //        LAST_SALE_YMD = "",
+        //        SHUBAI = false,
+        //        SYOHIN_KIND_L_CD = "",
+        //        SYOHIN_KIND_M_CD = "",
+        //        SYOHIN_KIND_S_CD = "",
+        //        SYOHIN_KIND_CD = ""
+        //    };
+
+        //    for (int i = 0; i < syohins.Length; i++)
+        //    {
+        //        if (syohins[i].SYOHIN_CD == sSyohinCD.PadLeft(8, '0'))
+        //        {
+        //            cls.SYOHIN_CD = syohins[i].SYOHIN_CD;
+        //            cls.SYOHIN_NM = syohins[i].SYOHIN_NM;
+        //            cls.SYOHIN_SNM = syohins[i].SYOHIN_SNM;
+        //            cls.SYOHIN_KANA = syohins[i].SIRESAKI_CD;
+        //            cls.SIRESAKI_CD = syohins[i].SIRESAKI_CD;
+        //            cls.SIRESAKI_NM = syohins[i].SIRESAKI_NM;
+        //            cls.SIRESAKI_KANA_NM = syohins[i].SIRESAKI_KANA_NM;
+        //            cls.JAN_CD = syohins[i].JAN_CD;
+        //            cls.SYOHIN_KIKAKU = syohins[i].SYOHIN_KIKAKU;
+        //            cls.CASE_IRISU = syohins[i].CASE_IRISU;
+        //            cls.NOUHIN_KARI_TANKA = syohins[i].NOUHIN_KARI_TANKA;
+        //            cls.RETAIL_TANKA = syohins[i].RETAIL_TANKA;
+        //            cls.HATYU_LIMIT_DAY_CNT = syohins[i].HATYU_LIMIT_DAY_CNT;
+        //            cls.START_SALE_YMD = syohins[i].START_SALE_YMD;
+        //            cls.LAST_SALE_YMD = syohins[i].LAST_SALE_YMD;
+        //            cls.SHUBAI = syohins[i].SHUBAI;
+        //            cls.SYOHIN_KIND_L_CD = syohins[i].SYOHIN_KIND_L_CD;
+        //            cls.SYOHIN_KIND_M_CD = syohins[i].SYOHIN_KIND_M_CD;
+        //            cls.SYOHIN_KIND_S_CD = syohins[i].SYOHIN_KIND_S_CD;
+        //            cls.SYOHIN_KIND_CD = syohins[i].SYOHIN_KIND_CD;
+        //            break;
+        //        }
+        //    }
+
+        //    return cls;
+        //}
+
+        ///------------------------------------------------------------------------
+        /// <summary>
+        ///     商品マスターデータテーブルから情報を取得する : 2020/04/09 </summary>
+        /// <param name="syohins">
+        ///     ClsCsvData.ClsCsvSyohin_Newクラス配列</param>
+        /// <param name="sSyohinCD">
+        ///     商品コード  </param>
+        /// <returns>
+        ///     商品マスタークラス</returns>
+        ///------------------------------------------------------------------------
+        public static ClsCsvData.ClsCsvSyohin_New GetSyohinsFromDataTable(System.Data.DataTable data, string sSyohinCD)
         {
-            ClsCsvData.ClsCsvSyohin cls = new ClsCsvData.ClsCsvSyohin
+            ClsCsvData.ClsCsvSyohin_New cls = new ClsCsvData.ClsCsvSyohin_New
             {
                 SYOHIN_CD = "",
                 SYOHIN_NM = "",
                 SYOHIN_SNM = "",
-                SYOHIN_KANA = "",
+                //SYOHIN_KANA = "",
                 SIRESAKI_CD = "",
                 SIRESAKI_NM = "",
                 SIRESAKI_KANA_NM = "",
                 JAN_CD = "",
                 SYOHIN_KIKAKU = "",
                 CASE_IRISU = global.flgOff,
-                NOUHIN_KARI_TANKA = global.flgOff,
-                RETAIL_TANKA = global.flgOff,
-                HATYU_LIMIT_DAY_CNT = global.flgOff,
+                //NOUHIN_KARI_TANKA = global.flgOff,
+                //RETAIL_TANKA = global.flgOff,
+                //HATYU_LIMIT_DAY_CNT = global.flgOff,
                 START_SALE_YMD = "",
                 LAST_SALE_YMD = "",
                 SHUBAI = false,
@@ -1296,32 +1455,28 @@ namespace STSH_OCR.Common
                 SYOHIN_KIND_CD = ""
             };
 
-            for (int i = 0; i < syohins.Length; i++)
+            DataRow[] row = data.AsEnumerable().Where(a => a["SYOHIN_CD"].ToString().PadLeft(8, '0') == sSyohinCD.PadLeft(8, '0')).ToArray();
+
+            foreach (var t in row)
             {
-                if (syohins[i].SYOHIN_CD == sSyohinCD.PadLeft(8, '0'))
-                {
-                    cls.SYOHIN_CD = syohins[i].SYOHIN_CD;
-                    cls.SYOHIN_NM = syohins[i].SYOHIN_NM;
-                    cls.SYOHIN_SNM = syohins[i].SYOHIN_SNM;
-                    cls.SYOHIN_KANA = syohins[i].SIRESAKI_CD;
-                    cls.SIRESAKI_CD = syohins[i].SIRESAKI_CD;
-                    cls.SIRESAKI_NM = syohins[i].SIRESAKI_NM;
-                    cls.SIRESAKI_KANA_NM = syohins[i].SIRESAKI_KANA_NM;
-                    cls.JAN_CD = syohins[i].JAN_CD;
-                    cls.SYOHIN_KIKAKU = syohins[i].SYOHIN_KIKAKU;
-                    cls.CASE_IRISU = syohins[i].CASE_IRISU;
-                    cls.NOUHIN_KARI_TANKA = syohins[i].NOUHIN_KARI_TANKA;
-                    cls.RETAIL_TANKA = syohins[i].RETAIL_TANKA;
-                    cls.HATYU_LIMIT_DAY_CNT = syohins[i].HATYU_LIMIT_DAY_CNT;
-                    cls.START_SALE_YMD = syohins[i].START_SALE_YMD;
-                    cls.LAST_SALE_YMD = syohins[i].LAST_SALE_YMD;
-                    cls.SHUBAI = syohins[i].SHUBAI;
-                    cls.SYOHIN_KIND_L_CD = syohins[i].SYOHIN_KIND_L_CD;
-                    cls.SYOHIN_KIND_M_CD = syohins[i].SYOHIN_KIND_M_CD;
-                    cls.SYOHIN_KIND_S_CD = syohins[i].SYOHIN_KIND_S_CD;
-                    cls.SYOHIN_KIND_CD = syohins[i].SYOHIN_KIND_CD;
-                    break;
-                }
+                cls.SYOHIN_CD = t["SYOHIN_CD"].ToString();
+                cls.SYOHIN_NM = t["SYOHIN_NM"].ToString();
+                cls.SYOHIN_SNM = t["SYOHIN_SNM"].ToString();
+                //cls.SYOHIN_KANA = syohins[i].SIRESAKI_CD;
+                cls.SIRESAKI_CD = t["SIRESAKI_CD"].ToString();
+                cls.SIRESAKI_NM = t["SIRESAKI_NM"].ToString();
+                cls.SIRESAKI_KANA_NM = t["SIRESAKI_KANA_NM"].ToString();
+                cls.JAN_CD = t["JAN_CD"].ToString();
+                cls.SYOHIN_KIKAKU = t["SYOHIN_KIKAKU"].ToString();
+                cls.CASE_IRISU = Utility.StrtoDouble(t["CASE_IRISU"].ToString());
+                cls.START_SALE_YMD = t["START_SALE_YMD"].ToString();
+                cls.LAST_SALE_YMD = t["LAST_SALE_YMD"].ToString();
+                cls.SHUBAI = Convert.ToBoolean(Utility.StrtoInt(t["SHUBAI"].ToString()));
+                cls.SYOHIN_KIND_L_CD = t["SYOHIN_KIND_L_CD"].ToString();
+                cls.SYOHIN_KIND_M_CD = t["SYOHIN_KIND_M_CD"].ToString();
+                cls.SYOHIN_KIND_S_CD = t["SYOHIN_KIND_S_CD"].ToString();
+                cls.SYOHIN_KIND_CD = t["SYOHIN_KIND_CD"].ToString();
+                break;
             }
 
             return cls;

@@ -162,7 +162,7 @@ namespace STSH_OCR.OCR
         ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
 
         // 商品クラス
-        ClsCsvData.ClsCsvSyohin[] syohins = null;
+        ClsCsvData.ClsCsvSyohin_New[] syohins = null;
 
         // 店着日配列
         ClsTenDate[] tenDates = new ClsTenDate[7];
@@ -197,11 +197,13 @@ namespace STSH_OCR.OCR
             string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
 
-            // 得意先マスタークラス配列取得
-            tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
+            // 2020/04/09 コメント化
+            //// 得意先マスタークラス配列取得
+            //tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
 
-            // 商品マスタークラス配列取得
-            syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
+            // 2020/04/09 コメント化
+            //// 商品マスタークラス配列取得
+            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             // データ登録
             if (dID == string.Empty)
@@ -1719,11 +1721,12 @@ namespace STSH_OCR.OCR
                 fromImg = Properties.Settings.Default.MyDataPath + t.ImageFileName;
 
                 // 移動先フォルダ
-                string sName = Utility.getNouhinName(t.TokuisakiCode.ToString().PadLeft(7, '0'), out sTel, out sJyu);   // 届先名
+                //string sName = Utility.getNouhinName(t.TokuisakiCode.ToString().PadLeft(7, '0'), out sTel, out sJyu);   // 2020/04/09 コメント化
+                string sName = Utility.GetTokuisakiFromDataTable(t.TokuisakiCode.ToString("D7"), global.dtTokuisaki).TOKUISAKI_NM;   // 2020/04/09
 
                 //// 発注書移動先ファイルパス
                 //string userFolder = s.画像保存先パス + t.TokuisakiCode.ToString().PadLeft(7, '0') + "_" + sName;
-                
+
                 //// お客様フォルダがあるか？なければ作成する
                 //if (!System.IO.Directory.Exists(userFolder))
                 //{
@@ -3572,14 +3575,14 @@ namespace STSH_OCR.OCR
                 if ((e.RowIndex % 2) != 0)
                 {
                     string syCd = Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0');
-                    ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, syCd);
+                    ClsCsvData.ClsCsvSyohin_New syohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, syCd);    // 2020/04/09
 
                     dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;       // 仕入先名
                     dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;             // 商品名
                     dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;    // 規格
                     dg1[colIrisu, e.RowIndex].Value = syohin.CASE_IRISU;            // 入数
-                    dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;     // 納価
-                    dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;          // 売価
+                    //dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;     // 納価
+                    //dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;          // 売価
 
                     // 終売のとき
                     if (syohin.SHUBAI)
