@@ -190,7 +190,7 @@ namespace STSH_OCR.Common
                 int vI = 0;
                 bool bl = false;
 
-                ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisakiFromDataTable(s.TokuisakiCode.ToString("D2"), global.dtTokuisaki);
+                ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisakiFromDataTable(s.TokuisakiCode.ToString("D7"), global.dtTokuisaki);
 
                 if (tokuisaki.TOKUISAKI_CD == "")
                 {

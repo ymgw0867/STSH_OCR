@@ -278,17 +278,15 @@ namespace STSH_OCR
             dCountShow();   // 件数表示
             timer1.Enabled = true;
 
-            //// 得意先CSVデータ配列読み込み
-            //global.gl_Tokuisaki = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-
             // CSVデータをDataSetに読み込む : 2020/04/09
             global.dtSyohin = readCSV(Properties.Settings.Default.商品マスター);
             global.dtTokuisaki = readCSV(Properties.Settings.Default.得意先マスター);
+            global.dtNoukaBaika = readCSV(Properties.Settings.Default.納価売価);
 
-            // データセットにデータテーブルを追加 : 2020/04/09
-            global.DataSet = new DataSet();
-            global.DataSet.Tables.Add(global.dtSyohin);
-            global.DataSet.Tables.Add(global.dtTokuisaki);
+            //// データセットにデータテーブルを追加 : 2020/04/09
+            //global.DataSet = new DataSet();
+            //global.DataSet.Tables.Add(global.dtSyohin);
+            //global.DataSet.Tables.Add(global.dtTokuisaki);
 
             // データベース接続
             cn = new SQLiteConnection("DataSource=" + db_file);

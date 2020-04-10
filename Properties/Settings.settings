@@ -6,10 +6,10 @@
       <Value Profile="(Default)">c:\STSH_OCR\DB\STSH_OCR.db3</Value>
     </Setting>
     <Setting Name="商品マスター" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\STSH_OCR\MST\syohinmst.csv</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\MST\syohinmst_New.csv</Value>
     </Setting>
     <Setting Name="得意先マスター" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">c:\STSH_OCR\MST\tokuisakimst.csv</Value>
+      <Value Profile="(Default)">c:\STSH_OCR\MST\tokuisakimst_New.csv</Value>
     </Setting>
     <Setting Name="商品在庫マスター" Type="System.String" Scope="Application">
       <Value Profile="(Default)">c:\STSH_OCR\MST\syohinzaiko.csv</Value>
@@ -55,6 +55,9 @@
     </Setting>
     <Setting Name="商品分類リスト" Type="System.String" Scope="Application">
       <Value Profile="(Default)">c:\STSH_OCR\MST\商品分類リスト.xlsx</Value>
+    </Setting>
+    <Setting Name="納価売価" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">c:\STSH_OCR\MST\syohinNoukaBaika.csv</Value>
     </Setting>
   </Settings>
 </SettingsFile>

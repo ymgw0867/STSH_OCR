@@ -21,15 +21,6 @@ namespace STSH_OCR.Pattern
         {
             InitializeComponent();
         }
-
-        string[] SyoArray = null;
-        string[] SySzArray = null;
-        string[] ShiireArray = null;
-
-        // 2020/04/08 コメント化
-        //ClsCsvData.ClsCsvTokuisaki[] csvTokuisakis = null;
-        //ClsCsvData.ClsCsvSyohin[] csvSyohins = null;
-
         // 2020/04/08
         ClsCsvData.ClsCsvSyohin_New csvSyohin = null;
 
@@ -186,28 +177,6 @@ namespace STSH_OCR.Pattern
             }
         }
 
-        ///-----------------------------------------------------------
-        /// <summary>
-        ///     マスター読み込み </summary>
-        ///-----------------------------------------------------------
-        private void getVNouhin()
-        {
-            // 2020/04/08 コメント化
-            //int toDate = Utility.StrtoInt(DateTime.Today.Year.ToString() + DateTime.Today.Month.ToString("D2") + DateTime.Today.Day.ToString("D2"));
-
-            // 2020/04/08 コメント化
-            //// 得意先CSVデータ配列読み込み
-            //string[] MstArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-            //csvTokuisakis = ClsCsvData.ClsCsvTokuisaki.Load(MstArray, toDate);
-
-            // 2020/04/08 コメント化
-            //// 商品マスター配列読み込み
-            //SyoArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
-            //SySzArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
-            //ShiireArray = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
-            //csvSyohins = ClsCsvData.ClsCsvSyohin.Load(SyoArray, SySzArray, ShiireArray, toDate);
-        }
-
         ///------------------------------------------------------------
         /// <summary>
         ///     発注書パターン一覧表示 </summary>
@@ -228,12 +197,9 @@ namespace STSH_OCR.Pattern
 
             foreach (var s in dbPtn.OrderBy(a => a.TokuisakiCode).ThenBy(a => a.SeqNum).ThenBy(a => a.SecondNum))
             {
-                int vI = 0;
-                bool bl = false;
-
-
                 // 得意先情報を取得：2020/04/09
-                ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisakiFromDataTable(s.TokuisakiCode.ToString(), global.dtTokuisaki);
+                ClsCsvData.ClsCsvTokuisaki tokuisaki = Utility.GetTokuisakiFromDataTable(s.TokuisakiCode.ToString().PadLeft(7, '0'), global.dtTokuisaki);
+
                 if (tokuisaki.TOKUISAKI_CD == string.Empty)
                 {
                     continue;
@@ -700,7 +666,7 @@ namespace STSH_OCR.Pattern
                         // 2020/04/08 コメント化
                         //csvSyohin = Utility.GetSyohinData(SyoArray, SySzArray, ShiireArray, _G_Code);
 
-                        // 2020/04/09
+                        // 商品情報取得 2020/04/09
                         csvSyohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, _G_Code);
 
                         int xRow = r * 2 + xR;
@@ -726,12 +692,15 @@ namespace STSH_OCR.Pattern
                             rtnArray[xRow, 44] = csvSyohin.CASE_IRISU;
                             rtnArray[xRow, 48] = csvSyohin.SYOHIN_CD.PadLeft(8, '0');
                             rtnArray[xRow2, 48] = _R_Days + "日前";
-                            //rtnArray[xRow, 60] = csvSyohin.NOUHIN_KARI_TANKA; // 2020/04/08 コメント化
-                            //rtnArray[xRow, 74] = csvSyohin.RETAIL_TANKA;  //  // 2020/04/08 コメント化
+
+                            // 納価売価取得：2020/04/10
+                            ClsCsvData.ClsCsvNoukaBaika noukaBaika = Utility.GetNoukaBaikaFromDataTable(pPID, csvSyohin.SYOHIN_CD.PadLeft(8, '0'), global.dtNoukaBaika);
+                            rtnArray[xRow, 60] = noukaBaika.NOUKA;  // 2020/04/10
+                            rtnArray[xRow, 74] = noukaBaika.BAIKA;  // 2020/04/10
+
                             rtnArray[xRow2, 60] = csvSyohin.JAN_CD;
                         }
                     }
-
 
                     // 備考
                     //rtnArray[62, 2] = s.備考; 

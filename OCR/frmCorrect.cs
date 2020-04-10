@@ -158,11 +158,11 @@ namespace STSH_OCR.OCR
         private readonly string colDay7 = "c12";
         private readonly string colSyubai = "c13";
 
-        // 得意先クラス
-        ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
+        //// 得意先クラス
+        //ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
 
-        // 商品クラス
-        ClsCsvData.ClsCsvSyohin_New[] syohins = null;
+        //// 商品クラス
+        //ClsCsvData.ClsCsvSyohin_New[] syohins = null;
 
         // 店着日配列
         ClsTenDate[] tenDates = new ClsTenDate[7];
@@ -573,10 +573,6 @@ namespace STSH_OCR.OCR
         {
             if (e.KeyChar != '0' && e.KeyChar != '5' && e.KeyChar != '\b' && e.KeyChar != '\t')
                 e.Handled = true;
-        }
-
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
         }
 
         private void frmCorrect_Shown(object sender, EventArgs e)
@@ -1457,24 +1453,6 @@ namespace STSH_OCR.OCR
                 }
 
                 // 発注書画像移動処理
-                //foreach (var file in System.IO.Directory.GetFiles(Properties.Settings.Default.MyDataPath, "*.tif"))
-                //{
-                //    // 画像ファイル名を取得します
-                //    string sImgNm = System.IO.Path.GetFileName(file);
-
-                //    // 移動先に同じ名前のファイルが存在するとき削除する
-                //    string tifName = Properties.Settings.Default.TifPath + sImgNm;
-
-                //    if (System.IO.File.Exists(tifName))
-                //    {
-                //        System.IO.File.Delete(tifName);
-                //    }
-
-                //    // 画像ファイルをTIFフォルダに移動する
-                //    System.IO.File.Move(file, tifName);
-                //}
-
-                // 発注書画像移動処理
                 MoveFaxImage();
 
                 // 発注書データを削除します
@@ -1546,17 +1524,18 @@ namespace STSH_OCR.OCR
 
                     while(sqlData.Read())
                     {
-                        // 得意先名取得
-                        string TokuiNM = string.Empty;
+                        // 2020/04/10 コメント化
+                        //for (int i = 0; i < tokuisaki.Length; i++)
+                        //{
+                        //    if (tokuisaki[i].TOKUISAKI_CD == sqlData["得意先コード"].ToString().PadLeft(7, '0'))
+                        //    {
+                        //        TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+                        //        break;
+                        //    }
+                        //}
 
-                        for (int i = 0; i < tokuisaki.Length; i++)
-                        {
-                            if (tokuisaki[i].TOKUISAKI_CD == sqlData["得意先コード"].ToString().PadLeft(7, '0'))
-                            {
-                                TokuiNM = tokuisaki[i].TOKUISAKI_NM;
-                                break;
-                            }
-                        }
+                        // 得意先名取得 2020/04/10
+                        string TokuiNM = Utility.GetTokuisakiFromDataTable(sqlData["得意先コード"].ToString().PadLeft(7, '0'), global.dtTokuisaki).TOKUISAKI_NM;
 
                         // フォルダ名
                         string DirNM = sqlData["得意先コード"].ToString().PadLeft(7, '0') + "_" + TokuiNM;
@@ -1790,81 +1769,6 @@ namespace STSH_OCR.OCR
             //}
         }
 
-
-        private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            // ログ書き込み状態のとき、値を保持する
-            if (editLogStatus)
-            {
-                // 商品コード
-                if (e.ColumnIndex == 3)
-                {
-                    cellName = CELL_SYOHINCD;
-                }
-
-                // 納価
-                if (e.ColumnIndex == 4)
-                {
-                    cellName = CELL_NOUKA;
-                }
-
-                // 売価
-                if (e.ColumnIndex == 5)
-                {
-                    cellName = CELL_BAIKA;
-                }
-
-                // 月曜発注数
-                if (e.ColumnIndex == 6)
-                {
-                    cellName = CELL_MON;
-                }
-
-                // 火曜発注数
-                if (e.ColumnIndex == 7)
-                {
-                    cellName = CELL_TUE;
-                }
-
-                // 水曜発注数
-                if (e.ColumnIndex == 8)
-                {
-                    cellName = CELL_WED;
-                }
-
-                // 木曜発注数
-                if (e.ColumnIndex == 9)
-                {
-                    cellName = CELL_THU;
-                }
-
-                // 金曜発注数
-                if (e.ColumnIndex == 10)
-                {
-                    cellName = CELL_FRI;
-                }
-
-                // 土曜発注数
-                if (e.ColumnIndex == 11)
-                {
-                    cellName = CELL_SAT;
-                }
-
-                // 日曜発注数
-                if (e.ColumnIndex == 12)
-                {
-                    cellName = CELL_SUN;
-                }
-
-                // 終売処理
-                if (e.ColumnIndex == 13)
-                {
-                    cellName = CELL_SHUBAI;
-                }
-
-                cellBeforeValue = Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value);
-            }
-        }
 
 
         /// -------------------------------------------------------------------------
@@ -3340,19 +3244,18 @@ namespace STSH_OCR.OCR
 
         private void txtTokuisakiCD_TextChanged(object sender, EventArgs e)
         {
-            // 得意先名表示
-            string TokuiNM = string.Empty;
+            // 2020/04/10 コメント化
+            //for (int i = 0; i < tokuisaki.Length; i++)
+            //{
+            //    if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
+            //    {
+            //        TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+            //        break;
+            //    }
+            //}
 
-            for (int i = 0; i < tokuisaki.Length; i++)
-            {
-                if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
-                {
-                    TokuiNM = tokuisaki[i].TOKUISAKI_NM;
-                    break;
-                }
-            }
-            
-            lblTokuisakiName.Text = TokuiNM;
+            // 得意先名取得 2020/04/10
+            lblTokuisakiName.Text = Utility.GetTokuisakiFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), global.dtTokuisaki).TOKUISAKI_NM; ;
 
             // 発注書パターン表示
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
@@ -3581,8 +3484,11 @@ namespace STSH_OCR.OCR
                     dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;             // 商品名
                     dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;    // 規格
                     dg1[colIrisu, e.RowIndex].Value = syohin.CASE_IRISU;            // 入数
-                    //dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;     // 納価
-                    //dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;          // 売価
+
+                    // 納価売価取得：2020/04/10
+                    ClsCsvData.ClsCsvNoukaBaika noukaBaika = Utility.GetNoukaBaikaFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), syCd, global.dtNoukaBaika);
+                    dg1[colNouka, e.RowIndex].Value = noukaBaika.NOUKA;     // 納価
+                    dg1[colBaika, e.RowIndex].Value = noukaBaika.BAIKA;     // 売価
 
                     // 終売のとき
                     if (syohin.SHUBAI)
@@ -3824,19 +3730,6 @@ namespace STSH_OCR.OCR
         }
 
 
-        //CellEndEditイベントハンドラ
-        private void DataGridView1_CellEndEdit(object sender,
-            DataGridViewCellEventArgs e)
-        {
-            //SelectedIndexChangedイベントハンドラを削除
-            if (this.dataGridViewComboBox != null)
-            {
-                this.dataGridViewComboBox.SelectedIndexChanged -=
-                    new EventHandler(dataGridViewComboBox_SelectedIndexChanged);
-                this.dataGridViewComboBox = null;
-            }
-        }
-
         //DataGridViewに表示されているコンボボックスの
         //SelectedIndexChangedイベントハンドラ
         private void dataGridViewComboBox_SelectedIndexChanged(object sender,
@@ -3890,22 +3783,26 @@ namespace STSH_OCR.OCR
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // 得意先名・FAX番号取得
-            string TokuiNM = string.Empty;
-            string TokuiFax = string.Empty;
+            // 2020/04/10 コメント化
+            //string TokuiNM = string.Empty;
+            //string TokuiFax = string.Empty;
 
-            for (int i = 0; i < tokuisaki.Length; i++)
-            {
-                if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
-                {
-                    TokuiNM = tokuisaki[i].TOKUISAKI_NM;
-                    TokuiFax = tokuisaki[i].TOKUISAKI_FAX;
-                    break;
-                }
-            }
+            //for (int i = 0; i < tokuisaki.Length; i++)
+            //{
+            //    if (tokuisaki[i].TOKUISAKI_CD == txtTokuisakiCD.Text.PadLeft(7, '0'))
+            //    {
+            //        TokuiNM = tokuisaki[i].TOKUISAKI_NM;
+            //        TokuiFax = tokuisaki[i].TOKUISAKI_FAX;
+            //        break;
+            //    }
+            //}
 
+            // 得意先名・FAX番号取得 2020/04/10
+            ClsCsvData.ClsCsvTokuisaki tokuisaki =　Utility.GetTokuisakiFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), global.dtTokuisaki);
+
+            // 返信ＦＡＸ画面表示
             Hide();
-            frmReFax reFax = new frmReFax(_img, TokuiNM, TokuiFax);
+            frmReFax reFax = new frmReFax(_img, tokuisaki.TOKUISAKI_NM, tokuisaki.TOKUISAKI_FAX);   // 2020/04/10
             reFax.ShowDialog();
             Show();
         }
@@ -4097,6 +3994,81 @@ namespace STSH_OCR.OCR
         private void btnLeft_Click_1(object sender, EventArgs e)
         {
             ImageRotate(pictureBox1.Image);
+        }
+
+        private void dg1_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            // ログ書き込み状態のとき、値を保持する
+            if (editLogStatus)
+            {
+                // 商品コード
+                if (e.ColumnIndex == 3)
+                {
+                    cellName = CELL_SYOHINCD;
+                }
+
+                // 納価
+                if (e.ColumnIndex == 4)
+                {
+                    cellName = CELL_NOUKA;
+                }
+
+                // 売価
+                if (e.ColumnIndex == 5)
+                {
+                    cellName = CELL_BAIKA;
+                }
+
+                // 月曜発注数
+                if (e.ColumnIndex == 6)
+                {
+                    cellName = CELL_MON;
+                }
+
+                // 火曜発注数
+                if (e.ColumnIndex == 7)
+                {
+                    cellName = CELL_TUE;
+                }
+
+                // 水曜発注数
+                if (e.ColumnIndex == 8)
+                {
+                    cellName = CELL_WED;
+                }
+
+                // 木曜発注数
+                if (e.ColumnIndex == 9)
+                {
+                    cellName = CELL_THU;
+                }
+
+                // 金曜発注数
+                if (e.ColumnIndex == 10)
+                {
+                    cellName = CELL_FRI;
+                }
+
+                // 土曜発注数
+                if (e.ColumnIndex == 11)
+                {
+                    cellName = CELL_SAT;
+                }
+
+                // 日曜発注数
+                if (e.ColumnIndex == 12)
+                {
+                    cellName = CELL_SUN;
+                }
+
+                // 終売処理
+                if (e.ColumnIndex == 13)
+                {
+                    cellName = CELL_SHUBAI;
+                }
+
+                cellBeforeValue = Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value);
+            }
         }
     }
 }

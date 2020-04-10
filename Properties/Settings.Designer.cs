@@ -34,7 +34,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\MST\\syohinmst.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\MST\\syohinmst_New.csv")]
         public string 商品マスター {
             get {
                 return ((string)(this["商品マスター"]));
@@ -43,7 +43,7 @@ namespace STSH_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\MST\\tokuisakimst.csv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\MST\\tokuisakimst_New.csv")]
         public string 得意先マスター {
             get {
                 return ((string)(this["得意先マスター"]));
@@ -182,6 +182,15 @@ namespace STSH_OCR.Properties {
         public string 商品分類リスト {
             get {
                 return ((string)(this["商品分類リスト"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\STSH_OCR\\MST\\syohinNoukaBaika.csv")]
+        public string 納価売価 {
+            get {
+                return ((string)(this["納価売価"]));
             }
         }
     }

@@ -23,7 +23,7 @@ namespace STSH_OCR.Pattern
             InitializeComponent();
         }
 
-        string[] TkArray = null;        // 得意先マスター配列
+        //string[] TkArray = null;        // 得意先マスター配列
         //string[] SyArray = null;        // 商品マスター配列
         //string[] SyZkArray = null;      // 商品在庫マスター配列
         //string[] ShiireArray = null;    // 仕入先マスター配列
@@ -68,7 +68,7 @@ namespace STSH_OCR.Pattern
         //ClsCsvData.ClsCsvSyohin[] global.syohin_News = null;
         //ClsCsvData.ClsCsvSyohin_New[] syohin_News = null;
 
-        string[] csvArray = null;
+        //string[] csvArray = null;
 
         string comm1 = "※機械で読み込みます" + Environment.NewLine + "※２重線での訂正はしないで下さい" + Environment.NewLine + "※FAXは曲がらないようご注意下さい";
         string comm2 = "佐藤食品株式会社";
@@ -96,31 +96,12 @@ namespace STSH_OCR.Pattern
             // フォーム初期化
             dispInitial();
 
-            // 得意先CSVデータ配列読み込み            
-            //TkArray = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-
-            //// 商品CSVデータ配列読み込み
-            //SyArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品マスター, Encoding.Default);
-
-            //// 商品在庫CSVデータ配列読み込み
-            //SyZkArray = System.IO.File.ReadAllLines(Properties.Settings.Default.商品在庫マスター, Encoding.Default);
-
-            //// 仕入先CSVデータ配列読み込み
-            //ShiireArray = System.IO.File.ReadAllLines(Properties.Settings.Default.仕入先マスター, Encoding.Default);
-
             // ローカルマスター接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
 
             // 発注書パターンマスターテーブル読み込み
             dbPtn = context.GetTable<Common.ClsOrderPattern>();
-
-            // 商品マスタークラス配列読み込み
-            //global.syohin_News = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
-            //System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());            
-            //syohin_News = Utility.GetSyohinData();
-            //System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString()); 
-            //System.Diagnostics.Debug.WriteLine(syohin_News.Length);
         }
 
 
@@ -433,7 +414,7 @@ namespace STSH_OCR.Pattern
                 tempDGV.Columns.Add(colKikaku, "規格");
                 tempDGV.Columns.Add(colIrisu, "入数");
 
-                tempDGV.Columns[colMaker].Width = 140;
+                tempDGV.Columns[colMaker].Width = 200;
                 tempDGV.Columns[colHinCode].Width = 80;
                 tempDGV.Columns[colIrisu].Width = 50;
                 tempDGV.Columns[colKikaku].Width = 80;
@@ -494,7 +475,6 @@ namespace STSH_OCR.Pattern
                 //フォームサイズ定義
 
                 // 列スタイルを変更する
-
                 tempDGV.EnableHeadersVisualStyles = false;
                 tempDGV.ColumnHeadersDefaultCellStyle.BackColor = Color.SteelBlue;
                 tempDGV.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
@@ -528,20 +508,23 @@ namespace STSH_OCR.Pattern
                 tempDGV.Columns.Add(colHinName, "商品名");
                 tempDGV.Columns.Add(colKikaku, "規格");
                 tempDGV.Columns.Add(colIrisu, "入数");
-                tempDGV.Columns.Add(colNouka, "納価");
-                tempDGV.Columns.Add(colBaika, "売価");
+
+                //tempDGV.Columns.Add(colNouka, "納価");  // 2020/04/10
+                //tempDGV.Columns.Add(colBaika, "売価");  // 2020/04/10
+
                 tempDGV.Columns.Add(colJanCD, "JAN");
                 tempDGV.Columns.Add(colReadDays, "リード");
 
                 tempDGV.Columns[colSeqNum].Width = 40;
-                tempDGV.Columns[colMaker].Width = 180;
+                tempDGV.Columns[colMaker].Width = 220;
                 tempDGV.Columns[colHinCode].Width = 80;
-                //tempDGV.Columns[colHinName].Width = 300;
                 tempDGV.Columns[colIrisu].Width = 50;
                 tempDGV.Columns[colKikaku].Width = 80;
-                tempDGV.Columns[colNouka].Width = 60;
-                tempDGV.Columns[colBaika].Width = 60;
-                tempDGV.Columns[colJanCD].Width = 100;
+
+                //tempDGV.Columns[colNouka].Width = 60;  // 2020/04/10
+                //tempDGV.Columns[colBaika].Width = 60;  // 2020/04/10
+
+                tempDGV.Columns[colJanCD].Width = 110;
                 tempDGV.Columns[colReadDays].Width = 70;
 
                 tempDGV.Columns[colHinName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -550,8 +533,10 @@ namespace STSH_OCR.Pattern
                 tempDGV.Columns[colHinCode].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colIrisu].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colKikaku].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                tempDGV.Columns[colNouka].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                tempDGV.Columns[colBaika].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+                //tempDGV.Columns[colNouka].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;  // 2020/04/10
+                //tempDGV.Columns[colBaika].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;  // 2020/04/10
+
                 tempDGV.Columns[colJanCD].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colReadDays].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
@@ -561,8 +546,7 @@ namespace STSH_OCR.Pattern
                 foreach (DataGridViewColumn c in tempDGV.Columns)
                 {
                     // 編集可否
-                    if (c.Name == colSeqNum || c.Name == colMaker || c.Name == colKikaku || c.Name == colIrisu || c.Name == colJanCD || 
-                        c.Name == colNouka || c.Name == colBaika)
+                    if (c.Name == colSeqNum || c.Name == colMaker || c.Name == colKikaku || c.Name == colIrisu || c.Name == colJanCD)
                     {
                         c.ReadOnly = true;
                     }
@@ -1327,6 +1311,21 @@ namespace STSH_OCR.Pattern
                 dataGridView3.Focus();
                 //gcMultiRow1.CurrentCell = gcMultiRow1[0, "lblNum"];
                 return;
+            }
+
+            // リード日数確認
+            for (int i = 0; i < dataGridView3.Rows.Count; i++)
+            {
+                // 商品登録されてリード日数がゼロのとき
+                if (Utility.NulltoStr(dataGridView3.Rows[i].Cells[colHinCode].Value) != string.Empty && 
+                    Utility.NulltoStr(dataGridView3.Rows[i].Cells[colReadDays].Value) == global.FLGOFF)
+                {
+                    if (MessageBox.Show("リード日数がゼロの商品があります。続行しますか？", "リード日数", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2) == DialogResult.No)
+                    {
+                        dataGridView3.Focus();
+                        return;
+                    }
+                }
             }
 
             // 登録確認
@@ -2181,19 +2180,33 @@ namespace STSH_OCR.Pattern
             // 商品コード
             if (e.ColumnIndex == 2)
             {
+                string syCD = Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString().PadLeft(0, '8');
+
                 // 2020/04/09
-                ClsCsvData.ClsCsvSyohin_New cls = Utility.GetSyohinsFromDataTable(global.dtSyohin, Utility.NulltoStr(dataGridView3[colHinCode, e.RowIndex].Value).ToString().PadLeft(0, '8'));
+                ClsCsvData.ClsCsvSyohin_New cls = Utility.GetSyohinsFromDataTable(global.dtSyohin, syCD);
 
                 dataGridView3[colMaker, e.RowIndex].Value = cls.SIRESAKI_NM;
                 dataGridView3[colHinName, e.RowIndex].Value = cls.SYOHIN_NM;
                 dataGridView3[colKikaku, e.RowIndex].Value = cls.SYOHIN_KIKAKU;
                 dataGridView3[colIrisu, e.RowIndex].Value = cls.CASE_IRISU;
-                //dataGridView3[colNouka, e.RowIndex].Value = cls.NOUHIN_KARI_TANKA;
-                //dataGridView3[colBaika, e.RowIndex].Value = cls.RETAIL_TANKA;
+
                 dataGridView3[colJanCD, e.RowIndex].Value = cls.JAN_CD;
-                //dataGridView3[colReadDays, e.RowIndex].Value = cls.HATYU_LIMIT_DAY_CNT;
+                dataGridView3[colReadDays, e.RowIndex].Value = global.FLGOFF;   // 初期値ゼロ表示：2020/04/10
             }
 
+            // リード日数
+            if (e.ColumnIndex == 7)
+            {
+                if (Utility.NulltoStr(dataGridView3.Rows[e.RowIndex].Cells[colHinCode].Value) != string.Empty &&
+                    Utility.NulltoStr(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value) == global.FLGOFF)
+                {
+                    dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Red;
+                }
+                else
+                {
+                    dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = SystemColors.ControlText;
+                }
+            }
         }
 
         private void 行挿入ToolStripMenuItem_Click(object sender, EventArgs e)
