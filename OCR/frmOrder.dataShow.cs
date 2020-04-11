@@ -60,6 +60,50 @@ namespace STSH_OCR.OCR
 
                 while (dataReader.Read())
                 {
+                    int sYear = Utility.StrtoInt(dataReader["年"].ToString());
+                    int sMonth = Utility.StrtoInt(dataReader["月"].ToString());
+                    int TkCD = Utility.StrtoInt(dataReader["得意先コード"].ToString());
+                    int PtID = Utility.StrtoInt(dataReader["patternID"].ToString());
+                    int Seq = Utility.StrtoInt(dataReader["SeqNumber"].ToString());
+
+                    string sDay = dataReader["ID"].ToString().Substring(0, 8);
+                    int cc = 0;
+
+                    // 同じ発注書が存在するとき：発注書データ
+                    foreach (var t in tblOrderCheck.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
+                                                             a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
+                    {
+                        if (t.ID.Contains(sDay))
+                        {
+                            cc++;
+                        }
+                    }
+
+                    if (cc > 0)
+                    {
+                        lblWarning.Text = "発注書データに" + cc + "件、登録済みです。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
+                                         "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
+
+                        lblWarning.Visible = true;
+                    }
+
+                    // 画像表示
+                    _img = Utility.GetImageFilePath(Config.ImgPath, dataReader["得意先コード"].ToString().PadLeft(7, '0')) + @"\" + dataReader["画像名"].ToString();
+                   
+                    if (System.IO.File.Exists(_img))
+                    {
+                        showImage_openCv(_img);
+                        trackBar1.Enabled = true;
+                        btnLeft.Enabled = true;
+                    }
+                    else
+                    {
+                        pictureBox1.Image = null;
+                        trackBar1.Enabled = false;
+                        btnLeft.Enabled = false;
+                    }
+
+                    // ヘッダ情報
                     txtYear.Text = dataReader["年"].ToString();
                     txtMonth.Text = dataReader["月"].ToString();
                     txtTokuisakiCD.Text = dataReader["得意先コード"].ToString().PadLeft(7, '0');
@@ -78,7 +122,10 @@ namespace STSH_OCR.OCR
                     checkBox1.Checked = Convert.ToBoolean(Utility.StrtoInt(Utility.NulltoStr(dataReader["確認"])));
                     txtMemo.Text = dataReader["メモ"].ToString();
 
-                    global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
+                    // 店着日配列作成
+                    SetShowTenDate(tenDates);
+
+                    //global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
 
                     // FAX発注書データ表示
                     showItem(dataReader, dg1);
@@ -87,22 +134,418 @@ namespace STSH_OCR.OCR
                     lblErrMsg.Visible = false;
                     lblErrMsg.Text = string.Empty;
 
-                    // 画像表示
-                    _img = Utility.GetImageFilePath(Config.ImgPath, dataReader["得意先コード"].ToString().PadLeft(7, '0')) + @"\" + dataReader["画像名"].ToString();
-                    showImage_openCv(_img);
-                    trackBar1.Enabled = true;
-
                     label3.Text = "[" + dataReader["ID"].ToString() + "]";
                 }
 
                 dataReader.Close();
             }
 
+            // 店着日ロック
+            DayLock(tenDates);
+
+            showStatus = true;
+
+            // 発注済み商品数表示コントロール
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                int col = i + 6;
+
+                for (int r = 1; r < dg1.RowCount; r += 2)
+                {
+                    ShowPastOrder(i, col, r);
+                }
+            }
+
             // ログ書き込み状態とする
             editLogStatus = true;
 
-            showStatus = false;
             Cursor = Cursors.Default;
+        }
+
+        ///-------------------------------------------------------------------
+        /// <summary>
+        ///     注文済み商品表示コントロール </summary>
+        /// <param name="iX">
+        ///     tenDate配列指標 </param>
+        /// <param name="col">
+        ///     データグリッド発注数カラムインデックス</param>
+        /// <param name="row">
+        ///     データグリッド行インデックス</param>
+        ///-------------------------------------------------------------------
+        private void ShowPastOrder(int iX, int col, int row)
+        {
+            if (tenDates[0] == null)
+            {
+                return;
+            }
+
+            // 終売取消以外で
+            if (Utility.NulltoStr(dg1[colSyubai, row].Value) != global.SyubaiArray[1])
+            {
+                // 空白日付以外で
+                if (tenDates[iX].Year != string.Empty)
+                {
+                    DateTime cdt;
+                    if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out cdt))
+                    {
+                        // 昨日以前も対象外、当日以降で
+                        if (cdt >= DateTime.Today)
+                        {
+                            // 文字色と背景色を標準に戻す
+                            dg1[col, row].Style.ForeColor = SystemColors.ControlText;
+
+                            if (row % 4 == 1)
+                            {
+                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.White;
+                                dg1.Rows[row].Cells[col].Style.BackColor = Color.White;
+                            }
+                            else
+                            {
+                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.Lavender;
+                                dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
+                            }
+
+                            string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
+                            string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
+                            int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[col, row].Value));    // 発注数
+
+                            System.Diagnostics.Debug.WriteLine("得:" + txtTokuisakiCD.Text + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
+
+                            // 得意先毎に同じ商品が同じ日に注文済み
+                            foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
+                            {
+                                dg1[col, row].ReadOnly = false;
+                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+
+                                if (t.Suu == Suu)
+                                {
+                                    // 発注数も一致
+                                    //dg1[col, row].ReadOnly = false;
+                                    //dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                    //dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+
+                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
+                                }
+                                else
+                                {
+                                    // 発注数は不一致
+                                    //dg1[col, row].ReadOnly = false;
+                                    //dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                    //dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+
+                                    dg1[col, row].Style.ForeColor = Color.Red;
+
+                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 注文済み商品ありメッセージのコントロール
+            ShowPastOrderMessage();
+        }
+
+        ///------------------------------------------------------------------
+        /// <summary>
+        ///     注文済み商品ありメッセージのコントロール </summary>
+        ///------------------------------------------------------------------
+        private void ShowPastOrderMessage()
+        {
+            bool msgStatus = false;
+
+            // 注文済み商品ありメッセージのコントロール
+            label1.Text = "";
+            for (int i = 6; i <= 12; i++)
+            {
+                for (int r = 0; r < dg1.RowCount; r++)
+                {
+                    if (dg1.Rows[r].Cells[i].Style.BackColor == Color.MistyRose)
+                    {
+                        label1.Text = "注文済み商品があります";
+                        msgStatus = true;
+                        break;
+                    }
+                }
+
+                if (msgStatus)
+                {
+                    break;
+                }
+            }
+        }
+
+        ///------------------------------------------------------------------------
+        /// <summary>
+        ///     店着日が空白のときは該当発注列をロックする </summary>
+        /// <param name="txtBox">
+        ///     店着日テキストボックスオブジェクト</param>
+        ///------------------------------------------------------------------------
+        private void DayLock(ClsTenDate[] dates)
+        {
+            if (!TenDateStatus)
+            {
+                return;
+            }
+
+            //TextBox textBox = (TextBox)txtBox;
+
+            string col = "";
+            int week = 0;
+
+            for (int iX = 0; iX < tenDates.Length; iX++)
+            {
+                switch (iX)
+                {
+                    case 0:
+                        col = colDay1;
+                        week = 1;
+                        break;
+                    case 1:
+                        col = colDay2;
+                        week = 2;
+                        break;
+                    case 2:
+                        col = colDay3;
+                        week = 3;
+                        break;
+                    case 3:
+                        col = colDay4;
+                        week = 4;
+                        break;
+                    case 4:
+                        col = colDay5;
+                        week = 5;
+                        break;
+                    case 5:
+                        col = colDay6;
+                        week = 6;
+                        break;
+                    case 6:
+                        col = colDay7;
+                        week = 0;
+                        break;
+                }
+
+                DateTime dt = DateTime.Today;
+
+                if (tenDates[iX].Day == string.Empty)
+                {
+                    // 店着日空白
+                    Dg1ColumnLock(col);
+                }
+                else if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out dt))
+                {
+                    DayOfWeek wk = dt.DayOfWeek;
+
+                    // 記入店着日が正しく過去の日付のとき
+                    //if ((int)wk == week && dt < DateTime.Today)
+
+                    // 過去の日付のとき
+                    if (dt < DateTime.Today)
+                    {
+                        // 過去の日付列
+                        Dg1ColumnLock(col);
+                    }
+                    else
+                    {
+                        // ロック状態解除
+                        Dg1ColumnUnLock(col);
+                    }
+                }
+                else
+                {
+                    // ロック状態解除
+                    Dg1ColumnUnLock(col);
+                }
+            }
+        }
+
+        ///---------------------------------------------------------------------
+        /// <summary>
+        ///     特定の日付列をロックする </summary>
+        /// <param name="col">
+        ///     カラム名</param>
+        ///---------------------------------------------------------------------
+        private void Dg1ColumnLock(string col)
+        {
+            dg1.Columns[col].ReadOnly = true;
+
+            for (int i = 0; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].Cells[col].Style.BackColor = Color.LightGray;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = Color.LightGray;
+            }
+
+            for (int i = 2; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].Cells[col].Style.BackColor = Color.LightGray;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = Color.LightGray;
+            }
+        }
+
+        ///---------------------------------------------------------------------
+        /// <summary>
+        ///     特定の日付列のロック状態を解除する </summary>
+        /// <param name="col">
+        ///     カラム名</param>
+        ///---------------------------------------------------------------------
+        private void Dg1ColumnUnLock(string col)
+        {
+            for (int i = 0; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].Cells[col].Style.BackColor = Color.White;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = Color.White;
+
+                dg1[col, i].ReadOnly = true;
+                dg1[col, i + 1].ReadOnly = false;
+            }
+
+            for (int i = 2; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].Cells[col].Style.BackColor = Color.Lavender;
+                dg1.Rows[i + 1].Cells[col].Style.BackColor = Color.Lavender;
+                dg1[col, i].ReadOnly = true;
+                dg1[col, i + 1].ReadOnly = false;
+            }
+        }
+
+        ///-----------------------------------------------------------
+        /// <summary>
+        ///     店着日配列を作成する </summary>
+        /// <param name="tenDates">
+        ///     ClstenDate</param>
+        ///-----------------------------------------------------------
+        private void SetShowTenDate(ClsTenDate[] tenDates)
+        {
+            if (!TenDateStatus)
+            {
+                return;
+            }
+
+            // 初期化
+            for (int i = 0; i < 7; i++)
+            {
+                tenDates[i] = new ClsTenDate();
+            }
+
+            tenDates[0].Day = txtTenDay1.Text;
+
+            if (txtTenDay1.Text != string.Empty)
+            {
+                tenDates[0].Year = txtYear.Text.ToString();
+                tenDates[0].Month = txtMonth.Text.ToString();
+            }
+            else
+            {
+                // 日付が無記入のときは年月も空白
+                tenDates[0].Year = string.Empty;
+                tenDates[0].Month = string.Empty;
+            }
+
+            tenDates[1].Day = txtTenDay2.Text.Trim();
+            tenDates[2].Day = txtTenDay3.Text.Trim();
+            tenDates[3].Day = txtTenDay4.Text.Trim();
+            tenDates[4].Day = txtTenDay5.Text.Trim();
+            tenDates[5].Day = txtTenDay6.Text.Trim();
+            tenDates[6].Day = txtTenDay7.Text.Trim();
+
+            int sYear = Utility.StrtoInt(txtYear.Text);
+            int sMonth = Utility.StrtoInt(txtMonth.Text);
+            bool NextMonth = false;
+            string wDay = "";
+
+            // 店着日付（年月日）をセット
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                // 空白はネグる
+                if (tenDates[i].Day == string.Empty)
+                {
+                    tenDates[i].Year = string.Empty;
+                    tenDates[i].Month = string.Empty;
+                    continue;
+                }
+
+                // 日付が若くなったら翌月扱い
+                if (!NextMonth && Utility.StrtoInt(wDay) > Utility.StrtoInt(tenDates[i].Day))
+                {
+                    // ここから翌月
+                    sMonth++;
+
+                    if (sMonth > 12)
+                    {
+                        // 翌年
+                        sMonth -= 12;
+                        sYear++;
+                    }
+
+                    NextMonth = true;
+                }
+
+                if (tenDates[i].Day != string.Empty)
+                {
+                    tenDates[i].Year = sYear.ToString();
+                    tenDates[i].Month = sMonth.ToString();
+                }
+                else
+                {
+                    tenDates[i].Year = string.Empty;
+                    tenDates[i].Month = string.Empty;
+                }
+
+                wDay = tenDates[i].Day;
+
+                // 該当テキストボックス
+                TextBox box;
+
+                switch (i)
+                {
+                    case 0:
+                        box = txtTenDay1;
+                        break;
+                    case 1:
+                        box = txtTenDay2;
+                        break;
+                    case 2:
+                        box = txtTenDay3;
+                        break;
+                    case 3:
+                        box = txtTenDay4;
+                        break;
+                    case 4:
+                        box = txtTenDay5;
+                        break;
+                    case 5:
+                        box = txtTenDay6;
+                        break;
+                    case 6:
+                        box = txtTenDay7;
+                        break;
+                    default:
+                        box = txtTenDay1;
+                        break;
+                }
+
+                // 店着日テキストボックス文字色
+                box.ForeColor = global.defaultColor;
+
+                if (tenDates[i].Month != string.Empty)
+                {
+                    if (txtMonth.Text != tenDates[i].Month)
+                    {
+                        box.ForeColor = Color.Green;
+                    }
+                }
+            }
+
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                System.Diagnostics.Debug.WriteLine(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day);
+            }
         }
 
         ///------------------------------------------------------------------------------------
@@ -608,6 +1051,8 @@ namespace STSH_OCR.OCR
             txtTenDay7.BackColor = Color.White;
             checkBox1.BackColor = SystemColors.Control;
 
+            label1.Text = string.Empty;
+
             txtYear.ForeColor = global.defaultColor;
             txtMonth.ForeColor = global.defaultColor;
             txtPID.ForeColor = global.defaultColor;
@@ -629,6 +1074,14 @@ namespace STSH_OCR.OCR
             txtSeqNum.Text = string.Empty;
             txtTokuisakiCD.Text = string.Empty;
             lblNoImage.Visible = false;
+
+            txtTenDay1.Text = " ";
+            txtTenDay2.Text = " ";
+            txtTenDay3.Text = " ";
+            txtTenDay4.Text = " ";
+            txtTenDay5.Text = " ";
+            txtTenDay6.Text = " ";
+            txtTenDay7.Text = " ";
 
             dg1.Rows.Clear();   // 行数をクリア
             dg1.Rows.Add(30);   // 行数を設定
@@ -674,6 +1127,12 @@ namespace STSH_OCR.OCR
                 }
             }
 
+            for (int i = 0; i < dg1.Rows.Count; i += 4)
+            {
+                dg1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                dg1.Rows[i + 1].DefaultCellStyle.BackColor = Color.White;
+            }
+
             for (int i = 2; i < dg1.Rows.Count; i+=4)
             {
                 dg1.Rows[i].DefaultCellStyle.BackColor = Color.Lavender;
@@ -686,6 +1145,8 @@ namespace STSH_OCR.OCR
             // 確認チェック欄
             checkBox1.BackColor = SystemColors.Control;
             checkBox1.Checked = false;
+
+            lblWarning.Visible = false;
 
             // ヘッダ情報
             txtYear.ReadOnly = false;
@@ -727,6 +1188,7 @@ namespace STSH_OCR.OCR
             //データ数表示
             lblPage.Text = "";
 
+            TenDateStatus = true;
         }
 
         ///------------------------------------------------------------------------------------

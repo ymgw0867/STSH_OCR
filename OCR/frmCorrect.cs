@@ -36,6 +36,7 @@ namespace STSH_OCR.OCR
         // データベース：Sqlite3
         SQLiteConnection cn = null;
         DataContext context = null;
+
         SQLiteConnection cn2 = null;
         DataContext context2 = null;
 
@@ -158,12 +159,6 @@ namespace STSH_OCR.OCR
         private readonly string colDay7 = "c12";
         private readonly string colSyubai = "c13";
 
-        //// 得意先クラス
-        //ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
-
-        //// 商品クラス
-        //ClsCsvData.ClsCsvSyohin_New[] syohins = null;
-
         // 店着日配列
         ClsTenDate[] tenDates = new ClsTenDate[7];
 
@@ -194,8 +189,8 @@ namespace STSH_OCR.OCR
             tblFaxCheck = context2.GetTable<Common.ClsFaxOrder>();   // ＦＡＸ発注書テーブル ※チェック用
             tblEditLog = context2.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
 
-            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-            int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
+            //string[] tk_array = System.Io.file.readalllines(properties.settings.default.得意先マスター, encoding.default);
+            //int sdate = datetime.today.year * 10000 + datetime.today.month * 100 + datetime.today.day;
 
             // 2020/04/09 コメント化
             //// 得意先マスタークラス配列取得
@@ -2219,10 +2214,7 @@ namespace STSH_OCR.OCR
             if (getErrData(cI, ocr))
             {
                 MessageBox.Show("エラーはありませんでした", "エラーチェック", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //gcMultiRow1.CurrentCell = null;
-                //gcMultiRow2.CurrentCell = null;
-                //gcMultiRow3.CurrentCell = null;
-
+             
                 // データ表示
                 showOcrData(cI);
             }
@@ -2238,8 +2230,6 @@ namespace STSH_OCR.OCR
                 ErrShow(ocr);
             }
         }
-
-
 
         private void button4_Click(object sender, EventArgs e)
         {

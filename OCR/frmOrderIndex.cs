@@ -87,6 +87,7 @@ namespace STSH_OCR.OCR
 
             // ボタン
             trackBar1.Enabled = false;
+            button2.Enabled = false;
 
             dgRows = true;
         }
@@ -405,13 +406,14 @@ namespace STSH_OCR.OCR
             {
                 //画像イメージ表示
                 showImage_openCv(_img);
-
                 trackBar1.Enabled = true;
+                button2.Enabled = true;
             }
             else
             {
                 pictureBox1.Image = null;
                 trackBar1.Enabled = false;
+                button2.Enabled = false;
             }
         }
 
@@ -430,6 +432,7 @@ namespace STSH_OCR.OCR
             // 画像表示欄初期化
             pictureBox1.Image = null;
             trackBar1.Enabled = false;
+            button2.Enabled = false;
         }
     }
 }

@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Data.Linq;
 using System.Data.SQLite;
 using STSH_OCR.Common;
-//using GrapeCity.Win.MultiRow;
 
 namespace STSH_OCR.OCR
 {
@@ -166,7 +165,6 @@ namespace STSH_OCR.OCR
                     // エラー情報表示初期化
                     lblErrMsg.Visible = false;
                     lblErrMsg.Text = string.Empty;
-
 
                     label3.Text = "[" + dataReader["ID"].ToString() + "]";
                 }

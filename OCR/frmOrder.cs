@@ -60,6 +60,14 @@ namespace STSH_OCR.OCR
         Table<Common.ClsOrder> tblOrder = null;
         ClsOrder Order = null;
 
+        // 発注書データ ※重複チェック用
+        Table<Common.ClsOrder> tblOrderCheck = null;
+        ClsOrder OrderCheck = null;
+
+        // 得意先別発注履歴
+        Table<Common.ClsOrderHistory> tblOrderHistories = null;
+        ClsOrderHistory clsOrderHistory = null;
+
         // セル値
         private string cellName = string.Empty;         // セル名
         private string cellBeforeValue = string.Empty;  // 編集前
@@ -115,9 +123,10 @@ namespace STSH_OCR.OCR
 
         // 画面表示時ステータス
         bool showStatus = false;
+        bool TenDateStatus = false;
 
         //int fCnt = 0;   // データ件数
-        
+
 
         // openCvSharp 関連
         const float B_WIDTH = 0.45f;
@@ -143,14 +152,8 @@ namespace STSH_OCR.OCR
         private readonly string colDay7 = "c12";
         private readonly string colSyubai = "c13";
 
-        // 2020/04/08 コメント化
-        //// 得意先クラス
-        //ClsCsvData.ClsCsvTokuisaki [] tokuisaki = null;
-
-        // 2020/04/08 コメント化
-        //// 商品クラス
-        //ClsCsvData.ClsCsvSyohin[] syohins = null;
-
+        // 店着日配列
+        ClsTenDate[] tenDates = new ClsTenDate[7];
 
         private void frmCorrect_Load(object sender, EventArgs e)
         {
@@ -165,17 +168,21 @@ namespace STSH_OCR.OCR
             // 共有DB接続
             cn = new SQLiteConnection("DataSource=" + db_file);
             context = new DataContext(cn);
-            tblPtn = context.GetTable<Common.ClsOrderPattern>();        // 登録パターンテーブル
-            tblOrder = context.GetTable<Common.ClsOrder>();             // 発注書テーブル
-            tblConfig = context.GetTable<Common.ClsSystemConfig>();     // 環境設定
+
+            tblPtn = context.GetTable<Common.ClsOrderPattern>();                // 登録パターンテーブル
+            tblOrder = context.GetTable<Common.ClsOrder>();                     // 発注書テーブル
+            tblConfig = context.GetTable<Common.ClsSystemConfig>();             // 環境設定
+            tblOrderHistories = context.GetTable<Common.ClsOrderHistory>();     // 得意先別発注履歴
+            tblOrderCheck = context.GetTable<Common.ClsOrder>();                // 発注書データ ※チェック用
 
             // ローカルDB接続
             cn2 = new SQLiteConnection("DataSource=" + Local_DB);
             context2 = new DataContext(cn2);
+
             tblEditLog = context2.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
 
-            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-            int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
+            //string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
+            //int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
 
             // 2020/04/08 コメント化
             //// 得意先マスタークラス配列取得
@@ -2282,6 +2289,7 @@ namespace STSH_OCR.OCR
                 dg1[colMaker, i].Value = string.Empty;
             }
 
+            // 商品パターン表示
             foreach (var t in tblPtn.Where(a => a.TokuisakiCode ==  Utility.StrtoInt(_TokuisakiCD) && 
                             a.SeqNum == Utility.StrtoInt(_PID) && a.SecondNum == Utility.StrtoInt(_SeqNum)))
             {
@@ -2289,21 +2297,18 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 1].Value = t.G_Code1.PadLeft(8, '0');
                     dg1[colMaker, 1].Value = t.G_Name1;
-                    //dg1[colHinCode, 1].Value = t.G_Read1;
                 }
 
                 if (t.G_Code2 != string.Empty)
                 {
                     dg1[colHinCode, 3].Value = t.G_Code2.PadLeft(8, '0');
                     dg1[colMaker, 3].Value = t.G_Name2;
-                    //dg1[colHinCode, 3].Value = t.G_Read2;
                 }
 
                 if (t.G_Code3 != string.Empty)
                 {
                     dg1[colHinCode, 5].Value = t.G_Code3.PadLeft(8, '0');
                     dg1[colMaker, 5].Value = t.G_Name3;
-                    //dg1[colHinCode, 5].Value = t.G_Read3;
                 }
 
 
@@ -2311,7 +2316,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 7].Value = t.G_Code4.PadLeft(8, '0');
                     dg1[colMaker, 7].Value = t.G_Name4;
-                    //dg1[colHinCode, 7].Value = t.G_Read4;
                 }
 
 
@@ -2319,7 +2323,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 9].Value = t.G_Code5.PadLeft(8, '0');
                     dg1[colMaker, 9].Value = t.G_Name5;
-                    //dg1[colHinCode, 9].Value = t.G_Read5;
                 }
 
 
@@ -2327,7 +2330,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 11].Value = t.G_Code6.PadLeft(8, '0');
                     dg1[colMaker, 11].Value = t.G_Name6;
-                    //dg1[colHinCode, 11].Value = t.G_Read6;
                 }
 
 
@@ -2335,7 +2337,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 13].Value = t.G_Code7.PadLeft(8, '0');
                     dg1[colMaker, 13].Value = t.G_Name7;
-                    //dg1[colHinCode, 13].Value = t.G_Read7;
                 }
 
 
@@ -2343,7 +2344,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 15].Value = t.G_Code8.PadLeft(8, '0');
                     dg1[colMaker, 15].Value = t.G_Name8;
-                    //dg1[colHinCode, 15].Value = t.G_Read8;
                 }
 
 
@@ -2351,7 +2351,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 17].Value = t.G_Code9.PadLeft(8, '0');
                     dg1[colMaker, 17].Value = t.G_Name9;
-                    //dg1[colHinCode, 17].Value = t.G_Read9;
                 }
 
 
@@ -2359,7 +2358,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 19].Value = t.G_Code10.PadLeft(8, '0');
                     dg1[colMaker, 19].Value = t.G_Name10;
-                    //dg1[colHinCode, 19].Value = t.G_Read10;
                 }
 
 
@@ -2367,7 +2365,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 21].Value = t.G_Code11.PadLeft(8, '0');
                     dg1[colMaker, 21].Value = t.G_Name11;
-                    //dg1[colHinCode, 21].Value = t.G_Read11;
                 }
 
 
@@ -2375,7 +2372,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 23].Value = t.G_Code12.PadLeft(8, '0');
                     dg1[colMaker, 23].Value = t.G_Name12;
-                    //dg1[colHinCode, 23].Value = t.G_Read12;
                 }
 
 
@@ -2383,7 +2379,6 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 25].Value = t.G_Code13.PadLeft(8, '0');
                     dg1[colMaker, 25].Value = t.G_Name13;
-                    //dg1[colHinCode, 25].Value = t.G_Read13;
                 }
 
 
@@ -2391,14 +2386,12 @@ namespace STSH_OCR.OCR
                 {
                     dg1[colHinCode, 27].Value = t.G_Code14.PadLeft(8, '0');
                     dg1[colMaker, 27].Value = t.G_Name14;
-                    //dg1[colHinCode, 27].Value = t.G_Read14;
                 }
 
                 if (t.G_Code15 != string.Empty)
                 {
                     dg1[colHinCode, 29].Value = t.G_Code15.PadLeft(8, '0');
                     dg1[colMaker, 29].Value = t.G_Name15;
-                    //dg1[colHinCode, 29].Value = t.G_Read15;
                 }
             }
         }
@@ -2751,5 +2744,29 @@ namespace STSH_OCR.OCR
             pictureBox1.Image = img;
         }
 
+        private void txtTenDay1_TextChanged(object sender, EventArgs e)
+        {
+            if (!showStatus)
+            {
+                return;
+            }
+
+            // 店着日配列を更新
+            SetShowTenDate(tenDates);
+
+            // 店着日ロック
+            DayLock(tenDates);
+
+            // 発注済み商品数表示コントロール
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                int col = i + 6;
+
+                for (int r = 1; r < dg1.RowCount; r += 2)
+                {
+                    ShowPastOrder(i, col, r);
+                }
+            }
+        }
     }
 }

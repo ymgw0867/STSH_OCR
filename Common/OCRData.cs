@@ -208,14 +208,6 @@ namespace STSH_OCR.Common
             //string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
 
-            // 2020/04/08 コメント化
-            //// 得意先マスタークラス配列取得
-            //tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
-
-            // 2020/04/08 コメント化
-            //// 商品マスタークラス配列取得
-            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
-
             int rCnt = 0;
 
             // オーナーフォームを無効にする
@@ -294,16 +286,7 @@ namespace STSH_OCR.Common
         ///-----------------------------------------------------------------------------------------------
         public Boolean errCheckMain(string sID, Table<ClsOrder> tblOrder, Table<ClsOrderPattern> tblPtn)
         {
-            string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
-
-            // 2020/04/08 コメント化
-            // 得意先マスタークラス配列取得
-            //tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
-
-            // 2020/04/08 コメント化
-            // 商品マスタークラス配列取得
-            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             // 発注書データ読み出し
             Boolean eCheck = true;
@@ -313,11 +296,6 @@ namespace STSH_OCR.Common
 
             // エラーチェック実施
             eCheck = errCheckData(r, tblPtn);
-
-            //if (!eCheck) //エラーがあったとき
-            //{
-            //    _errHeaderIndex = i;     // エラーとなったヘッダRowIndex
-            //}
 
             return eCheck;
         }
@@ -715,7 +693,6 @@ namespace STSH_OCR.Common
                 }
             }
 
-
             return true;
         }
 
@@ -748,14 +725,14 @@ namespace STSH_OCR.Common
                 return false;
             }
 
-            // 年月
-            int rDate = r.Year * 100 + r.Month;
-            int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Month;
-            if (rDate < toDate)
-            {
-                setErrStatus(eYearMonth, 0, "年月が正しくありません");
-                return false;
-            }
+            //// 年月 : 2020/04/11 コメント化
+            //int rDate = r.Year * 100 + r.Month;
+            //int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Month;
+            //if (rDate < toDate)
+            //{
+            //    setErrStatus(eYearMonth, 0, "年月が正しくありません");
+            //    return false;
+            //}
 
             if (r.Month < 1 || r.Month > 12)
             {
@@ -793,6 +770,7 @@ namespace STSH_OCR.Common
                 OrderPattern = ptn.Single(a => a.TokuisakiCode == r.TokuisakiCode && a.SeqNum == r.patternID && a.SecondNum == r.SeqNumber);
             }
 
+            // 店着日配列
             ClsTenDate[] tenDates = new ClsTenDate[7];
 
             Utility.SetTenDate(tenDates, r);
@@ -1083,34 +1061,6 @@ namespace STSH_OCR.Common
             //--------------------------------------------------------------------
             for (int i = 0; i < 15; i++)
             {
-                //ha = false;
-
-                //// 発注の有無を調べる
-                //for (int iX = 0; iX < 7; iX++)
-                //{
-                //    if (Utility.StrtoInt(goods[i].Suu[iX]) != global.flgOff)
-                //    {
-                //        // 発注あり
-                //        ha = true;
-                //    }
-                //}
-
-                //if (goods[i].Code == string.Empty)
-                //{
-                //    // 発注あり
-                //    if (ha)
-                //    {
-                //        setErrStatus(eHinCode, i * 2 + 1, "商品が登録されていません");
-                //        return false;
-                //    }
-                //}
-                //else if (!ChkShohin(goods[i].Code, goods[i].Syubai, out eMsg, out eNum, ha))
-                //{
-                //    setErrStatus(eNum, i * 2 + 1, eMsg);
-                //    return false;
-                //}
-                
-
                 if (!ChkShohin_NEW(goods, i, tenDates, out eMsg, out eNum))
                 {
                     setErrStatus(eNum, i * 2 + 1, eMsg);

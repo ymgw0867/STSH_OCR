@@ -30,9 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmOrder));
-            this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.btnRight = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.lblNoImage = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -42,10 +40,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnErrCheck = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.btnFirst = new System.Windows.Forms.Button();
-            this.btnBefore = new System.Windows.Forms.Button();
-            this.btnNext = new System.Windows.Forms.Button();
-            this.btnEnd = new System.Windows.Forms.Button();
             this.btnPrint = new System.Windows.Forms.Button();
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.txtErrStatus = new System.Windows.Forms.TextBox();
@@ -79,6 +73,7 @@
             this.lblPages = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblPage = new System.Windows.Forms.Label();
+            this.lblWarning = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -87,40 +82,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.dg1)).BeginInit();
             this.SuspendLayout();
             // 
-            // hScrollBar1
-            // 
-            this.hScrollBar1.Location = new System.Drawing.Point(11, 852);
-            this.hScrollBar1.Name = "hScrollBar1";
-            this.hScrollBar1.Size = new System.Drawing.Size(330, 37);
-            this.hScrollBar1.TabIndex = 13;
-            this.toolTip1.SetToolTip(this.hScrollBar1, "出勤簿を移動します");
-            this.hScrollBar1.Visible = false;
-            this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
-            // 
             // toolTip1
             // 
             this.toolTip1.BackColor = System.Drawing.Color.LemonChiffon;
-            // 
-            // btnRight
-            // 
-            this.btnRight.BackColor = System.Drawing.SystemColors.Control;
-            this.btnRight.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnRight.Image = ((System.Drawing.Image)(resources.GetObject("btnRight.Image")));
-            this.btnRight.Location = new System.Drawing.Point(356, 811);
-            this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(35, 35);
-            this.btnRight.TabIndex = 360;
-            this.btnRight.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnRight, "画像を右回転");
-            this.btnRight.UseVisualStyleBackColor = false;
-            this.btnRight.Visible = false;
             // 
             // btnLeft
             // 
             this.btnLeft.BackColor = System.Drawing.SystemColors.Control;
             this.btnLeft.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.btnLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnLeft.Image")));
-            this.btnLeft.Location = new System.Drawing.Point(1022, 852);
+            this.btnLeft.Location = new System.Drawing.Point(488, 838);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(35, 35);
             this.btnLeft.TabIndex = 361;
@@ -221,54 +192,6 @@
             this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.button4_Click);
             // 
-            // btnFirst
-            // 
-            this.btnFirst.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnFirst.Location = new System.Drawing.Point(348, 852);
-            this.btnFirst.Name = "btnFirst";
-            this.btnFirst.Size = new System.Drawing.Size(103, 37);
-            this.btnFirst.TabIndex = 9;
-            this.btnFirst.Text = "先頭データ";
-            this.btnFirst.UseVisualStyleBackColor = true;
-            this.btnFirst.Visible = false;
-            this.btnFirst.Click += new System.EventHandler(this.button3_Click_1);
-            // 
-            // btnBefore
-            // 
-            this.btnBefore.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnBefore.Location = new System.Drawing.Point(455, 852);
-            this.btnBefore.Name = "btnBefore";
-            this.btnBefore.Size = new System.Drawing.Size(103, 37);
-            this.btnBefore.TabIndex = 10;
-            this.btnBefore.Text = "前データ";
-            this.btnBefore.UseVisualStyleBackColor = true;
-            this.btnBefore.Visible = false;
-            this.btnBefore.Click += new System.EventHandler(this.button4_Click_1);
-            // 
-            // btnNext
-            // 
-            this.btnNext.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnNext.Location = new System.Drawing.Point(562, 852);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(103, 37);
-            this.btnNext.TabIndex = 11;
-            this.btnNext.Text = "次データ";
-            this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Visible = false;
-            this.btnNext.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // btnEnd
-            // 
-            this.btnEnd.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnEnd.Location = new System.Drawing.Point(669, 852);
-            this.btnEnd.Name = "btnEnd";
-            this.btnEnd.Size = new System.Drawing.Size(103, 37);
-            this.btnEnd.TabIndex = 12;
-            this.btnEnd.Text = "最終データ";
-            this.btnEnd.UseVisualStyleBackColor = true;
-            this.btnEnd.Visible = false;
-            this.btnEnd.Click += new System.EventHandler(this.button8_Click);
-            // 
             // btnPrint
             // 
             this.btnPrint.BackColor = System.Drawing.SystemColors.Control;
@@ -288,7 +211,7 @@
             // 
             // txtErrStatus
             // 
-            this.txtErrStatus.Location = new System.Drawing.Point(286, 823);
+            this.txtErrStatus.Location = new System.Drawing.Point(1064, 852);
             this.txtErrStatus.Name = "txtErrStatus";
             this.txtErrStatus.ReadOnly = true;
             this.txtErrStatus.Size = new System.Drawing.Size(23, 19);
@@ -325,6 +248,7 @@
             this.txtYear.TabIndex = 365;
             this.txtYear.Text = "2020";
             this.txtYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtYear.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtYear.Enter += new System.EventHandler(this.txtYear_Enter);
             // 
             // label4
@@ -363,6 +287,7 @@
             this.txtMonth.TabIndex = 368;
             this.txtMonth.Text = "10";
             this.txtMonth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtMonth.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtMonth.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtMonth.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -459,6 +384,7 @@
             this.txtTenDay7.Size = new System.Drawing.Size(40, 31);
             this.txtTenDay7.TabIndex = 579;
             this.txtTenDay7.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay7.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay7.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay7.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -486,6 +412,7 @@
             this.txtTenDay1.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay1.TabIndex = 573;
             this.txtTenDay1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay1.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay1.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay1.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -500,6 +427,7 @@
             this.txtTenDay2.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay2.TabIndex = 574;
             this.txtTenDay2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay2.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay2.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay2.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -514,6 +442,7 @@
             this.txtTenDay3.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay3.TabIndex = 575;
             this.txtTenDay3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay3.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay3.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay3.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -528,6 +457,7 @@
             this.txtTenDay4.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay4.TabIndex = 576;
             this.txtTenDay4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay4.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay4.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay4.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -542,6 +472,7 @@
             this.txtTenDay5.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay5.TabIndex = 577;
             this.txtTenDay5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay5.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay5.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay5.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -556,6 +487,7 @@
             this.txtTenDay6.Size = new System.Drawing.Size(41, 31);
             this.txtTenDay6.TabIndex = 578;
             this.txtTenDay6.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtTenDay6.TextChanged += new System.EventHandler(this.txtTenDay1_TextChanged);
             this.txtTenDay6.Enter += new System.EventHandler(this.txtYear_Enter);
             this.txtTenDay6.Leave += new System.EventHandler(this.txtYear_Leave);
             // 
@@ -573,9 +505,9 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(778, 852);
+            this.trackBar1.Location = new System.Drawing.Point(175, 838);
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(238, 45);
+            this.trackBar1.Size = new System.Drawing.Size(297, 45);
             this.trackBar1.TabIndex = 590;
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             // 
@@ -619,19 +551,20 @@
             // 
             this.label1.BackColor = System.Drawing.Color.Lavender;
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.label1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1.ForeColor = System.Drawing.Color.Red;
             this.label1.Location = new System.Drawing.Point(1063, 123);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(443, 31);
             this.label1.TabIndex = 593;
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label1.Text = "注文済み商品があります";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.linkLabel1.Location = new System.Drawing.Point(12, 827);
+            this.linkLabel1.Location = new System.Drawing.Point(12, 838);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(135, 15);
             this.linkLabel1.TabIndex = 595;
@@ -671,11 +604,24 @@
             this.lblPage.Text = "100/100";
             this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // lblWarning
+            // 
+            this.lblWarning.BackColor = System.Drawing.Color.Red;
+            this.lblWarning.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblWarning.ForeColor = System.Drawing.Color.White;
+            this.lblWarning.Location = new System.Drawing.Point(1063, 825);
+            this.lblWarning.Name = "lblWarning";
+            this.lblWarning.Size = new System.Drawing.Size(726, 22);
+            this.lblWarning.TabIndex = 600;
+            this.lblWarning.Text = "同じ発注書が受信されています";
+            this.lblWarning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // frmOrder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1904, 906);
+            this.Controls.Add(this.lblWarning);
             this.Controls.Add(this.lblPage);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblPages);
@@ -703,19 +649,13 @@
             this.Controls.Add(this.txtYear);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.btnLeft);
-            this.Controls.Add(this.btnRight);
             this.Controls.Add(this.txtErrStatus);
             this.Controls.Add(this.btnPrint);
-            this.Controls.Add(this.btnEnd);
-            this.Controls.Add(this.btnNext);
-            this.Controls.Add(this.btnBefore);
-            this.Controls.Add(this.btnFirst);
             this.Controls.Add(this.btnErrCheck);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.txtMemo);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.label1);
@@ -742,8 +682,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.HScrollBar hScrollBar1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label lblNoImage;
         private System.Windows.Forms.Panel panel1;
@@ -755,14 +693,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnErrCheck;
         private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Button btnFirst;
-        private System.Windows.Forms.Button btnBefore;
-        private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.Button btnEnd;
         private System.Windows.Forms.Button btnPrint;
         private System.Drawing.Printing.PrintDocument printDocument1;
         private System.Windows.Forms.TextBox txtErrStatus;
-        private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -794,5 +727,6 @@
         private System.Windows.Forms.Label lblPages;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblPage;
+        private System.Windows.Forms.Label lblWarning;
     }
 }
