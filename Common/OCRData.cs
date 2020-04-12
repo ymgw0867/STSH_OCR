@@ -205,7 +205,6 @@ namespace STSH_OCR.Common
         public Boolean errCheckMain(int sIx, int eIx, Form frm, Table<ClsFaxOrder> tblFax, Table<ClsOrderPattern> tblPtn, string[] cID)
         {
             // 2020/04/08 コメント化
-            //string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
 
             int rCnt = 0;
@@ -1350,7 +1349,7 @@ namespace STSH_OCR.Common
 
             if ((Int32)wk != week)
             {
-                eMsg = "店着日付の曜日が正しくありません";
+                eMsg = "店着日付（" + dt.ToShortDateString()  +"）の曜日が正しくありません ";
                 return false;
             }
 

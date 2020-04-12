@@ -124,9 +124,7 @@ namespace STSH_OCR.OCR
         // 画面表示時ステータス
         bool showStatus = false;
         bool TenDateStatus = false;
-
-        //int fCnt = 0;   // データ件数
-
+        bool PtnShowStatus = false;     // 2020/04/12
 
         // openCvSharp 関連
         const float B_WIDTH = 0.45f;
@@ -180,17 +178,6 @@ namespace STSH_OCR.OCR
             context2 = new DataContext(cn2);
 
             tblEditLog = context2.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
-
-            //string[] Tk_Array = System.IO.File.ReadAllLines(Properties.Settings.Default.得意先マスター, Encoding.Default);
-            //int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
-
-            // 2020/04/08 コメント化
-            //// 得意先マスタークラス配列取得
-            //tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
-
-            // 2020/04/08 コメント化
-            //// 商品マスタークラス配列取得
-            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             // 環境設定読み出し
             Config = (ClsSystemConfig)tblConfig.Single(a => a.ID == global.configKEY);
@@ -2214,7 +2201,7 @@ namespace STSH_OCR.OCR
         private void dg1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             string colName = dg1.Columns[dg1.CurrentCell.ColumnIndex].Name;
-            if (colName == colDay1 || colName == colDay2 || colName == colDay3 || colName == colDay4 || colName == colDay5 || colName == colDay6 || colName == colDay7)
+            if (colName == colDay1 || colName == colDay2 || colName == colDay3 || colName == colDay4 || colName == colDay5 || colName == colDay6 || colName == colDay7 || colName == colSyubai)
             {
                 if (dg1.IsCurrentCellDirty)
                 {
@@ -2273,6 +2260,12 @@ namespace STSH_OCR.OCR
         ///----------------------------------------------------------------------------------
         private void ShowFaxPattern(TextBox TokuisakiCD, TextBox PID, TextBox SeqNum)
         {
+            // 2020/04/12
+            if (!PtnShowStatus)
+            {
+                return;
+            }
+
             string _TokuisakiCD = Utility.NulltoStr(TokuisakiCD.Text);
             string _PID = Utility.NulltoStr(PID.Text);
             string _SeqNum = Utility.NulltoStr(SeqNum.Text);
@@ -2394,6 +2387,8 @@ namespace STSH_OCR.OCR
                     dg1[colMaker, 29].Value = t.G_Name15;
                 }
             }
+
+            System.Diagnostics.Debug.WriteLine("商品パターン表示");
         }
 
         private void txtTokuisakiCD_TextChanged(object sender, EventArgs e)
@@ -2433,13 +2428,11 @@ namespace STSH_OCR.OCR
             trackBar1.Value = 0;
         }
 
-
         // GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
         public static Bitmap MatToBitmap(Mat image)
         {
             return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
         }
-
 
         ///---------------------------------------------------------
         /// <summary>
@@ -2487,7 +2480,6 @@ namespace STSH_OCR.OCR
             pictureBox1.Image = canvas;
         }
 
-
         ///---------------------------------------------------------
         /// <summary>
         ///     画像表示メイン openCV : 2018/10/24 </summary>
@@ -2519,30 +2511,108 @@ namespace STSH_OCR.OCR
 
         private void dg1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            if (!global.ChangeValueStatus)
+            {
+                return;
+            }
+
+            // 終売取消
+            if (e.ColumnIndex == 13)
+            {
+                if ((e.RowIndex % 2) != 0)
+                {
+                    if (e.RowIndex % 4 == 1)
+                    {
+                        //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.White;
+                        //dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
+
+                        for (int i = 0; i < dg1.ColumnCount; i++)
+                        {
+                            if (dg1.Rows[e.RowIndex].Cells[i].Style.BackColor != Color.LightGray)
+                            {
+                                dg1.Rows[e.RowIndex - 1].Cells[i].Style.BackColor = Color.White;
+                                dg1.Rows[e.RowIndex].Cells[i].Style.BackColor = Color.White;
+                            }
+                        }
+                    }
+                    else if (e.RowIndex % 4 == 3)
+                    {
+                        //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.Lavender;
+                        //dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Lavender;
+
+                        for (int i = 0; i < dg1.ColumnCount; i++)
+                        {
+                            if (dg1.Rows[e.RowIndex].Cells[i].Style.BackColor != Color.LightGray)
+                            {
+                                dg1.Rows[e.RowIndex - 1].Cells[i].Style.BackColor = Color.Lavender;
+                                dg1.Rows[e.RowIndex].Cells[i].Style.BackColor = Color.Lavender;
+                            }
+                        }
+                    }
+
+                    // 終売取消
+                    if (Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value) == global.SyubaiArray[1])
+                    {
+                        //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.BackColor = Color.LightGray;
+                        //dg1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGray;
+
+                        for (int i = 4; i < dg1.ColumnCount; i++)
+                        {
+                            dg1.Rows[e.RowIndex - 1].Cells[i].Style.ForeColor = Color.LightGray;
+                            dg1.Rows[e.RowIndex].Cells[i].Style.ForeColor = Color.LightGray;
+                        }
+                    }
+                    else
+                    {
+                        //dg1.Rows[e.RowIndex - 1].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                        //dg1.Rows[e.RowIndex].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+
+                        for (int i = 4; i < dg1.ColumnCount; i++)
+                        {
+                            dg1.Rows[e.RowIndex - 1].Cells[i].Style.ForeColor = SystemColors.ControlText;
+                            dg1.Rows[e.RowIndex].Cells[i].Style.ForeColor = SystemColors.ControlText;
+                        }
+
+                        // 注文済み商品発注数表示
+                        if (showStatus)
+                        {
+                            for (int i = 6; i <= 12; i++)
+                            {
+                                ShowPastOrder(i - 6, i, e.RowIndex);
+                            }
+                        }
+                    }
+
+                    // 注文済み商品メッセージコントロール
+                    ShowPastOrderMessage();
+                }
+            }
+
+            // 商品コード
             if (e.ColumnIndex == 3)
             {
                 if ((e.RowIndex % 2) != 0)
                 {
-                    // 2020/04/08 コメント化
-                    //ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
-
-                    // 2020/04/09
-                    ClsCsvData.ClsCsvSyohin_New syohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0'));
+                    string syCd = Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value).PadLeft(8, '0');
+                    ClsCsvData.ClsCsvSyohin_New syohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, syCd);    // 2020/04/09
 
                     dg1[colMaker, e.RowIndex - 1].Value = syohin.SIRESAKI_NM;       // 仕入先名
                     dg1[colMaker, e.RowIndex].Value = syohin.SYOHIN_NM;             // 商品名
                     dg1[colKikaku, e.RowIndex - 1].Value = syohin.SYOHIN_KIKAKU;    // 規格
                     dg1[colIrisu, e.RowIndex].Value = syohin.CASE_IRISU;            // 入数
-                    //dg1[colNouka, e.RowIndex].Value = syohin.NOUHIN_KARI_TANKA;     // 納価     // 2020/04/08 コメント化
-                    //dg1[colBaika, e.RowIndex].Value = syohin.RETAIL_TANKA;          // 売価     // 2020/04/08 コメント化
+
+                    // 納価売価取得：2020/04/10
+                    ClsCsvData.ClsCsvNoukaBaika noukaBaika = Utility.GetNoukaBaikaFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), syCd, global.dtNoukaBaika);
+                    dg1[colNouka, e.RowIndex].Value = noukaBaika.NOUKA;     // 納価
+                    dg1[colBaika, e.RowIndex].Value = noukaBaika.BAIKA;     // 売価
 
                     // 終売のとき
                     if (syohin.SHUBAI)
                     {
                         if (syohin.LAST_SALE_YMD.Length > 7)
                         {
-                            dg1[colHinCode, e.RowIndex - 1].Value = syohin.LAST_SALE_YMD.Substring(0, 4) + "/" + 
-                                                                    syohin.LAST_SALE_YMD.Substring(4, 2) + "/" + 
+                            dg1[colHinCode, e.RowIndex - 1].Value = syohin.LAST_SALE_YMD.Substring(0, 4) + "/" +
+                                                                    syohin.LAST_SALE_YMD.Substring(4, 2) + "/" +
                                                                     syohin.LAST_SALE_YMD.Substring(6, 2);
 
                             dg1[colMaker, e.RowIndex].Style.ForeColor = Color.Red;
@@ -2564,7 +2634,32 @@ namespace STSH_OCR.OCR
                         dg1[colHinCode, e.RowIndex - 1].Style.ForeColor = SystemColors.ControlText;
 
                         // 終売処理コンボボックスを編集不可とする
+                        dg1[colSyubai, e.RowIndex].Value = "";
                         dg1[colSyubai, e.RowIndex].ReadOnly = true;
+                    }
+
+                    // 注文済み商品発注数表示
+                    if (showStatus)
+                    {
+                        for (int i = 6; i <= 12; i++)
+                        {
+                            ShowPastOrder(i - 6, i, e.RowIndex);
+                        }
+                    }
+                }
+
+                return;
+            }
+
+            // 発注数
+            if (e.ColumnIndex >= 6 && e.ColumnIndex <= 12)
+            {
+                if ((e.RowIndex % 2) != 0)
+                {
+                    if (showStatus)
+                    {
+                        int iX = e.ColumnIndex - 6;
+                        ShowPastOrder(iX, e.ColumnIndex, e.RowIndex);
                     }
                 }
             }

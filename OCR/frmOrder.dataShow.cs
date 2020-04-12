@@ -38,8 +38,12 @@ namespace STSH_OCR.OCR
         ///------------------------------------------------------------------------------------
         private void showOcrData(string sID)
         {
+            System.Diagnostics.Debug.WriteLine("発注書表示");
+
+            PtnShowStatus = false;  // 2020/04/12
+
             Cursor = Cursors.WaitCursor;
-            showStatus = true;
+            showStatus = false;
 
             // 非ログ書き込み状態とする
             editLogStatus = false;
@@ -50,7 +54,7 @@ namespace STSH_OCR.OCR
             // 発注データを取得
             Order = tblOrder.Single(a => a.ID == sID);
 
-            global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
+            global.ChangeValueStatus = true;   // これ以下ChangeValueイベントを発生させない
 
             string Sql = "select * from OrderData WHERE ID = '" + sID + "'";
 
@@ -125,8 +129,6 @@ namespace STSH_OCR.OCR
                     // 店着日配列作成
                     SetShowTenDate(tenDates);
 
-                    //global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
-
                     // FAX発注書データ表示
                     showItem(dataReader, dg1);
 
@@ -160,6 +162,8 @@ namespace STSH_OCR.OCR
             editLogStatus = true;
 
             Cursor = Cursors.Default;
+
+            PtnShowStatus = true;  // 2020/04/12
         }
 
         ///-------------------------------------------------------------------
@@ -205,41 +209,39 @@ namespace STSH_OCR.OCR
                                 dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
                             }
 
-                            string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
-                            string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
                             int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[col, row].Value));    // 発注数
 
-                            System.Diagnostics.Debug.WriteLine("得:" + txtTokuisakiCD.Text + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
-
-                            // 得意先毎に同じ商品が同じ日に注文済み
-                            foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
+                            // 発注があるとき
+                            if (Suu > 0)
                             {
-                                dg1[col, row].ReadOnly = false;
-                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+                                string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
+                                string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
 
-                                if (t.Suu == Suu)
+                                System.Diagnostics.Debug.WriteLine("得:" + txtTokuisakiCD.Text + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
+
+                                // 得意先毎に同じ商品が同じ日に注文済み
+                                foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
                                 {
-                                    // 発注数も一致
-                                    //dg1[col, row].ReadOnly = false;
-                                    //dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                    //dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+                                    dg1[col, row].ReadOnly = false;
+                                    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                    dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
 
-                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
+                                    if (t.Suu == Suu)
+                                    {
+                                        // 発注数も一致
+                                        dg1[col, row].ReadOnly = true;
+                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
+                                    }
+                                    else
+                                    {
+                                        // 発注数は不一致
+                                        dg1[col, row].ReadOnly = false;
+                                        dg1[col, row].Style.ForeColor = Color.Red;
+                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
+                                    }
+
+                                    break;
                                 }
-                                else
-                                {
-                                    // 発注数は不一致
-                                    //dg1[col, row].ReadOnly = false;
-                                    //dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                    //dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
-
-                                    dg1[col, row].Style.ForeColor = Color.Red;
-
-                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
-                                }
-
-                                break;
                             }
                         }
                     }
@@ -952,9 +954,7 @@ namespace STSH_OCR.OCR
                     default:
                         break;
                 }
-
             }
-
 
             for (int i = 0; i < 15; i++)
             {
@@ -971,7 +971,10 @@ namespace STSH_OCR.OCR
                 {
                     dataGrid[colBaika, i * 2 + 1].Value = goods[i].Baika;
                 }
-                
+
+                global.ChangeValueStatus = true;
+                dg1.Rows[i * 2 + 1].Cells[colSyubai].Value = global.SyubaiArray[goods[i].Syubai];
+
                 dataGrid[colDay1, i * 2 + 1].Value = goods[i].Suu[0];
                 dataGrid[colDay2, i * 2 + 1].Value = goods[i].Suu[1];
                 dataGrid[colDay3, i * 2 + 1].Value = goods[i].Suu[2];
@@ -979,8 +982,6 @@ namespace STSH_OCR.OCR
                 dataGrid[colDay5, i * 2 + 1].Value = goods[i].Suu[4];
                 dataGrid[colDay6, i * 2 + 1].Value = goods[i].Suu[5];
                 dataGrid[colDay7, i * 2 + 1].Value = goods[i].Suu[6];
-
-                dg1.Rows[i * 2 + 1].Cells[colSyubai].Value = global.SyubaiArray[goods[i].Syubai];
             }
 
 
@@ -1035,6 +1036,7 @@ namespace STSH_OCR.OCR
         private void formInitialize(string sID)
         {
             global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
+            TenDateStatus = false;
 
             // テキストボックス表示色設定
             txtYear.BackColor = Color.White;

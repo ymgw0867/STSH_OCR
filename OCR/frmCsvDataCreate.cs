@@ -30,6 +30,10 @@ namespace STSH_OCR.OCR
         Table<Common.ClsOrder> tblOrder = null;
         ClsOrder order = null;
 
+        // 得意先別発注履歴データ：2020/04/12
+        Table<ClsOrderHistory> tblOrderHistories = null;
+        //ClsOrder order = null;
+
         // CSVデータ出力先
         string _sPath = "";
 
@@ -38,14 +42,6 @@ namespace STSH_OCR.OCR
 
         // 店着日付クラス
         ClsTenDate[] tenDates = new ClsTenDate[7];
-
-        // 2020/04/08 コメント化
-        // 商品マスタークラス
-        //ClsCsvData.ClsCsvSyohin[] syohins = null;
-
-        // 2020/04/08 コメント化
-        // 得意先マスタークラス
-        //ClsCsvData.ClsCsvTokuisaki[] tokuisakis = null;
 
         // 発注書ＣＳＶデータクラス
         ClsCsvData.ClsCsvCSV[] csvDatas = null;
@@ -202,16 +198,6 @@ namespace STSH_OCR.OCR
 
                     string cTokuisakiCD = r.TokuisakiCode.ToString("D7");
                     string cTokuisakiNM = "";
-
-                    // 2020/04/08 コメント化
-                    //for (int i = 0; i < tokuisakis.Length; i++)
-                    //{
-                    //    if (tokuisakis[i].TOKUISAKI_CD == cTokuisakiCD)
-                    //    {
-                    //        cTokuisakiNM = tokuisakis[i].TOKUISAKI_NM;
-                    //        break;
-                    //    }
-                    //}
 
                     // 2020/04/09
                     cTokuisakiNM = Utility.GetTokuisakiFromDataTable(cTokuisakiCD, global.dtTokuisaki).TOKUISAKI_NM;
@@ -472,7 +458,6 @@ namespace STSH_OCR.OCR
                         }
 
                         // 商品情報取得
-                        //ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohins(syohins, goods[i].Code.PadLeft(8, '0'));  // 2020/04/08 コメント化
                         ClsCsvData.ClsCsvSyohin_New syohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, goods[i].Code.PadLeft(8, '0'));  // 2020/04/09
 
                         // 店着日別発注数
@@ -484,8 +469,37 @@ namespace STSH_OCR.OCR
                                 continue;
                             }
 
-                            // 納品日取得
+                            // 店着日空白はネグる : 2020/04/12
+                            if (tenDates[iX].Year == string.Empty)
+                            {
+                                continue;
+                            }
+
+                            // 店着日 : 2020/04/12
+                            DateTime tDT;
+                            if (!DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out tDT))
+                            {
+                                continue;
+                            }
+
+                            // 過去日付はネグる : 2020/04/12
+                            if (tDT < DateTime.Today)
+                            {
+                                continue;
+                            }
+
+                            // 発注済みデータはネグる : 2020/04/12
+
+                            // 納品日（店着日）
                             cNouhinDT = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0');
+
+                            // 同じ発注が得意先別発注履歴に存在するとき：（得意先、発注日、商品コード、発注数が同じ）
+                            if (tblOrderHistories.Any(a => a.TokuisakiCD == Utility.StrtoInt(cTokuisakiCD) && a.OrderDate == cNouhinDT && a.SyohinCD == goods[i].Code &&
+                                                                           a.Suu == Utility.StrtoInt(goods[i].Suu[iX])))
+                            {
+                                // ネグる
+                                continue;
+                            }
 
                             // ＣＳＶクラス配列追加
                             Array.Resize(ref csvDatas, dCnt + 1);
@@ -670,6 +684,9 @@ namespace STSH_OCR.OCR
             tblOrder = context.GetTable<Common.ClsOrder>();
             int Maisu = tblOrder.Count();
             lblMaisu.Text = Maisu.ToString("N0");
+
+            // 得意先別発注履歴：2020/04/12
+            tblOrderHistories = context.GetTable<Common.ClsOrderHistory>();
 
             if (Maisu > 0)
             {

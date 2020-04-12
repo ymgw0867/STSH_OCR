@@ -131,9 +131,7 @@ namespace STSH_OCR.OCR
         // 画面表示時ステータス
         bool showStatus = false;
         bool TenDateStatus = false;
-
-        //int fCnt = 0;   // データ件数
-        
+        bool PtnShowStatus = false;     // 2020/04/12
 
         // openCvSharp 関連
         const float B_WIDTH = 0.45f;
@@ -188,17 +186,6 @@ namespace STSH_OCR.OCR
             tblFax = context2.GetTable<Common.ClsFaxOrder>();        // ＦＡＸ発注書テーブル
             tblFaxCheck = context2.GetTable<Common.ClsFaxOrder>();   // ＦＡＸ発注書テーブル ※チェック用
             tblEditLog = context2.GetTable<Common.ClsDataEditLog>(); // 編集ログテーブル
-
-            //string[] tk_array = System.Io.file.readalllines(properties.settings.default.得意先マスター, encoding.default);
-            //int sdate = datetime.today.year * 10000 + datetime.today.month * 100 + datetime.today.day;
-
-            // 2020/04/09 コメント化
-            //// 得意先マスタークラス配列取得
-            //tokuisaki = ClsCsvData.ClsCsvTokuisaki.Load(Tk_Array, sDate);
-
-            // 2020/04/09 コメント化
-            //// 商品マスタークラス配列取得
-            //syohins = Utility.GetSyohinData(Properties.Settings.Default.商品マスター, Properties.Settings.Default.商品在庫マスター, Properties.Settings.Default.仕入先マスター);
 
             // データ登録
             if (dID == string.Empty)
@@ -3109,6 +3096,12 @@ namespace STSH_OCR.OCR
         ///----------------------------------------------------------------------------------
         private void ShowFaxPattern(TextBox TokuisakiCD, TextBox PID, TextBox SeqNum)
         {
+            // 2020/04/12
+            if (!PtnShowStatus)
+            {
+                return;
+            }
+
             string _TokuisakiCD = Utility.NulltoStr(TokuisakiCD.Text);
             string _PID = Utility.NulltoStr(PID.Text);
             string _SeqNum = Utility.NulltoStr(SeqNum.Text);
@@ -3230,6 +3223,8 @@ namespace STSH_OCR.OCR
                     dg1[colMaker, 29].Value = t.G_Name15;
                 }
             }
+
+            System.Diagnostics.Debug.WriteLine("商品パターン表示");
         }
 
         private void txtTokuisakiCD_TextChanged(object sender, EventArgs e)
@@ -3250,7 +3245,7 @@ namespace STSH_OCR.OCR
             // 発注書パターン表示
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
         }
-               
+
         ///-----------------------------------------------------------
         /// <summary>
         ///     画像表示 openCV：2018/10/24 </summary>
@@ -3582,41 +3577,39 @@ namespace STSH_OCR.OCR
                                 dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
                             }
 
-                            string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
-                            string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
                             int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[col, row].Value));    // 発注数
 
-                            System.Diagnostics.Debug.WriteLine("得:" + txtTokuisakiCD.Text + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
-
-                            // 得意先毎に同じ商品が同じ日に注文済み
-                            foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
+                            // 発注があるとき
+                            if (Suu > 0)
                             {
-                                dg1[col, row].ReadOnly = false;
-                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+                                string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
+                                string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
 
-                                if (t.Suu == Suu)
+                                System.Diagnostics.Debug.WriteLine("得:" + txtTokuisakiCD.Text + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
+
+                                // 得意先毎に同じ商品が同じ日に注文済み
+                                foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
                                 {
-                                    // 発注数も一致
-                                    //dg1[col, row].ReadOnly = false;
-                                    //dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                    //dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+                                    dg1[col, row].ReadOnly = false;
+                                    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                    dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
 
-                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
+                                    if (t.Suu == Suu)
+                                    {
+                                        // 発注数も一致
+                                        dg1[col, row].ReadOnly = true;
+                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
+                                    }
+                                    else
+                                    {
+                                        // 発注数は不一致
+                                        dg1[col, row].ReadOnly = false;
+                                        dg1[col, row].Style.ForeColor = Color.Red;
+                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
+                                    }
+
+                                    break;
                                 }
-                                else
-                                {
-                                    // 発注数は不一致
-                                    //dg1[col, row].ReadOnly = false;
-                                    //dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                    //dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
-
-                                    dg1[col, row].Style.ForeColor = Color.Red;
-
-                                    System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
-                                }
-
-                                break;
                             }
                         }
                     }

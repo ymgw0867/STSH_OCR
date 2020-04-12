@@ -49,6 +49,8 @@ namespace STSH_OCR.OCR
         {
             System.Diagnostics.Debug.WriteLine("発注書表示");
 
+            PtnShowStatus = false;  // 2020/04/12
+
             Cursor = Cursors.WaitCursor;
             showStatus = false;
 
@@ -85,10 +87,12 @@ namespace STSH_OCR.OCR
                     foreach (var t in tblFaxCheck.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
                                                              a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
                     {
-                        if (t.ID.Contains(sDay))
-                        {
-                            cc++;
-                        }
+                        cc++;
+
+                        //if (t.ID.Contains(sDay))
+                        //{
+                        //    cc++;
+                        //}
                     }
 
                     if (cc > 0)
@@ -105,10 +109,12 @@ namespace STSH_OCR.OCR
                     foreach (var t in tblOrder.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
                                                              a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
                     {
-                        if (t.ID.Contains(sDay))
-                        {
-                            cc++;
-                        }
+                        cc++;
+
+                        //if (t.ID.Contains(sDay))
+                        //{
+                        //    cc++;
+                        //}
                     }
 
                     if (cc > 0)
@@ -157,8 +163,6 @@ namespace STSH_OCR.OCR
                     // 店着日配列作成
                     SetShowTenDate(tenDates);
 
-                    //global.ChangeValueStatus = true;    // これ以下ChangeValueイベントを発生させる
-
                     // FAX発注書データ表示
                     showItem(dataReader, dg1);
 
@@ -171,9 +175,6 @@ namespace STSH_OCR.OCR
 
                 dataReader.Close();
             }
-
-            //// 店着日配列を更新
-            //SetShowTenDate(tenDates);
 
             // 店着日ロック
             DayLock(tenDates);
@@ -195,6 +196,8 @@ namespace STSH_OCR.OCR
             editLogStatus = true;
 
             Cursor = Cursors.Default;
+
+            PtnShowStatus = true;  // 2020/04/12
         }
 
         ///-----------------------------------------------------------
@@ -497,399 +500,6 @@ namespace STSH_OCR.OCR
             clsFax.G_Read20 = clsPtn.G_Read20;
 
             clsFax.PatternLoad = global.flgOn;
-        }
-
-        ///------------------------------------------------------------------------------------
-        /// <summary>
-        ///     発注商品表示 </summary>
-        /// <param name="r">
-        ///     NHBR_CLIDataSet.FAX注文書Row</param>
-        /// <param name="mr">
-        ///     GcMultiRow</param>
-        /// <param name="ptnNum">
-        ///     パターンID</param>
-        ///------------------------------------------------------------------------------------
-        private void showItem_org(ClsFaxOrder r, DataGridView dataGrid)
-        {
-            global.ChangeValueStatus = false;
-
-            // １行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 1].Value = r.G_Code1;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka1 != 0)
-            {
-                dataGrid[colNouka, 1].Value = r.G_Nouka1;
-            }
-
-            if (r.G_Baika1 != 0)
-            {
-                dataGrid[colBaika, 1].Value = r.G_Baika1;
-            }
-
-            dataGrid[colDay1, 1].Value = r.Goods1_1;
-            dataGrid[colDay2, 1].Value = r.Goods1_2;
-            dataGrid[colDay3, 1].Value = r.Goods1_3;
-            dataGrid[colDay4, 1].Value = r.Goods1_4;
-            dataGrid[colDay5, 1].Value = r.Goods1_5;
-            dataGrid[colDay6, 1].Value = r.Goods1_6;
-            dataGrid[colDay7, 1].Value = r.Goods1_7;
-
-            dg1.Rows[1].Cells[colSyubai].Value = global.SyubaiArray[r.G_Syubai1];
-
-            // ２行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 3].Value = r.G_Code2;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka2 != 0)
-            {
-                dataGrid[colNouka, 3].Value = r.G_Nouka2;
-            }
-
-            if (r.G_Baika2 != 0)
-            {
-                dataGrid[colBaika, 3].Value = r.G_Baika2;
-            }
-
-            dataGrid[colDay1, 3].Value = r.Goods2_1;
-            dataGrid[colDay2, 3].Value = r.Goods2_2;
-            dataGrid[colDay3, 3].Value = r.Goods2_3;
-            dataGrid[colDay4, 3].Value = r.Goods2_4;
-            dataGrid[colDay5, 3].Value = r.Goods2_5;
-            dataGrid[colDay6, 3].Value = r.Goods2_6;
-            dataGrid[colDay7, 3].Value = r.Goods2_7;
-
-            dataGrid[colSyubai, 3].Value = global.SyubaiArray[r.G_Syubai2];
-
-            // ３行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 5].Value = r.G_Code3;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka3 != 0)
-            {
-                dataGrid[colNouka, 5].Value = r.G_Nouka3;
-            }
-
-            if (r.G_Baika3 != 0)
-            {
-                dataGrid[colBaika, 5].Value = r.G_Baika3;
-            }
-
-            dataGrid[colDay1, 5].Value = r.Goods3_1;
-            dataGrid[colDay2, 5].Value = r.Goods3_2;
-            dataGrid[colDay3, 5].Value = r.Goods3_3;
-            dataGrid[colDay4, 5].Value = r.Goods3_4;
-            dataGrid[colDay5, 5].Value = r.Goods3_5;
-            dataGrid[colDay6, 5].Value = r.Goods3_6;
-            dataGrid[colDay7, 5].Value = r.Goods3_7;
-
-            dataGrid[colSyubai, 5].Value = global.SyubaiArray[r.G_Syubai3];
-
-            // ４行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 7].Value = r.G_Code4;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka4 != 0)
-            {
-                dataGrid[colNouka, 7].Value = r.G_Nouka4;
-            }
-
-            if (r.G_Baika4 != 0)
-            {
-                dataGrid[colBaika, 7].Value = r.G_Baika4;
-            }
-
-            dataGrid[colDay1, 7].Value = r.Goods4_1;
-            dataGrid[colDay2, 7].Value = r.Goods4_2;
-            dataGrid[colDay3, 7].Value = r.Goods4_3;
-            dataGrid[colDay4, 7].Value = r.Goods4_4;
-            dataGrid[colDay5, 7].Value = r.Goods4_5;
-            dataGrid[colDay6, 7].Value = r.Goods4_6;
-            dataGrid[colDay7, 7].Value = r.Goods4_7;
-
-            dataGrid[colSyubai, 7].Value = global.SyubaiArray[r.G_Syubai4];
-
-            // ５行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 9].Value = r.G_Code5;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka5 != 0)
-            {
-                dataGrid[colNouka, 9].Value = r.G_Nouka5;
-            }
-
-            if (r.G_Baika5 != 0)
-            {
-                dataGrid[colBaika, 9].Value = r.G_Baika5;
-            }
-
-            dataGrid[colDay1, 9].Value = r.Goods5_1;
-            dataGrid[colDay2, 9].Value = r.Goods5_2;
-            dataGrid[colDay3, 9].Value = r.Goods5_3;
-            dataGrid[colDay4, 9].Value = r.Goods5_4;
-            dataGrid[colDay5, 9].Value = r.Goods5_5;
-            dataGrid[colDay6, 9].Value = r.Goods5_6;
-            dataGrid[colDay7, 9].Value = r.Goods5_7;
-
-            dataGrid[colSyubai, 9].Value = global.SyubaiArray[r.G_Syubai5];
-
-            // ６行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 11].Value = r.G_Code6;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka6 != 0)
-            {
-                dataGrid[colNouka, 11].Value = r.G_Nouka6;
-            }
-
-            if (r.G_Baika6 != 0)
-            {
-                dataGrid[colBaika, 11].Value = r.G_Baika6;
-            }
-
-            dataGrid[colDay1, 11].Value = r.Goods6_1;
-            dataGrid[colDay2, 11].Value = r.Goods6_2;
-            dataGrid[colDay3, 11].Value = r.Goods6_3;
-            dataGrid[colDay4, 11].Value = r.Goods6_4;
-            dataGrid[colDay5, 11].Value = r.Goods6_5;
-            dataGrid[colDay6, 11].Value = r.Goods6_6;
-            dataGrid[colDay7, 11].Value = r.Goods6_7;
-
-            dataGrid[colSyubai, 11].Value = global.SyubaiArray[r.G_Syubai6];
-
-            // ７行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 13].Value = r.G_Code7;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka7 != 0)
-            {
-                dataGrid[colNouka, 13].Value = r.G_Nouka7;
-            }
-
-            if (r.G_Baika7 != 0)
-            {
-                dataGrid[colBaika, 13].Value = r.G_Baika7;
-            }
-
-            dataGrid[colDay1, 13].Value = r.Goods7_1;
-            dataGrid[colDay2, 13].Value = r.Goods7_2;
-            dataGrid[colDay3, 13].Value = r.Goods7_3;
-            dataGrid[colDay4, 13].Value = r.Goods7_4;
-            dataGrid[colDay5, 13].Value = r.Goods7_5;
-            dataGrid[colDay6, 13].Value = r.Goods7_6;
-            dataGrid[colDay7, 13].Value = r.Goods7_7;
-
-            dataGrid[colSyubai, 13].Value = global.SyubaiArray[r.G_Syubai7];
-
-            // ８行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 15].Value = r.G_Code8;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka8 != 0)
-            {
-                dataGrid[colNouka, 15].Value = r.G_Nouka8;
-            }
-
-            if (r.G_Baika8 != 0)
-            {
-                dataGrid[colBaika, 15].Value = r.G_Baika8;
-            }
-
-            dataGrid[colDay1, 15].Value = r.Goods8_1;
-            dataGrid[colDay2, 15].Value = r.Goods8_2;
-            dataGrid[colDay3, 15].Value = r.Goods8_3;
-            dataGrid[colDay4, 15].Value = r.Goods8_4;
-            dataGrid[colDay5, 15].Value = r.Goods8_5;
-            dataGrid[colDay6, 15].Value = r.Goods8_6;
-            dataGrid[colDay7, 15].Value = r.Goods8_7;
-
-            dataGrid[colSyubai, 15].Value = global.SyubaiArray[r.G_Syubai8];
-
-            // ９行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 17].Value = r.G_Code9;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka9 != 0)
-            {
-                dataGrid[colNouka, 17].Value = r.G_Nouka9;
-            }
-
-            if (r.G_Baika9 != 0)
-            {
-                dataGrid[colBaika, 17].Value = r.G_Baika9;
-            }
-
-            dataGrid[colDay1, 17].Value = r.Goods9_1;
-            dataGrid[colDay2, 17].Value = r.Goods9_2;
-            dataGrid[colDay3, 17].Value = r.Goods9_3;
-            dataGrid[colDay4, 17].Value = r.Goods9_4;
-            dataGrid[colDay5, 17].Value = r.Goods9_5;
-            dataGrid[colDay6, 17].Value = r.Goods9_6;
-            dataGrid[colDay7, 17].Value = r.Goods9_7;
-
-            dataGrid[colSyubai, 17].Value = global.SyubaiArray[r.G_Syubai9];
-
-            // 10行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 19].Value = r.G_Code10;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka10 != 0)
-            {
-                dataGrid[colNouka, 19].Value = r.G_Nouka10;
-            }
-
-            if (r.G_Baika10 != 0)
-            {
-                dataGrid[colBaika, 19].Value = r.G_Baika10;
-            }
-
-            dataGrid[colDay1, 19].Value = r.Goods10_1;
-            dataGrid[colDay2, 19].Value = r.Goods10_2;
-            dataGrid[colDay3, 19].Value = r.Goods10_3;
-            dataGrid[colDay4, 19].Value = r.Goods10_4;
-            dataGrid[colDay5, 19].Value = r.Goods10_5;
-            dataGrid[colDay6, 19].Value = r.Goods10_6;
-            dataGrid[colDay7, 19].Value = r.Goods10_7;
-
-            dataGrid[colSyubai, 19].Value = global.SyubaiArray[r.G_Syubai10];
-
-            // 11行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 21].Value = r.G_Code11;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka11 != 0)
-            {
-                dataGrid[colNouka, 21].Value = r.G_Nouka11;
-            }
-
-            if (r.G_Baika11 != 0)
-            {
-                dataGrid[colBaika, 21].Value = r.G_Baika11;
-            }
-
-            dataGrid[colDay1, 21].Value = r.Goods11_1;
-            dataGrid[colDay2, 21].Value = r.Goods11_2;
-            dataGrid[colDay3, 21].Value = r.Goods11_3;
-            dataGrid[colDay4, 21].Value = r.Goods11_4;
-            dataGrid[colDay5, 21].Value = r.Goods11_5;
-            dataGrid[colDay6, 21].Value = r.Goods11_6;
-            dataGrid[colDay7, 21].Value = r.Goods11_7;
-
-            dataGrid[colSyubai, 21].Value = global.SyubaiArray[r.G_Syubai11];
-
-            // 12行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 23].Value = r.G_Code12;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka12 != 0)
-            {
-                dataGrid[colNouka, 23].Value = r.G_Nouka12;
-            }
-
-            if (r.G_Baika12 != 0)
-            {
-                dataGrid[colBaika, 23].Value = r.G_Baika12;
-            }
-
-            dataGrid[colDay1, 23].Value = r.Goods12_1;
-            dataGrid[colDay2, 23].Value = r.Goods12_2;
-            dataGrid[colDay3, 23].Value = r.Goods12_3;
-            dataGrid[colDay4, 23].Value = r.Goods12_4;
-            dataGrid[colDay5, 23].Value = r.Goods12_5;
-            dataGrid[colDay6, 23].Value = r.Goods12_6;
-            dataGrid[colDay7, 23].Value = r.Goods12_7;
-
-            dataGrid[colSyubai, 23].Value = global.SyubaiArray[r.G_Syubai12];
-
-            // 13行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 25].Value = r.G_Code13;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka13 != 0)
-            {
-                dataGrid[colNouka, 25].Value = r.G_Nouka13;
-            }
-
-            if (r.G_Baika13 != 0)
-            {
-                dataGrid[colBaika, 25].Value = r.G_Baika13;
-            }
-
-            dataGrid[colDay1, 25].Value = r.Goods13_1;
-            dataGrid[colDay2, 25].Value = r.Goods13_2;
-            dataGrid[colDay3, 25].Value = r.Goods13_3;
-            dataGrid[colDay4, 25].Value = r.Goods13_4;
-            dataGrid[colDay5, 25].Value = r.Goods13_5;
-            dataGrid[colDay6, 25].Value = r.Goods13_6;
-            dataGrid[colDay7, 25].Value = r.Goods13_7;
-
-            dataGrid[colSyubai, 25].Value = global.SyubaiArray[r.G_Syubai13];
-
-            // 14行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 27].Value = r.G_Code14;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka14 != 0)
-            {
-                dataGrid[colNouka, 27].Value = r.G_Nouka14;
-            }
-
-            if (r.G_Baika14 != 0)
-            {
-                dataGrid[colBaika, 27].Value = r.G_Baika14;
-            }
-
-            dataGrid[colDay1, 27].Value = r.Goods14_1;
-            dataGrid[colDay2, 27].Value = r.Goods14_2;
-            dataGrid[colDay3, 27].Value = r.Goods14_3;
-            dataGrid[colDay4, 27].Value = r.Goods14_4;
-            dataGrid[colDay5, 27].Value = r.Goods14_5;
-            dataGrid[colDay6, 27].Value = r.Goods14_6;
-            dataGrid[colDay7, 27].Value = r.Goods14_7;
-
-            dataGrid[colSyubai, 27].Value = global.SyubaiArray[r.G_Syubai14];
-
-            // 15行目
-            global.ChangeValueStatus = true;
-            dataGrid[colHinCode, 29].Value = r.G_Code15;
-            global.ChangeValueStatus = false;
-
-            if (r.G_Nouka15 != 0)
-            {
-                dataGrid[colNouka, 29].Value = r.G_Nouka15;
-            }
-
-            if (r.G_Baika15 != 0)
-            {
-                dataGrid[colBaika, 29].Value = r.G_Baika15;
-            }
-
-            dataGrid[colDay1, 29].Value = r.Goods15_1;
-            dataGrid[colDay2, 29].Value = r.Goods15_2;
-            dataGrid[colDay3, 29].Value = r.Goods15_3;
-            dataGrid[colDay4, 29].Value = r.Goods15_4;
-            dataGrid[colDay5, 29].Value = r.Goods15_5;
-            dataGrid[colDay6, 29].Value = r.Goods15_6;
-            dataGrid[colDay7, 29].Value = r.Goods15_7;
-
-            dataGrid[colSyubai, 29].Value = global.SyubaiArray[r.G_Syubai15];
-
-            //カレントセル選択状態としない
-            dg1.CurrentCell = null;
         }
 
         ///------------------------------------------------------------------------------------
@@ -1296,7 +906,6 @@ namespace STSH_OCR.OCR
                     default:
                         break;
                 }
-
             }
 
             for (int i = 0; i < 15; i++)
@@ -1316,11 +925,7 @@ namespace STSH_OCR.OCR
                 }
 
                 global.ChangeValueStatus = true;
-
                 dg1.Rows[i * 2 + 1].Cells[colSyubai].Value = global.SyubaiArray[goods[i].Syubai];
-
-                //// 発注実績表示コントロールオン
-                //showStatus = true;
 
                 dataGrid[colDay1, i * 2 + 1].Value = goods[i].Suu[0];
                 dataGrid[colDay2, i * 2 + 1].Value = goods[i].Suu[1];
@@ -1329,7 +934,6 @@ namespace STSH_OCR.OCR
                 dataGrid[colDay5, i * 2 + 1].Value = goods[i].Suu[4];
                 dataGrid[colDay6, i * 2 + 1].Value = goods[i].Suu[5];
                 dataGrid[colDay7, i * 2 + 1].Value = goods[i].Suu[6];
-                //global.ChangeValueStatus = false;
             }
 
 
@@ -1384,7 +988,6 @@ namespace STSH_OCR.OCR
         ///------------------------------------------------------------------------------------
         private void formInitialize(string sID, int cIx)
         {
-
             global.ChangeValueStatus = false;   // これ以下ChangeValueイベントを発生させない
             TenDateStatus = false;
 

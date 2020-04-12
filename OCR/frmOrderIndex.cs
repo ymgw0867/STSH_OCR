@@ -419,8 +419,24 @@ namespace STSH_OCR.OCR
 
         private void button2_Click(object sender, EventArgs e)
         {
+            string sID = Utility.NulltoStr(dataGridView1[colID, dataGridView1.SelectedRows[0].Index].Value);
+
+            if (sID != string.Empty)
+            {
+                ShowOrderData(sID);
+            }
+        }
+
+        ///-----------------------------------------------------------------------------
+        /// <summary>
+        ///     発注書データ編集画面を表示する </summary>
+        /// <param name="sID">
+        ///     ID</param>
+        ///-----------------------------------------------------------------------------
+        private void ShowOrderData(string sID)
+        {
             Hide();
-            frmOrder frm = new frmOrder(dataGridView1[colID, dataGridView1.SelectedRows[0].Index].Value.ToString());
+            frmOrder frm = new frmOrder(sID);
             frm.ShowDialog();
             Show();
 
@@ -433,6 +449,16 @@ namespace STSH_OCR.OCR
             pictureBox1.Image = null;
             trackBar1.Enabled = false;
             button2.Enabled = false;
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            string sID = Utility.NulltoStr(dataGridView1.Rows[e.RowIndex].Cells[colID].Value);
+
+            if (sID != string.Empty)
+            {
+                ShowOrderData(sID);
+            }
         }
     }
 }
