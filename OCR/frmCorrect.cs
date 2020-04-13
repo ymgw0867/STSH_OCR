@@ -1635,7 +1635,7 @@ namespace STSH_OCR.OCR
             ocr._errMsg = string.Empty;
 
             // エラーチェック実行①:カレントレコードから最終レコードまで
-            if (!ocr.errCheckMain(cIdx, cID.Length - 1, this, tblFax, tblPtn, cID))
+            if (!ocr.errCheckMain(cIdx, cID.Length - 1, this, tblFax, tblPtn, tblOrderHistories, cID))
             {
                 return false;
             }
@@ -1643,7 +1643,7 @@ namespace STSH_OCR.OCR
             // エラーチェック実行②:最初のレコードからカレントレコードの前のレコードまで
             if (cIdx > 0)
             {
-                if (!ocr.errCheckMain(0, (cIdx - 1), this, tblFax, tblPtn, cID))
+                if (!ocr.errCheckMain(0, (cIdx - 1), this, tblFax, tblPtn, tblOrderHistories, cID))
                 {
                     return false;
                 }
@@ -3240,7 +3240,7 @@ namespace STSH_OCR.OCR
             //}
 
             // 得意先名取得 2020/04/10
-            lblTokuisakiName.Text = Utility.GetTokuisakiFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), global.dtTokuisaki).TOKUISAKI_NM; ;
+            lblTokuisakiName.Text = Utility.GetTokuisakiFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), global.dtTokuisaki).TOKUISAKI_NM;
 
             // 発注書パターン表示
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
@@ -3598,6 +3598,7 @@ namespace STSH_OCR.OCR
                                     {
                                         // 発注数も一致
                                         dg1[col, row].ReadOnly = true;
+                                        dg1[col, row].Style.ForeColor = Color.LightGray;
                                         System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
                                     }
                                     else
@@ -3636,7 +3637,7 @@ namespace STSH_OCR.OCR
                 {
                     if (dg1.Rows[r].Cells[i].Style.BackColor == Color.MistyRose)
                     {
-                        label1.Text = "注文済み商品があります";
+                        label1.Text = "注文済商品があります ①発注数同じ：ロック済で発注書データ対象外、②発注数違い：編集可・発注書データ作成";
                         msgStatus = true;
                         break;
                     }

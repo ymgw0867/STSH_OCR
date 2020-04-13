@@ -12,6 +12,7 @@ namespace STSH_OCR.Common
         public int Nouka { get; set; }
         public int Baika { get; set; }
         public string [] Suu { get; set; }
+        public bool[] Target { get; set; }
         public int Syubai { get; set; }
     }
 }

@@ -205,232 +205,237 @@ namespace STSH_OCR.OCR
                     string cNouhinDT = string.Empty;
                     string cDT = global.DTKBN;
 
-                    // 商品発注明細クラス
-                    ClsGoods[] goods = new ClsGoods[15];
-                    for (int i = 0; i < global.MAX_GYO; i++)
-                    {
-                        goods[i] = new ClsGoods();
-                        goods[i].Suu = new string[7];
+                    // 商品発注明細クラス : 2020/04/12
+                    ClsGoods[] goods = Utility.SetGoodsTabla(r, tenDates, tblOrderHistories);
 
-                        switch (i)
-                        {
-                            case 0:
-                                goods[i].Code = r.G_Code1;
-                                goods[i].Suu[0] = r.Goods1_1;
-                                goods[i].Suu[1] = r.Goods1_2;
-                                goods[i].Suu[2] = r.Goods1_3;
-                                goods[i].Suu[3] = r.Goods1_4;
-                                goods[i].Suu[4] = r.Goods1_5;
-                                goods[i].Suu[5] = r.Goods1_6;
-                                goods[i].Suu[6] = r.Goods1_7;
-                                goods[i].Nouka = r.G_Nouka1;
-                                goods[i].Baika = r.G_Baika1;
-                                goods[i].Syubai = r.G_Syubai1;
-                                break;
 
-                            case 1:
-                                goods[i].Code = r.G_Code2;
-                                goods[i].Suu[0] = r.Goods2_1;
-                                goods[i].Suu[1] = r.Goods2_2;
-                                goods[i].Suu[2] = r.Goods2_3;
-                                goods[i].Suu[3] = r.Goods2_4;
-                                goods[i].Suu[4] = r.Goods2_5;
-                                goods[i].Suu[5] = r.Goods2_6;
-                                goods[i].Suu[6] = r.Goods2_7;
-                                goods[i].Nouka = r.G_Nouka2;
-                                goods[i].Baika = r.G_Baika2;
-                                goods[i].Syubai = r.G_Syubai2;
-                                break;
+                    // 2020/04/12 コメント化
+                    //ClsGoods[] goods = new ClsGoods[15];
+                    //for (int i = 0; i < global.MAX_GYO; i++)
+                    //{
+                    //    goods[i] = new ClsGoods();
+                    //    goods[i].Suu = new string [7];
+                    //    goods[i].Target = new bool [7];     // 2020/04/13
 
-                            case 2:
-                                goods[i].Code = r.G_Code3;
-                                goods[i].Suu[0] = r.Goods3_1;
-                                goods[i].Suu[1] = r.Goods3_2;
-                                goods[i].Suu[2] = r.Goods3_3;
-                                goods[i].Suu[3] = r.Goods3_4;
-                                goods[i].Suu[4] = r.Goods3_5;
-                                goods[i].Suu[5] = r.Goods3_6;
-                                goods[i].Suu[6] = r.Goods3_7;
-                                goods[i].Nouka = r.G_Nouka3;
-                                goods[i].Baika = r.G_Baika3;
-                                goods[i].Syubai = r.G_Syubai3;
-                                break;
+                    //    switch (i)
+                    //    {
+                    //        case 0:
+                    //            goods[i].Code = r.G_Code1;
+                    //            goods[i].Suu[0] = r.Goods1_1;
+                    //            goods[i].Suu[1] = r.Goods1_2;
+                    //            goods[i].Suu[2] = r.Goods1_3;
+                    //            goods[i].Suu[3] = r.Goods1_4;
+                    //            goods[i].Suu[4] = r.Goods1_5;
+                    //            goods[i].Suu[5] = r.Goods1_6;
+                    //            goods[i].Suu[6] = r.Goods1_7;
+                    //            goods[i].Nouka = r.G_Nouka1;
+                    //            goods[i].Baika = r.G_Baika1;
+                    //            goods[i].Syubai = r.G_Syubai1;
+                    //            break;
 
-                            case 3:
-                                goods[i].Code = r.G_Code4;
-                                goods[i].Suu[0] = r.Goods4_1;
-                                goods[i].Suu[1] = r.Goods4_2;
-                                goods[i].Suu[2] = r.Goods4_3;
-                                goods[i].Suu[3] = r.Goods4_4;
-                                goods[i].Suu[4] = r.Goods4_5;
-                                goods[i].Suu[5] = r.Goods4_6;
-                                goods[i].Suu[6] = r.Goods4_7;
-                                goods[i].Nouka = r.G_Nouka4;
-                                goods[i].Baika = r.G_Baika4;
-                                goods[i].Syubai = r.G_Syubai4;
-                                break;
+                    //        case 1:
+                    //            goods[i].Code = r.G_Code2;
+                    //            goods[i].Suu[0] = r.Goods2_1;
+                    //            goods[i].Suu[1] = r.Goods2_2;
+                    //            goods[i].Suu[2] = r.Goods2_3;
+                    //            goods[i].Suu[3] = r.Goods2_4;
+                    //            goods[i].Suu[4] = r.Goods2_5;
+                    //            goods[i].Suu[5] = r.Goods2_6;
+                    //            goods[i].Suu[6] = r.Goods2_7;
+                    //            goods[i].Nouka = r.G_Nouka2;
+                    //            goods[i].Baika = r.G_Baika2;
+                    //            goods[i].Syubai = r.G_Syubai2;
+                    //            break;
 
-                            case 4:
-                                goods[i].Code = r.G_Code5;
-                                goods[i].Suu[0] = r.Goods5_1;
-                                goods[i].Suu[1] = r.Goods5_2;
-                                goods[i].Suu[2] = r.Goods5_3;
-                                goods[i].Suu[3] = r.Goods5_4;
-                                goods[i].Suu[4] = r.Goods5_5;
-                                goods[i].Suu[5] = r.Goods5_6;
-                                goods[i].Suu[6] = r.Goods5_7;
-                                goods[i].Nouka = r.G_Nouka5;
-                                goods[i].Baika = r.G_Baika5;
-                                goods[i].Syubai = r.G_Syubai5;
-                                break;
+                    //        case 2:
+                    //            goods[i].Code = r.G_Code3;
+                    //            goods[i].Suu[0] = r.Goods3_1;
+                    //            goods[i].Suu[1] = r.Goods3_2;
+                    //            goods[i].Suu[2] = r.Goods3_3;
+                    //            goods[i].Suu[3] = r.Goods3_4;
+                    //            goods[i].Suu[4] = r.Goods3_5;
+                    //            goods[i].Suu[5] = r.Goods3_6;
+                    //            goods[i].Suu[6] = r.Goods3_7;
+                    //            goods[i].Nouka = r.G_Nouka3;
+                    //            goods[i].Baika = r.G_Baika3;
+                    //            goods[i].Syubai = r.G_Syubai3;
+                    //            break;
 
-                            case 5:
-                                goods[i].Code = r.G_Code6;
-                                goods[i].Suu[0] = r.Goods6_1;
-                                goods[i].Suu[1] = r.Goods6_2;
-                                goods[i].Suu[2] = r.Goods6_3;
-                                goods[i].Suu[3] = r.Goods6_4;
-                                goods[i].Suu[4] = r.Goods6_5;
-                                goods[i].Suu[5] = r.Goods6_6;
-                                goods[i].Suu[6] = r.Goods6_7;
-                                goods[i].Nouka = r.G_Nouka6;
-                                goods[i].Baika = r.G_Baika6;
-                                goods[i].Syubai = r.G_Syubai6;
-                                break;
+                    //        case 3:
+                    //            goods[i].Code = r.G_Code4;
+                    //            goods[i].Suu[0] = r.Goods4_1;
+                    //            goods[i].Suu[1] = r.Goods4_2;
+                    //            goods[i].Suu[2] = r.Goods4_3;
+                    //            goods[i].Suu[3] = r.Goods4_4;
+                    //            goods[i].Suu[4] = r.Goods4_5;
+                    //            goods[i].Suu[5] = r.Goods4_6;
+                    //            goods[i].Suu[6] = r.Goods4_7;
+                    //            goods[i].Nouka = r.G_Nouka4;
+                    //            goods[i].Baika = r.G_Baika4;
+                    //            goods[i].Syubai = r.G_Syubai4;
+                    //            break;
 
-                            case 6:
-                                goods[i].Code = r.G_Code7;
-                                goods[i].Suu[0] = r.Goods7_1;
-                                goods[i].Suu[1] = r.Goods7_2;
-                                goods[i].Suu[2] = r.Goods7_3;
-                                goods[i].Suu[3] = r.Goods7_4;
-                                goods[i].Suu[4] = r.Goods7_5;
-                                goods[i].Suu[5] = r.Goods7_6;
-                                goods[i].Suu[6] = r.Goods7_7;
-                                goods[i].Nouka = r.G_Nouka7;
-                                goods[i].Baika = r.G_Baika7;
-                                goods[i].Syubai = r.G_Syubai7;
-                                break;
+                    //        case 4:
+                    //            goods[i].Code = r.G_Code5;
+                    //            goods[i].Suu[0] = r.Goods5_1;
+                    //            goods[i].Suu[1] = r.Goods5_2;
+                    //            goods[i].Suu[2] = r.Goods5_3;
+                    //            goods[i].Suu[3] = r.Goods5_4;
+                    //            goods[i].Suu[4] = r.Goods5_5;
+                    //            goods[i].Suu[5] = r.Goods5_6;
+                    //            goods[i].Suu[6] = r.Goods5_7;
+                    //            goods[i].Nouka = r.G_Nouka5;
+                    //            goods[i].Baika = r.G_Baika5;
+                    //            goods[i].Syubai = r.G_Syubai5;
+                    //            break;
 
-                            case 7:
-                                goods[i].Code = r.G_Code8;
-                                goods[i].Suu[0] = r.Goods8_1;
-                                goods[i].Suu[1] = r.Goods8_2;
-                                goods[i].Suu[2] = r.Goods8_3;
-                                goods[i].Suu[3] = r.Goods8_4;
-                                goods[i].Suu[4] = r.Goods8_5;
-                                goods[i].Suu[5] = r.Goods8_6;
-                                goods[i].Suu[6] = r.Goods8_7;
-                                goods[i].Nouka = r.G_Nouka8;
-                                goods[i].Baika = r.G_Baika8;
-                                goods[i].Syubai = r.G_Syubai8;
-                                break;
+                    //        case 5:
+                    //            goods[i].Code = r.G_Code6;
+                    //            goods[i].Suu[0] = r.Goods6_1;
+                    //            goods[i].Suu[1] = r.Goods6_2;
+                    //            goods[i].Suu[2] = r.Goods6_3;
+                    //            goods[i].Suu[3] = r.Goods6_4;
+                    //            goods[i].Suu[4] = r.Goods6_5;
+                    //            goods[i].Suu[5] = r.Goods6_6;
+                    //            goods[i].Suu[6] = r.Goods6_7;
+                    //            goods[i].Nouka = r.G_Nouka6;
+                    //            goods[i].Baika = r.G_Baika6;
+                    //            goods[i].Syubai = r.G_Syubai6;
+                    //            break;
 
-                            case 8:
-                                goods[i].Code = r.G_Code9;
-                                goods[i].Suu[0] = r.Goods9_1;
-                                goods[i].Suu[1] = r.Goods9_2;
-                                goods[i].Suu[2] = r.Goods9_3;
-                                goods[i].Suu[3] = r.Goods9_4;
-                                goods[i].Suu[4] = r.Goods9_5;
-                                goods[i].Suu[5] = r.Goods9_6;
-                                goods[i].Suu[6] = r.Goods9_7;
-                                goods[i].Nouka = r.G_Nouka9;
-                                goods[i].Baika = r.G_Baika9;
-                                goods[i].Syubai = r.G_Syubai9;
-                                break;
+                    //        case 6:
+                    //            goods[i].Code = r.G_Code7;
+                    //            goods[i].Suu[0] = r.Goods7_1;
+                    //            goods[i].Suu[1] = r.Goods7_2;
+                    //            goods[i].Suu[2] = r.Goods7_3;
+                    //            goods[i].Suu[3] = r.Goods7_4;
+                    //            goods[i].Suu[4] = r.Goods7_5;
+                    //            goods[i].Suu[5] = r.Goods7_6;
+                    //            goods[i].Suu[6] = r.Goods7_7;
+                    //            goods[i].Nouka = r.G_Nouka7;
+                    //            goods[i].Baika = r.G_Baika7;
+                    //            goods[i].Syubai = r.G_Syubai7;
+                    //            break;
 
-                            case 9:
-                                goods[i].Code = r.G_Code10;
-                                goods[i].Suu[0] = r.Goods10_1;
-                                goods[i].Suu[1] = r.Goods10_2;
-                                goods[i].Suu[2] = r.Goods10_3;
-                                goods[i].Suu[3] = r.Goods10_4;
-                                goods[i].Suu[4] = r.Goods10_5;
-                                goods[i].Suu[5] = r.Goods10_6;
-                                goods[i].Suu[6] = r.Goods10_7;
-                                goods[i].Nouka = r.G_Nouka10;
-                                goods[i].Baika = r.G_Baika10;
-                                goods[i].Syubai = r.G_Syubai10;
-                                break;
+                    //        case 7:
+                    //            goods[i].Code = r.G_Code8;
+                    //            goods[i].Suu[0] = r.Goods8_1;
+                    //            goods[i].Suu[1] = r.Goods8_2;
+                    //            goods[i].Suu[2] = r.Goods8_3;
+                    //            goods[i].Suu[3] = r.Goods8_4;
+                    //            goods[i].Suu[4] = r.Goods8_5;
+                    //            goods[i].Suu[5] = r.Goods8_6;
+                    //            goods[i].Suu[6] = r.Goods8_7;
+                    //            goods[i].Nouka = r.G_Nouka8;
+                    //            goods[i].Baika = r.G_Baika8;
+                    //            goods[i].Syubai = r.G_Syubai8;
+                    //            break;
 
-                            case 10:
-                                goods[i].Code = r.G_Code11;
-                                goods[i].Suu[0] = r.Goods11_1;
-                                goods[i].Suu[1] = r.Goods11_2;
-                                goods[i].Suu[2] = r.Goods11_3;
-                                goods[i].Suu[3] = r.Goods11_4;
-                                goods[i].Suu[4] = r.Goods11_5;
-                                goods[i].Suu[5] = r.Goods11_6;
-                                goods[i].Suu[6] = r.Goods11_7;
-                                goods[i].Nouka = r.G_Nouka11;
-                                goods[i].Baika = r.G_Baika11;
-                                goods[i].Syubai = r.G_Syubai11;
-                                break;
+                    //        case 8:
+                    //            goods[i].Code = r.G_Code9;
+                    //            goods[i].Suu[0] = r.Goods9_1;
+                    //            goods[i].Suu[1] = r.Goods9_2;
+                    //            goods[i].Suu[2] = r.Goods9_3;
+                    //            goods[i].Suu[3] = r.Goods9_4;
+                    //            goods[i].Suu[4] = r.Goods9_5;
+                    //            goods[i].Suu[5] = r.Goods9_6;
+                    //            goods[i].Suu[6] = r.Goods9_7;
+                    //            goods[i].Nouka = r.G_Nouka9;
+                    //            goods[i].Baika = r.G_Baika9;
+                    //            goods[i].Syubai = r.G_Syubai9;
+                    //            break;
 
-                            case 11:
-                                goods[i].Code = r.G_Code12;
-                                goods[i].Suu[0] = r.Goods12_1;
-                                goods[i].Suu[1] = r.Goods12_2;
-                                goods[i].Suu[2] = r.Goods12_3;
-                                goods[i].Suu[3] = r.Goods12_4;
-                                goods[i].Suu[4] = r.Goods12_5;
-                                goods[i].Suu[5] = r.Goods12_6;
-                                goods[i].Suu[6] = r.Goods12_7;
-                                goods[i].Nouka = r.G_Nouka12;
-                                goods[i].Baika = r.G_Baika12;
-                                goods[i].Syubai = r.G_Syubai12;
-                                break;
+                    //        case 9:
+                    //            goods[i].Code = r.G_Code10;
+                    //            goods[i].Suu[0] = r.Goods10_1;
+                    //            goods[i].Suu[1] = r.Goods10_2;
+                    //            goods[i].Suu[2] = r.Goods10_3;
+                    //            goods[i].Suu[3] = r.Goods10_4;
+                    //            goods[i].Suu[4] = r.Goods10_5;
+                    //            goods[i].Suu[5] = r.Goods10_6;
+                    //            goods[i].Suu[6] = r.Goods10_7;
+                    //            goods[i].Nouka = r.G_Nouka10;
+                    //            goods[i].Baika = r.G_Baika10;
+                    //            goods[i].Syubai = r.G_Syubai10;
+                    //            break;
 
-                            case 12:
-                                goods[i].Code = r.G_Code13;
-                                goods[i].Suu[0] = r.Goods13_1;
-                                goods[i].Suu[1] = r.Goods13_2;
-                                goods[i].Suu[2] = r.Goods13_3;
-                                goods[i].Suu[3] = r.Goods13_4;
-                                goods[i].Suu[4] = r.Goods13_5;
-                                goods[i].Suu[5] = r.Goods13_6;
-                                goods[i].Suu[6] = r.Goods13_7;
-                                goods[i].Nouka = r.G_Nouka13;
-                                goods[i].Baika = r.G_Baika13;
-                                goods[i].Syubai = r.G_Syubai13;
-                                break;
+                    //        case 10:
+                    //            goods[i].Code = r.G_Code11;
+                    //            goods[i].Suu[0] = r.Goods11_1;
+                    //            goods[i].Suu[1] = r.Goods11_2;
+                    //            goods[i].Suu[2] = r.Goods11_3;
+                    //            goods[i].Suu[3] = r.Goods11_4;
+                    //            goods[i].Suu[4] = r.Goods11_5;
+                    //            goods[i].Suu[5] = r.Goods11_6;
+                    //            goods[i].Suu[6] = r.Goods11_7;
+                    //            goods[i].Nouka = r.G_Nouka11;
+                    //            goods[i].Baika = r.G_Baika11;
+                    //            goods[i].Syubai = r.G_Syubai11;
+                    //            break;
 
-                            case 13:
-                                goods[i].Code = r.G_Code14;
-                                goods[i].Suu[0] = r.Goods14_1;
-                                goods[i].Suu[1] = r.Goods14_2;
-                                goods[i].Suu[2] = r.Goods14_3;
-                                goods[i].Suu[3] = r.Goods14_4;
-                                goods[i].Suu[4] = r.Goods14_5;
-                                goods[i].Suu[5] = r.Goods14_6;
-                                goods[i].Suu[6] = r.Goods14_7;
-                                goods[i].Nouka = r.G_Nouka14;
-                                goods[i].Baika = r.G_Baika14;
-                                goods[i].Syubai = r.G_Syubai14;
-                                break;
+                    //        case 11:
+                    //            goods[i].Code = r.G_Code12;
+                    //            goods[i].Suu[0] = r.Goods12_1;
+                    //            goods[i].Suu[1] = r.Goods12_2;
+                    //            goods[i].Suu[2] = r.Goods12_3;
+                    //            goods[i].Suu[3] = r.Goods12_4;
+                    //            goods[i].Suu[4] = r.Goods12_5;
+                    //            goods[i].Suu[5] = r.Goods12_6;
+                    //            goods[i].Suu[6] = r.Goods12_7;
+                    //            goods[i].Nouka = r.G_Nouka12;
+                    //            goods[i].Baika = r.G_Baika12;
+                    //            goods[i].Syubai = r.G_Syubai12;
+                    //            break;
 
-                            case 14:
-                                goods[i].Code = r.G_Code15;
-                                goods[i].Suu[0] = r.Goods15_1;
-                                goods[i].Suu[1] = r.Goods15_2;
-                                goods[i].Suu[2] = r.Goods15_3;
-                                goods[i].Suu[3] = r.Goods15_4;
-                                goods[i].Suu[4] = r.Goods15_5;
-                                goods[i].Suu[5] = r.Goods15_6;
-                                goods[i].Suu[6] = r.Goods15_7;
-                                goods[i].Nouka = r.G_Nouka15;
-                                goods[i].Baika = r.G_Baika15;
-                                goods[i].Syubai = r.G_Syubai15;
-                                break;
+                    //        case 12:
+                    //            goods[i].Code = r.G_Code13;
+                    //            goods[i].Suu[0] = r.Goods13_1;
+                    //            goods[i].Suu[1] = r.Goods13_2;
+                    //            goods[i].Suu[2] = r.Goods13_3;
+                    //            goods[i].Suu[3] = r.Goods13_4;
+                    //            goods[i].Suu[4] = r.Goods13_5;
+                    //            goods[i].Suu[5] = r.Goods13_6;
+                    //            goods[i].Suu[6] = r.Goods13_7;
+                    //            goods[i].Nouka = r.G_Nouka13;
+                    //            goods[i].Baika = r.G_Baika13;
+                    //            goods[i].Syubai = r.G_Syubai13;
+                    //            break;
 
-                            default:
-                                break;
-                        }
-                    }
+                    //        case 13:
+                    //            goods[i].Code = r.G_Code14;
+                    //            goods[i].Suu[0] = r.Goods14_1;
+                    //            goods[i].Suu[1] = r.Goods14_2;
+                    //            goods[i].Suu[2] = r.Goods14_3;
+                    //            goods[i].Suu[3] = r.Goods14_4;
+                    //            goods[i].Suu[4] = r.Goods14_5;
+                    //            goods[i].Suu[5] = r.Goods14_6;
+                    //            goods[i].Suu[6] = r.Goods14_7;
+                    //            goods[i].Nouka = r.G_Nouka14;
+                    //            goods[i].Baika = r.G_Baika14;
+                    //            goods[i].Syubai = r.G_Syubai14;
+                    //            break;
+
+                    //        case 14:
+                    //            goods[i].Code = r.G_Code15;
+                    //            goods[i].Suu[0] = r.Goods15_1;
+                    //            goods[i].Suu[1] = r.Goods15_2;
+                    //            goods[i].Suu[2] = r.Goods15_3;
+                    //            goods[i].Suu[3] = r.Goods15_4;
+                    //            goods[i].Suu[4] = r.Goods15_5;
+                    //            goods[i].Suu[5] = r.Goods15_6;
+                    //            goods[i].Suu[6] = r.Goods15_7;
+                    //            goods[i].Nouka = r.G_Nouka15;
+                    //            goods[i].Baika = r.G_Baika15;
+                    //            goods[i].Syubai = r.G_Syubai15;
+                    //            break;
+
+                    //        default:
+                    //            break;
+                    //    }
+                    //}
 
                     // 商品明細
-                    for (int i = 0; i < global.MAX_GYO; i++)
+                    for (int i = 0; i < goods.Length; i++)
                     {
                         if (goods[i].Code == string.Empty)
                         {
@@ -445,61 +450,69 @@ namespace STSH_OCR.OCR
 
                         int hCnt = 0;
 
-                        // 発注数があるか？
-                        for (int iX = 0; iX < 7; iX++)
-                        {
-                            hCnt += Utility.StrtoInt(goods[i].Suu[iX]);
-                        }
+                        // コメント化 2020/04/12
+                        //// 発注数があるか？
+                        //for (int iX = 0; iX < 7; iX++)
+                        //{
+                        //    hCnt += Utility.StrtoInt(goods[i].Suu[iX]);
+                        //}
 
-                        // 発注数がなければネグる
-                        if (hCnt == global.flgOff)
-                        {
-                            continue;
-                        }
+                        //// 発注数がなければネグる
+                        //if (hCnt == global.flgOff)
+                        //{
+                        //    continue;
+                        //}
 
                         // 商品情報取得
                         ClsCsvData.ClsCsvSyohin_New syohin = Utility.GetSyohinsFromDataTable(global.dtSyohin, goods[i].Code.PadLeft(8, '0'));  // 2020/04/09
 
                         // 店着日別発注数
-                        for (int iX = 0; iX < 7; iX++)
+                        for (int iX = 0; iX < goods[i].Target.Length; iX++)
                         {
+                            // 対象ステータスで判断：2020/04/13
+                            if (!goods[i].Target[iX])
+                            {
+                                continue;
+                            }
+
                             if (Utility.StrtoInt(goods[i].Suu[iX]) == global.flgOff)
                             {
                                 // 発注数空白、０はネグる
                                 continue;
                             }
 
-                            // 店着日空白はネグる : 2020/04/12
-                            if (tenDates[iX].Year == string.Empty)
-                            {
-                                continue;
-                            }
+                            // コメント化 2020/04/13
+                            //// 店着日空白はネグる : 2020/04/12
+                            //if (tenDates[iX].Year == string.Empty)
+                            //{
+                            //    continue;
+                            //}
 
-                            // 店着日 : 2020/04/12
-                            DateTime tDT;
-                            if (!DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out tDT))
-                            {
-                                continue;
-                            }
+                            //// 店着日 : 2020/04/12
+                            //DateTime tDT;
+                            //if (!DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out tDT))
+                            //{
+                            //    continue;
+                            //}
 
-                            // 過去日付はネグる : 2020/04/12
-                            if (tDT < DateTime.Today)
-                            {
-                                continue;
-                            }
+                            //// 過去日付はネグる : 2020/04/12
+                            //if (tDT < DateTime.Today)
+                            //{
+                            //    continue;
+                            //}
 
-                            // 発注済みデータはネグる : 2020/04/12
+                            //// 発注済みデータはネグる : 2020/04/12
+
+                            //// 同じ発注が得意先別発注履歴に存在するとき：（得意先、発注日、商品コード、発注数が同じ）
+                            //if (tblOrderHistories.Any(a => a.TokuisakiCD == Utility.StrtoInt(cTokuisakiCD) && a.OrderDate == cNouhinDT && a.SyohinCD == goods[i].Code &&
+                            //                                               a.Suu == Utility.StrtoInt(goods[i].Suu[iX])))
+                            //{
+                            //    // ネグる
+                            //    continue;
+                            //}
 
                             // 納品日（店着日）
                             cNouhinDT = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0');
-
-                            // 同じ発注が得意先別発注履歴に存在するとき：（得意先、発注日、商品コード、発注数が同じ）
-                            if (tblOrderHistories.Any(a => a.TokuisakiCD == Utility.StrtoInt(cTokuisakiCD) && a.OrderDate == cNouhinDT && a.SyohinCD == goods[i].Code &&
-                                                                           a.Suu == Utility.StrtoInt(goods[i].Suu[iX])))
-                            {
-                                // ネグる
-                                continue;
-                            }
 
                             // ＣＳＶクラス配列追加
                             Array.Resize(ref csvDatas, dCnt + 1);

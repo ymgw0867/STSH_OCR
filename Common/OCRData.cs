@@ -202,7 +202,7 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     True:エラーなし、false:エラーあり</returns>
         ///-----------------------------------------------------------------------------------------------
-        public Boolean errCheckMain(int sIx, int eIx, Form frm, Table<ClsFaxOrder> tblFax, Table<ClsOrderPattern> tblPtn, string[] cID)
+        public Boolean errCheckMain(int sIx, int eIx, Form frm, Table<ClsFaxOrder> tblFax, Table<ClsOrderPattern> tblPtn, Table<ClsOrderHistory>tblHistories, string[] cID)
         {
             // 2020/04/08 コメント化
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
@@ -240,7 +240,7 @@ namespace STSH_OCR.Common
                     ClsFaxOrder r = tblFax.Single(a => a.ID == cID[i]);
 
                     // エラーチェック実施
-                    eCheck = errCheckData(r, tblPtn);
+                    eCheck = errCheckData(r, tblPtn, tblHistories);
 
                     if (!eCheck)　//エラーがあったとき
                     {
@@ -283,7 +283,7 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     True:エラーなし、false:エラーあり</returns>
         ///-----------------------------------------------------------------------------------------------
-        public Boolean errCheckMain(string sID, Table<ClsOrder> tblOrder, Table<ClsOrderPattern> tblPtn)
+        public Boolean errCheckMain(string sID, Table<ClsOrder> tblOrder, Table<ClsOrderPattern> tblPtn, Table<ClsOrderHistory> tblHistories)
         {
             int sDate = DateTime.Today.Year * 10000 + DateTime.Today.Month * 100 + DateTime.Today.Day;
 
@@ -294,7 +294,7 @@ namespace STSH_OCR.Common
             ClsOrder r = tblOrder.Single(a => a.ID == sID);
 
             // エラーチェック実施
-            eCheck = errCheckData(r, tblPtn);
+            eCheck = errCheckData(r, tblPtn, tblHistories);
 
             return eCheck;
         }
@@ -333,7 +333,7 @@ namespace STSH_OCR.Common
         ///     エラーなし：true, エラー有り：false</returns>
         ///-----------------------------------------------------------------------------------------------
         /// 
-        public Boolean errCheckData(ClsFaxOrder r, Table<ClsOrderPattern> ptn)
+        public Boolean errCheckData(ClsFaxOrder r, Table<ClsOrderPattern> ptn, Table<ClsOrderHistory> tblHistories)
         {
             int eNum = 0;
 
@@ -349,15 +349,6 @@ namespace STSH_OCR.Common
                 setErrStatus(eDataCheck, 0, "未確認の発注書です");
                 return false;
             }
-
-            // 年月 : 2020/04/02 コメント化
-            //int rDate = r.Year * 100 + r.Month;
-            //int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Month;
-            //if (rDate < toDate)
-            //{
-            //    setErrStatus(eYearMonth, 0, "年月が正しくありません");
-            //    return false;
-            //}
 
             if (r.Month < 1 || r.Month > 12)
             {
@@ -488,6 +479,7 @@ namespace STSH_OCR.Common
             {
                 goods[i] = new ClsGoods();
                 goods[i].Suu = new string[7];
+                goods[i].Target = new bool[7];
 
                 switch (i)
                 {
@@ -676,16 +668,91 @@ namespace STSH_OCR.Common
                 }
             }
 
+            // 発注対象ステータスを設定：2020/04/13
+            for (int i = 0; i < goods.Length; i++)
+            {
+                for (int iX = 0; iX < tenDates.Length; iX++)
+                {
+                    // 発注対象ステータス初期値：2020/04/20
+                    goods[i].Target[iX] = false;
+
+                    // 終売取消のときネグる
+                    if (goods[i].Syubai == global.SYUBAI_TORIKESHI)
+                    {
+                        continue;
+                    }
+
+                    // 空白の店着日はネグる
+                    if (tenDates[iX].Day == string.Empty)
+                    {
+                        continue;
+                    }
+
+                    // 昨日以前の店着日はネグる
+                    DateTime dt;
+                    if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out dt))
+                    {
+                        if (dt < DateTime.Today)
+                        {
+                            continue;
+                        }
+                    }
+
+                    int ss = Utility.StrtoInt(goods[i].Suu[iX]);
+
+                    // 発注あり：2020/04/13
+                    if (ss > 0)
+                    {
+                        // 注文済み（得意先、発注日、商品コード、数量同一）商品はネグる：2020/04/13
+                        string dd = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0');
+                        string syCD = goods[i].Code;
+                        if (tblHistories.Any(a => a.TokuisakiCD == r.TokuisakiCode && a.SyohinCD == goods[i].Code && a.OrderDate == dd && a.Suu == ss))
+                        {
+                            continue;
+                        }
+                    }
+
+                    // 発注対象ステータス：2020/04/20
+                    goods[i].Target[iX] = true;
+                }
+            }
+
             bool ha = false;
 
             //--------------------------------------------------------------------
-            //
+            //      エラーチェック：発注商品があるか？
+            //--------------------------------------------------------------------
+            bool dPage = false;
+
+            for (int i = 0; i < goods.Length; i++)
+            {
+                for (int iX = 0; iX < tenDates.Length; iX++)
+                {
+                    if (goods[i].Target[iX] && Utility.StrtoInt(goods[i].Suu[iX]) > 0)
+                    {
+                        dPage = true;
+                        break;
+                    }
+                }
+
+                if (dPage)
+                {
+                    break;
+                }
+            }
+
+            if (!dPage)
+            {
+                setErrStatus(eYearMonth, 0, "発注商品がありません");
+                return false;
+            }
+
+            //--------------------------------------------------------------------
             //      商品エラーチェック
-            //
             //--------------------------------------------------------------------
             for (int i = 0; i < 15; i++)
             {
-                if (!ChkShohin_NEW(goods, i, tenDates, out eMsg, out eNum))
+                if (!ChkShohin_NEW(goods, i, tenDates, tblHistories, out eMsg, out eNum, r.TokuisakiCode))
                 {
                     setErrStatus(eNum, i * 2 + 1, eMsg);
                     return false;
@@ -707,7 +774,7 @@ namespace STSH_OCR.Common
         ///     エラーなし：true, エラー有り：false</returns>
         ///-----------------------------------------------------------------------------------------------
         /// 
-        public Boolean errCheckData(ClsOrder r, Table<ClsOrderPattern> ptn)
+        public Boolean errCheckData(ClsOrder r, Table<ClsOrderPattern> ptn, Table<ClsOrderHistory> tblHistories)
         {
             int eNum = 0;
 
@@ -723,15 +790,6 @@ namespace STSH_OCR.Common
                 setErrStatus(eDataCheck, 0, "未確認の発注書です");
                 return false;
             }
-
-            //// 年月 : 2020/04/11 コメント化
-            //int rDate = r.Year * 100 + r.Month;
-            //int toDate = (DateTime.Today.Year * 100) + DateTime.Today.Month;
-            //if (rDate < toDate)
-            //{
-            //    setErrStatus(eYearMonth, 0, "年月が正しくありません");
-            //    return false;
-            //}
 
             if (r.Month < 1 || r.Month > 12)
             {
@@ -858,209 +916,289 @@ namespace STSH_OCR.Common
             //      商品発注明細クラス配列を作成
             //
             //--------------------------------------------------------------------
-            ClsGoods[] goods = new ClsGoods[15];
-            for (int i = 0; i < global.MAX_GYO; i++)
-            {
-                goods[i] = new ClsGoods();
-                goods[i].Suu = new string[7];
+            ClsGoods[] goods = Utility.SetGoodsTabla(r, tenDates, tblHistories);
 
-                switch (i)
-                {
-                    case 0:
-                        goods[i].Code = r.G_Code1;
-                        goods[i].Suu[0] = r.Goods1_1;
-                        goods[i].Suu[1] = r.Goods1_2;
-                        goods[i].Suu[2] = r.Goods1_3;
-                        goods[i].Suu[3] = r.Goods1_4;
-                        goods[i].Suu[4] = r.Goods1_5;
-                        goods[i].Suu[5] = r.Goods1_6;
-                        goods[i].Suu[6] = r.Goods1_7;
-                        goods[i].Syubai = r.G_Syubai1;
-                        break;
+            //　2020/04/12 コメント化
+            //ClsGoods[] goods = new ClsGoods[15];
+            //for (int i = 0; i < global.MAX_GYO; i++)
+            //{
+            //    goods[i] = new ClsGoods();
+            //    goods[i].Suu = new string[7];
+            //    goods[i].Target = new bool [7];
 
-                    case 1:
-                        goods[i].Code = r.G_Code2;
-                        goods[i].Suu[0] = r.Goods2_1;
-                        goods[i].Suu[1] = r.Goods2_2;
-                        goods[i].Suu[2] = r.Goods2_3;
-                        goods[i].Suu[3] = r.Goods2_4;
-                        goods[i].Suu[4] = r.Goods2_5;
-                        goods[i].Suu[5] = r.Goods2_6;
-                        goods[i].Suu[6] = r.Goods2_7;
-                        goods[i].Syubai = r.G_Syubai2;
-                        break;
+            //    switch (i)
+            //    {
+            //        case 0:
+            //            goods[i].Code = r.G_Code1;
+            //            goods[i].Suu[0] = r.Goods1_1;
+            //            goods[i].Suu[1] = r.Goods1_2;
+            //            goods[i].Suu[2] = r.Goods1_3;
+            //            goods[i].Suu[3] = r.Goods1_4;
+            //            goods[i].Suu[4] = r.Goods1_5;
+            //            goods[i].Suu[5] = r.Goods1_6;
+            //            goods[i].Suu[6] = r.Goods1_7;
+            //            goods[i].Syubai = r.G_Syubai1;
+            //            break;
 
-                    case 2:
-                        goods[i].Code = r.G_Code3;
-                        goods[i].Suu[0] = r.Goods3_1;
-                        goods[i].Suu[1] = r.Goods3_2;
-                        goods[i].Suu[2] = r.Goods3_3;
-                        goods[i].Suu[3] = r.Goods3_4;
-                        goods[i].Suu[4] = r.Goods3_5;
-                        goods[i].Suu[5] = r.Goods3_6;
-                        goods[i].Suu[6] = r.Goods3_7;
-                        goods[i].Syubai = r.G_Syubai3;
-                        break;
+            //        case 1:
+            //            goods[i].Code = r.G_Code2;
+            //            goods[i].Suu[0] = r.Goods2_1;
+            //            goods[i].Suu[1] = r.Goods2_2;
+            //            goods[i].Suu[2] = r.Goods2_3;
+            //            goods[i].Suu[3] = r.Goods2_4;
+            //            goods[i].Suu[4] = r.Goods2_5;
+            //            goods[i].Suu[5] = r.Goods2_6;
+            //            goods[i].Suu[6] = r.Goods2_7;
+            //            goods[i].Syubai = r.G_Syubai2;
+            //            break;
 
-                    case 3:
-                        goods[i].Code = r.G_Code4;
-                        goods[i].Suu[0] = r.Goods4_1;
-                        goods[i].Suu[1] = r.Goods4_2;
-                        goods[i].Suu[2] = r.Goods4_3;
-                        goods[i].Suu[3] = r.Goods4_4;
-                        goods[i].Suu[4] = r.Goods4_5;
-                        goods[i].Suu[5] = r.Goods4_6;
-                        goods[i].Suu[6] = r.Goods4_7;
-                        goods[i].Syubai = r.G_Syubai4;
-                        break;
+            //        case 2:
+            //            goods[i].Code = r.G_Code3;
+            //            goods[i].Suu[0] = r.Goods3_1;
+            //            goods[i].Suu[1] = r.Goods3_2;
+            //            goods[i].Suu[2] = r.Goods3_3;
+            //            goods[i].Suu[3] = r.Goods3_4;
+            //            goods[i].Suu[4] = r.Goods3_5;
+            //            goods[i].Suu[5] = r.Goods3_6;
+            //            goods[i].Suu[6] = r.Goods3_7;
+            //            goods[i].Syubai = r.G_Syubai3;
+            //            break;
 
-                    case 4:
-                        goods[i].Code = r.G_Code5;
-                        goods[i].Suu[0] = r.Goods5_1;
-                        goods[i].Suu[1] = r.Goods5_2;
-                        goods[i].Suu[2] = r.Goods5_3;
-                        goods[i].Suu[3] = r.Goods5_4;
-                        goods[i].Suu[4] = r.Goods5_5;
-                        goods[i].Suu[5] = r.Goods5_6;
-                        goods[i].Suu[6] = r.Goods5_7;
-                        goods[i].Syubai = r.G_Syubai5;
-                        break;
+            //        case 3:
+            //            goods[i].Code = r.G_Code4;
+            //            goods[i].Suu[0] = r.Goods4_1;
+            //            goods[i].Suu[1] = r.Goods4_2;
+            //            goods[i].Suu[2] = r.Goods4_3;
+            //            goods[i].Suu[3] = r.Goods4_4;
+            //            goods[i].Suu[4] = r.Goods4_5;
+            //            goods[i].Suu[5] = r.Goods4_6;
+            //            goods[i].Suu[6] = r.Goods4_7;
+            //            goods[i].Syubai = r.G_Syubai4;
+            //            break;
 
-                    case 5:
-                        goods[i].Code = r.G_Code6;
-                        goods[i].Suu[0] = r.Goods6_1;
-                        goods[i].Suu[1] = r.Goods6_2;
-                        goods[i].Suu[2] = r.Goods6_3;
-                        goods[i].Suu[3] = r.Goods6_4;
-                        goods[i].Suu[4] = r.Goods6_5;
-                        goods[i].Suu[5] = r.Goods6_6;
-                        goods[i].Suu[6] = r.Goods6_7;
-                        goods[i].Syubai = r.G_Syubai6;
-                        break;
+            //        case 4:
+            //            goods[i].Code = r.G_Code5;
+            //            goods[i].Suu[0] = r.Goods5_1;
+            //            goods[i].Suu[1] = r.Goods5_2;
+            //            goods[i].Suu[2] = r.Goods5_3;
+            //            goods[i].Suu[3] = r.Goods5_4;
+            //            goods[i].Suu[4] = r.Goods5_5;
+            //            goods[i].Suu[5] = r.Goods5_6;
+            //            goods[i].Suu[6] = r.Goods5_7;
+            //            goods[i].Syubai = r.G_Syubai5;
+            //            break;
 
-                    case 6:
-                        goods[i].Code = r.G_Code7;
-                        goods[i].Suu[0] = r.Goods7_1;
-                        goods[i].Suu[1] = r.Goods7_2;
-                        goods[i].Suu[2] = r.Goods7_3;
-                        goods[i].Suu[3] = r.Goods7_4;
-                        goods[i].Suu[4] = r.Goods7_5;
-                        goods[i].Suu[5] = r.Goods7_6;
-                        goods[i].Suu[6] = r.Goods7_7;
-                        goods[i].Syubai = r.G_Syubai7;
-                        break;
+            //        case 5:
+            //            goods[i].Code = r.G_Code6;
+            //            goods[i].Suu[0] = r.Goods6_1;
+            //            goods[i].Suu[1] = r.Goods6_2;
+            //            goods[i].Suu[2] = r.Goods6_3;
+            //            goods[i].Suu[3] = r.Goods6_4;
+            //            goods[i].Suu[4] = r.Goods6_5;
+            //            goods[i].Suu[5] = r.Goods6_6;
+            //            goods[i].Suu[6] = r.Goods6_7;
+            //            goods[i].Syubai = r.G_Syubai6;
+            //            break;
 
-                    case 7:
-                        goods[i].Code = r.G_Code8;
-                        goods[i].Suu[0] = r.Goods8_1;
-                        goods[i].Suu[1] = r.Goods8_2;
-                        goods[i].Suu[2] = r.Goods8_3;
-                        goods[i].Suu[3] = r.Goods8_4;
-                        goods[i].Suu[4] = r.Goods8_5;
-                        goods[i].Suu[5] = r.Goods8_6;
-                        goods[i].Suu[6] = r.Goods8_7;
-                        goods[i].Syubai = r.G_Syubai8;
-                        break;
+            //        case 6:
+            //            goods[i].Code = r.G_Code7;
+            //            goods[i].Suu[0] = r.Goods7_1;
+            //            goods[i].Suu[1] = r.Goods7_2;
+            //            goods[i].Suu[2] = r.Goods7_3;
+            //            goods[i].Suu[3] = r.Goods7_4;
+            //            goods[i].Suu[4] = r.Goods7_5;
+            //            goods[i].Suu[5] = r.Goods7_6;
+            //            goods[i].Suu[6] = r.Goods7_7;
+            //            goods[i].Syubai = r.G_Syubai7;
+            //            break;
 
-                    case 8:
-                        goods[i].Code = r.G_Code9;
-                        goods[i].Suu[0] = r.Goods9_1;
-                        goods[i].Suu[1] = r.Goods9_2;
-                        goods[i].Suu[2] = r.Goods9_3;
-                        goods[i].Suu[3] = r.Goods9_4;
-                        goods[i].Suu[4] = r.Goods9_5;
-                        goods[i].Suu[5] = r.Goods9_6;
-                        goods[i].Suu[6] = r.Goods9_7;
-                        goods[i].Syubai = r.G_Syubai9;
-                        break;
+            //        case 7:
+            //            goods[i].Code = r.G_Code8;
+            //            goods[i].Suu[0] = r.Goods8_1;
+            //            goods[i].Suu[1] = r.Goods8_2;
+            //            goods[i].Suu[2] = r.Goods8_3;
+            //            goods[i].Suu[3] = r.Goods8_4;
+            //            goods[i].Suu[4] = r.Goods8_5;
+            //            goods[i].Suu[5] = r.Goods8_6;
+            //            goods[i].Suu[6] = r.Goods8_7;
+            //            goods[i].Syubai = r.G_Syubai8;
+            //            break;
 
-                    case 9:
-                        goods[i].Code = r.G_Code10;
-                        goods[i].Suu[0] = r.Goods10_1;
-                        goods[i].Suu[1] = r.Goods10_2;
-                        goods[i].Suu[2] = r.Goods10_3;
-                        goods[i].Suu[3] = r.Goods10_4;
-                        goods[i].Suu[4] = r.Goods10_5;
-                        goods[i].Suu[5] = r.Goods10_6;
-                        goods[i].Suu[6] = r.Goods10_7;
-                        goods[i].Syubai = r.G_Syubai10;
-                        break;
+            //        case 8:
+            //            goods[i].Code = r.G_Code9;
+            //            goods[i].Suu[0] = r.Goods9_1;
+            //            goods[i].Suu[1] = r.Goods9_2;
+            //            goods[i].Suu[2] = r.Goods9_3;
+            //            goods[i].Suu[3] = r.Goods9_4;
+            //            goods[i].Suu[4] = r.Goods9_5;
+            //            goods[i].Suu[5] = r.Goods9_6;
+            //            goods[i].Suu[6] = r.Goods9_7;
+            //            goods[i].Syubai = r.G_Syubai9;
+            //            break;
 
-                    case 10:
-                        goods[i].Code = r.G_Code11;
-                        goods[i].Suu[0] = r.Goods11_1;
-                        goods[i].Suu[1] = r.Goods11_2;
-                        goods[i].Suu[2] = r.Goods11_3;
-                        goods[i].Suu[3] = r.Goods11_4;
-                        goods[i].Suu[4] = r.Goods11_5;
-                        goods[i].Suu[5] = r.Goods11_6;
-                        goods[i].Suu[6] = r.Goods11_7;
-                        goods[i].Syubai = r.G_Syubai11;
-                        break;
+            //        case 9:
+            //            goods[i].Code = r.G_Code10;
+            //            goods[i].Suu[0] = r.Goods10_1;
+            //            goods[i].Suu[1] = r.Goods10_2;
+            //            goods[i].Suu[2] = r.Goods10_3;
+            //            goods[i].Suu[3] = r.Goods10_4;
+            //            goods[i].Suu[4] = r.Goods10_5;
+            //            goods[i].Suu[5] = r.Goods10_6;
+            //            goods[i].Suu[6] = r.Goods10_7;
+            //            goods[i].Syubai = r.G_Syubai10;
+            //            break;
 
-                    case 11:
-                        goods[i].Code = r.G_Code12;
-                        goods[i].Suu[0] = r.Goods12_1;
-                        goods[i].Suu[1] = r.Goods12_2;
-                        goods[i].Suu[2] = r.Goods12_3;
-                        goods[i].Suu[3] = r.Goods12_4;
-                        goods[i].Suu[4] = r.Goods12_5;
-                        goods[i].Suu[5] = r.Goods12_6;
-                        goods[i].Suu[6] = r.Goods12_7;
-                        goods[i].Syubai = r.G_Syubai12;
-                        break;
+            //        case 10:
+            //            goods[i].Code = r.G_Code11;
+            //            goods[i].Suu[0] = r.Goods11_1;
+            //            goods[i].Suu[1] = r.Goods11_2;
+            //            goods[i].Suu[2] = r.Goods11_3;
+            //            goods[i].Suu[3] = r.Goods11_4;
+            //            goods[i].Suu[4] = r.Goods11_5;
+            //            goods[i].Suu[5] = r.Goods11_6;
+            //            goods[i].Suu[6] = r.Goods11_7;
+            //            goods[i].Syubai = r.G_Syubai11;
+            //            break;
 
-                    case 12:
-                        goods[i].Code = r.G_Code13;
-                        goods[i].Suu[0] = r.Goods13_1;
-                        goods[i].Suu[1] = r.Goods13_2;
-                        goods[i].Suu[2] = r.Goods13_3;
-                        goods[i].Suu[3] = r.Goods13_4;
-                        goods[i].Suu[4] = r.Goods13_5;
-                        goods[i].Suu[5] = r.Goods13_6;
-                        goods[i].Suu[6] = r.Goods13_7;
-                        goods[i].Syubai = r.G_Syubai13;
-                        break;
+            //        case 11:
+            //            goods[i].Code = r.G_Code12;
+            //            goods[i].Suu[0] = r.Goods12_1;
+            //            goods[i].Suu[1] = r.Goods12_2;
+            //            goods[i].Suu[2] = r.Goods12_3;
+            //            goods[i].Suu[3] = r.Goods12_4;
+            //            goods[i].Suu[4] = r.Goods12_5;
+            //            goods[i].Suu[5] = r.Goods12_6;
+            //            goods[i].Suu[6] = r.Goods12_7;
+            //            goods[i].Syubai = r.G_Syubai12;
+            //            break;
 
-                    case 13:
-                        goods[i].Code = r.G_Code14;
-                        goods[i].Suu[0] = r.Goods14_1;
-                        goods[i].Suu[1] = r.Goods14_2;
-                        goods[i].Suu[2] = r.Goods14_3;
-                        goods[i].Suu[3] = r.Goods14_4;
-                        goods[i].Suu[4] = r.Goods14_5;
-                        goods[i].Suu[5] = r.Goods14_6;
-                        goods[i].Suu[6] = r.Goods14_7;
-                        goods[i].Syubai = r.G_Syubai14;
-                        break;
+            //        case 12:
+            //            goods[i].Code = r.G_Code13;
+            //            goods[i].Suu[0] = r.Goods13_1;
+            //            goods[i].Suu[1] = r.Goods13_2;
+            //            goods[i].Suu[2] = r.Goods13_3;
+            //            goods[i].Suu[3] = r.Goods13_4;
+            //            goods[i].Suu[4] = r.Goods13_5;
+            //            goods[i].Suu[5] = r.Goods13_6;
+            //            goods[i].Suu[6] = r.Goods13_7;
+            //            goods[i].Syubai = r.G_Syubai13;
+            //            break;
 
-                    case 14:
-                        goods[i].Code = r.G_Code15;
-                        goods[i].Suu[0] = r.Goods15_1;
-                        goods[i].Suu[1] = r.Goods15_2;
-                        goods[i].Suu[2] = r.Goods15_3;
-                        goods[i].Suu[3] = r.Goods15_4;
-                        goods[i].Suu[4] = r.Goods15_5;
-                        goods[i].Suu[5] = r.Goods15_6;
-                        goods[i].Suu[6] = r.Goods15_7;
-                        goods[i].Syubai = r.G_Syubai15;
-                        break;
+            //        case 13:
+            //            goods[i].Code = r.G_Code14;
+            //            goods[i].Suu[0] = r.Goods14_1;
+            //            goods[i].Suu[1] = r.Goods14_2;
+            //            goods[i].Suu[2] = r.Goods14_3;
+            //            goods[i].Suu[3] = r.Goods14_4;
+            //            goods[i].Suu[4] = r.Goods14_5;
+            //            goods[i].Suu[5] = r.Goods14_6;
+            //            goods[i].Suu[6] = r.Goods14_7;
+            //            goods[i].Syubai = r.G_Syubai14;
+            //            break;
 
-                    default:
-                        break;
-                }
-            }
+            //        case 14:
+            //            goods[i].Code = r.G_Code15;
+            //            goods[i].Suu[0] = r.Goods15_1;
+            //            goods[i].Suu[1] = r.Goods15_2;
+            //            goods[i].Suu[2] = r.Goods15_3;
+            //            goods[i].Suu[3] = r.Goods15_4;
+            //            goods[i].Suu[4] = r.Goods15_5;
+            //            goods[i].Suu[5] = r.Goods15_6;
+            //            goods[i].Suu[6] = r.Goods15_7;
+            //            goods[i].Syubai = r.G_Syubai15;
+            //            break;
+
+            //        default:
+            //            break;
+            //    }
+            //}
+
+            //// 発注対象ステータスを設定：2020/04/13
+            //for (int i = 0; i < goods.Length; i++)
+            //{
+            //    for (int iX = 0; iX < tenDates.Length; iX++)
+            //    {
+            //        // 発注対象ステータス初期値：2020/04/20
+            //        goods[i].Target[iX] = false;
+
+            //        // 終売取消のときネグる
+            //        if (goods[i].Syubai == global.SYUBAI_TORIKESHI)
+            //        {
+            //            continue;
+            //        }
+
+            //        // 空白の店着日はネグる
+            //        if (tenDates[iX].Day == string.Empty)
+            //        {
+            //            continue;
+            //        }
+
+            //        // 昨日以前の店着日はネグる
+            //        DateTime dt;
+            //        if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out dt))
+            //        {
+            //            if (dt < DateTime.Today)
+            //            {
+            //                continue;
+            //            }
+            //        }
+
+            //        int ss = Utility.StrtoInt(goods[i].Suu[iX]);
+
+            //        // 発注あり：2020/04/13
+            //        if (ss > 0)
+            //        {
+            //            // 注文済み（得意先、発注日、商品コード、数量同一）商品はネグる：2020/04/13
+            //            string dd = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0');
+            //            string syCD = goods[i].Code;
+            //            if (tblHistories.Any(a => a.TokuisakiCD == r.TokuisakiCode && a.SyohinCD == goods[i].Code && a.OrderDate == dd && a.Suu == ss))
+            //            {
+            //                continue;
+            //            }
+            //        }
+
+            //        // 発注対象ステータス：2020/04/20
+            //        goods[i].Target[iX] = true;
+            //    }
+            //}
+
 
             bool ha = false;
 
             //--------------------------------------------------------------------
-            //
+            //      エラーチェック：発注商品があるか？
+            //--------------------------------------------------------------------
+            bool dPage = false;
+
+            for (int i = 0; i < goods.Length; i++)
+            {
+                for (int iX = 0; iX < tenDates.Length; iX++)
+                {
+                    if (goods[i].Target[iX] && Utility.StrtoInt(goods[i].Suu[iX]) > 0)
+                    {
+                        dPage = true;
+                        break;
+                    }
+                }
+
+                if (dPage)
+                {
+                    break;
+                }
+            }
+
+            if (!dPage)
+            {
+                setErrStatus(eYearMonth, 0, "発注商品がありません");
+                return false;
+            }
+
+            //--------------------------------------------------------------------
             //      商品エラーチェック
-            //
             //--------------------------------------------------------------------
             for (int i = 0; i < 15; i++)
             {
-                if (!ChkShohin_NEW(goods, i, tenDates, out eMsg, out eNum))
+                if (!ChkShohin_NEW(goods, i, tenDates, tblHistories, out eMsg, out eNum, r.TokuisakiCode))
                 {
                     setErrStatus(eNum, i * 2 + 1, eMsg);
                     return false;
@@ -1069,53 +1207,6 @@ namespace STSH_OCR.Common
 
             return true;
         }
-
-
-        ///------------------------------------------------------------
-        /// <summary>
-        ///     商品コード検証 </summary>
-        /// <param name="G_Code">
-        ///     商品コード</param>
-        /// <param name="G_Syubai">
-        ///     終売処理</param>
-        /// <param name="eMsg">
-        ///     エラーメッセージ</param>
-        /// <param name="eNum">
-        ///     エラー箇所</param>
-        /// <param name="ha">
-        ///     発注の有無　true:発注あり, false:発注なし</param>
-        /// <returns>
-        ///     エラーなし：true, エラー有り：false</returns>
-        ///------------------------------------------------------------
-
-        //private bool ChkShohin(string G_Code, int G_Syubai, out string eMsg, out int eNum, bool ha)
-        //{
-            //// 商品コードマスター登録チェック
-            //ClsCsvData.ClsCsvSyohin syohin = Utility.GetSyohinData(G_Code);
-
-            //// 商品マスター未登録
-            //if (syohin.SYOHIN_CD == string.Empty)
-            //{
-            //    eNum = eHinCode;
-            //    eMsg = "マスター未登録または削除済みの商品です";
-            //    return false;
-            //}
-
-            //// 終売で発注ありのとき
-            //if (syohin.SHUBAI && ha)
-            //{
-            //    if (G_Syubai == global.flgOff)
-            //    {
-            //        eNum = eShubai;
-            //        eMsg = "該当商品は終売です。終売処理を選択してください";
-            //        return false;
-            //    }
-            //}
-
-            //eNum = global.flgOff;
-            //eMsg = "";
-            //return true;
-        //}
 
         ///-----------------------------------------------------------------------------------
         /// <summary>
@@ -1133,7 +1224,7 @@ namespace STSH_OCR.Common
         /// <returns>
         ///     検証結果 true:エラーなし, false:エラーあり</returns>
         ///-----------------------------------------------------------------------------------
-        private bool ChkShohin_NEW(ClsGoods[] Goods, int iX, ClsTenDate [] tenDates, out string eMsg, out int eNum)
+        private bool ChkShohin_NEW(ClsGoods[] Goods, int iX, ClsTenDate [] tenDates, Table<ClsOrderHistory> tblHistories, out string eMsg, out int eNum, int tokuisakiCD)
         {
             bool ha = false;
 
@@ -1145,23 +1236,43 @@ namespace STSH_OCR.Common
                 return true;
             }
 
-            // 発注の有無を調べる
+            // エラーチェックの有無、発注の有無を調べる
             for (int i = 0; i < 7; i++)
             {
-                // 空白の店着日はネグる
-                if (tenDates[i].Day == string.Empty)
+                //// 空白の店着日はネグる
+                //if (tenDates[i].Day == string.Empty)
+                //{
+                //    continue;
+                //}
+
+                //// 昨日以前の店着日はネグる
+                //DateTime dt;
+                //if (DateTime.TryParse(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day, out dt))
+                //{
+                //    if (dt < DateTime.Today)
+                //    {
+                //        continue;
+                //    }
+                //}
+
+                //int ss = Utility.StrtoInt(Goods[iX].Suu[i]);
+
+                //// 発注あり：2020/04/13
+                //if (ss > 0)
+                //{
+                //    // 注文済み（得意先、発注日、商品コード、数量同一）商品はネグる：2020/04/13
+                //    string dd = tenDates[i].Year + tenDates[i].Month.PadLeft(2, '0') + tenDates[i].Day.PadLeft(2, '0');
+                //    string syCD = Goods[iX].Code;
+                //    if (tblHistories.Any(a => a.TokuisakiCD == tokuisakiCD && a.SyohinCD == Goods[iX].Code && a.OrderDate == dd && a.Suu == ss))
+                //    {
+                //        continue;
+                //    }
+                //}
+
+                // 対象ステータスで判断：2020/04/13
+                if (!Goods[iX].Target[i])
                 {
                     continue;
-                }
-
-                // 昨日以前の店着日はネグる
-                DateTime dt;
-                if (DateTime.TryParse(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day, out dt))
-                {
-                    if (dt < DateTime.Today)
-                    {
-                        continue;
-                    }
                 }
 
                 if (Utility.StrtoInt(Goods[iX].Suu[i]) != global.flgOff)
@@ -1172,8 +1283,7 @@ namespace STSH_OCR.Common
                 }
             }
 
-            // 発注なしのときはネグる
-            //if (Goods[iX].Code == string.Empty && !ha) // 2020/04/02 コメント化
+            // 発注なしのときはエラーなし
             if (!ha)
             {
                 eNum = global.flgOff;
@@ -1219,20 +1329,41 @@ namespace STSH_OCR.Common
             int Read = 0;
             for (int i = 0; i < 7; i++)
             {
-                // 空白の店着日はネグる
-                if (tenDates[i].Day == string.Empty)
+                // コメント化：2020/04/13
+                //// 空白の店着日はネグる
+                //if (tenDates[i].Day == string.Empty)
+                //{
+                //    continue;
+                //}
+
+                //// 昨日以前の店着日はネグる
+                //DateTime dt;
+                //if (DateTime.TryParse(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day, out dt))
+                //{
+                //    if (dt < DateTime.Today)
+                //    {
+                //        continue;
+                //    }
+                //}
+
+                //int ss = Utility.StrtoInt(Goods[iX].Suu[i]);
+
+                //// 発注あり：2020/04/13
+                //if (ss > 0)
+                //{
+                //    // 注文済み（得意先、発注日、商品コード、数量同一）商品はネグる：2020/04/13
+                //    string dd = tenDates[i].Year + tenDates[i].Month.PadLeft(2, '0') + tenDates[i].Day.PadLeft(2, '0');
+                //    string syCD = Goods[iX].Code;
+                //    if (tblHistories.Any(a => a.TokuisakiCD == tokuisakiCD && a.SyohinCD == Goods[iX].Code && a.OrderDate == dd && a.Suu == ss))
+                //    {
+                //        continue;
+                //    }
+                //}
+
+                // 対象ステータスで判断：2020/04/13
+                if (!Goods[iX].Target[i])
                 {
                     continue;
-                }
-
-                // 昨日以前の店着日はネグる
-                DateTime dt;
-                if (DateTime.TryParse(tenDates[i].Year + "/" + tenDates[i].Month + "/" + tenDates[i].Day, out dt))
-                {
-                    if (dt < DateTime.Today)
-                    {
-                        continue;
-                    }
                 }
 
                 if (Utility.StrtoInt(Goods[iX].Suu[i]) != global.flgOff)

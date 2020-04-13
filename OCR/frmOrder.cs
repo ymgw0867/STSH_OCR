@@ -1210,7 +1210,7 @@ namespace STSH_OCR.OCR
             ocr._errMsg = string.Empty;
 
             // エラーチェック実行①:カレントレコードから最終レコードまで
-            if (!ocr.errCheckMain(sID, tblOrder, tblPtn))
+            if (!ocr.errCheckMain(sID, tblOrder, tblPtn, tblOrderHistories))
             {
                 return false;
             }
