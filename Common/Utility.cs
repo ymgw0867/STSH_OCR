@@ -766,7 +766,18 @@ namespace STSH_OCR.Common
             return DirNM;
         }
 
-
+        ///---------------------------------------------------------------------------
+        /// <summary>
+        ///     商品明細クラス作成 </summary>
+        /// <param name="r">
+        ///     ClsOrder </param>
+        /// <param name="tenDates">
+        ///     店着日配列</param>
+        /// <param name="tblHistories">
+        ///     商品発注履歴テーブル</param>
+        /// <returns>
+        ///     商品明細クラス配列</returns>
+        ///---------------------------------------------------------------------------
         public static ClsGoods [] SetGoodsTabla(ClsOrder r, ClsTenDate [] tenDates, Table<ClsOrderHistory> tblHistories)
         {
             ClsGoods[] goods = new ClsGoods[15];
@@ -787,6 +798,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods1_5;
                         goods[i].Suu[5] = r.Goods1_6;
                         goods[i].Suu[6] = r.Goods1_7;
+                        goods[i].Nouka = r.G_Nouka1;
+                        goods[i].Baika = r.G_Baika1;
                         goods[i].Syubai = r.G_Syubai1;
                         break;
 
@@ -799,6 +812,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods2_5;
                         goods[i].Suu[5] = r.Goods2_6;
                         goods[i].Suu[6] = r.Goods2_7;
+                        goods[i].Nouka = r.G_Nouka2;
+                        goods[i].Baika = r.G_Baika2;
                         goods[i].Syubai = r.G_Syubai2;
                         break;
 
@@ -811,6 +826,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods3_5;
                         goods[i].Suu[5] = r.Goods3_6;
                         goods[i].Suu[6] = r.Goods3_7;
+                        goods[i].Nouka = r.G_Nouka3;
+                        goods[i].Baika = r.G_Baika3;
                         goods[i].Syubai = r.G_Syubai3;
                         break;
 
@@ -823,6 +840,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods4_5;
                         goods[i].Suu[5] = r.Goods4_6;
                         goods[i].Suu[6] = r.Goods4_7;
+                        goods[i].Nouka = r.G_Nouka4;
+                        goods[i].Baika = r.G_Baika4;
                         goods[i].Syubai = r.G_Syubai4;
                         break;
 
@@ -835,6 +854,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods5_5;
                         goods[i].Suu[5] = r.Goods5_6;
                         goods[i].Suu[6] = r.Goods5_7;
+                        goods[i].Nouka = r.G_Nouka5;
+                        goods[i].Baika = r.G_Baika5;
                         goods[i].Syubai = r.G_Syubai5;
                         break;
 
@@ -847,6 +868,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods6_5;
                         goods[i].Suu[5] = r.Goods6_6;
                         goods[i].Suu[6] = r.Goods6_7;
+                        goods[i].Nouka = r.G_Nouka6;
+                        goods[i].Baika = r.G_Baika6;
                         goods[i].Syubai = r.G_Syubai6;
                         break;
 
@@ -859,6 +882,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods7_5;
                         goods[i].Suu[5] = r.Goods7_6;
                         goods[i].Suu[6] = r.Goods7_7;
+                        goods[i].Nouka = r.G_Nouka7;
+                        goods[i].Baika = r.G_Baika7;
                         goods[i].Syubai = r.G_Syubai7;
                         break;
 
@@ -871,6 +896,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods8_5;
                         goods[i].Suu[5] = r.Goods8_6;
                         goods[i].Suu[6] = r.Goods8_7;
+                        goods[i].Nouka = r.G_Nouka8;
+                        goods[i].Baika = r.G_Baika8;
                         goods[i].Syubai = r.G_Syubai8;
                         break;
 
@@ -883,6 +910,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods9_5;
                         goods[i].Suu[5] = r.Goods9_6;
                         goods[i].Suu[6] = r.Goods9_7;
+                        goods[i].Nouka = r.G_Nouka9;
+                        goods[i].Baika = r.G_Baika9;
                         goods[i].Syubai = r.G_Syubai9;
                         break;
 
@@ -895,6 +924,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods10_5;
                         goods[i].Suu[5] = r.Goods10_6;
                         goods[i].Suu[6] = r.Goods10_7;
+                        goods[i].Nouka = r.G_Nouka10;
+                        goods[i].Baika = r.G_Baika10;
                         goods[i].Syubai = r.G_Syubai10;
                         break;
 
@@ -907,6 +938,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods11_5;
                         goods[i].Suu[5] = r.Goods11_6;
                         goods[i].Suu[6] = r.Goods11_7;
+                        goods[i].Nouka = r.G_Nouka11;
+                        goods[i].Baika = r.G_Baika11;
                         goods[i].Syubai = r.G_Syubai11;
                         break;
 
@@ -919,6 +952,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods12_5;
                         goods[i].Suu[5] = r.Goods12_6;
                         goods[i].Suu[6] = r.Goods12_7;
+                        goods[i].Nouka = r.G_Nouka12;
+                        goods[i].Baika = r.G_Baika12;
                         goods[i].Syubai = r.G_Syubai12;
                         break;
 
@@ -931,6 +966,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods13_5;
                         goods[i].Suu[5] = r.Goods13_6;
                         goods[i].Suu[6] = r.Goods13_7;
+                        goods[i].Nouka = r.G_Nouka13;
+                        goods[i].Baika = r.G_Baika13;
                         goods[i].Syubai = r.G_Syubai13;
                         break;
 
@@ -943,6 +980,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods14_5;
                         goods[i].Suu[5] = r.Goods14_6;
                         goods[i].Suu[6] = r.Goods14_7;
+                        goods[i].Nouka = r.G_Nouka14;
+                        goods[i].Baika = r.G_Baika14;
                         goods[i].Syubai = r.G_Syubai14;
                         break;
 
@@ -955,6 +994,8 @@ namespace STSH_OCR.Common
                         goods[i].Suu[4] = r.Goods15_5;
                         goods[i].Suu[5] = r.Goods15_6;
                         goods[i].Suu[6] = r.Goods15_7;
+                        goods[i].Nouka = r.G_Nouka15;
+                        goods[i].Baika = r.G_Baika15;
                         goods[i].Syubai = r.G_Syubai15;
                         break;
 
@@ -1013,6 +1054,146 @@ namespace STSH_OCR.Common
             }
 
             return goods;
+        }
+
+
+        ///-------------------------------------------------------------------
+        /// <summary>
+        ///     注文済み商品表示コントロール </summary>
+        /// <param name="iX">
+        ///     tenDate配列指標 </param>
+        /// <param name="col">
+        ///     データグリッド発注数カラムインデックス</param>
+        /// <param name="row">
+        ///     データグリッド行インデックス</param>
+        ///-------------------------------------------------------------------
+        public static void ShowPastOrder(int iX, int col, int row, ClsTenDate [] tenDates, DataGridView dg1, string colHinCode, string colSyubai, string tkCD, Table<ClsOrderHistory> tblOrderHistories)
+        {
+            if (tenDates[0] == null)
+            {
+                return;
+            }
+
+            // 終売取消以外で
+            if (Utility.NulltoStr(dg1[colSyubai, row].Value) != global.SyubaiArray[1])
+            {
+                // 空白日付以外で
+                if (tenDates[iX].Year != string.Empty)
+                {
+                    DateTime cdt;
+                    if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out cdt))
+                    {
+                        // 昨日以前も対象外、当日以降で
+                        if (cdt >= DateTime.Today)
+                        {
+                            // 文字色と背景色を標準に戻す
+                            dg1[col, row].Style.ForeColor = SystemColors.ControlText;
+                            dg1[col, row].ReadOnly = false;     // 2020/04/13
+
+                            if (row % 4 == 1)
+                            {
+                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.White;
+                                dg1.Rows[row].Cells[col].Style.BackColor = Color.White;
+                            }
+                            else
+                            {
+                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.Lavender;
+                                dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
+                            }
+
+                            int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[col, row].Value));    // 発注数
+
+                            // 発注があるとき
+                            if (Suu > 0)
+                            {
+                                string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
+                                string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
+
+                                System.Diagnostics.Debug.WriteLine("得:" + tkCD + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
+
+                                // 得意先毎に同じ商品が同じ日に注文済み
+                                foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(tkCD) && a.SyohinCD == syCd && a.OrderDate == dt))
+                                {
+                                    dg1[col, row].ReadOnly = false;
+                                    dg1[col, row].Style.ForeColor = Color.Red;
+                                    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
+                                    dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
+
+                                    if (t.Suu == Suu)
+                                    {
+                                        // 発注数も一致
+                                        dg1[col, row].ReadOnly = true;
+                                        dg1[col, row].Style.ForeColor = Color.LightGray;
+                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
+
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        //// 発注数は不一致
+                                        //dg1[col, row].ReadOnly = false;
+                                        //dg1[col, row].Style.ForeColor = Color.Red;
+                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        ///------------------------------------------------------------------
+        /// <summary>
+        ///     注文済み商品ありメッセージのコントロール </summary>
+        ///------------------------------------------------------------------
+        public static string ShowPastOrderMessage(DataGridView dg1)
+        {
+            bool msgStatus = false;
+
+            // 注文済み商品ありメッセージのコントロール
+            string label1 = "";
+            for (int i = 6; i <= 12; i++)
+            {
+                for (int r = 0; r < dg1.RowCount; r++)
+                {
+                    if (dg1.Rows[r].Cells[i].Style.BackColor == Color.MistyRose)
+                    {
+                        label1 = "注文済商品 ①発注数同じ：グレー、ロック済・発注書データ対象外、②発注数違い：赤、編集可・発注書データ作成";
+                        msgStatus = true;
+                        break;
+                    }
+                }
+
+                if (msgStatus)
+                {
+                    break;
+                }
+            }
+
+            return label1;
+        }
+
+        ///-------------------------------------------------------------------------------
+        /// <summary>
+        ///     指定したファイルをロックせずに、System.Drawing.Imageを作成する。</summary>
+        /// <param name="filename">
+        ///     作成元のファイルのパス</param>
+        /// <returns>
+        ///     作成したSystem.Drawing.Image。</returns>
+        ///-------------------------------------------------------------------------------
+        public static System.Drawing.Image CreateImage(string filename)
+        {
+            System.IO.FileStream fs = new System.IO.FileStream(
+                filename,
+                System.IO.FileMode.Open,
+                System.IO.FileAccess.Read);
+
+            System.Drawing.Image img = System.Drawing.Image.FromStream(fs);
+
+            fs.Close();
+            return img;
+
         }
     }
 }

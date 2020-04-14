@@ -91,22 +91,6 @@ namespace STSH_OCR.OCR
                         lblWarning.Visible = true;
                     }
 
-                    // 画像表示
-                    _img = Utility.GetImageFilePath(Config.ImgPath, dataReader["得意先コード"].ToString().PadLeft(7, '0')) + @"\" + dataReader["画像名"].ToString();
-                   
-                    if (System.IO.File.Exists(_img))
-                    {
-                        showImage_openCv(_img);
-                        trackBar1.Enabled = true;
-                        btnLeft.Enabled = true;
-                    }
-                    else
-                    {
-                        pictureBox1.Image = null;
-                        trackBar1.Enabled = false;
-                        btnLeft.Enabled = false;
-                    }
-
                     // ヘッダ情報
                     txtYear.Text = dataReader["年"].ToString();
                     txtMonth.Text = dataReader["月"].ToString();
@@ -132,6 +116,23 @@ namespace STSH_OCR.OCR
                     // FAX発注書データ表示
                     showItem(dataReader, dg1);
 
+                    // 画像表示
+                    _img = Utility.GetImageFilePath(Config.ImgPath, dataReader["得意先コード"].ToString().PadLeft(7, '0')) + @"\" + dataReader["画像名"].ToString();
+
+                    if (System.IO.File.Exists(_img))
+                    {
+                        //showImage_openCv(_img);
+                        imgShow(_img);  // 2020/04/14
+                        trackBar1.Enabled = true;
+                        btnLeft.Enabled = true;
+                    }
+                    else
+                    {
+                        pictureBox1.Image = null;
+                        trackBar1.Enabled = false;
+                        btnLeft.Enabled = false;
+                    }
+
                     // エラー情報表示初期化
                     lblErrMsg.Visible = false;
                     lblErrMsg.Text = string.Empty;
@@ -154,8 +155,20 @@ namespace STSH_OCR.OCR
 
                 for (int r = 1; r < dg1.RowCount; r += 2)
                 {
-                    ShowPastOrder(i, col, r);
+                    // 2020/04/13
+                    Utility.ShowPastOrder(i, col, r, tenDates, dg1, colHinCode, colSyubai, txtTokuisakiCD.Text, tblOrderHistories);
                 }
+            }
+
+            // 2020/04/13
+            label6.Text = Utility.ShowPastOrderMessage(dg1);
+            if (label6.Text != string.Empty)
+            {
+                label1.Text = "注文済み商品があります";
+            }
+            else
+            {
+                label1.Text = "";
             }
 
             // ログ書き込み状態とする
@@ -164,122 +177,6 @@ namespace STSH_OCR.OCR
             Cursor = Cursors.Default;
 
             PtnShowStatus = true;  // 2020/04/12
-        }
-
-        ///-------------------------------------------------------------------
-        /// <summary>
-        ///     注文済み商品表示コントロール </summary>
-        /// <param name="iX">
-        ///     tenDate配列指標 </param>
-        /// <param name="col">
-        ///     データグリッド発注数カラムインデックス</param>
-        /// <param name="row">
-        ///     データグリッド行インデックス</param>
-        ///-------------------------------------------------------------------
-        private void ShowPastOrder(int iX, int col, int row)
-        {
-            if (tenDates[0] == null)
-            {
-                return;
-            }
-
-            // 終売取消以外で
-            if (Utility.NulltoStr(dg1[colSyubai, row].Value) != global.SyubaiArray[1])
-            {
-                // 空白日付以外で
-                if (tenDates[iX].Year != string.Empty)
-                {
-                    DateTime cdt;
-                    if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out cdt))
-                    {
-                        // 昨日以前も対象外、当日以降で
-                        if (cdt >= DateTime.Today)
-                        {
-                            // 文字色と背景色を標準に戻す
-                            dg1[col, row].Style.ForeColor = SystemColors.ControlText;
-
-                            if (row % 4 == 1)
-                            {
-                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.White;
-                                dg1.Rows[row].Cells[col].Style.BackColor = Color.White;
-                            }
-                            else
-                            {
-                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.Lavender;
-                                dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
-                            }
-
-                            int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[col, row].Value));    // 発注数
-
-                            // 発注があるとき
-                            if (Suu > 0)
-                            {
-                                string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
-                                string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
-
-                                System.Diagnostics.Debug.WriteLine("得:" + txtTokuisakiCD.Text + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
-
-                                // 得意先毎に同じ商品が同じ日に注文済み
-                                foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
-                                {
-                                    dg1[col, row].ReadOnly = false;
-                                    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                    dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
-
-                                    if (t.Suu == Suu)
-                                    {
-                                        // 発注数も一致
-                                        dg1[col, row].ReadOnly = true;
-                                        dg1[col, row].Style.ForeColor = Color.LightGray;
-                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
-                                    }
-                                    else
-                                    {
-                                        // 発注数は不一致
-                                        dg1[col, row].ReadOnly = false;
-                                        dg1[col, row].Style.ForeColor = Color.Red;
-                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
-                                    }
-
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 注文済み商品ありメッセージのコントロール
-            ShowPastOrderMessage();
-        }
-
-        ///------------------------------------------------------------------
-        /// <summary>
-        ///     注文済み商品ありメッセージのコントロール </summary>
-        ///------------------------------------------------------------------
-        private void ShowPastOrderMessage()
-        {
-            bool msgStatus = false;
-
-            // 注文済み商品ありメッセージのコントロール
-            label1.Text = "";
-            for (int i = 6; i <= 12; i++)
-            {
-                for (int r = 0; r < dg1.RowCount; r++)
-                {
-                    if (dg1.Rows[r].Cells[i].Style.BackColor == Color.MistyRose)
-                    {
-                        label1.Text = "注文済商品があります ①発注数同じ：ロック済で発注書データ対象外、②発注数違い：編集可・発注書データ作成";
-                        msgStatus = true;
-                        break;
-                    }
-                }
-
-                if (msgStatus)
-                {
-                    break;
-                }
-            }
         }
 
         ///------------------------------------------------------------------------
@@ -1055,6 +952,7 @@ namespace STSH_OCR.OCR
             checkBox1.BackColor = SystemColors.Control;
 
             label1.Text = string.Empty;
+            label6.Text = string.Empty;
 
             txtYear.ForeColor = global.defaultColor;
             txtMonth.ForeColor = global.defaultColor;

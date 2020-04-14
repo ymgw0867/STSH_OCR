@@ -39,6 +39,48 @@ namespace STSH_OCR.OCR
             //fAdp.Fill(dtsC.FAX注文書);
         }
 
+        private void CheckSameFAX(int TkCD, int sYear, int sMonth, int PtID, int Seq, string sID)
+        {
+            string sDay = sID.Substring(0, 8);
+            int cc = 0;
+            lblWarning.Visible = false;
+
+            // 同じ発注書が存在するとき：Fax発注書
+            foreach (var t in tblFaxCheck.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
+                                                     a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
+            {
+                cc++;
+            }
+
+            if (cc > 0)
+            {
+                lblWarning.Text = "同じ発注書が他に" + cc + "件あります。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
+                                 "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
+
+                lblWarning.Visible = true;
+            }
+
+            cc = 0;
+
+            // 同じ発注書が存在するとき：発注書データ
+            foreach (var t in tblOrder.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
+                                                     a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
+            {
+                cc++;
+            }
+
+            if (cc > 0)
+            {
+                lblWarning.Text = "発注書データに" + cc + "件、登録済みです。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
+                                 "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
+
+                lblWarning.Visible = true;
+            }
+        }
+
+
+
+
         ///------------------------------------------------------------------------------------
         /// <summary>
         ///     データを画面に表示します </summary>
@@ -81,65 +123,41 @@ namespace STSH_OCR.OCR
                     int Seq = Utility.StrtoInt(dataReader["SeqNumber"].ToString());
 
                     string sDay = dataReader["ID"].ToString().Substring(0, 8);
-                    int cc = 0;
 
-                    // 同じ発注書が存在するとき：Fax発注書
-                    foreach (var t in tblFaxCheck.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
-                                                             a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
-                    {
-                        cc++;
+                    // コメント化：2020/04/14
+                    //int cc = 0;
 
-                        //if (t.ID.Contains(sDay))
-                        //{
-                        //    cc++;
-                        //}
-                    }
+                    //// 同じ発注書が存在するとき：Fax発注書
+                    //foreach (var t in tblFaxCheck.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
+                    //                                         a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
+                    //{
+                    //    cc++;
+                    //}
 
-                    if (cc > 0)
-                    {
-                        lblWarning.Text = "同じ発注書が他に" + cc + "件あります。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
-                                         "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
+                    //if (cc > 0)
+                    //{
+                    //    lblWarning.Text = "同じ発注書が他に" + cc + "件あります。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
+                    //                     "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
 
-                        lblWarning.Visible = true;
-                    }
+                    //    lblWarning.Visible = true;
+                    //}
 
-                    cc = 0;
+                    //cc = 0;
 
-                    // 同じ発注書が存在するとき：発注書データ
-                    foreach (var t in tblOrder.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
-                                                             a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
-                    {
-                        cc++;
+                    //// 同じ発注書が存在するとき：発注書データ
+                    //foreach (var t in tblOrder.Where(a => a.TokuisakiCode == TkCD && a.Year == sYear && a.Month == sMonth &&
+                    //                                         a.patternID == PtID && a.SeqNumber == Seq && a.ID != sID))
+                    //{
+                    //    cc++;
+                    //}
 
-                        //if (t.ID.Contains(sDay))
-                        //{
-                        //    cc++;
-                        //}
-                    }
+                    //if (cc > 0)
+                    //{
+                    //    lblWarning.Text = "発注書データに" + cc + "件、登録済みです。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
+                    //                     "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
 
-                    if (cc > 0)
-                    {
-                        lblWarning.Text = "発注書データに" + cc + "件、登録済みです。 得意先：" + TkCD + "　発注書番号：" + PtID.ToString("D3") + Seq.ToString("D2") +
-                                         "　年月：" + sYear + sMonth.ToString("D2") + "　受信日：" + sDay.Substring(0, 4) + "/" + sDay.Substring(4, 2) + "/" + sDay.Substring(6, 2);
-
-                        lblWarning.Visible = true;
-                    }
-
-                    // 画像表示
-                    _img = Properties.Settings.Default.MyDataPath + dataReader["画像名"].ToString();
-
-                    if (System.IO.File.Exists(_img))
-                    {
-                        showImage_openCv(_img);
-                        trackBar1.Enabled = true;
-                        btnLeft.Enabled = true;
-                    }
-                    else
-                    {
-                        pictureBox1.Image = null;
-                        trackBar1.Enabled = false;
-                        btnLeft.Enabled = false;
-                    }                    
+                    //    lblWarning.Visible = true;
+                    //}              
 
                     // ヘッダ情報
                     txtYear.Text = dataReader["年"].ToString();
@@ -166,6 +184,24 @@ namespace STSH_OCR.OCR
                     // FAX発注書データ表示
                     showItem(dataReader, dg1);
 
+                    // 画像表示
+                    _img = Properties.Settings.Default.MyDataPath + dataReader["画像名"].ToString();
+
+                    if (System.IO.File.Exists(_img))
+                    {
+                        //showImage_openCv(_img);
+
+                        imgShow(_img);
+                        trackBar1.Enabled = true;
+                        btnLeft.Enabled = true;
+                    }
+                    else
+                    {
+                        pictureBox1.Image = null;
+                        trackBar1.Enabled = false;
+                        btnLeft.Enabled = false;
+                    }
+
                     // エラー情報表示初期化
                     lblErrMsg.Visible = false;
                     lblErrMsg.Text = string.Empty;
@@ -188,7 +224,19 @@ namespace STSH_OCR.OCR
 
                 for (int r = 1; r < dg1.RowCount; r += 2)
                 {
-                    ShowPastOrder(i, col, r);
+                    // 2020/04/13
+                     Utility.ShowPastOrder(i, col, r, tenDates, dg1, colHinCode, colSyubai, txtTokuisakiCD.Text, tblOrderHistories);
+                }
+
+                // 2020/04/13
+                label6.Text = Utility.ShowPastOrderMessage(dg1);
+                if (label6.Text != string.Empty)
+                {
+                    label1.Text = "注文済み商品があります";
+                }
+                else
+                {
+                    label1.Text  = "";
                 }
             }
 
@@ -1007,6 +1055,7 @@ namespace STSH_OCR.OCR
             checkBox1.BackColor = SystemColors.Control;
 
             label1.Text = string.Empty;
+            label6.Text = string.Empty;
 
             txtYear.ForeColor = global.defaultColor;
             txtMonth.ForeColor = global.defaultColor;

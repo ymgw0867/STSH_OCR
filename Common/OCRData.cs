@@ -743,7 +743,7 @@ namespace STSH_OCR.Common
 
             if (!dPage)
             {
-                setErrStatus(eYearMonth, 0, "発注商品がありません");
+                setErrStatus(eYearMonth, 0, "発注対象商品がありません");
                 return false;
             }
 

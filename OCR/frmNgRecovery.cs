@@ -1,4 +1,4 @@
-﻿using OpenCvSharp;
+﻿//using OpenCvSharp;
 using System;
 using System.Drawing;
 using System.IO;
@@ -32,7 +32,9 @@ namespace STSH_OCR.OCR
         float n_width = 0f;
         float n_height = 0f;
 
-        Mat mMat = new Mat();
+        //Mat mMat = new Mat();
+
+        Image FaxImg = null;
 
         private void frmNgRecovery_Load(object sender, EventArgs e)
         {
@@ -122,8 +124,10 @@ namespace STSH_OCR.OCR
                 return;
             }
 
-            //画像イメージ表示
-            showImage_openCv(ngf[checkedListBox1.SelectedIndex].ngFileName);
+            //画像イメージ表示 : 2020/04/14
+            //showImage_openCv(ngf[checkedListBox1.SelectedIndex].ngFileName);
+
+            imgShow(ngf[checkedListBox1.SelectedIndex].ngFileName);
 
             trackBar1.Enabled = true;
             btnLeft.Enabled = true;
@@ -133,6 +137,32 @@ namespace STSH_OCR.OCR
         {
             public string ngFileName { get; set; }
             public string ngRecDate { get; set; }
+        }
+
+        ///---------------------------------------------------------
+        /// <summary>
+        ///     画像表示メイン : 2020/04/14 </summary>
+        /// <param name="filePath">
+        ///     画像ファイルパス</param>
+        ///---------------------------------------------------------
+        private void imgShow(string filePath)
+        {
+            try
+            {
+                // System.Drawing.Imageを作成する
+                FaxImg = Utility.CreateImage(filePath);
+
+                // PictureBoxの大きさにあわせて画像を拡大または縮小して表示する
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+
+                // 画像を表示する
+                pictureBox1.Image = FaxImg;
+            }
+            catch (Exception ex)
+            {
+                pictureBox1.Image = null;
+                MessageBox.Show(ex.Message);
+            }
         }
 
         ///--------------------------------------------------------------
@@ -456,111 +486,107 @@ namespace STSH_OCR.OCR
 
 
 
-        ///-----------------------------------------------------------
-        /// <summary>
-        ///     画像表示 openCV：2018/10/24 </summary>
-        /// <param name="img">
-        ///     表示画像ファイル名</param>
-        ///-----------------------------------------------------------
-        private void showImage_openCv(string img)
-        {
-            n_width = B_WIDTH;
-            n_height = B_HEIGHT;
+        /////-----------------------------------------------------------
+        ///// <summary>
+        /////     画像表示 openCV：2018/10/24 </summary>
+        ///// <param name="img">
+        /////     表示画像ファイル名</param>
+        /////-----------------------------------------------------------
+        //private void showImage_openCv(string img)
+        //{
+        //    n_width = B_WIDTH;
+        //    n_height = B_HEIGHT;
 
-            imgShow(img, n_width, n_height);
+        //    imgShow(img, n_width, n_height);
 
-            trackBar1.Value = 0;
-        }
+        //    trackBar1.Value = 0;
+        //}
 
 
-        // GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
-        private Bitmap MatToBitmap(Mat image)
-        {
-            return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
-        }
+        //// GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
+        //private Bitmap MatToBitmap(Mat image)
+        //{
+        //    return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
+        //}
+
+
+        /////---------------------------------------------------------
+        ///// <summary>
+        /////     画像表示メイン openCV : 2018/10/24 </summary>
+        ///// <param name="mImg">
+        /////     Mat形式イメージ</param>
+        ///// <param name="w">
+        /////     width</param>
+        ///// <param name="h">
+        /////     height</param>
+        /////---------------------------------------------------------
+        //private void imgShow(Mat mImg, float w, float h)
+        //{
+        //    int cWidth = 0;
+        //    int cHeight = 0;
+
+        //    Bitmap bt = MatToBitmap(mImg);
+
+        //    // Bitmapサイズ
+        //    if (panel1.Width < (bt.Width * w) || panel1.Height < (bt.Height * h))
+        //    {
+        //        cWidth = (int)(bt.Width * w);
+        //        cHeight = (int)(bt.Height * h);
+        //    }
+        //    else
+        //    {
+        //        cWidth = panel1.Width;
+        //        cHeight = panel1.Height;
+        //    }
+
+        //    // Bitmap を生成
+        //    Bitmap canvas = new Bitmap(cWidth, cHeight);
+
+        //    // ImageオブジェクトのGraphicsオブジェクトを作成する
+        //    Graphics g = Graphics.FromImage(canvas);
+
+        //    // 画像をcanvasの座標(0, 0)の位置に指定のサイズで描画する
+        //    g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+
+        //    //メモリクリア
+        //    bt.Dispose();
+        //    g.Dispose();
+
+        //    // PictureBox1に表示する
+        //    pictureBox1.Image = canvas;
+        //}
 
 
         ///---------------------------------------------------------
         /// <summary>
-        ///     画像表示メイン openCV : 2018/10/24 </summary>
+        ///     画像表示メイン : 2020/04/14 </summary>
         /// <param name="mImg">
-        ///     Mat形式イメージ</param>
+        ///     Image形式イメージ</param>
         /// <param name="w">
         ///     width</param>
         /// <param name="h">
         ///     height</param>
         ///---------------------------------------------------------
-        private void imgShow(Mat mImg, float w, float h)
-        {
-            int cWidth = 0;
-            int cHeight = 0;
-
-            Bitmap bt = MatToBitmap(mImg);
-
-            // Bitmapサイズ
-            if (panel1.Width < (bt.Width * w) || panel1.Height < (bt.Height * h))
-            {
-                cWidth = (int)(bt.Width * w);
-                cHeight = (int)(bt.Height * h);
-            }
-            else
-            {
-                cWidth = panel1.Width;
-                cHeight = panel1.Height;
-            }
-
-            // Bitmap を生成
-            Bitmap canvas = new Bitmap(cWidth, cHeight);
-
-            // ImageオブジェクトのGraphicsオブジェクトを作成する
-            Graphics g = Graphics.FromImage(canvas);
-
-            // 画像をcanvasの座標(0, 0)の位置に指定のサイズで描画する
-            g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
-
-            //メモリクリア
-            bt.Dispose();
-            g.Dispose();
-
-            // PictureBox1に表示する
-            pictureBox1.Image = canvas;
-        }
-
-
-
-        ///---------------------------------------------------------
-        /// <summary>
-        ///     画像表示メイン openCV : 2018/10/24 </summary>
-        /// <param name="mImg">
-        ///     Mat形式イメージ</param>
-        /// <param name="w">
-        ///     width</param>
-        /// <param name="h">
-        ///     height</param>
-        ///---------------------------------------------------------
-        private void imgShow(string filePath, float w, float h)
+        private void imgShow(Image mImg, float w, float h)
         {
             try
             {
-                //メモリクリア
-                mMat.Dispose();
-
-                //mMat = new Mat(filePath, ImreadModes.Grayscale);
-                mMat = new Mat(@filePath);
-
-                Bitmap bt = MatToBitmap(mMat);
+                Bitmap bt = new Bitmap(mImg);
 
                 // Bitmap を生成
                 Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
 
                 Graphics g = Graphics.FromImage(canvas);
 
+                // 画像をcanvasの座標(0, 0)の位置に指定のサイズで描画する
                 g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
 
                 //メモリクリア
                 bt.Dispose();
                 g.Dispose();
 
+                // PictureBox1に表示する
+                pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
                 pictureBox1.Image = canvas;
             }
             catch (Exception ex)
@@ -570,12 +596,55 @@ namespace STSH_OCR.OCR
             }
         }
 
+        /////---------------------------------------------------------
+        ///// <summary>
+        /////     画像表示メイン openCV : 2018/10/24 </summary>
+        ///// <param name="mImg">
+        /////     Mat形式イメージ</param>
+        ///// <param name="w">
+        /////     width</param>
+        ///// <param name="h">
+        /////     height</param>
+        /////---------------------------------------------------------
+        //private void imgShow(string filePath, float w, float h)
+        //{
+        //    try
+        //    {
+        //        //メモリクリア
+        //        mMat.Dispose();
+
+        //        //mMat = new Mat(filePath, ImreadModes.Grayscale);
+        //        mMat = new Mat(@filePath);
+
+        //        Bitmap bt = MatToBitmap(mMat);
+
+        //        // Bitmap を生成
+        //        Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
+
+        //        Graphics g = Graphics.FromImage(canvas);
+
+        //        g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+
+        //        //メモリクリア
+        //        bt.Dispose();
+        //        g.Dispose();
+
+        //        pictureBox1.Image = canvas;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        pictureBox1.Image = null;
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //}
+
         private void TrackBar1_ValueChanged(object sender, EventArgs e)
         {
             n_width = B_WIDTH + (float)trackBar1.Value * 0.05f;
             n_height = B_HEIGHT + (float)trackBar1.Value * 0.05f;
 
-            imgShow(mMat, n_width, n_height);
+            //imgShow(mMat, n_width, n_height);
+            imgShow(FaxImg, n_width, n_height);   // 2020/04/14
         }
 
         private void CheckedListBox1_SelectedValueChanged(object sender, EventArgs e)

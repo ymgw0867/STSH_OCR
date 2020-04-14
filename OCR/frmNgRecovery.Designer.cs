@@ -37,6 +37,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnLeft = new System.Windows.Forms.Button();
             this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.btnPrn = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -46,7 +47,6 @@
             this.linkLblOn = new System.Windows.Forms.LinkLabel();
             this.button5 = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.btnLeft = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -67,8 +67,8 @@
             // 
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(102, 84);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.Size = new System.Drawing.Size(1054, 816);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -114,6 +114,20 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(284, 740);
             this.panel2.TabIndex = 13;
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.BackColor = System.Drawing.SystemColors.Control;
+            this.btnLeft.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnLeft.Image")));
+            this.btnLeft.Location = new System.Drawing.Point(297, 839);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(45, 45);
+            this.btnLeft.TabIndex = 363;
+            this.btnLeft.TabStop = false;
+            this.toolTip1.SetToolTip(this.btnLeft, "画像を回転");
+            this.btnLeft.UseVisualStyleBackColor = false;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
             // printDocument1
             // 
@@ -215,20 +229,6 @@
             this.trackBar1.TabIndex = 16;
             this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1_ValueChanged);
             // 
-            // btnLeft
-            // 
-            this.btnLeft.BackColor = System.Drawing.SystemColors.Control;
-            this.btnLeft.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnLeft.Image = ((System.Drawing.Image)(resources.GetObject("btnLeft.Image")));
-            this.btnLeft.Location = new System.Drawing.Point(297, 839);
-            this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(45, 45);
-            this.btnLeft.TabIndex = 363;
-            this.btnLeft.TabStop = false;
-            this.toolTip1.SetToolTip(this.btnLeft, "画像を回転");
-            this.btnLeft.UseVisualStyleBackColor = false;
-            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
-            // 
             // frmNgRecovery
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -258,7 +258,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmNgRecovery_FormClosing);
             this.Load += new System.EventHandler(this.frmNgRecovery_Load);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();

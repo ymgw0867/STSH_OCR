@@ -15,7 +15,7 @@ using STSH_OCR.Common;
 using STSH_OCR.OCR;
 using System.Configuration;
 using Excel = Microsoft.Office.Interop.Excel;
-using OpenCvSharp;
+//using OpenCvSharp;
 using System.Windows.Interop;
 
 namespace STSH_OCR.OCR
@@ -139,7 +139,9 @@ namespace STSH_OCR.OCR
         float n_width = 0f;
         float n_height = 0f;
 
-        Mat mMat = new Mat();
+        //Mat mMat = new Mat();
+
+        Image FaxImg = null;    // 2020/04/14
 
         // カラム定義
         private readonly string colHinCode = "c0";
@@ -272,36 +274,6 @@ namespace STSH_OCR.OCR
 
         #endregion
 
-        private void gcMrSetting()
-        {
-            ////multirow編集モード
-            //gcMultiRow1.EditMode = EditMode.EditProgrammatically;
-
-            //this.gcMultiRow1.AllowUserToAddRows = false;                    // 手動による行追加を禁止する
-            //this.gcMultiRow1.AllowUserToDeleteRows = false;                 // 手動による行削除を禁止する
-            ////this.gcMultiRow1.Rows.Clear();                                  // 行数をクリア
-            //this.gcMultiRow1.RowCount = 1;                                  // 行数を設定
-            //this.gcMultiRow1.HideSelection = true;                          // GcMultiRow コントロールがフォーカスを失ったとき、セルの選択状態を非表示にする
-
-            ////multirow編集モード
-            //gcMultiRow2.EditMode = EditMode.EditProgrammatically;
-
-            //this.gcMultiRow2.AllowUserToAddRows = false;                    // 手動による行追加を禁止する
-            //this.gcMultiRow2.AllowUserToDeleteRows = false;                 // 手動による行削除を禁止する
-            ////this.gcMultiRow2.Rows.Clear();                                  // 行数をクリア
-            //this.gcMultiRow2.RowCount = global.MAX_GYO;                                  // 行数を設定
-            //this.gcMultiRow2.HideSelection = true;                          // GcMultiRow コントロールがフォーカスを失ったとき、セルの選択状態を非表示にする
-            
-            ////multirow編集モード
-            //gcMultiRow3.EditMode = EditMode.EditProgrammatically;
-
-            //this.gcMultiRow3.AllowUserToAddRows = false;                    // 手動による行追加を禁止する
-            //this.gcMultiRow3.AllowUserToDeleteRows = false;                 // 手動による行削除を禁止する
-            ////this.gcMultiRow3.Rows.Clear();                                  // 行数をクリア
-            //this.gcMultiRow3.RowCount = 5;                                  // 行数を設定
-            //this.gcMultiRow3.HideSelection = true;                          // GcMultiRow コントロールがフォーカスを失ったとき、セルの選択状態を非表示にする
-
-        }
 
         ///------------------------------------------------------------------------
         /// <summary>
@@ -1655,209 +1627,6 @@ namespace STSH_OCR.OCR
             return true;
         }
 
-        ///----------------------------------------------------------------------------------
-        /// <summary>
-        ///     画像ファイル退避処理 </summary>
-        ///----------------------------------------------------------------------------------
-        private void tifFileMove()
-        {
-            string sTel = string.Empty;
-            string sJyu = string.Empty;
-
-            //var s = dts.環境設定.Single(a => a.ID == global.flgOn);
-
-            //// 移動先フォルダがあるか？なければ作成する（TIFフォルダ）
-            //if (!System.IO.Directory.Exists(s.画像保存先パス))
-            //{
-            //    System.IO.Directory.CreateDirectory(s.画像保存先パス);
-            //}
-
-            string fromImg = string.Empty;
-            string toImg = string.Empty;
-
-            // 発注書データを取得する
-            foreach (var t in tblFax.OrderBy(a => a.ID))
-            {
-                // 発注書画像ファイルパスを取得する
-                fromImg = Properties.Settings.Default.MyDataPath + t.ImageFileName;
-
-                // 移動先フォルダ
-                //string sName = Utility.getNouhinName(t.TokuisakiCode.ToString().PadLeft(7, '0'), out sTel, out sJyu);   // 2020/04/09 コメント化
-                string sName = Utility.GetTokuisakiFromDataTable(t.TokuisakiCode.ToString("D7"), global.dtTokuisaki).TOKUISAKI_NM;   // 2020/04/09
-
-                //// 発注書移動先ファイルパス
-                //string userFolder = s.画像保存先パス + t.TokuisakiCode.ToString().PadLeft(7, '0') + "_" + sName;
-
-                //// お客様フォルダがあるか？なければ作成する
-                //if (!System.IO.Directory.Exists(userFolder))
-                //{
-                //    System.IO.Directory.CreateDirectory(userFolder);
-                //}
-
-                //// 同名ファイルが既に登録済みのときは削除する
-                //toImg = userFolder + @"\" + t.ImageFileName;
-                //if (System.IO.File.Exists(toImg)) 
-                //{
-                //    System.IO.File.Delete(toImg);
-                //}
-
-                //// ファイルを移動する
-                //if (System.IO.File.Exists(fromImg)) 
-                //{
-                //    System.IO.File.Move(fromImg, toImg);
-                //}
-            }
-        }
-
-        /// ---------------------------------------------------------------------
-        /// <summary>
-        ///     MDBファイルを最適化する </summary>
-        /// ---------------------------------------------------------------------
-        private void mdbCompact()
-        {
-            //try
-            //{
-            //    JRO.JetEngine jro = new JRO.JetEngine();
-            //    string OldDb = Properties.Settings.Default.mdbOlePath;
-            //    string NewDb = Properties.Settings.Default.mdbPathTemp;
-
-            //    jro.CompactDatabase(OldDb, NewDb);
-
-            //    //今までのバックアップファイルを削除する
-            //    System.IO.File.Delete(Properties.Settings.Default.mdbPath + global.MDBBACK);
-
-            //    //今までのファイルをバックアップとする
-            //    System.IO.File.Move(Properties.Settings.Default.mdbPath + global.MDBFILE, Properties.Settings.Default.mdbPath + global.MDBBACK);
-
-            //    //一時ファイルをMDBファイルとする
-            //    System.IO.File.Move(Properties.Settings.Default.mdbPath + global.MDBTEMP, Properties.Settings.Default.mdbPath + global.MDBFILE);
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show("MDB最適化中" + Environment.NewLine + e.Message, "エラー", MessageBoxButtons.OK);
-            //}
-        }
-
-        private void btnMinus_Click(object sender, EventArgs e)
-        {
-
-            //if (dGV.RowCount == global.NIPPOU_TATE)
-            //{
-            //    global.miMdlZoomRate_TATE = (float)leadImg.ScaleFactor;
-            //}
-            //else if (dGV.RowCount == global.NIPPOU_YOKO)
-            //{
-            //    global.miMdlZoomRate_YOKO = (float)leadImg.ScaleFactor;
-            //}
-        }
-
-
-
-        /// -------------------------------------------------------------------------
-        /// <summary>
-        ///     基準年月以前の過去勤務票ヘッダデータとその明細データを削除します</summary>
-        /// <param name="sYYMM">
-        ///     基準年月</param>     
-        /// -------------------------------------------------------------------------
-        private void deleteLastDataArchived(int sYYMM)
-        {
-            //// データ読み込み
-            //getDataSet();
-
-            //// 基準年月以前の過去勤務票ヘッダデータを取得します
-            //var h = dts.過去勤務票ヘッダ
-            //        .Where(a => a.RowState != DataRowState.Deleted && a.RowState != DataRowState.Detached &&
-            //                    a.年 * 100 + a.月 < sYYMM);
-
-            //// foreach用の配列を作成
-            //var hLst = h.ToList();
-
-            //foreach (var lh in hLst)
-            //{
-            //    // ヘッダIDが一致する過去勤務票明細を取得します
-            //    var m = dts.過去勤務票明細
-            //        .Where(a => a.RowState != DataRowState.Deleted && a.RowState != DataRowState.Detached &&
-            //                    a.ヘッダID == lh.ID);
-
-            //    // foreach用の配列を作成
-            //    var list = m.ToList();
-
-            //    // 該当過去勤務票明細を削除します
-            //    foreach (var lm in list)
-            //    {
-            //        DataSet1.過去勤務票明細Row lRow = (DataSet1.過去勤務票明細Row)dts.過去勤務票明細.Rows.Find(lm.ID);
-            //        lRow.Delete();
-            //    }
-
-            //    // 画像ファイルを削除します
-            //    string imgPath = Properties.Settings.Default.tifPath + lh.画像名;
-            //    File.Delete(imgPath);
-
-            //    // 過去勤務票ヘッダを削除します
-            //    lh.Delete();
-            //}
-
-            //// データベース更新
-            //pAdpMn.UpdateAll(dts);
-        }
-
-        /// -----------------------------------------------------------------------------
-        /// <summary>
-        ///     設定月数分経過した過去画像を削除する</summary>
-        /// <param name="_dYYMM">
-        ///     基準年月 (例：201401)</param>
-        /// -----------------------------------------------------------------------------
-        private void deleteImageArchived(int _dYYMM)
-        {
-            //int _DataYYMM;
-            //string fileYYMM;
-
-            //// 設定月数分経過した過去画像を削除する            
-            //foreach (string files in System.IO.Directory.GetFiles(Properties.Settings.Default.tifPath, "*.tif"))
-            //{
-            //    // ファイル名が規定外のファイルは読み飛ばします
-            //    if (System.IO.Path.GetFileName(files).Length < 21) continue;
-
-            //    //ファイル名より年月を取得する
-            //    fileYYMM = System.IO.Path.GetFileName(files).Substring(0, 6);
-
-            //    if (Utility.NumericCheck(fileYYMM))
-            //    {
-            //        _DataYYMM = int.Parse(fileYYMM);
-
-            //        //基準年月以前なら削除する
-            //        if (_DataYYMM <= _dYYMM) File.Delete(files);
-            //    }
-            //}
-        }
-
-        /// -------------------------------------------------------------------
-        /// <summary>
-        ///     FAX注文書データを全件削除します</summary>
-        /// -------------------------------------------------------------------
-        private void deleteDataAll()
-        {
-            // FAX注文書データ読み込み
-            //getDataSet();
-
-            //// FAX注文書削除
-            //var m = dtsC.FAX注文書.Where(a => a.RowState != DataRowState.Deleted);
-            //foreach (var t in m)
-            //{
-            //    t.Delete();
-            //}
-
-            //// データベース更新
-            //fAdp.Update(dtsC.FAX注文書);
-
-            //// 後片付け
-            //dtsC.FAX注文書.Dispose();
-        }
-
-        private void maskedTextBox3_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
-        {
-
-        }
 
         private void txtYear_TextChanged(object sender, EventArgs e)
         {
@@ -2097,87 +1866,6 @@ namespace STSH_OCR.OCR
                 //cn.Close();
             }
         }
-
-        private void Control_KeyDown2(object sender, KeyEventArgs e)
-        {
-            //if (e.KeyData == Keys.Space)
-            //{
-            //    gcMultiRow1.EndEdit();
-
-            //    frmTodoke frm = new frmTodoke(false);
-            //    frm.ShowDialog();
-
-            //    if (frm._nouCode != null)
-            //    {
-            //        gcMultiRow1.SetValue(0, "txtTdkNum", frm._nouCode[0]);
-            //        gcMultiRow1.CurrentCellPosition = new CellPosition(0, "txtOrderNum");
-            //    }
-
-            //    // 後片付け
-            //    frm.Dispose();
-            //}
-        }
-
-        private void Control_KeyDownHinM2(object sender, KeyEventArgs e)
-        {
-            //if (e.KeyData == Keys.Space)
-            //{
-            //    //gcMultiRow2.EndEdit();
-
-            //    frmSyohin frm = new frmSyohin(false);
-            //    frm.ShowDialog();
-
-            //    if (frm._nouCode != null)
-            //    {
-            //        gcMultiRow2.SetValue(gcMultiRow2.CurrentCell.RowIndex, gcMultiRow2.CurrentCellPosition.CellName, frm._nouCode[0]);
-
-            //        if (gcMultiRow2.CurrentCellPosition.CellName == "txtHinCode")
-            //        {
-            //            gcMultiRow2.CurrentCellPosition = new CellPosition(gcMultiRow2.CurrentCell.RowIndex, "txtSuu");
-            //            //gcMultiRow2.CurrentCell = null;
-            //        }
-            //        else if (gcMultiRow2.CurrentCellPosition.CellName == "txtHinCode2")
-            //        {
-            //            gcMultiRow2.CurrentCellPosition = new CellPosition(gcMultiRow2.CurrentCell.RowIndex, "txtSuu2");
-            //            //gcMultiRow2.CurrentCell = null;
-            //        }
-            //    }
-
-            //    // 後片付け
-            //    frm.Dispose();
-            //}
-        }
-
-        private void Control_KeyDownHin(object sender, KeyEventArgs e)
-        {
-            //if (e.KeyData == Keys.Space)
-            //{
-            //    gcMultiRow3.EndEdit();
-
-            //    frmSyohin frm = new frmSyohin(false);
-            //    frm.ShowDialog();
-
-            //    if (frm._nouCode != null)
-            //    {
-            //        gcMultiRow3.SetValue(gcMultiRow3.CurrentCell.RowIndex, gcMultiRow3.CurrentCellPosition.CellName, frm._nouCode[0]);
-
-            //        if (gcMultiRow3.CurrentCellPosition.CellName == "txtHinCode")
-            //        {
-            //            gcMultiRow3.CurrentCellPosition = new CellPosition(gcMultiRow3.CurrentCell.RowIndex, "txtSuu");
-            //            //gcMultiRow3.CurrentCell = null;
-            //        }
-            //        else if (gcMultiRow3.CurrentCellPosition.CellName == "txtHinCode2")
-            //        {
-            //            gcMultiRow3.CurrentCellPosition = new CellPosition(gcMultiRow3.CurrentCell.RowIndex, "txtSuu2");
-            //            //gcMultiRow3.CurrentCell = null;
-            //        }
-            //    }
-
-            //    // 後片付け
-            //    frm.Dispose();
-            //}
-        }
-
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -2480,28 +2168,6 @@ namespace STSH_OCR.OCR
 
             // 保留処理
             setHoldData(cID[cI]);
-        }
-
-        private void btnRight_Click(object sender, EventArgs e)
-        {
-            //// 右へ90°回転させる
-            //Leadtools.ImageProcessing.RotateCommand rc = new Leadtools.ImageProcessing.RotateCommand();
-            //rc.Angle = 90 * 100;
-            //rc.FillColor = new Leadtools.RasterColor(255, 255, 255);
-            ////rc.Flags = RotateCommandFlags.Bicubic;
-            //rc.Flags = Leadtools.ImageProcessing.RotateCommandFlags.Resize;
-            //rc.Run(leadImg.Image);
-        }
-
-        private void btnLeft_Click(object sender, EventArgs e)
-        {
-            //// 左へ90°回転させる
-            //Leadtools.ImageProcessing.RotateCommand rc = new Leadtools.ImageProcessing.RotateCommand();
-            //rc.Angle = -90 * 100;
-            //rc.FillColor = new Leadtools.RasterColor(255, 255, 255);
-            ////rc.Flags = RotateCommandFlags.Bicubic;
-            //rc.Flags = Leadtools.ImageProcessing.RotateCommandFlags.Resize;
-            //rc.Run(leadImg.Image);
         }
 
         ///-----------------------------------------------------------------------
@@ -3077,11 +2743,17 @@ namespace STSH_OCR.OCR
         private void txtPID_TextChanged(object sender, EventArgs e)
         {
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
+
+            // 同一発注書：2020/04/14
+            CheckSameFAX(Utility.StrtoInt(txtTokuisakiCD.Text), Utility.StrtoInt(txtYear.Text), Utility.StrtoInt(txtMonth.Text), Utility.StrtoInt(txtPID.Text), Utility.StrtoInt(txtSeqNum.Text), ClsFaxOrder.ID);
         }
 
         private void txtSeqNum_TextChanged(object sender, EventArgs e)
         {
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
+
+            // 同一発注書：2020/04/14
+            CheckSameFAX(Utility.StrtoInt(txtTokuisakiCD.Text), Utility.StrtoInt(txtYear.Text), Utility.StrtoInt(txtMonth.Text), Utility.StrtoInt(txtPID.Text), Utility.StrtoInt(txtSeqNum.Text), ClsFaxOrder.ID);
         }
 
         ///----------------------------------------------------------------------------------
@@ -3244,47 +2916,104 @@ namespace STSH_OCR.OCR
 
             // 発注書パターン表示
             ShowFaxPattern(txtTokuisakiCD, txtPID, txtSeqNum);
+
+            // 同一発注書：2020/04/14
+            CheckSameFAX(Utility.StrtoInt(txtTokuisakiCD.Text), Utility.StrtoInt(txtYear.Text), Utility.StrtoInt(txtMonth.Text), Utility.StrtoInt(txtPID.Text), Utility.StrtoInt(txtSeqNum.Text), ClsFaxOrder.ID);
         }
 
-        ///-----------------------------------------------------------
-        /// <summary>
-        ///     画像表示 openCV：2018/10/24 </summary>
-        /// <param name="img">
-        ///     表示画像ファイル名</param>
-        ///-----------------------------------------------------------
-        private void showImage_openCv(string img)
-        {
-            n_width = B_WIDTH;
-            n_height = B_HEIGHT;
+        /////-----------------------------------------------------------
+        ///// <summary>
+        /////     画像表示 openCV：2018/10/24 </summary>
+        ///// <param name="img">
+        /////     表示画像ファイル名</param>
+        /////-----------------------------------------------------------
+        //private void showImage_openCv(string img)
+        //{
+        //    n_width = B_WIDTH;
+        //    n_height = B_HEIGHT;
 
-            imgShow(img, n_width, n_height);
+        //    imgShow(img, n_width, n_height);
 
-            trackBar1.Value = 0;
-        }
+        //    trackBar1.Value = 0;
+        //}
 
 
-        // GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
-        public static Bitmap MatToBitmap(Mat image)
-        {
-            Bitmap bitmap = null;
+        //// GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
+        //public static Bitmap MatToBitmap(Mat image)
+        //{
+        //    Bitmap bitmap = null;
 
-            try
-            {
-                bitmap = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
-            }
-            catch (Exception)
-            {
+        //    try
+        //    {
+        //        bitmap = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
+        //    }
+        //    catch (Exception)
+        //    {
 
-                //throw;
-            }
+        //        //throw;
+        //    }
 
-            return bitmap;
-        }
+        //    return bitmap;
+        //}
 
+
+        /////---------------------------------------------------------
+        ///// <summary>
+        /////     画像表示メイン openCV : 2018/10/24 </summary>
+        ///// <param name="mImg">
+        /////     Mat形式イメージ</param>
+        ///// <param name="w">
+        /////     width</param>
+        ///// <param name="h">
+        /////     height</param>
+        /////---------------------------------------------------------
+        //private void imgShow(Mat mImg, float w, float h)
+        //{
+        //    int cWidth = 0;
+        //    int cHeight = 0;
+
+        //    try
+        //    {
+        //        Bitmap bt = MatToBitmap(mImg);
+
+        //        // Bitmapサイズ
+        //        if (panel1.Width < (bt.Width * w) || panel1.Height < (bt.Height * h))
+        //        {
+        //            cWidth = (int)(bt.Width * w);
+        //            cHeight = (int)(bt.Height * h);
+        //        }
+        //        else
+        //        {
+        //            cWidth = panel1.Width;
+        //            cHeight = panel1.Height;
+        //        }
+
+        //        // Bitmap を生成
+        //        Bitmap canvas = new Bitmap(cWidth, cHeight);
+
+        //        // ImageオブジェクトのGraphicsオブジェクトを作成する
+        //        Graphics g = Graphics.FromImage(canvas);
+
+        //        // 画像をcanvasの座標(0, 0)の位置に指定のサイズで描画する
+        //        g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+
+        //        //メモリクリア
+        //        bt.Dispose();
+        //        g.Dispose();
+
+        //        // PictureBox1に表示する
+        //        pictureBox1.Image = canvas;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        pictureBox1.Image = null;
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //}
 
         ///---------------------------------------------------------
         /// <summary>
-        ///     画像表示メイン openCV : 2018/10/24 </summary>
+        ///     画像表示メイン : 2020/04/14 </summary>
         /// <param name="mImg">
         ///     Mat形式イメージ</param>
         /// <param name="w">
@@ -3292,14 +3021,14 @@ namespace STSH_OCR.OCR
         /// <param name="h">
         ///     height</param>
         ///---------------------------------------------------------
-        private void imgShow(Mat mImg, float w, float h)
+        private void imgShow(Image mImg, float w, float h)
         {
             int cWidth = 0;
             int cHeight = 0;
 
             try
             {
-                Bitmap bt = MatToBitmap(mImg);
+                Bitmap bt = new Bitmap (mImg);
 
                 // Bitmapサイズ
                 if (panel1.Width < (bt.Width * w) || panel1.Height < (bt.Height * h))
@@ -3327,6 +3056,7 @@ namespace STSH_OCR.OCR
                 g.Dispose();
 
                 // PictureBox1に表示する
+                pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
                 pictureBox1.Image = canvas;
             }
             catch (Exception ex)
@@ -3347,29 +3077,57 @@ namespace STSH_OCR.OCR
         /// <param name="h">
         ///     height</param>
         ///---------------------------------------------------------
-        private void imgShow(string filePath, float w, float h)
+        //private void imgShow(string filePath, float w, float h)
+        //{
+        //    try
+        //    {
+        //        // メモリクリア
+        //        mMat.Dispose();
+
+        //        System.Diagnostics.Debug.WriteLine("画面表示：" + filePath);
+        //        //MessageBox.Show("画面表示：" + filePath);
+
+        //        //mMat = new Mat(filePath, ImreadModes.Grayscale);
+        //        mMat = new Mat(filePath);
+        //        Bitmap bt = MatToBitmap(mMat);
+
+        //        // Bitmap を生成
+        //        Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
+        //        Graphics g = Graphics.FromImage(canvas);
+        //        g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+
+        //        //メモリクリア
+        //        bt.Dispose();
+        //        g.Dispose();
+
+        //        pictureBox1.Image = canvas;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        pictureBox1.Image = null;
+        //        MessageBox.Show(ex.Message);
+        //    }
+        //}
+
+
+        ///---------------------------------------------------------
+        /// <summary>
+        ///     画像表示メイン : 2020/04/14 </summary>
+        /// <param name="filePath">
+        ///     画像ファイルパス</param>
+        ///---------------------------------------------------------
+        private void imgShow(string filePath)
         {
             try
             {
-                // メモリクリア
-                mMat.Dispose();
+                // System.Drawing.Imageを作成する
+                FaxImg = Utility.CreateImage(filePath);
 
-                //mMat = new Mat(filePath, ImreadModes.Grayscale);
-                mMat = new Mat(filePath);
-                Bitmap bt = MatToBitmap(mMat);
-
-                // Bitmap を生成
-                Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
-
-                Graphics g = Graphics.FromImage(canvas);
-
-                g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
-
-                //メモリクリア
-                bt.Dispose();
-                g.Dispose();
-
-                pictureBox1.Image = canvas;
+                // PictureBoxの大きさにあわせて画像を拡大または縮小して表示する
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                
+                // 画像を表示する
+                pictureBox1.Image = FaxImg;
             }
             catch (Exception ex)
             {
@@ -3377,6 +3135,7 @@ namespace STSH_OCR.OCR
                 MessageBox.Show(ex.Message);
             }
         }
+
 
         private void dg1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -3447,13 +3206,27 @@ namespace STSH_OCR.OCR
                         {
                             for (int i = 6; i <= 12; i++)
                             {
-                                ShowPastOrder(i - 6, i, e.RowIndex);
+                                //ShowPastOrder(i - 6, i, e.RowIndex); 2020/04/13 コメント化
+
+                                // 2020/04/13
+                                Utility.ShowPastOrder(i - 6, i, e.RowIndex, tenDates, dg1, colHinCode, colSyubai, txtTokuisakiCD.Text, tblOrderHistories);
                             }
                         }
                     }
 
                     // 注文済み商品メッセージコントロール
-                    ShowPastOrderMessage();
+                    //ShowPastOrderMessage();　2020/04/13 コメント化
+
+                    // 2020/04/13
+                    label6.Text = Utility.ShowPastOrderMessage(dg1);
+                    if (label6.Text != string.Empty)
+                    {
+                        label1.Text = "注文済み商品があります";
+                    }
+                    else
+                    {
+                        label1.Text = "";
+                    }
                 }
             }
 
@@ -3512,9 +3285,25 @@ namespace STSH_OCR.OCR
                     {
                         for (int i = 6; i <= 12; i++)
                         {
-                            ShowPastOrder(i - 6, i, e.RowIndex);
+                            // 2020/04/13 コメント化
+                            //ShowPastOrder(i - 6, i, e.RowIndex);
+
+                            // 2020/04/13
+                            Utility.ShowPastOrder(i - 6, i, e.RowIndex, tenDates, dg1, colHinCode, colSyubai, txtTokuisakiCD.Text, tblOrderHistories);
                         }
                     }
+                }
+
+                // 注文済み商品メッセージコントロール
+                // 2020/04/13
+                label6.Text = Utility.ShowPastOrderMessage(dg1);
+                if (label6.Text != string.Empty)
+                {
+                    label1.Text = "注文済み商品があります";
+                }
+                else
+                {
+                    label1.Text = "";
                 }
 
                 return;
@@ -3528,136 +3317,38 @@ namespace STSH_OCR.OCR
                     if (showStatus)
                     {
                         int iX = e.ColumnIndex - 6;
-                        ShowPastOrder(iX, e.ColumnIndex, e.RowIndex);
+
+                        //ShowPastOrder(iX, e.ColumnIndex, e.RowIndex);　　2020/04/13 コメント化
+
+                        // 2020/04/13
+                        Utility.ShowPastOrder(iX, e.ColumnIndex, e.RowIndex, tenDates, dg1, colHinCode, colSyubai, txtTokuisakiCD.Text, tblOrderHistories);
                     }
                 }
-            }
-        }
 
-        ///-------------------------------------------------------------------
-        /// <summary>
-        ///     注文済み商品表示コントロール </summary>
-        /// <param name="iX">
-        ///     tenDate配列指標 </param>
-        /// <param name="col">
-        ///     データグリッド発注数カラムインデックス</param>
-        /// <param name="row">
-        ///     データグリッド行インデックス</param>
-        ///-------------------------------------------------------------------
-        private void ShowPastOrder(int iX, int col, int row)
-        {
-            if (tenDates[0] == null)
-            {
+                // 注文済み商品メッセージコントロール
+                // 2020/04/13
+                label6.Text = Utility.ShowPastOrderMessage(dg1);
+                if (label6.Text != string.Empty)
+                {
+                    label1.Text = "注文済み商品があります";
+                }
+                else
+                {
+                    label1.Text = "";
+                }
+
                 return;
             }
-
-            // 終売取消以外で
-            if (Utility.NulltoStr(dg1[colSyubai, row].Value) != global.SyubaiArray[1])
-            {
-                // 空白日付以外で
-                if (tenDates[iX].Year != string.Empty)
-                {
-                    DateTime cdt;
-                    if (DateTime.TryParse(tenDates[iX].Year + "/" + tenDates[iX].Month + "/" + tenDates[iX].Day, out cdt))
-                    {
-                        // 昨日以前も対象外、当日以降で
-                        if (cdt >= DateTime.Today)
-                        {
-                            // 文字色と背景色を標準に戻す
-                            dg1[col, row].Style.ForeColor = SystemColors.ControlText;
-
-                            if (row % 4 == 1)
-                            {
-                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.White;
-                                dg1.Rows[row].Cells[col].Style.BackColor = Color.White;
-                            }
-                            else
-                            {
-                                dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.Lavender;
-                                dg1.Rows[row].Cells[col].Style.BackColor = Color.Lavender;
-                            }
-
-                            int Suu = Utility.StrtoInt(Utility.NulltoStr(dg1[col, row].Value));    // 発注数
-
-                            // 発注があるとき
-                            if (Suu > 0)
-                            {
-                                string syCd = Utility.NulltoStr(dg1[colHinCode, row].Value).PadLeft(8, '0'); // 商品コード
-                                string dt = tenDates[iX].Year + tenDates[iX].Month.PadLeft(2, '0') + tenDates[iX].Day.PadLeft(2, '0'); // 発注日
-
-                                System.Diagnostics.Debug.WriteLine("得:" + txtTokuisakiCD.Text + " 商:" + syCd + " 日:" + dt + " 数:" + Suu);
-
-                                // 得意先毎に同じ商品が同じ日に注文済み
-                                foreach (var t in tblOrderHistories.Where(a => a.TokuisakiCD == Utility.StrtoInt(txtTokuisakiCD.Text) && a.SyohinCD == syCd && a.OrderDate == dt))
-                                {
-                                    dg1[col, row].ReadOnly = false;
-                                    dg1.Rows[row - 1].Cells[col].Style.BackColor = Color.MistyRose;
-                                    dg1.Rows[row].Cells[col].Style.BackColor = Color.MistyRose;
-
-                                    if (t.Suu == Suu)
-                                    {
-                                        // 発注数も一致
-                                        dg1[col, row].ReadOnly = true;
-                                        dg1[col, row].Style.ForeColor = Color.LightGray;
-                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数一致:" + Suu);
-                                    }
-                                    else
-                                    {
-                                        // 発注数は不一致
-                                        dg1[col, row].ReadOnly = false;
-                                        dg1[col, row].Style.ForeColor = Color.Red;
-                                        System.Diagnostics.Debug.WriteLine(dt + " " + col + "," + row + " 発注数は不一致:" + Suu);
-                                    }
-
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 注文済み商品ありメッセージのコントロール
-            ShowPastOrderMessage();
         }
-
-        ///------------------------------------------------------------------
-        /// <summary>
-        ///     注文済み商品ありメッセージのコントロール </summary>
-        ///------------------------------------------------------------------
-        private void ShowPastOrderMessage()
-        {
-            bool msgStatus = false;
-
-            // 注文済み商品ありメッセージのコントロール
-            label1.Text = "";
-            for (int i = 6; i <= 12; i++)
-            {
-                for (int r = 0; r < dg1.RowCount; r++)
-                {
-                    if (dg1.Rows[r].Cells[i].Style.BackColor == Color.MistyRose)
-                    {
-                        label1.Text = "注文済商品があります ①発注数同じ：ロック済で発注書データ対象外、②発注数違い：編集可・発注書データ作成";
-                        msgStatus = true;
-                        break;
-                    }
-                }
-
-                if (msgStatus)
-                {
-                    break;
-                }
-            }
-        }
-
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
             n_width = B_WIDTH + (float)trackBar1.Value * 0.05f;
             n_height = B_HEIGHT + (float)trackBar1.Value * 0.05f;
 
-            imgShow(mMat, n_width, n_height);
+            imgShow(FaxImg, n_width, n_height);
         }
+
         private DataGridViewComboBoxEditingControl dataGridViewComboBox = null;
 
         private void dg1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
@@ -3811,8 +3502,20 @@ namespace STSH_OCR.OCR
 
                 for (int r = 1; r < dg1.RowCount; r += 2)
                 {
-                    ShowPastOrder(i, col, r);
+                    // 2020/04/13
+                    Utility.ShowPastOrder(i, col, r, tenDates, dg1, colHinCode, colSyubai, txtTokuisakiCD.Text, tblOrderHistories);
                 }
+            }
+
+            // 2020/04/13
+            label6.Text = Utility.ShowPastOrderMessage(dg1);
+            if (label6.Text != string.Empty)
+            {
+                label1.Text = "注文済み商品があります";
+            }
+            else
+            {
+                label1.Text = "";
             }
         }
 
@@ -4053,6 +3756,46 @@ namespace STSH_OCR.OCR
 
                 cellBeforeValue = Utility.NulltoStr(dg1[e.ColumnIndex, e.RowIndex].Value);
             }
+        }
+
+        private void txtYear_TextChanged_1(object sender, EventArgs e)
+        {
+            if (!showStatus)
+            {
+                return;
+            }
+
+            // 店着日配列を更新
+            SetShowTenDate(tenDates);
+
+            // 店着日ロック
+            DayLock(tenDates);
+
+            // 発注済み商品数表示コントロール
+            for (int i = 0; i < tenDates.Length; i++)
+            {
+                int col = i + 6;
+
+                for (int r = 1; r < dg1.RowCount; r += 2)
+                {
+                    // 2020/04/13
+                    Utility.ShowPastOrder(i, col, r, tenDates, dg1, colHinCode, colSyubai, txtTokuisakiCD.Text, tblOrderHistories);
+                }
+            }
+
+            // 2020/04/13
+            label6.Text = Utility.ShowPastOrderMessage(dg1);
+            if (label6.Text != string.Empty)
+            {
+                label1.Text = "注文済み商品があります";
+            }
+            else
+            {
+                label1.Text = "";
+            }
+
+            // 同一発注書：2020/04/14
+            CheckSameFAX(Utility.StrtoInt(txtTokuisakiCD.Text), Utility.StrtoInt(txtYear.Text), Utility.StrtoInt(txtMonth.Text), Utility.StrtoInt(txtPID.Text), Utility.StrtoInt(txtSeqNum.Text), ClsFaxOrder.ID);
         }
     }
 }

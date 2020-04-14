@@ -297,6 +297,8 @@ namespace STSH_OCR.Pattern
             button3.Enabled = false;
             button4.Enabled = false;
             button5.Enabled = false;
+
+            radioButton1.Checked = true;
         }
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -367,24 +369,44 @@ namespace STSH_OCR.Pattern
                 return;
             }
 
-            // 印刷確認
-            if (MessageBox.Show(pCnt + "件の発注書を印刷します。よろしいですか。", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            // 印刷確認 : 2020/04/14
+            string msg = "";
+            if (radioButton1.Checked)
+            {
+                msg = "印刷";
+            }
+            else
+            {
+                msg = "Excel出力";
+            }
+
+            if (MessageBox.Show(pCnt + "件の発注書を" + msg + "します。よろしいですか。", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
 
-            PrintDialog pd = new PrintDialog();
-            pd.PrinterSettings = new System.Drawing.Printing.PrinterSettings();
-
-            if (pd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            // 印刷時のプリンター設定 : 2020/04/14
+            if (radioButton1.Checked)
             {
-                string printerName = pd.PrinterSettings.PrinterName; // プリンター名
-                int copies = pd.PrinterSettings.Copies; // 印刷部数
-                bool ptof = pd.PrinterSettings.PrintToFile; // printToFile
+                PrintDialog pd = new PrintDialog();
+                pd.PrinterSettings = new System.Drawing.Printing.PrinterSettings();
 
-                // ＦＡＸ注文書印刷
-                prnSheet(printerName, copies, ptof);
+                if (pd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    string printerName = pd.PrinterSettings.PrinterName; // プリンター名
+                    int copies = pd.PrinterSettings.Copies; // 印刷部数
+                    bool ptof = pd.PrinterSettings.PrintToFile; // printToFile
+
+                    // ＦＡＸ注文書印刷
+                    prnSheet(printerName, copies, ptof);
+                }
             }
+            else
+            {
+                // ＦＡＸ注文書Excel出力
+                prnSheet("", 0, false);
+            }
+
         }
                 
         private class clsVNouhin
@@ -717,41 +739,48 @@ namespace STSH_OCR.Pattern
                 oXls.DisplayAlerts = false;
                 oXlsBook.Sheets[1].Delete();
 
-                //System.Threading.Thread.Sleep(1000);
-
-                // 印刷
-                oXlsBook.PrintOutEx(Type.Missing, Type.Missing, copies, true, prnName, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-
-                //if (ptof)
-                //{
-                //    if (copies > 1)
-                //    {
-                //        int iX = 1;
-                //        while (iX <= copies)
-                //        {
-                //            oXlsBook.PrintOutEx(Type.Missing, Type.Missing, Type.Missing, true, prnName, ptof, Type.Missing, Type.Missing, Type.Missing);
-                //            iX++;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        oXlsBook.PrintOutEx(Type.Missing, Type.Missing, copies, true, prnName, ptof, Type.Missing, Type.Missing, Type.Missing);
-                //    }
-                //}
-                //else
-                //{
-                //    oXlsBook.PrintOutEx(Type.Missing, Type.Missing, copies, true, prnName, ptof, Type.Missing, Type.Missing, Type.Missing);
-                //}
+                // 印刷：2020/04/14
+                if (radioButton1.Checked)
+                {
+                    // 印刷
+                    oXlsBook.PrintOutEx(Type.Missing, Type.Missing, copies, true, prnName, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                }
 
                 // 確認のためExcelのウィンドウを非表示にする
                 oXls.Visible = false;
+
+                // Excel出力：2020/04/14
+                if (radioButton2.Checked)
+                {
+                    //ダイアログボックスの初期設定
+                    DialogResult ret;
+                    SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                    saveFileDialog1.Title = "FAX発注書";
+                    saveFileDialog1.OverwritePrompt = true;
+                    saveFileDialog1.RestoreDirectory = true;
+                    saveFileDialog1.FileName = "FAX発注書";
+                    saveFileDialog1.Filter = "Microsoft Office Excelファイル(*.xlsx)|*.xlsx|全てのファイル(*.*)|*.*";
+
+                    //ダイアログボックスを表示し「保存」ボタンが選択されたらファイル名を表示
+                    string fileName;
+                    ret = saveFileDialog1.ShowDialog();
+
+                    if (ret == System.Windows.Forms.DialogResult.OK)
+                    {
+                        fileName = saveFileDialog1.FileName;
+                        oXlsBook.SaveAs(fileName, Type.Missing, Type.Missing,
+                                        Type.Missing, Type.Missing, Type.Missing,
+                                        Excel.XlSaveAsAccessMode.xlNoChange, Type.Missing,
+                                        Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+                    }
+                }
 
                 // 終了メッセージ 
                 MessageBox.Show("終了しました");
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "印刷処理", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(e.Message, "出力処理", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
             finally

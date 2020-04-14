@@ -8,7 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ClosedXML.Excel;
-using OpenCvSharp;
+//using OpenCvSharp;
+using STSH_OCR.Common;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace STSH_OCR.OCR
@@ -37,7 +38,7 @@ namespace STSH_OCR.OCR
         float n_width = 0f;
         float n_height = 0f;
 
-        Mat mMat = new Mat();
+        //Mat mMat = new Mat();
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -204,7 +205,10 @@ namespace STSH_OCR.OCR
             // 画像表示
             if (System.IO.File.Exists(_Img))
             {
-                showImage_openCv(_Img);
+                //showImage_openCv(_Img);
+
+                // 2020/04/14
+                imgShow(_Img);
             }
 
             //comboBox1.DataSource = System.Drawing.Printing.PrinterSettings.InstalledPrinters;
@@ -215,26 +219,52 @@ namespace STSH_OCR.OCR
             }
         }
 
+        ///---------------------------------------------------------
+        /// <summary>
+        ///     画像表示メイン : 2020/04/14 </summary>
+        /// <param name="filePath">
+        ///     画像ファイルパス</param>
+        ///---------------------------------------------------------
+        private void imgShow(string filePath)
+        {
+            try
+            {
+                // System.Drawing.Imageを作成する
+                Image img = Utility.CreateImage(filePath);
+
+                // PictureBoxの大きさにあわせて画像を拡大または縮小して表示する
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+
+                // 画像を表示する
+                pictureBox1.Image = img;
+            }
+            catch (Exception ex)
+            {
+                pictureBox1.Image = null;
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         ///-----------------------------------------------------------
         /// <summary>
         ///     画像表示 openCV：2018/10/24 </summary>
         /// <param name="img">
         ///     表示画像ファイル名</param>
         ///-----------------------------------------------------------
-        private void showImage_openCv(string img)
-        {
-            n_width = B_WIDTH;
-            n_height = B_HEIGHT;
+        //private void showImage_openCv(string img)
+        //{
+        //    n_width = B_WIDTH;
+        //    n_height = B_HEIGHT;
 
-            imgShow(img, n_width, n_height);
-        }
+        //    imgShow(img, n_width, n_height);
+        //}
 
 
-        // GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
-        public static Bitmap MatToBitmap(Mat image)
-        {
-            return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
-        }
+        //// GUI上に画像を表示するには、OpenCV上で扱うMat形式をBitmap形式に変換する必要がある
+        //public static Bitmap MatToBitmap(Mat image)
+        //{
+        //    return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
+        //}
 
         ///---------------------------------------------------------
         /// <summary>
@@ -246,24 +276,24 @@ namespace STSH_OCR.OCR
         /// <param name="h">
         ///     height</param>
         ///---------------------------------------------------------
-        private void imgShow(string filePath, float w, float h)
-        {
-            mMat = new Mat(filePath, ImreadModes.Grayscale);
-            Bitmap bt = MatToBitmap(mMat);
+        //private void imgShow(string filePath, float w, float h)
+        //{
+        //    mMat = new Mat(filePath, ImreadModes.Grayscale);
+        //    Bitmap bt = MatToBitmap(mMat);
 
-            // Bitmap を生成
-            Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
+        //    // Bitmap を生成
+        //    Bitmap canvas = new Bitmap((int)(bt.Width * w), (int)(bt.Height * h));
 
-            Graphics g = Graphics.FromImage(canvas);
+        //    Graphics g = Graphics.FromImage(canvas);
 
-            g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
+        //    g.DrawImage(bt, 0, 0, bt.Width * w, bt.Height * h);
 
-            //メモリクリア
-            bt.Dispose();
-            g.Dispose();
+        //    //メモリクリア
+        //    bt.Dispose();
+        //    g.Dispose();
 
-            pictureBox1.Image = canvas;
-        }
+        //    pictureBox1.Image = canvas;
+        //}
 
         private void button3_Click(object sender, EventArgs e)
         {
