@@ -76,9 +76,9 @@ namespace STSH_OCR.Common
                 tempDGV.Columns[colCode].Width = 80;
                 tempDGV.Columns[colShiireNM].Width = 160;
                 tempDGV.Columns[colName].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                tempDGV.Columns[colJan].Width = 100;
+                tempDGV.Columns[colJan].Width = 110;
                 tempDGV.Columns[colKikaku].Width = 90;
-                tempDGV.Columns[colSyubai].Width = 100;
+                tempDGV.Columns[colSyubai].Width = 120;
 
                 //tempDGV.Columns[colAddress].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
@@ -145,19 +145,55 @@ namespace STSH_OCR.Common
 
             foreach (var t in global.dtSyohin.AsEnumerable().OrderBy(a => a["SIRESAKI_CD"].ToString()).ThenBy(a => a["SYOHIN_CD"].ToString()))
             {
+                // 終売含まない
                 if (!checkBox1.Checked && t["SHUBAI"].ToString() == global.FLGON)
                 {
                     continue;
                 }
-                
+
+                // 終売判断：2020/04/15
+                bool SHUBAI = Utility.IsShubai(t["LAST_SALE_YMD"].ToString());
+
+                string L_YMD = "";
+
+                if (t["LAST_SALE_YMD"].ToString().Length > 7)
+                {
+                    L_YMD = t["LAST_SALE_YMD"].ToString().Substring(0, 4) + "/" + t["LAST_SALE_YMD"].ToString().Substring(4, 2) + "/" +
+                            t["LAST_SALE_YMD"].ToString().Substring(6, 2);
+                }
+
+                //bool SHUBAI = false;
+                //string L_YMD = "";
+
+                //if (t["LAST_SALE_YMD"].ToString().Length > 7)
+                //{
+                //    L_YMD = t["LAST_SALE_YMD"].ToString().Substring(0, 4) + "/" + t["LAST_SALE_YMD"].ToString().Substring(4, 2) + "/" +
+                //            t["LAST_SALE_YMD"].ToString().Substring(6, 2);
+
+                //    // 終売判断：2020/04/15
+                //    DateTime dt;
+                //    if (DateTime.TryParse(L_YMD, out dt))
+                //    {
+                //        if (dt < DateTime.Today)
+                //        {
+                //            SHUBAI = true;
+                //        }
+                //    }
+                //}
+
+                if (!checkBox1.Checked && SHUBAI)
+                {
+                    continue;
+                }
+
                 // 商品コード検索
                 if (sCode.Text != string.Empty && !t["SYOHIN_CD"].ToString().Contains(sCode.Text))
                 {
                     continue;
                 }
 
-                // 商品名カナ検索
-                if (sName.Text != string.Empty && !t["SYOHIN_KANA"].ToString().Contains(sName.Text))
+                // 商品名検索
+                if (sName.Text != string.Empty && !t["SYOHIN_NM"].ToString().Contains(sName.Text))
                 {
                     continue;
                 }
@@ -187,19 +223,11 @@ namespace STSH_OCR.Common
                 dataGridView1[colName, cnt].Value = t["SYOHIN_NM"].ToString();
                 dataGridView1[colJan, cnt].Value = t["JAN_CD"].ToString();
                 dataGridView1[colKikaku, cnt].Value = t["SYOHIN_KIKAKU"].ToString();
+                dataGridView1[colSyubai, cnt].Value = L_YMD;
 
-                if (t["LAST_SALE_YMD"].ToString().Length > 7)
-                {
-                    dataGridView1[colSyubai, cnt].Value = t["LAST_SALE_YMD"].ToString().Substring(0, 4) + " / " +
-                                                          t["LAST_SALE_YMD"].ToString().Substring(4, 2) + " / " +
-                                                          t["LAST_SALE_YMD"].ToString().Substring(6, 2);
-                }
-                else
-                {
-                    dataGridView1[colSyubai, cnt].Value = ""; ;
-                }
+                dataGridView1.Rows[cnt].DefaultCellStyle.ForeColor = SystemColors.ControlText;
 
-                if (t["SHUBAI"].ToString() == global.FLGON)
+                if (SHUBAI)
                 {
                     dataGridView1.Rows[cnt].DefaultCellStyle.ForeColor = Color.Red;
                 }
@@ -207,6 +235,16 @@ namespace STSH_OCR.Common
                 {
                     dataGridView1.Rows[cnt].DefaultCellStyle.ForeColor = SystemColors.ControlText;
                 }
+
+                // 2020/04/15 コメント化
+                //if (t["SHUBAI"].ToString() == global.FLGON)
+                //{
+                //    dataGridView1.Rows[cnt].DefaultCellStyle.ForeColor = Color.Red;
+                //}
+                //else
+                //{
+                //    dataGridView1.Rows[cnt].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                //}
 
                 cnt++;
             }            
@@ -326,6 +364,11 @@ namespace STSH_OCR.Common
         private void btnS_Click(object sender, EventArgs e)
         {
             showNouhin(dataGridView1);
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1195,5 +1195,37 @@ namespace STSH_OCR.Common
             return img;
 
         }
+
+        ///--------------------------------------------------------------
+        /// <summary>
+        ///     終売判断：2020/04/15 </summary>
+        /// <param name="YMD">
+        ///     日付</param>
+        /// <returns>
+        ///     true:終売, false:非終売</returns>
+        ///--------------------------------------------------------------
+        public static bool IsShubai(string YMD)
+        {
+            // 終売判断：2020/04/15
+            bool SHUBAI = false;
+            string L_YMD = "";
+
+            if (YMD.Length > 7)
+            {
+                L_YMD = YMD.Substring(0, 4) + "/" + YMD.Substring(4, 2) + "/" + YMD.Substring(6, 2);
+
+                // 終売判断：2020/04/15
+                DateTime dt;
+                if (DateTime.TryParse(L_YMD, out dt))
+                {
+                    if (dt < DateTime.Today)
+                    {
+                        SHUBAI = true;
+                    }
+                }
+            }
+
+            return SHUBAI;
+        }
     }
 }

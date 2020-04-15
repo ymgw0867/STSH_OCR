@@ -63,7 +63,7 @@
             // sName
             // 
             this.sName.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.sName.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf;
+            this.sName.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
             this.sName.Location = new System.Drawing.Point(317, 12);
             this.sName.Name = "sName";
             this.sName.Size = new System.Drawing.Size(436, 22);
@@ -76,7 +76,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(15, 82);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 21;
-            this.dataGridView1.Size = new System.Drawing.Size(880, 502);
+            this.dataGridView1.Size = new System.Drawing.Size(946, 502);
             this.dataGridView1.StandardTab = true;
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellDoubleClick);
@@ -85,7 +85,7 @@
             // 
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(243)))), ((int)(((byte)(190)))));
             this.button2.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button2.Location = new System.Drawing.Point(797, 603);
+            this.button2.Location = new System.Drawing.Point(863, 603);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(98, 37);
             this.button2.TabIndex = 8;
@@ -99,7 +99,7 @@
             // 
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(243)))), ((int)(((byte)(190)))));
             this.button3.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.button3.Location = new System.Drawing.Point(693, 603);
+            this.button3.Location = new System.Drawing.Point(759, 603);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(98, 37);
             this.button3.TabIndex = 7;
@@ -116,7 +116,7 @@
             this.btnS.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnS.Image = ((System.Drawing.Image)(resources.GetObject("btnS.Image")));
             this.btnS.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnS.Location = new System.Drawing.Point(830, 12);
+            this.btnS.Location = new System.Drawing.Point(896, 12);
             this.btnS.Name = "btnS";
             this.btnS.Size = new System.Drawing.Size(65, 64);
             this.btnS.TabIndex = 6;
@@ -145,8 +145,9 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(113, 22);
             this.label3.TabIndex = 8;
-            this.label3.Text = "商品名カナ";
+            this.label3.Text = "商品名";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // sSName
             // 
@@ -235,7 +236,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(907, 652);
+            this.ClientSize = new System.Drawing.Size(973, 652);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.sJanCode);
             this.Controls.Add(this.label6);

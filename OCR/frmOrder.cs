@@ -2653,8 +2653,9 @@ namespace STSH_OCR.OCR
                     dg1[colNouka, e.RowIndex].Value = noukaBaika.NOUKA;     // 納価
                     dg1[colBaika, e.RowIndex].Value = noukaBaika.BAIKA;     // 売価
 
-                    // 終売のとき
-                    if (syohin.SHUBAI)
+                    // 終売のとき : 2020/04/15
+                    //if (syohin.SHUBAI)
+                    if (Utility.IsShubai(syohin.LAST_SALE_YMD))
                     {
                         if (syohin.LAST_SALE_YMD.Length > 7)
                         {

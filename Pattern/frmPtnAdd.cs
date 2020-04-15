@@ -841,6 +841,16 @@ namespace STSH_OCR.Pattern
                 g[colIrisu, cnt].Value = t["CASE_IRISU"].ToString();
                 g[colKikaku, cnt].Value = t["SYOHIN_KIKAKU"].ToString();
 
+                // 終売判断：2020/04/15
+                if (Utility.IsShubai(t["LAST_SALE_YMD"].ToString()))
+                {
+                    g.Rows[cnt].DefaultCellStyle.ForeColor = Color.Red;
+                }
+                else
+                {
+                    g.Rows[cnt].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                }
+
                 cnt++;
             }
 
@@ -969,6 +979,10 @@ namespace STSH_OCR.Pattern
                     rireki[i].SYOHIN_KIKAKU = t["SYOHIN_KIKAKU"].ToString();
                     rireki[i].CASE_IRISU = Utility.StrtoDouble(t["CASE_IRISU"].ToString());
                     rireki[i].Suu = 0;
+
+                    // 終売：2020/04/15
+                    rireki[i].Shubai = Utility.IsShubai(t["LAST_SALE_YMD"].ToString());
+
                     i++;
                 }
 
@@ -1020,6 +1034,16 @@ namespace STSH_OCR.Pattern
                     g[colHinName, cnt].Value = t.SYOHIN_NM;
                     g[colKikaku, cnt].Value = t.SYOHIN_KIKAKU;
                     g[colKikanUri, cnt].Value = t.Suu;
+
+                    // 終売判断：2020/04/15
+                    if (t.Shubai)
+                    {
+                        g.Rows[cnt].DefaultCellStyle.ForeColor = Color.Red;
+                    }
+                    else
+                    {
+                        g.Rows[cnt].DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                    }
 
                     cnt++;
                 }

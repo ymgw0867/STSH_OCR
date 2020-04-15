@@ -25,5 +25,7 @@ namespace STSH_OCR.Common
 
         // 期間発注数
         public int Suu { get; set; }
+
+        public bool Shubai { get; set; }
     }
 }

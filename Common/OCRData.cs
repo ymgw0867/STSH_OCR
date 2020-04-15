@@ -1314,8 +1314,9 @@ namespace STSH_OCR.Common
                 return false;
             }
 
-            // 終売で発注ありのとき
-            if (syohin.SHUBAI && ha)
+            // 終売で発注ありのとき : 2020/04/15
+            //if (syohin.SHUBAI && ha)
+            if (Utility.IsShubai(syohin.LAST_SALE_YMD) && ha)
             {
                 if (Goods[iX].Syubai == global.flgOff)
                 {
