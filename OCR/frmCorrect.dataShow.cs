@@ -1198,7 +1198,7 @@ namespace STSH_OCR.OCR
                 //ErrShow();
 
                 //データ数表示
-                lblPage.Text = " (" + (cIx + 1).ToString() + "/" + cID.Length + ")";
+                lblPage.Text =  (cIx + 1).ToString() + "/" + cID.Length;
             }
             else
             {

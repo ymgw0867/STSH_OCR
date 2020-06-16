@@ -74,6 +74,9 @@ namespace STSH_OCR.OCR
             }
 
             lblDataCnt.Text = dbFax.Count().ToString();
+
+            // リカバリーデータ件数表示：2020/06/16
+            lblRecCnt.Text = System.IO.Directory.GetFiles(Properties.Settings.Default.MyDataPath, "*.csv").Count().ToString();
         }
 
 
@@ -361,6 +364,7 @@ namespace STSH_OCR.OCR
             dCnt += Utility.StrtoInt(textBox1.Text);
             dCnt += checkedListBox1.CheckedItems.Count;
             dCnt += Utility.StrtoInt(lblDataCnt.Text);
+            dCnt += Utility.StrtoInt(lblRecCnt.Text);   // リカバリーデータ件数：2020/06/16
 
             return dCnt;
         }

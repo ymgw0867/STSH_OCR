@@ -427,10 +427,18 @@ namespace STSH_OCR
                     _ocrFile = true;
                     break;
                 }
-            } 
+            }
 
-            // ローカルデータベース
-            if (!_ocrFile && tblFax.Count() == 0 && tblHold.Count() == 0)
+            // リカバリ処理データが存在するか？：2020/06/16
+            bool _NgRec = false;
+            if (System.IO.Directory.GetFiles(Properties.Settings.Default.MyDataPath, "*.csv").Any())
+            {
+                _NgRec = true;
+            }
+
+            // ローカルデータベース：リカバリ処理データを条件に追加 2020/06/16
+            //if (!_ocrFile && tblFax.Count() == 0 && tblHold.Count() == 0)
+            if (!_ocrFile && tblFax.Count() == 0 && tblHold.Count() == 0 && !_NgRec)
             {
                 MessageBox.Show("現在、処理可能なＦＡＸ発注書データはありません", "確認", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;

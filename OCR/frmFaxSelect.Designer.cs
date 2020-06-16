@@ -42,6 +42,8 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.lblRecCnt = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -98,7 +100,7 @@
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(12, 475);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(514, 100);
+            this.checkedListBox1.Size = new System.Drawing.Size(514, 94);
             this.checkedListBox1.TabIndex = 2;
             // 
             // label1
@@ -135,7 +137,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("游ゴシック", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label7.Location = new System.Drawing.Point(143, 456);
+            this.label7.Location = new System.Drawing.Point(244, 456);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(281, 17);
             this.label7.TabIndex = 12;
@@ -183,12 +185,34 @@
             this.label5.TabIndex = 17;
             this.label5.Text = "【受信発注書】";
             // 
+            // lblRecCnt
+            // 
+            this.lblRecCnt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblRecCnt.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblRecCnt.Location = new System.Drawing.Point(950, 493);
+            this.lblRecCnt.Name = "lblRecCnt";
+            this.lblRecCnt.Size = new System.Drawing.Size(58, 23);
+            this.lblRecCnt.TabIndex = 18;
+            this.lblRecCnt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("游ゴシック", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label8.Location = new System.Drawing.Point(820, 496);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(129, 20);
+            this.label8.TabIndex = 19;
+            this.label8.Text = "リカバリーデータ";
+            // 
             // frmFaxSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1022, 589);
             this.ControlBox = false;
+            this.Controls.Add(this.lblRecCnt);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.listBox1);
@@ -229,5 +253,7 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblRecCnt;
+        private System.Windows.Forms.Label label8;
     }
 }

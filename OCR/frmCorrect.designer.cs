@@ -702,7 +702,7 @@
             this.lblPage.Size = new System.Drawing.Size(89, 33);
             this.lblPage.TabIndex = 598;
             this.lblPage.Text = "100/100";
-            this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblPage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblWarning
             // 
