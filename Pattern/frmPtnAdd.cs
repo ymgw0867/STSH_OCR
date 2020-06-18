@@ -1009,7 +1009,7 @@ namespace STSH_OCR.Pattern
                     {
                         for (int iX = 0; iX < rireki.Length; iX++)
                         {
-                            if (rireki[iX].SYOHIN_CD == reader["商品コード"].ToString())
+                            if (rireki[iX].SYOHIN_CD.PadLeft(8, '0') == reader["商品コード"].ToString().PadLeft(8, '0'))
                             {
                                 rireki[iX].Suu = Utility.StrtoInt(reader["suu"].ToString());
                                 break;
