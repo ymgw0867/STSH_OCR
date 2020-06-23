@@ -75,6 +75,7 @@
             this.txtComment4 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.ToolStripMenuItem_Sort = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView3 = new STSH_OCR.DataGridViewEx();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -266,9 +267,10 @@
             this.ToolStripMenuItem_Delete,
             this.ToolStripMenuItem_Before,
             this.ToolStripMenuItem_After,
-            this.ToolStripMenuItem_ReadDays});
+            this.ToolStripMenuItem_ReadDays,
+            this.ToolStripMenuItem_Sort});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(173, 136);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(251, 158);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // toolStripMenuItem_SyohinAdd
@@ -278,7 +280,7 @@
             this.ToolStripMenuItem_SyohinInsert});
             this.toolStripMenuItem_SyohinAdd.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.toolStripMenuItem_SyohinAdd.Name = "toolStripMenuItem_SyohinAdd";
-            this.toolStripMenuItem_SyohinAdd.Size = new System.Drawing.Size(172, 22);
+            this.toolStripMenuItem_SyohinAdd.Size = new System.Drawing.Size(250, 22);
             this.toolStripMenuItem_SyohinAdd.Text = "選択商品登録";
             // 
             // 最後に追加AToolStripMenuItem
@@ -299,7 +301,7 @@
             // 
             this.ToolStripMenuItem_Insert.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.ToolStripMenuItem_Insert.Name = "ToolStripMenuItem_Insert";
-            this.ToolStripMenuItem_Insert.Size = new System.Drawing.Size(172, 22);
+            this.ToolStripMenuItem_Insert.Size = new System.Drawing.Size(250, 22);
             this.ToolStripMenuItem_Insert.Text = "行挿入(&I)";
             this.ToolStripMenuItem_Insert.Click += new System.EventHandler(this.行挿入ToolStripMenuItem_Click);
             // 
@@ -307,28 +309,28 @@
             // 
             this.ToolStripMenuItem_Delete.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.ToolStripMenuItem_Delete.Name = "ToolStripMenuItem_Delete";
-            this.ToolStripMenuItem_Delete.Size = new System.Drawing.Size(172, 22);
+            this.ToolStripMenuItem_Delete.Size = new System.Drawing.Size(250, 22);
             this.ToolStripMenuItem_Delete.Text = "行削除(&D)";
             this.ToolStripMenuItem_Delete.Click += new System.EventHandler(this.行削除ToolStripMenuItem_Click);
             // 
             // ToolStripMenuItem_Before
             // 
             this.ToolStripMenuItem_Before.Name = "ToolStripMenuItem_Before";
-            this.ToolStripMenuItem_Before.Size = new System.Drawing.Size(172, 22);
+            this.ToolStripMenuItem_Before.Size = new System.Drawing.Size(250, 22);
             this.ToolStripMenuItem_Before.Text = "前へ移動(&B)";
             this.ToolStripMenuItem_Before.Click += new System.EventHandler(this.前へ移動BToolStripMenuItem_Click);
             // 
             // ToolStripMenuItem_After
             // 
             this.ToolStripMenuItem_After.Name = "ToolStripMenuItem_After";
-            this.ToolStripMenuItem_After.Size = new System.Drawing.Size(172, 22);
+            this.ToolStripMenuItem_After.Size = new System.Drawing.Size(250, 22);
             this.ToolStripMenuItem_After.Text = "後へ移動(&A)";
             this.ToolStripMenuItem_After.Click += new System.EventHandler(this.ToolStripMenuItem_After_Click);
             // 
             // ToolStripMenuItem_ReadDays
             // 
             this.ToolStripMenuItem_ReadDays.Name = "ToolStripMenuItem_ReadDays";
-            this.ToolStripMenuItem_ReadDays.Size = new System.Drawing.Size(172, 22);
+            this.ToolStripMenuItem_ReadDays.Size = new System.Drawing.Size(250, 22);
             this.ToolStripMenuItem_ReadDays.Text = "リード日数設定(&R)";
             this.ToolStripMenuItem_ReadDays.Click += new System.EventHandler(this.ToolStripMenuItem_ReadDays_Click);
             // 
@@ -579,6 +581,13 @@
             this.label11.Text = "ＦＡＸ";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // ToolStripMenuItem_Sort
+            // 
+            this.ToolStripMenuItem_Sort.Name = "ToolStripMenuItem_Sort";
+            this.ToolStripMenuItem_Sort.Size = new System.Drawing.Size(250, 22);
+            this.ToolStripMenuItem_Sort.Text = "商品分類・商品コードで並び替え";
+            this.ToolStripMenuItem_Sort.Click += new System.EventHandler(this.分類商品コードで並び替えToolStripMenuItem_Click);
+            // 
             // dataGridView3
             // 
             this.dataGridView3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -592,7 +601,6 @@
             this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
             this.dataGridView3.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView3_EditingControlShowing);
             this.dataGridView3.Leave += new System.EventHandler(this.dataGridView3_Leave);
-            this.dataGridView3.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView3_MouseClick);
             // 
             // frmPtnAdd
             // 
@@ -703,5 +711,6 @@
         private System.Windows.Forms.TextBox txtComment4;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_Sort;
     }
 }

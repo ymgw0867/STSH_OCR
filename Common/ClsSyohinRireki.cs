@@ -26,6 +26,16 @@ namespace STSH_OCR.Common
         // 期間発注数
         public int Suu { get; set; }
 
+        // 終売
         public bool Shubai { get; set; }
+
+        // 大分類 : 2020/06/22
+        public string SYOHIN_KIND_L_CD { get; set; }
+
+        // 中分類 : 2020/06/22
+        public string SYOHIN_KIND_M_CD { get; set; }
+
+        // 小分類 : 2020/06/22
+        public string SYOHIN_KIND_S_CD { get; set; }
     }
 }

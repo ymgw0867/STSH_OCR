@@ -368,6 +368,8 @@ namespace STSH_OCR.Pattern
         private string colMaker = "c13";
         private string colSeqNum = "c14";
         private string colKikanUri = "c15";
+        private string colBunrui_L = "c16";
+        private string colBunrui_M = "c17";
 
         ///------------------------------------------------------------------------
         /// <summary>
@@ -514,12 +516,17 @@ namespace STSH_OCR.Pattern
 
                 tempDGV.Columns.Add(colJanCD, "JAN");
                 tempDGV.Columns.Add(colReadDays, "リード");
+                tempDGV.Columns.Add(colBunrui_L, "商品分類");
+                //tempDGV.Columns.Add(colBunrui_M, "中分類");
 
                 tempDGV.Columns[colSeqNum].Width = 40;
-                tempDGV.Columns[colMaker].Width = 220;
+                tempDGV.Columns[colMaker].Width = 200;
                 tempDGV.Columns[colHinCode].Width = 80;
-                tempDGV.Columns[colIrisu].Width = 50;
                 tempDGV.Columns[colKikaku].Width = 80;
+                tempDGV.Columns[colIrisu].Width = 50;
+
+                tempDGV.Columns[colBunrui_L].Width = 180;   // 2020/06/23
+                //tempDGV.Columns[colBunrui_M].Width = 100;   // 2020/06/23
 
                 //tempDGV.Columns[colNouka].Width = 60;  // 2020/04/10
                 //tempDGV.Columns[colBaika].Width = 60;  // 2020/04/10
@@ -545,8 +552,9 @@ namespace STSH_OCR.Pattern
 
                 foreach (DataGridViewColumn c in tempDGV.Columns)
                 {
-                    // 編集可否
-                    if (c.Name == colSeqNum || c.Name == colMaker || c.Name == colKikaku || c.Name == colIrisu || c.Name == colJanCD)
+                    // 編集可否 : 大分類、中分類を追加 2020/06/23
+                    if (c.Name == colSeqNum || c.Name == colMaker || c.Name == colKikaku || c.Name == colIrisu || c.Name == colJanCD || 
+                        c.Name == colBunrui_L || c.Name == colBunrui_M)
                     {
                         c.ReadOnly = true;
                     }
@@ -944,8 +952,6 @@ namespace STSH_OCR.Pattern
         //}
 
 
-
-
         ///--------------------------------------------------------
         /// <summary>
         ///     データグリッドに商品履歴を表示する </summary>
@@ -960,18 +966,52 @@ namespace STSH_OCR.Pattern
         {
             this.Cursor = Cursors.WaitCursor;
 
-            // 商品明細クラス
-            //ClsSyohinRireki[] rireki = new ClsSyohinRireki[global.syohin_News.Length];  // 2020/04/09 コメント化            
-            ClsSyohinRireki[] rireki = new ClsSyohinRireki[global.dtSyohin.Rows.Count];     // 2020/04/09
+            // 商品明細クラス    
+            ClsSyohinRireki[] rireki = new ClsSyohinRireki[global.dtSyohin.Rows.Count];     // 2020/04/09 
+            //ClsSyohinRireki[] rireki = null;     // 2020/04/09
 
             cn.Open();
 
             try
             {
+                //// 商品分類検索
+                //string Bunrui_L = Utility.NulltoStr(cmbSyohin_L.SelectedValue);
+                //string Bunrui_M = Utility.NulltoStr(cmbSyohin_M.SelectedValue);
+                //string Bunrui_S = Utility.NulltoStr(cmbSyohin_S.SelectedValue);
+
                 // 商品明細クラスに商品情報をセットする
                 int i = 0;
                 foreach (var t in global.dtSyohin.AsEnumerable())
                 {
+                    //// 大分類 : 2020/06/22
+                    //if (Bunrui_L != string.Empty)
+                    //{
+                    //    if (t["SYOHIN_KIND_L_CD"].ToString().PadLeft(2, '0') != Bunrui_L)
+                    //    {
+                    //        continue;
+                    //    }
+
+                    //    // 中分類 : 2020/06/22
+                    //    if (Bunrui_M != string.Empty)
+                    //    {
+                    //        if (t["SYOHIN_KIND_M_CD"].ToString().PadLeft(2, '0') != Bunrui_M)
+                    //        {
+                    //            continue;
+                    //        }
+
+                    //        // 小分類 : 2020/06/22
+                    //        if (Bunrui_S != string.Empty)
+                    //        {
+                    //            if (t["SYOHIN_KIND_S_CD"].ToString().PadLeft(2, '0') != Bunrui_S)
+                    //            {
+                    //                continue;
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
+                    Array.Resize(ref rireki, i + 1);
+
                     rireki[i] = new ClsSyohinRireki();
                     rireki[i].SYOHIN_CD = t["SYOHIN_CD"].ToString();
                     rireki[i].SYOHIN_NM = t["SYOHIN_NM"].ToString();
@@ -982,6 +1022,27 @@ namespace STSH_OCR.Pattern
 
                     // 終売：2020/04/15
                     rireki[i].Shubai = Utility.IsShubai(t["LAST_SALE_YMD"].ToString());
+
+                    //// 大分類・中分類名称取得 : 2020/06/22
+                    //string B_Name = GetSyohin_LM_Name(t["SYOHIN_KIND_L_CD"].ToString().PadLeft(2, '0'), t["SYOHIN_KIND_M_CD"].ToString().PadLeft(2, '0'));
+
+                    //string [] bb_Name = B_Name.Split(',');
+
+                    //// 大分類・中分類・小分類 : 2020/06/22
+                    //if (bb_Name.Length > 1)
+                    //{
+                    //    rireki[i].SYOHIN_KIND_L_CD = bb_Name[0];
+                    //    rireki[i].SYOHIN_KIND_M_CD = bb_Name[1];
+                    //}
+                    //else
+                    //{
+                    //    rireki[i].SYOHIN_KIND_L_CD = "";
+                    //    rireki[i].SYOHIN_KIND_M_CD = "";
+                    //}
+
+                    rireki[i].SYOHIN_KIND_L_CD = "";
+                    rireki[i].SYOHIN_KIND_M_CD = "";
+                    rireki[i].SYOHIN_KIND_S_CD = "";
 
                     i++;
                 }
@@ -1009,6 +1070,7 @@ namespace STSH_OCR.Pattern
                     {
                         for (int iX = 0; iX < rireki.Length; iX++)
                         {
+                            // 商品コードが一致している
                             if (rireki[iX].SYOHIN_CD.PadLeft(8, '0') == reader["商品コード"].ToString().PadLeft(8, '0'))
                             {
                                 rireki[iX].Suu = Utility.StrtoInt(reader["suu"].ToString());
@@ -2194,11 +2256,6 @@ namespace STSH_OCR.Pattern
             //}
         }
 
-        private void dataGridView3_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
-
         private void dataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             // 商品コード
@@ -2216,6 +2273,22 @@ namespace STSH_OCR.Pattern
 
                 dataGridView3[colJanCD, e.RowIndex].Value = cls.JAN_CD;
                 dataGridView3[colReadDays, e.RowIndex].Value = global.FLGOFF;   // 初期値ゼロ表示：2020/04/10
+
+                // 大分類、中分類表示：2020/06/23
+                //string [] bArray = GetSyohin_LM_Name(cls.SYOHIN_KIND_L_CD, cls.SYOHIN_KIND_M_CD).Split(',');
+                //if (bArray.Length > 1)
+                //{
+                //    dataGridView3[colBunrui_L, e.RowIndex].Value = bArray[0];
+                //    dataGridView3[colBunrui_M, e.RowIndex].Value = bArray[1];
+                //}
+                //else
+                //{
+                //    dataGridView3[colBunrui_L, e.RowIndex].Value = "";
+                //    dataGridView3[colBunrui_M, e.RowIndex].Value = "";
+                //}
+
+                // 大分類、中分類表示：2020/06/23
+                dataGridView3[colBunrui_L, e.RowIndex].Value = GetSyohin_LM_Name(cls.SYOHIN_KIND_L_CD, cls.SYOHIN_KIND_M_CD);
             }
 
             // リード日数
@@ -2274,7 +2347,7 @@ namespace STSH_OCR.Pattern
 
                     //int gRow = r + dataGridView1.SelectedRows.Count - 1 - i;
 
-                    dataGridView3[colHinCode, dataGridView3.Rows.Count - 1].Value = dataGridView1[colHinCode, dataGridView1.SelectedRows[i].Index].Value.ToString();
+                    dataGridView3[colHinCode, dataGridView3.Rows.Count - 1].Value = dataGridView1[colHinCode, dataGridView1.SelectedRows[i].Index].Value.ToString().PadLeft(8, '0');
                     dataGridView1.SelectedRows[i].DefaultCellStyle.BackColor = Color.LightPink;
                 }
 
@@ -2333,6 +2406,8 @@ namespace STSH_OCR.Pattern
                     ToolStripMenuItem_Before.Enabled = false;   // 前へ移動
                     ToolStripMenuItem_After.Enabled = false;    // 後へ移動
                 }
+
+                ToolStripMenuItem_Sort.Enabled = true;      // 商品分類、商品コードで並び替え：2020/06/23
             }
             else
             {
@@ -2342,6 +2417,16 @@ namespace STSH_OCR.Pattern
                 ToolStripMenuItem_Before.Enabled = false;   // 前へ移動
                 ToolStripMenuItem_After.Enabled = false;    // 後へ移動
                 ToolStripMenuItem_ReadDays.Enabled = false; // リード日数
+
+                // 登録商品があるか：2020/06/23
+                if (dataGridView3.Rows.Count < 1)
+                {
+                    ToolStripMenuItem_Sort.Enabled = false;      // 商品分類、商品コードで並び替え：2020/06/23
+                }
+                else
+                {
+                    ToolStripMenuItem_Sort.Enabled = true;      // 商品分類、商品コードで並び替え：2020/06/23
+                }
             }
         }
 
@@ -2357,7 +2442,7 @@ namespace STSH_OCR.Pattern
             // 商品登録
             for (int i = dataGridView1.SelectedRows.Count - 1; i >= 0; i--)
             {
-                dataGridView3[colHinCode, r + iX].Value = dataGridView1[colHinCode, dataGridView1.SelectedRows[i].Index].Value.ToString();
+                dataGridView3[colHinCode, r + iX].Value = dataGridView1[colHinCode, dataGridView1.SelectedRows[i].Index].Value.ToString().PadLeft(8, '0');
                 dataGridView1.SelectedRows[i].DefaultCellStyle.BackColor = Color.LightPink;
 
                 iX++;
@@ -2789,7 +2874,7 @@ namespace STSH_OCR.Pattern
         //    csvArray = new string[global.syohin_News.Length + 1];
         //    StringBuilder sb = new StringBuilder();
         //    csvArray[0] = "SYOHIN_CD,SYOHIN_NM,SYOHIN_SNM,SIRESAKI_CD,SIRESAKI_NM,SIRESAKI_KANA_NM,JAN_CD,SYOHIN_KIKAKU,CASE_IRISU,NOUHIN_KARI_TANKA,RETAIL_TANKA,HATYU_LIMIT_DAY_CNT,START_SALE_YMD,LAST_SALE_YMD,SHUBAI,SYOHIN_KIND_L_CD,SYOHIN_KIND_M_CD,SYOHIN_KIND_S_CD,SYOHIN_KIND_CD";
-            
+
         //    for (int i = 0; i < global.syohin_News.Length; i++)
         //    {
         //        sb.Clear();
@@ -2831,5 +2916,118 @@ namespace STSH_OCR.Pattern
         //    MessageBox.Show("Finish!");
         //}
 
+        ///----------------------------------------------------------------------------------
+        /// <summary>
+        ///     商品の大分類、中分類名称を取得する </summary>
+        /// <param name="L_Code">
+        ///     大分類コード </param>
+        /// <param name="M_Code">
+        ///     中分類コード</param>
+        /// <returns>
+        ///     文字列 "コード+大分類名,コード＋中分類名"</returns>
+        ///----------------------------------------------------------------------------------
+        private string GetSyohin_LM_Name(string L_Code, string M_Code)
+        {
+            string RtnName = "";
+
+            L_Code = L_Code.PadLeft(2, '0');
+            M_Code = M_Code.PadLeft(2, '0');
+
+            // 商品分類リスト読み込み
+            if (System.IO.File.Exists(Properties.Settings.Default.商品分類リスト))
+            {
+                using (IXLWorkbook bk = new XLWorkbook(Properties.Settings.Default.商品分類リスト, XLEventTracking.Disabled))
+                {
+                    var sheet1 = bk.Worksheet(1);
+                    var tbl = sheet1.RangeUsed().AsTable();
+
+                    int Cnt = 0;
+                    foreach (var t in tbl.DataRange.Rows())
+                    {
+                        if (t.RowNumber() < 3)
+                        {
+                            continue;
+                        }
+
+                        if (Utility.NulltoStr(t.Cell(3).Value) == string.Empty)
+                        {
+                            // 中分類コード空白はネグる
+                            continue;
+                        }
+
+                        string BunruiCD_L = Utility.NulltoStr(t.Cell(1).Value).PadLeft(2, '0'); // 大分類
+
+                        if (L_Code == BunruiCD_L)
+                        {
+                            string BunruiCD_M = Utility.NulltoStr(t.Cell(3).Value).PadLeft(2, '0');
+
+                            if (M_Code == BunruiCD_M)
+                            {
+                                RtnName = BunruiCD_L + BunruiCD_M +" " + Utility.NulltoStr(t.Cell(2).Value) + "・" + Utility.NulltoStr(t.Cell(4).Value);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return RtnName;
+        }
+
+        public class CustomComparer : System.Collections.IComparer
+        {
+            private int sortOrder;
+            private System.Collections.Comparer comparer;
+
+            public CustomComparer(SortOrder order)
+            {
+                this.sortOrder = (order == SortOrder.Descending ? -1 : 1);
+                this.comparer = new System.Collections.Comparer(System.Globalization.CultureInfo.CurrentCulture);
+            }
+
+            //並び替え方を定義する
+            public int Compare(object x, object y)
+            {
+                int result = 0;
+
+                DataGridViewRow rowx = (DataGridViewRow)x;
+                DataGridViewRow rowy = (DataGridViewRow)y;
+
+                //はじめの列のセルの値を比較し、同じならば次の列を比較する
+                //for (int i = 0; i < rowx.Cells.Count; i++)
+                //{
+                //    result = this.comparer.Compare(rowx.Cells[i].Value, rowy.Cells[i].Value);
+
+                //    if (result != 0)
+                //    {
+                //        break;
+                //    }
+                //}
+
+                result = this.comparer.Compare(rowx.Cells[8].Value, rowy.Cells[8].Value);
+
+                if (result == 0)
+                {
+                    result = this.comparer.Compare(rowx.Cells[2].Value, rowy.Cells[2].Value);
+                }
+
+                //結果を返す
+                return result * this.sortOrder;
+            }
+        }
+
+        private void button9_Click_1(object sender, EventArgs e)
+        {
+            dataGridView3.Sort(new CustomComparer(SortOrder.Ascending));
+        }
+
+        private void 分類商品コードで並び替えToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 並び替え：2020/06/23
+            dataGridView3.Sort(new CustomComparer(SortOrder.Ascending));
+
+            // ナンバーリング：2020/06/23
+            SetGridSeqNumber(dataGridView3);
+        }
     }
 }
