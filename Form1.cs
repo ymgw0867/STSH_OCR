@@ -297,8 +297,8 @@ namespace STSH_OCR
             context2 = new DataContext(cn2);
             tblFax = context2.GetTable<Common.ClsFaxOrder>();
 
-            // orderpattern にコメントフィールド追加：2020/04/01
-            DbAlterTable();
+            // orderpattern にコメントフィールド追加：2020/04/01 コメント化：2020/06/26
+            //DbAlterTable();
         }
 
         ///---------------------------------------------------------

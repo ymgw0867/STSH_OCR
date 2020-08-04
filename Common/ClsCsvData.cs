@@ -224,11 +224,13 @@ namespace STSH_OCR.Common
             // 得意先コード
             public string TOKUISAKI_CD { get; set; }
 
-            // 得意先名称
-            public int NOUKA { get; set; }
+            // 納価
+            //public int NOUKA { get; set; }    // 2020/08/04 コメント化
+            public double NOUKA { get; set; }   // 202020/08/04 浮動小数点
 
-            // 納品日
-            public int BAIKA { get; set; }
+            // 売価
+            //public int BAIKA { get; set; }    // 2020/08/04 コメント化
+            public double BAIKA { get; set; }   // 202020/08/04 浮動小数点
         }
     }
 }

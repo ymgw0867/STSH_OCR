@@ -602,8 +602,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code1"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka1"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika1"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka1"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika1"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka1"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika1"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods1_1"].ToString();
                         goods[i].Suu[1] = r["Goods1_2"].ToString();
                         goods[i].Suu[2] = r["Goods1_3"].ToString();
@@ -626,8 +628,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code2"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka2"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika2"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka2"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika2"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka2"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika2"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods2_1"].ToString();
                         goods[i].Suu[1] = r["Goods2_2"].ToString();
                         goods[i].Suu[2] = r["Goods2_3"].ToString();
@@ -651,8 +655,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code3"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka3"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika3"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka3"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika3"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka3"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika3"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods3_1"].ToString();
                         goods[i].Suu[1] = r["Goods3_2"].ToString();
                         goods[i].Suu[2] = r["Goods3_3"].ToString();
@@ -676,8 +682,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code4"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka4"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika4"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka4"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika4"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka4"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika4"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods4_1"].ToString();
                         goods[i].Suu[1] = r["Goods4_2"].ToString();
                         goods[i].Suu[2] = r["Goods4_3"].ToString();
@@ -700,8 +708,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code5"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka5"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika5"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka5"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika5"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka5"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika5"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods5_1"].ToString();
                         goods[i].Suu[1] = r["Goods5_2"].ToString();
                         goods[i].Suu[2] = r["Goods5_3"].ToString();
@@ -724,8 +734,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code6"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka6"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika6"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka6"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika6"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka6"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika6"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods6_1"].ToString();
                         goods[i].Suu[1] = r["Goods6_2"].ToString();
                         goods[i].Suu[2] = r["Goods6_3"].ToString();
@@ -748,8 +760,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code7"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka7"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika7"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka7"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika7"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka7"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika7"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods7_1"].ToString();
                         goods[i].Suu[1] = r["Goods7_2"].ToString();
                         goods[i].Suu[2] = r["Goods7_3"].ToString();
@@ -771,8 +785,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code8"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka8"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika8"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka8"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika8"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka8"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika8"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods8_1"].ToString();
                         goods[i].Suu[1] = r["Goods8_2"].ToString();
                         goods[i].Suu[2] = r["Goods8_3"].ToString();
@@ -795,8 +811,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code9"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka9"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika9"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka9"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika9"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka9"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika9"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods9_1"].ToString();
                         goods[i].Suu[1] = r["Goods9_2"].ToString();
                         goods[i].Suu[2] = r["Goods9_3"].ToString();
@@ -819,8 +837,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code10"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka10"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika10"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka10"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika10"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka10"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika10"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods10_1"].ToString();
                         goods[i].Suu[1] = r["Goods10_2"].ToString();
                         goods[i].Suu[2] = r["Goods10_3"].ToString();
@@ -843,8 +863,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code11"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka11"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika11"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka11"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika11"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka11"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika11"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods11_1"].ToString();
                         goods[i].Suu[1] = r["Goods11_2"].ToString();
                         goods[i].Suu[2] = r["Goods11_3"].ToString();
@@ -867,8 +889,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code12"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka12"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika12"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka12"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika12"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka12"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika12"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods12_1"].ToString();
                         goods[i].Suu[1] = r["Goods12_2"].ToString();
                         goods[i].Suu[2] = r["Goods12_3"].ToString();
@@ -891,8 +915,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code13"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka13"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika13"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka13"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika13"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka13"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika13"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods13_1"].ToString();
                         goods[i].Suu[1] = r["Goods13_2"].ToString();
                         goods[i].Suu[2] = r["Goods13_3"].ToString();
@@ -915,8 +941,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code14"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka14"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika14"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka14"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika14"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka14"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika14"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods14_1"].ToString();
                         goods[i].Suu[1] = r["Goods14_2"].ToString();
                         goods[i].Suu[2] = r["Goods14_3"].ToString();
@@ -938,8 +966,10 @@ namespace STSH_OCR.OCR
                             goods[i].Code = r["G_Code15"].ToString();
                         }
 
-                        goods[i].Nouka = Utility.StrtoInt(r["G_Nouka15"].ToString());
-                        goods[i].Baika = Utility.StrtoInt(r["G_Baika15"].ToString());
+                        //goods[i].Nouka = Utility.StrtoInt(r["G_Nouka15"].ToString());  // 2020/08/04 コメント化
+                        //goods[i].Baika = Utility.StrtoInt(r["G_Baika15"].ToString());  // 2020/08/04 コメント化
+                        goods[i].Nouka = Utility.StrtoDouble(r["G_Nouka15"].ToString());  // 2020/08/04 小数点以下対応
+                        goods[i].Baika = Utility.StrtoDouble(r["G_Baika15"].ToString());  // 2020/08/04 小数点以下対応
                         goods[i].Suu[0] = r["Goods15_1"].ToString();
                         goods[i].Suu[1] = r["Goods15_2"].ToString();
                         goods[i].Suu[2] = r["Goods15_3"].ToString();
@@ -964,12 +994,14 @@ namespace STSH_OCR.OCR
 
                 if (goods[i].Nouka != 0)
                 {
-                    dataGrid[colNouka, i * 2 + 1].Value = goods[i].Nouka;
+                    //dataGrid[colNouka, i * 2 + 1].Value = goods[i].Nouka;     // 2020/08/04 コメント化
+                    dataGrid[colNouka, i * 2 + 1].Value = String.Format("{0:0.##}", goods[i].Nouka / 100);  // 2020/08/04 小数点以下対応
                 }
 
                 if (goods[i].Baika != 0)
                 {
-                    dataGrid[colBaika, i * 2 + 1].Value = goods[i].Baika;
+                    //dataGrid[colBaika, i * 2 + 1].Value = goods[i].Baika;     // 2020/08/04 コメント化
+                    dataGrid[colBaika, i * 2 + 1].Value = String.Format("{0:0.##}", goods[i].Baika / 100);  // 2020/08/04 小数点以下対応
                 }
 
                 global.ChangeValueStatus = true;
