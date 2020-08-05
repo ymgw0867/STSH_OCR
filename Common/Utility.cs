@@ -499,10 +499,14 @@ namespace STSH_OCR.Common
 
             foreach (var t in rows)
             {
-                cls.TOKUISAKI_CD = t["得意先コード"].ToString();      // 得意先コード
-                cls.SYOHIN_CD = t["商品コード"].ToString();           // 商品コード
-                cls.NOUKA = Utility.StrtoInt(t["納価"].ToString());   // 納価
-                cls.BAIKA = Utility.StrtoInt(t["売価"].ToString());   // 売価
+                cls.TOKUISAKI_CD = t["得意先コード"].ToString();           // 得意先コード
+                cls.SYOHIN_CD = t["商品コード"].ToString();                // 商品コード
+
+                //cls.NOUKA = Utility.StrtoInt(t["納価"].ToString());     // 納価
+                //cls.BAIKA = Utility.StrtoInt(t["売価"].ToString());     // 売価
+                
+                cls.NOUKA = Utility.StrtoDouble(t["納価"].ToString());    // 納価 2020/08/05 小数点以下対応 
+                cls.BAIKA = Utility.StrtoDouble(t["売価"].ToString());    // 売価 2020/08/05 小数点以下対応
 
                 break;
             }

@@ -751,21 +751,22 @@ namespace STSH_OCR.OCR
                 //Sql += "G_Nouka15 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colNouka, 29].Value)) + ",";
 
                 // 小数点以下対応 2020/08/04 
-                Sql += "G_Nouka1 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 1].Value)) * 100 + ",";
-                Sql += "G_Nouka2 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 3].Value)) * 100 + ",";
-                Sql += "G_Nouka3 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 5].Value)) * 100 + ",";
-                Sql += "G_Nouka4 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 7].Value)) * 100 + ",";
-                Sql += "G_Nouka5 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 9].Value)) * 100 + ",";
-                Sql += "G_Nouka6 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 11].Value)) * 100 + ",";
-                Sql += "G_Nouka7 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 13].Value)) * 100 + ",";
-                Sql += "G_Nouka8 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 15].Value)) * 100 + ",";
-                Sql += "G_Nouka9 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 17].Value)) * 100 + ",";
-                Sql += "G_Nouka10 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 19].Value)) * 100 + ",";
-                Sql += "G_Nouka11 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 21].Value)) * 100 + ",";
-                Sql += "G_Nouka12 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 23].Value)) * 100 + ",";
-                Sql += "G_Nouka13 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 25].Value)) * 100 + ",";
-                Sql += "G_Nouka14 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 27].Value)) * 100 + ",";
-                Sql += "G_Nouka15 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 29].Value)) * 100 + ",";
+                // コメント化 2020/08/05：納価を保持しない 
+                //Sql += "G_Nouka1 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 1].Value)) * 100 + ",";
+                //Sql += "G_Nouka2 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 3].Value)) * 100 + ",";
+                //Sql += "G_Nouka3 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 5].Value)) * 100 + ",";
+                //Sql += "G_Nouka4 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 7].Value)) * 100 + ",";
+                //Sql += "G_Nouka5 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 9].Value)) * 100 + ",";
+                //Sql += "G_Nouka6 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 11].Value)) * 100 + ",";
+                //Sql += "G_Nouka7 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 13].Value)) * 100 + ",";
+                //Sql += "G_Nouka8 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 15].Value)) * 100 + ",";
+                //Sql += "G_Nouka9 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 17].Value)) * 100 + ",";
+                //Sql += "G_Nouka10 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 19].Value)) * 100 + ",";
+                //Sql += "G_Nouka11 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 21].Value)) * 100 + ",";
+                //Sql += "G_Nouka12 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 23].Value)) * 100 + ",";
+                //Sql += "G_Nouka13 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 25].Value)) * 100 + ",";
+                //Sql += "G_Nouka14 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 27].Value)) * 100 + ",";
+                //Sql += "G_Nouka15 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colNouka, 29].Value)) * 100 + ",";
 
                 // 2020/08/04 コメント化
                 //Sql += "G_Baika1 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 1].Value)) + ",";
@@ -784,22 +785,23 @@ namespace STSH_OCR.OCR
                 //Sql += "G_Baika14 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 27].Value)) + ",";
                 //Sql += "G_Baika15 = " + Utility.StrtoInt(Utility.NulltoStr(dg1[colBaika, 29].Value)) + ",";
 
-                // 小数点以下対応 2020/08/04 
-                Sql += "G_Baika1 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 1].Value)) * 100 + ",";
-                Sql += "G_Baika2 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 3].Value)) * 100 + ",";
-                Sql += "G_Baika3 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 5].Value)) * 100 + ",";
-                Sql += "G_Baika4 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 7].Value)) * 100 + ",";
-                Sql += "G_Baika5 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 9].Value)) * 100 + ",";
-                Sql += "G_Baika6 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 11].Value)) * 100 + ",";
-                Sql += "G_Baika7 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 13].Value)) * 100 + ",";
-                Sql += "G_Baika8 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 15].Value)) * 100 + ",";
-                Sql += "G_Baika9 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 17].Value)) * 100 + ",";
-                Sql += "G_Baika10 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 19].Value)) * 100 + ",";
-                Sql += "G_Baika11 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 21].Value)) * 100 + ",";
-                Sql += "G_Baika12 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 23].Value)) * 100 + ",";
-                Sql += "G_Baika13 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 25].Value)) * 100 + ",";
-                Sql += "G_Baika14 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 27].Value)) * 100 + ",";
-                Sql += "G_Baika15 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 29].Value)) * 100 + ",";
+                //// 小数点以下対応 2020/08/04 
+                // コメント化 2020/08/05：売価を保持しない 
+                //Sql += "G_Baika1 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 1].Value)) * 100 + ",";
+                //Sql += "G_Baika2 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 3].Value)) * 100 + ",";
+                //Sql += "G_Baika3 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 5].Value)) * 100 + ",";
+                //Sql += "G_Baika4 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 7].Value)) * 100 + ",";
+                //Sql += "G_Baika5 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 9].Value)) * 100 + ",";
+                //Sql += "G_Baika6 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 11].Value)) * 100 + ",";
+                //Sql += "G_Baika7 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 13].Value)) * 100 + ",";
+                //Sql += "G_Baika8 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 15].Value)) * 100 + ",";
+                //Sql += "G_Baika9 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 17].Value)) * 100 + ",";
+                //Sql += "G_Baika10 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 19].Value)) * 100 + ",";
+                //Sql += "G_Baika11 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 21].Value)) * 100 + ",";
+                //Sql += "G_Baika12 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 23].Value)) * 100 + ",";
+                //Sql += "G_Baika13 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 25].Value)) * 100 + ",";
+                //Sql += "G_Baika14 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 27].Value)) * 100 + ",";
+                //Sql += "G_Baika15 = " + Utility.StrtoDouble(Utility.NulltoStr(dg1[colBaika, 29].Value)) * 100 + ",";
 
                 Sql += "G_Syubai1 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 1].Value)) + ",";
                 Sql += "G_Syubai2 = " + GetSyubaiStatus(Utility.NulltoStr(dg1[colSyubai, 3].Value)) + ",";
@@ -2997,8 +2999,8 @@ namespace STSH_OCR.OCR
                     ClsCsvData.ClsCsvNoukaBaika noukaBaika = Utility.GetNoukaBaikaFromDataTable(txtTokuisakiCD.Text.PadLeft(7, '0'), syCd, global.dtNoukaBaika);
                     //dg1[colNouka, e.RowIndex].Value = noukaBaika.NOUKA;     // 納価 2020/08/04 コメント化
                     //dg1[colBaika, e.RowIndex].Value = noukaBaika.BAIKA;     // 売価 2020/08/04 コメント化
-                    dg1[colNouka, e.RowIndex].Value = String.Format("{0:#.##}", noukaBaika.NOUKA);  // CSVデータの納価小数点以下表示 2020/08/04
-                    dg1[colBaika, e.RowIndex].Value = String.Format("{0:#.##}", noukaBaika.BAIKA);  // CSVデータの売価小数点以下表示 2020/08/04
+                    dg1[colNouka, e.RowIndex].Value = String.Format("{0:0.##}", noukaBaika.NOUKA);  // CSVデータの納価小数点以下表示 2020/08/04
+                    dg1[colBaika, e.RowIndex].Value = String.Format("{0:0.##}", noukaBaika.BAIKA);  // CSVデータの売価小数点以下表示 2020/08/04
 
                     // 終売のとき : 2020/04/15
                     //if (syohin.SHUBAI)
