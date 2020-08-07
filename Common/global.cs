@@ -145,8 +145,13 @@ namespace STSH_OCR.Common
         public static DataSet DataSet;
 
         // データテーブル：2020/04/09
-        public static DataTable dtSyohin;       // 商品データテーブル
-        public static DataTable dtTokuisaki;    // 得意先データテーブル
-        public static DataTable dtNoukaBaika;   // 納価売価テーブル
+        public static DataTable dtSyohin;           // 商品データテーブル
+        public static DataTable dtTokuisaki;        // 得意先データテーブル
+        public static DataTable dtNoukaBaika;       // 納価売価テーブル
+        public static DataTable dtSyohinNoukaBaika; // 納価売価テーブルNew 2020/08/06
+
+        // 納品単価マスタ
+        public static string TANKA_TEIBAN = "01";       // 定番
+        public static string TANKA_TOKUBAI = "02";      // 特売
     }
 }

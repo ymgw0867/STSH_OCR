@@ -1231,5 +1231,59 @@ namespace STSH_OCR.Common
 
             return SHUBAI;
         }
+
+        ///---------------------------------------------------------
+        /// <summary>
+        ///     ＣＳＶデータからデータテーブルを生成する </summary>
+        /// <param name="sPath">
+        ///     CSVデータファイルパス</param>
+        /// <returns>
+        ///     データテーブル</returns>
+        ///---------------------------------------------------------
+        public static System.Data.DataTable readCSV(string sPath)
+        {
+            System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());
+
+            ////パスの設定
+            //string path = "CSVファイルのパス";
+
+            //StreamReaderクラスのインスタンスの作成
+            System.IO.StreamReader sr = new System.IO.StreamReader(sPath, Encoding.Default);
+
+            //DataTableクラスのインスタンスの作成
+            System.Data.DataTable dt = new System.Data.DataTable();
+
+            //1行目を区切り文字(カンマ)で分割し列名を取得
+            string[] items = sr.ReadLine().Split(',');
+
+            //列の作成
+            foreach (string item in items)
+            {
+                dt.Columns.Add(item, typeof(string));
+            }
+
+            //各行を読込み、テーブルを作成
+            while (sr.Peek() != -1)
+            {
+                string[] values = sr.ReadLine().Split(',');
+
+                DataRow dr = dt.NewRow();
+
+                for (int ii = 0; ii < items.Length; ii++)
+                {
+                    dr[items[ii]] = values[ii];
+                }
+
+                dt.Rows.Add(dr);
+            }
+
+            //StreamReaderクラスのインスタンスの破棄
+            sr.Close();
+
+            System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());
+
+            return dt;
+        }
+
     }
 }

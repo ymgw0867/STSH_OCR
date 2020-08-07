@@ -279,9 +279,9 @@ namespace STSH_OCR
             timer1.Enabled = true;
 
             // CSVデータをDataSetに読み込む : 2020/04/09
-            global.dtSyohin = readCSV(Properties.Settings.Default.商品マスター);
-            global.dtTokuisaki = readCSV(Properties.Settings.Default.得意先マスター);
-            global.dtNoukaBaika = readCSV(Properties.Settings.Default.納価売価);
+            global.dtSyohin = Utility.readCSV(Properties.Settings.Default.商品マスター);
+            global.dtTokuisaki = Utility.readCSV(Properties.Settings.Default.得意先マスター);
+            global.dtNoukaBaika = Utility.readCSV(Properties.Settings.Default.納価売価);
 
             //// データセットにデータテーブルを追加 : 2020/04/09
             //global.DataSet = new DataSet();
@@ -297,8 +297,8 @@ namespace STSH_OCR
             context2 = new DataContext(cn2);
             tblFax = context2.GetTable<Common.ClsFaxOrder>();
 
-            // orderpattern にコメントフィールド追加：2020/04/01 コメント化：2020/06/26
-            //DbAlterTable();
+            // system_config に納品単価マスタパスフィールド追加：2020/08/06
+            DbAlterTable();
         }
 
         ///---------------------------------------------------------
@@ -309,50 +309,50 @@ namespace STSH_OCR
         /// <returns>
         ///     データテーブル</returns>
         ///---------------------------------------------------------
-        private DataTable readCSV(string sPath)
-        {
-            System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());
+        //private DataTable readCSV(string sPath)
+        //{
+        //    System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());
 
-            ////パスの設定
-            //string path = "CSVファイルのパス";
+        //    ////パスの設定
+        //    //string path = "CSVファイルのパス";
 
-            //StreamReaderクラスのインスタンスの作成
-            System.IO.StreamReader sr = new System.IO.StreamReader(sPath, Encoding.Default);
+        //    //StreamReaderクラスのインスタンスの作成
+        //    System.IO.StreamReader sr = new System.IO.StreamReader(sPath, Encoding.Default);
 
-            //DataTableクラスのインスタンスの作成
-            DataTable dt = new DataTable();
+        //    //DataTableクラスのインスタンスの作成
+        //    DataTable dt = new DataTable();
 
-            //1行目を区切り文字(カンマ)で分割し列名を取得
-            string[] items = sr.ReadLine().Split(',');
+        //    //1行目を区切り文字(カンマ)で分割し列名を取得
+        //    string[] items = sr.ReadLine().Split(',');
 
-            //列の作成
-            foreach (string item in items)
-            {
-                dt.Columns.Add(item, typeof(string));
-            }
+        //    //列の作成
+        //    foreach (string item in items)
+        //    {
+        //        dt.Columns.Add(item, typeof(string));
+        //    }
 
-            //各行を読込み、テーブルを作成
-            while (sr.Peek() != -1)
-            {
-                string[] values = sr.ReadLine().Split(',');
+        //    //各行を読込み、テーブルを作成
+        //    while (sr.Peek() != -1)
+        //    {
+        //        string[] values = sr.ReadLine().Split(',');
 
-                DataRow dr = dt.NewRow();
+        //        DataRow dr = dt.NewRow();
 
-                for (int ii = 0; ii < items.Length; ii++)
-                {
-                    dr[items[ii]] = values[ii];
-                }
+        //        for (int ii = 0; ii < items.Length; ii++)
+        //        {
+        //            dr[items[ii]] = values[ii];
+        //        }
 
-                dt.Rows.Add(dr);
-            }
+        //        dt.Rows.Add(dr);
+        //    }
 
-            //StreamReaderクラスのインスタンスの破棄
-            sr.Close();
+        //    //StreamReaderクラスのインスタンスの破棄
+        //    sr.Close();
 
-            System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());
+        //    System.Diagnostics.Debug.WriteLine(DateTime.Now.ToString());
 
-            return dt;
-        }
+        //    return dt;
+        //}
 
         private void DbAlterTable()
         {
@@ -361,25 +361,32 @@ namespace STSH_OCR
 
             try
             {
-                sql = "ALTER TABLE orderpattern ADD COLUMN Comment1 TEXT";
-                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
-                {
-                    com.ExecuteNonQuery();
-                }
+                //sql = "ALTER TABLE orderpattern ADD COLUMN Comment1 TEXT";
+                //using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                //{
+                //    com.ExecuteNonQuery();
+                //}
 
-                sql = "ALTER TABLE orderpattern ADD COLUMN Comment2 TEXT";
-                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
-                {
-                    com.ExecuteNonQuery();
-                }
+                //sql = "ALTER TABLE orderpattern ADD COLUMN Comment2 TEXT";
+                //using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                //{
+                //    com.ExecuteNonQuery();
+                //}
 
-                sql = "ALTER TABLE orderpattern ADD COLUMN Comment3 TEXT";
-                using (SQLiteCommand com = new SQLiteCommand(sql, cn))
-                {
-                    com.ExecuteNonQuery();
-                }
+                //sql = "ALTER TABLE orderpattern ADD COLUMN Comment3 TEXT";
+                //using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                //{
+                //    com.ExecuteNonQuery();
+                //}
 
-                sql = "ALTER TABLE orderpattern ADD COLUMN Comment4 TEXT";
+                //sql = "ALTER TABLE orderpattern ADD COLUMN Comment4 TEXT";
+                //using (SQLiteCommand com = new SQLiteCommand(sql, cn))
+                //{
+                //    com.ExecuteNonQuery();
+                //}
+
+                // 2020/08/06
+                sql = "ALTER TABLE system_Config ADD COLUMN NouhinTankaPath TEXT";
                 using (SQLiteCommand com = new SQLiteCommand(sql, cn))
                 {
                     com.ExecuteNonQuery();

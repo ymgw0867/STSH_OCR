@@ -232,5 +232,37 @@ namespace STSH_OCR.Common
             //public int BAIKA { get; set; }    // 2020/08/04 コメント化
             public double BAIKA { get; set; }   // 202020/08/04 浮動小数点
         }
+
+        ///--------------------------------------------------------------
+        /// <summary>
+        ///     納品単価マスタ </summary>        
+        ///--------------------------------------------------------------
+        public class ClsCsvNouhinTanka
+        {
+            // 商品コード
+            public string SYOHIN_CD { get; set; }
+
+            // 特価区分分類
+            public string SPECIAL_VAL_KBN { get; set; }
+
+            // 有効開始日付
+            public string YUKO_START_YMD { get; set; }
+
+            // 有効終了日付
+            public string YUKO_END_YMD { get; set; }
+
+            // 得意先コード
+            public string TOKUISAKI_CD { get; set; }
+
+            // 納品単価
+            public double NOUHIN_TANKA { get; set; }
+
+            // 小売単価
+            public double KOURI_TANKA { get; set; }
+
+            // 削除フラグ
+            public int DELFLG { get; set; }
+
+        }
     }
 }

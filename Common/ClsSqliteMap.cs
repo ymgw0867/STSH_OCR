@@ -36,6 +36,9 @@ namespace STSH_OCR.Common
 
         [Column(Name = "更新年月日")]
         public string YyMmDd { get; set; }
+
+        [Column(Name = "NouhinTankaPath")]
+        public string NouhinTankaPath { get; set; }
     }
 
     // 発注書編集ログ
