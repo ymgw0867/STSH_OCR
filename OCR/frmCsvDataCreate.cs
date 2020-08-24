@@ -598,16 +598,7 @@ namespace STSH_OCR.OCR
 
             DataRow[] rows = null;
 
-            //// 定番
-            //if (SpecialVal == global.TANKA_TEIBAN)
-            //{
-            //    rows = data.AsEnumerable().Where(a => a["SPECIAL_VAL_KBN"].ToString() == SpecialVal && 
-            //                                          a["TOKUISAKI_CD"].ToString().PadLeft(7, '0') == TokuisakiCD &&
-            //                                          a["SYOHIN_CD"].ToString().PadLeft(8, '0') == SyohinCD &&
-            //                                          a["DELFLG"].ToString() == global.FLGOFF).ToArray();
-            //}
-
-            // 特売
+            // 特売・得意先コード指定
             rows = data.AsEnumerable().Where(a => a["SPECIAL_VAL_KBN"].ToString() == global.TANKA_TOKUBAI &&
                                                   a["TOKUISAKI_CD"].ToString().PadLeft(7, '0') == TokuisakiCD &&
                                                   a["SYOHIN_CD"].ToString().PadLeft(8, '0') == SyohinCD &&
@@ -616,6 +607,51 @@ namespace STSH_OCR.OCR
                                                   a["DELFLG"].ToString() == global.FLGOFF)
                                       .OrderByDescending(a => Utility.StrtoInt(a["YUKO_START_YMD"].ToString()))
                                       .ToArray();
+
+            if (rows.Count() == global.flgOff)
+            {
+                // 特売・チェーンＣＤ指定：2020/08/24
+                rows = data.AsEnumerable().Where(a => a["SPECIAL_VAL_KBN"].ToString() == global.TANKA_TOKUBAI &&
+                                                      a["TOKUISAKI_CD"].ToString().PadLeft(7, '0').Substring(0, 4) == TokuisakiCD.Substring(0, 4) &&
+                                                      a["SYOHIN_CD"].ToString().PadLeft(8, '0') == SyohinCD &&
+                                                      Utility.StrtoInt(a["YUKO_START_YMD"].ToString()) <= TenDate &&
+                                                      Utility.StrtoInt(a["YUKO_END_YMD"].ToString()) >= TenDate &&
+                                                      a["DELFLG"].ToString() == global.FLGOFF)
+                                          .OrderByDescending(a => Utility.StrtoInt(a["YUKO_START_YMD"].ToString()))
+                                          .ToArray();
+            }
+
+            //foreach (var t in rows)
+            //{
+            //    clsCsvNouhin.SYOHIN_CD = t["SYOHIN_CD"].ToString();
+            //    clsCsvNouhin.SPECIAL_VAL_KBN = t["SPECIAL_VAL_KBN"].ToString();
+            //    clsCsvNouhin.YUKO_START_YMD = t["YUKO_START_YMD"].ToString();
+            //    clsCsvNouhin.YUKO_END_YMD = t["YUKO_END_YMD"].ToString();
+            //    clsCsvNouhin.TOKUISAKI_CD = t["TOKUISAKI_CD"].ToString();
+            //    clsCsvNouhin.NOUHIN_TANKA = Utility.StrtoDouble(t["NOUHIN_TANKA"].ToString());
+            //    clsCsvNouhin.KOURI_TANKA = Utility.StrtoDouble(t["KOURI_TANKA"].ToString());
+            //    break;
+            //}
+
+            // 該当する特売データがなかったとき
+            //if (clsCsvNouhin.SYOHIN_CD == "")
+            if (rows.Count() == global.flgOff)
+            {
+                // 定価・得意先コード指定
+                rows = data.AsEnumerable().Where(a => a["SPECIAL_VAL_KBN"].ToString() == global.TANKA_TEIBAN &&
+                                                      a["TOKUISAKI_CD"].ToString().PadLeft(7, '0') == TokuisakiCD &&
+                                                      a["SYOHIN_CD"].ToString().PadLeft(8, '0') == SyohinCD &&
+                                                      a["DELFLG"].ToString() == global.FLGOFF).ToArray();
+
+                if (rows.Count() == global.flgOff)
+                {
+                    // 定価・チェーンＣＤ指定：2020/08/24
+                    rows = data.AsEnumerable().Where(a => a["SPECIAL_VAL_KBN"].ToString() == global.TANKA_TEIBAN &&
+                                                          a["TOKUISAKI_CD"].ToString().PadLeft(7, '0').Substring(0, 4) == TokuisakiCD.Substring(0, 4) &&
+                                                          a["SYOHIN_CD"].ToString().PadLeft(8, '0') == SyohinCD &&
+                                                          a["DELFLG"].ToString() == global.FLGOFF).ToArray();
+                }
+            }
 
             foreach (var t in rows)
             {
@@ -627,28 +663,6 @@ namespace STSH_OCR.OCR
                 clsCsvNouhin.NOUHIN_TANKA = Utility.StrtoDouble(t["NOUHIN_TANKA"].ToString());
                 clsCsvNouhin.KOURI_TANKA = Utility.StrtoDouble(t["KOURI_TANKA"].ToString());
                 break;
-            }
-
-            // 該当する特売データがなかったとき
-            if (clsCsvNouhin.SYOHIN_CD == "")
-            {
-                // 定番
-                rows = data.AsEnumerable().Where(a => a["SPECIAL_VAL_KBN"].ToString() == global.TANKA_TEIBAN &&
-                                                      a["TOKUISAKI_CD"].ToString().PadLeft(7, '0') == TokuisakiCD &&
-                                                      a["SYOHIN_CD"].ToString().PadLeft(8, '0') == SyohinCD &&
-                                                      a["DELFLG"].ToString() == global.FLGOFF).ToArray();
-
-                foreach (var t in rows)
-                {
-                    clsCsvNouhin.SYOHIN_CD = t["SYOHIN_CD"].ToString();
-                    clsCsvNouhin.SPECIAL_VAL_KBN = t["SPECIAL_VAL_KBN"].ToString();
-                    clsCsvNouhin.YUKO_START_YMD = t["YUKO_START_YMD"].ToString();
-                    clsCsvNouhin.YUKO_END_YMD = t["YUKO_END_YMD"].ToString();
-                    clsCsvNouhin.TOKUISAKI_CD = t["TOKUISAKI_CD"].ToString();
-                    clsCsvNouhin.NOUHIN_TANKA = Utility.StrtoDouble(t["NOUHIN_TANKA"].ToString());
-                    clsCsvNouhin.KOURI_TANKA = Utility.StrtoDouble(t["KOURI_TANKA"].ToString());
-                    break;
-                }
             }
 
             return clsCsvNouhin;
