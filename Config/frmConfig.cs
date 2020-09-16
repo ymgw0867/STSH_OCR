@@ -44,6 +44,7 @@ namespace STSH_OCR.Config
             txtDataSpan.Text = ClsConf.DataSpan.ToString();
             txtLogSpan.Text = ClsConf.LogSpan.ToString();
             comboBox1.SelectedIndex = ClsConf.FileWriteStatus;
+            txtNouhinTankaMst.Text = ClsConf.NouhinTankaPath;
         }
 
         ///------------------------------------------------------------------------
@@ -116,6 +117,7 @@ namespace STSH_OCR.Config
             ClsConf.LogSpan = Utility.StrtoInt(txtLogSpan.Text);
             ClsConf.FileWriteStatus = comboBox1.SelectedIndex;
             ClsConf.YyMmDd = DateTime.Now.ToString();
+            ClsConf.NouhinTankaPath = txtNouhinTankaMst.Text;
 
             context.SubmitChanges();
 
@@ -226,6 +228,49 @@ namespace STSH_OCR.Config
             {
                 e.Handled = true;
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string fn = OpenFilDialog("納品単価マスターCSVファイル");
+            if (fn != string.Empty)
+            {
+                txtNouhinTankaMst.Text = fn;
+            }
+        }
+
+        ///----------------------------------------------------------
+        /// <summary>
+        ///     CSVファイル選択ダイアログ </summary>
+        /// <param name="title">
+        ///     ダイアログ画面タイトル</param>
+        /// <returns>
+        ///     ファイル名</returns>
+        ///----------------------------------------------------------
+        private string OpenFilDialog(string title)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Title = title;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = "CSVファイル(*.csv)|*.csv|全てのファイル(*.*)|*.*";
+
+            //ダイアログボックスを表示し「保存」ボタンが選択されたらファイル名を表示
+            string fileName;
+            DialogResult ret = openFileDialog1.ShowDialog();
+
+            if (ret == System.Windows.Forms.DialogResult.OK)
+            {
+                fileName = openFileDialog1.FileName;
+            }
+            else
+            {
+                fileName = string.Empty;
+            }
+
+            // 不要になった時点で破棄する
+            openFileDialog1.Dispose();
+
+            return fileName;
         }
     }
 }

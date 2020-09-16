@@ -717,8 +717,12 @@ namespace STSH_OCR.Pattern
 
                             // 納価売価取得：2020/04/10
                             ClsCsvData.ClsCsvNoukaBaika noukaBaika = Utility.GetNoukaBaikaFromDataTable(pPID, csvSyohin.SYOHIN_CD.PadLeft(8, '0'), global.dtNoukaBaika);
-                            rtnArray[xRow, 60] = noukaBaika.NOUKA;  // 2020/04/10
-                            rtnArray[xRow, 74] = noukaBaika.BAIKA;  // 2020/04/10
+                            
+                            //rtnArray[xRow, 60] = noukaBaika.NOUKA;  // 2020/04/10
+                            //rtnArray[xRow, 74] = noukaBaika.BAIKA;  // 2020/04/10
+
+                            rtnArray[xRow, 60] = String.Format("{0:0.##}", noukaBaika.NOUKA);  // 2020/08/05 小数点以下対応
+                            rtnArray[xRow, 74] = String.Format("{0:0.##}", noukaBaika.BAIKA);  // 2020/08/05 小数点以下対応
 
                             rtnArray[xRow2, 60] = csvSyohin.JAN_CD;
                         }
