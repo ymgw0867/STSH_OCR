@@ -612,7 +612,7 @@ namespace STSH_OCR.OCR
             {
                 // 特売・チェーンＣＤ指定：2020/08/24
                 rows = data.AsEnumerable().Where(a => a["SPECIAL_VAL_KBN"].ToString() == global.TANKA_TOKUBAI &&
-                                                      a["TOKUISAKI_CD"].ToString().PadLeft(7, '0').Substring(0, 4) == TokuisakiCD.Substring(0, 4) &&
+                                                      a["CHAIN_CD"].ToString().PadLeft(4, '0') == TokuisakiCD.Substring(0, 4) &&
                                                       a["SYOHIN_CD"].ToString().PadLeft(8, '0') == SyohinCD &&
                                                       Utility.StrtoInt(a["YUKO_START_YMD"].ToString()) <= TenDate &&
                                                       Utility.StrtoInt(a["YUKO_END_YMD"].ToString()) >= TenDate &&
@@ -621,20 +621,7 @@ namespace STSH_OCR.OCR
                                           .ToArray();
             }
 
-            //foreach (var t in rows)
-            //{
-            //    clsCsvNouhin.SYOHIN_CD = t["SYOHIN_CD"].ToString();
-            //    clsCsvNouhin.SPECIAL_VAL_KBN = t["SPECIAL_VAL_KBN"].ToString();
-            //    clsCsvNouhin.YUKO_START_YMD = t["YUKO_START_YMD"].ToString();
-            //    clsCsvNouhin.YUKO_END_YMD = t["YUKO_END_YMD"].ToString();
-            //    clsCsvNouhin.TOKUISAKI_CD = t["TOKUISAKI_CD"].ToString();
-            //    clsCsvNouhin.NOUHIN_TANKA = Utility.StrtoDouble(t["NOUHIN_TANKA"].ToString());
-            //    clsCsvNouhin.KOURI_TANKA = Utility.StrtoDouble(t["KOURI_TANKA"].ToString());
-            //    break;
-            //}
-
             // 該当する特売データがなかったとき
-            //if (clsCsvNouhin.SYOHIN_CD == "")
             if (rows.Count() == global.flgOff)
             {
                 // 定価・得意先コード指定
@@ -647,7 +634,7 @@ namespace STSH_OCR.OCR
                 {
                     // 定価・チェーンＣＤ指定：2020/08/24
                     rows = data.AsEnumerable().Where(a => a["SPECIAL_VAL_KBN"].ToString() == global.TANKA_TEIBAN &&
-                                                          a["TOKUISAKI_CD"].ToString().PadLeft(7, '0').Substring(0, 4) == TokuisakiCD.Substring(0, 4) &&
+                                                          a["CHAIN_CD"].ToString().PadLeft(4, '0') == TokuisakiCD.Substring(0, 4) &&
                                                           a["SYOHIN_CD"].ToString().PadLeft(8, '0') == SyohinCD &&
                                                           a["DELFLG"].ToString() == global.FLGOFF).ToArray();
                 }
@@ -655,6 +642,10 @@ namespace STSH_OCR.OCR
 
             foreach (var t in rows)
             {
+                System.Diagnostics.Debug.WriteLine(t["SYOHIN_CD"].ToString() + "," + t["SPECIAL_VAL_KBN"].ToString() + "," +
+                    t["YUKO_START_YMD"].ToString() + "," + t["YUKO_END_YMD"].ToString() + "," + t["TOKUISAKI_CD"].ToString() + "," + 
+                    t["NOUHIN_TANKA"].ToString() + "," + t["KOURI_TANKA"].ToString());
+
                 clsCsvNouhin.SYOHIN_CD = t["SYOHIN_CD"].ToString();
                 clsCsvNouhin.SPECIAL_VAL_KBN = t["SPECIAL_VAL_KBN"].ToString();
                 clsCsvNouhin.YUKO_START_YMD = t["YUKO_START_YMD"].ToString();
