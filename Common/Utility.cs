@@ -555,6 +555,10 @@ namespace STSH_OCR.Common
             int sMonth = r.Month;
             bool NextMonth = false;
 
+            //string wDay = ""; //2020/08/28 コメント化
+            string wDay = r.Day1.Trim();    // 2020/08/28
+
+
             //string wDay = "";   // 2020/08/28 コメント化
             string wDay = r.Day1.Trim(); //2020/08/28
 
@@ -640,9 +644,9 @@ namespace STSH_OCR.Common
             int sYear = r.Year;
             int sMonth = r.Month;
             bool NextMonth = false;
-            
-            //string wDay = "";  // 2020/08/28 コメント化
-            string wDay = r.Day1.Trim();　// 2020/08/28
+
+            //string wDay = ""; //2020/08/28 コメント化
+            string wDay = r.Day1.Trim();    // 2020/08/28
 
             // 店着日付（年月日）をセット
             for (int i = 1; i < tenDates.Length; i++)
